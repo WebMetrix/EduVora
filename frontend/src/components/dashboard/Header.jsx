@@ -1,7 +1,34 @@
-import { Menu, ChevronDown, Bell } from 'lucide-react';
-import { motion } from 'framer-motion';
+import { useState, useRef, useEffect } from 'react';
+import { Menu, ChevronDown, Bell, User, Settings, Wallet, BarChart2, HelpCircle, LogOut } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { useTranslation } from '../../hooks/useTranslation';
+import { useNavigate } from 'react-router-dom';
 
 export default function Header({ toggleSidebar }) {
+  const { t } = useTranslation();
+  const navigate = useNavigate();
+  const [isProfileOpen, setIsProfileOpen] = useState(false);
+  const profileRef = useRef(null);
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (profileRef.current && !profileRef.current.contains(event.target)) {
+        setIsProfileOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
+  const dropdownItems = [
+    { id: 'profile', icon: User, label: t('dashboard.nav.myProfile') },
+    { id: 'settings', icon: Settings, label: t('dashboard.nav.settings') },
+    { id: 'wallet', icon: Wallet, label: t('dashboard.nav.wallet') },
+    { id: 'payouts', icon: BarChart2, label: t('dashboard.nav.payouts') },
+    { id: 'help', icon: HelpCircle, label: t('dashboard.nav.helpSupport') }
+  ];
+
   return (
     <header
       className="sticky top-0 z-30 flex items-center justify-between px-6 lg:px-8 h-14 bg-white/70 backdrop-blur-xl border-b border-slate-200/60 shadow-sm"
@@ -34,29 +61,71 @@ export default function Header({ toggleSidebar }) {
         </button>
 
         {/* User Profile */}
-        <motion.div
-          whileHover={{ scale: 1.02 }}
-          className="flex items-center gap-3 cursor-pointer group"
-        >
-          {/* Avatar */}
-          <div className="relative">
-            <div className="w-9 h-9 lg:w-10 lg:h-10 rounded-full bg-indigo-50 flex items-center justify-center border border-indigo-100 text-indigo-700 font-bold text-[13px] lg:text-[14px] shadow-sm group-hover:shadow-md transition-shadow">
-              PS
+        <div className="relative" ref={profileRef}>
+          <motion.button
+            whileHover={{ scale: 1.02 }}
+            onClick={() => setIsProfileOpen(!isProfileOpen)}
+            className="flex items-center gap-2 lg:gap-3 focus:outline-none group hover:bg-slate-100/50 p-1.5 lg:p-2 rounded-2xl transition-all"
+          >
+            {/* Avatar */}
+            <div className="relative">
+              <div className="w-8 h-8 lg:w-9 lg:h-9 rounded-full bg-indigo-50 flex items-center justify-center text-indigo-700 font-bold text-[13px] shadow-sm">
+                PS
+              </div>
             </div>
-            {/* Green Status Dot (Mobile) */}
-            <div className="absolute bottom-0 right-0 w-2.5 h-2.5 bg-emerald-500 rounded-full border-2 border-white"></div>
-            {/* Glowing ring on hover */}
-            <div className="absolute inset-0 rounded-full ring-2 ring-indigo-500/0 group-hover:ring-indigo-500/30 ring-offset-2 transition-all duration-300"></div>
-          </div>
 
-          {/* User Name & ID (hidden on mobile) */}
-          <div className="hidden lg:block">
-            <h4 className="text-[14px] font-bold text-slate-900 leading-tight">Priya Sharma</h4>
-            <p className="text-[11px] font-medium text-slate-500 mt-0.5">ID: LN100245</p>
-          </div>
+            {/* User Name & Rank */}
+            <div className="hidden lg:flex flex-col text-left">
+              <h4 className="text-[13px] font-extrabold text-slate-900 leading-tight group-hover:text-indigo-700 transition-colors">Priya Sharma</h4>
+              <p className="text-[11px] font-medium text-slate-500 mt-0.5 tracking-wide">Gold Rank</p>
+            </div>
 
-          <ChevronDown className="w-4 h-4 text-slate-400 group-hover:text-indigo-600 transition-colors ml-1 hidden sm:block" />
-        </motion.div>
+            <motion.div 
+              animate={{ rotate: isProfileOpen ? 180 : 0 }}
+              transition={{ duration: 0.2 }}
+            >
+              <ChevronDown className="w-4 h-4 text-slate-400 group-hover:text-indigo-600 transition-colors lg:ml-1" />
+            </motion.div>
+          </motion.button>
+
+          {/* Dropdown Menu */}
+          <AnimatePresence>
+            {isProfileOpen && (
+              <motion.div
+                initial={{ opacity: 0, y: 10, scale: 0.95 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                exit={{ opacity: 0, y: 10, scale: 0.95 }}
+                transition={{ duration: 0.15, ease: "easeOut" }}
+                className="absolute right-0 top-full mt-2 w-[160px] lg:w-[170px] bg-white rounded-xl shadow-[0_10px_40px_rgb(0,0,0,0.12)] border border-slate-100 overflow-hidden z-[100] origin-top-right"
+              >
+                <div className="py-1.5 flex flex-col">
+                  {dropdownItems.map((item, idx) => (
+                    <button 
+                      key={idx} 
+                      onClick={() => {
+                        if (item.id === 'profile') {
+                          navigate('/profile');
+                        }
+                        setIsProfileOpen(false);
+                      }}
+                      className="flex items-center gap-2.5 px-4 py-2 hover:bg-slate-50 transition-colors w-full text-left group/item"
+                    >
+                      <item.icon className="w-[15px] h-[15px] text-slate-500 group-hover/item:text-indigo-600 transition-colors" />
+                      <span className="text-[12px] font-semibold text-slate-700 group-hover/item:text-indigo-600 transition-colors">{item.label}</span>
+                    </button>
+                  ))}
+                  
+                  <div className="h-px bg-slate-100 my-1 mx-3" />
+                  
+                  <button className="flex items-center gap-2.5 px-4 py-2 hover:bg-red-50 transition-colors w-full text-left group/logout">
+                    <LogOut className="w-[15px] h-[15px] text-red-500 group-hover/logout:text-red-600 transition-colors" />
+                    <span className="text-[12px] font-semibold text-red-500 group-hover/logout:text-red-600 transition-colors">{t('dashboard.nav.logout')}</span>
+                  </button>
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </div>
 
       </div>
     </header>

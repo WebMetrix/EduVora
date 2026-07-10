@@ -91,38 +91,34 @@ export default function Footer() {
   ];
 
   return (
-    <motion.footer
-      whileHover={{ y: -2 }}
-      className="mt-4 bg-gradient-to-br from-white/60 to-white/30 backdrop-blur-2xl border border-white/60 rounded-[20px] p-5 lg:p-6 shadow-[0_8px_30px_rgb(0,0,0,0.04)] hover:shadow-[0_15px_40px_rgb(99,102,241,0.08)] hover:border-indigo-100/60 transition-all duration-500 flex flex-col group relative overflow-hidden"
+    <footer
+      className="mt-6 lg:mt-8 flex flex-col group relative"
     >
-      {/* Decorative gradient flare */}
-      <div className="absolute top-0 right-0 w-64 h-64 bg-indigo-300/10 rounded-full blur-[80px] -translate-y-1/2 translate-x-1/2 pointer-events-none group-hover:bg-indigo-300/20 transition-colors duration-700" />
-      <div className="absolute bottom-0 left-0 w-48 h-48 bg-purple-300/10 rounded-full blur-[60px] translate-y-1/2 -translate-x-1/2 pointer-events-none group-hover:bg-purple-300/20 transition-colors duration-700" />
 
-      <div className="relative z-10 flex flex-col lg:flex-row justify-between gap-8 lg:gap-10 mb-6 lg:mb-8">
+      <div className="relative z-10 flex flex-col lg:flex-row justify-between gap-6 lg:gap-8 mb-4 lg:mb-5">
 
         {/* Brand & Social Section */}
-        <div className="flex flex-col max-w-[260px]">
-          <div className="flex items-center gap-2 mb-4 group/brand cursor-pointer">
-            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-indigo-500 to-indigo-700 flex items-center justify-center shadow-md group-hover/brand:shadow-indigo-500/30 transition-all duration-300">
-              <span className="text-white font-black text-[15px]">E</span>
+        <div className="flex flex-col max-w-[220px]">
+          <div className="flex items-center gap-2 mb-3 group/brand cursor-pointer">
+            <div className="w-6 h-6 rounded-md bg-gradient-to-br from-indigo-500 to-indigo-700 flex items-center justify-center shadow-md group-hover/brand:shadow-indigo-500/30 transition-all duration-300">
+              <span className="text-white font-black text-[12px]">E</span>
             </div>
             <div className="flex flex-col">
-              <span className="text-[16px] font-black text-indigo-950 leading-none tracking-tight group-hover/brand:text-indigo-700 transition-colors">EDUVORA</span>
-              <span className="text-[7.5px] font-extrabold text-slate-500 tracking-widest mt-0.5">MLM PLATFORM</span>
+              <span className="text-[13px] font-black text-indigo-950 leading-none tracking-tight group-hover/brand:text-indigo-700 transition-colors">EDUVORA</span>
+              <span className="text-[6.5px] font-extrabold text-slate-500 tracking-widest mt-0.5">MLM PLATFORM</span>
             </div>
           </div>
-          <p className="text-[12px] lg:text-[13px] text-slate-500/90 font-medium leading-relaxed mb-5">
+          <p className="text-[10.5px] lg:text-[11px] text-slate-500/90 font-medium leading-relaxed mb-4">
             {t('dashboard.footer.description')}
           </p>
-          <div className="flex items-center gap-2.5">
+          <div className="flex items-center gap-2">
             {Object.values(SocialIcons).map((Icon, index) => (
               <a
                 key={index}
                 href="#"
-                className="w-7 h-7 rounded-full bg-white/50 border border-white/80 flex items-center justify-center text-slate-500 hover:bg-gradient-to-tr hover:from-indigo-600 hover:to-indigo-500 hover:text-white hover:border-transparent hover:-translate-y-0.5 hover:shadow-md transition-all duration-300"
+                className="w-6 h-6 rounded-full bg-white/50 border border-white/80 flex items-center justify-center text-slate-500 hover:bg-gradient-to-tr hover:from-indigo-600 hover:to-indigo-500 hover:text-white hover:border-transparent hover:-translate-y-0.5 hover:shadow-md transition-all duration-300"
               >
-                <div className="scale-[0.8] flex items-center justify-center">
+                <div className="scale-[0.7] flex items-center justify-center">
                   <Icon />
                 </div>
               </a>
@@ -131,14 +127,14 @@ export default function Footer() {
         </div>
 
         {/* Links Grid (Desktop/Tablet) */}
-        <div className="hidden sm:grid flex-1 grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8 lg:ml-12">
+        <div className="hidden sm:grid flex-1 grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6 lg:ml-12">
           {sections.map(section => (
-            <div key={section.id} className="flex flex-col gap-3">
-              <h4 className="text-[14px] font-extrabold text-slate-800 tracking-wide">{section.title}</h4>
-              <ul className="flex flex-col gap-2">
+            <div key={section.id} className="flex flex-col gap-2.5">
+              <h4 className="text-[12px] font-extrabold text-slate-800 tracking-wide">{section.title}</h4>
+              <ul className="flex flex-col gap-1.5">
                 {section.items.map((item, idx) => (
                   <li key={idx}>
-                    <a href="#" className="text-[13px] lg:text-[14px] text-slate-500 font-medium hover:text-indigo-600 hover:translate-x-1 inline-block transition-all duration-300">
+                    <a href="#" className="text-[11px] lg:text-[11.5px] text-slate-500 font-medium hover:text-indigo-600 hover:translate-x-1 inline-block transition-all duration-300">
                       {item.label}
                     </a>
                   </li>
@@ -163,11 +159,11 @@ export default function Footer() {
       </div>
 
       {/* Copyright */}
-      <div className="relative z-10 pt-4 lg:pt-5 border-t border-slate-200/40 flex items-center justify-center text-center">
-        <p className="text-[12px] font-semibold text-slate-400">
+      <div className="relative z-10 pt-3 lg:pt-4 border-t border-slate-200/40 flex items-center justify-center text-center">
+        <p className="text-[10px] lg:text-[10.5px] font-semibold text-slate-400">
           {t('dashboard.footer.copyright')}
         </p>
       </div>
-    </motion.footer>
+    </footer>
   );
 }

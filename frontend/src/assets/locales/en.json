@@ -97,8 +97,11 @@
       "reports": "Reports",
       "rank": "Rank & Achievements",
       "profile": "Profile",
+      "myProfile": "My Profile",
       "settings": "Settings",
-      "support": "Support"
+      "support": "Support",
+      "helpSupport": "Help & Support",
+      "logout": "Logout"
     },
     "upgrade": {
       "title": "Go Diamond",
@@ -184,6 +187,58 @@
         "news": "News & Updates"
       },
       "copyright": "© 2026 EDUVORA. All rights reserved."
+    }
+  },
+  "profile": {
+    "title": "My Profile",
+    "subtitle": "View and manage your personal information",
+    "tabs": {
+      "personalInfo": "Personal Information",
+      "contactInfo": "Contact Information",
+      "addressInfo": "Address Information",
+      "bankInfo": "Bank Information",
+      "changePassword": "Change Password"
+    },
+    "personal": {
+      "title": "Personal Information",
+      "edit": "Edit",
+      "fullName": "Full Name",
+      "email": "Email Address",
+      "username": "Username",
+      "mobile": "Mobile Number",
+      "dob": "Date of Birth",
+      "maritalStatus": "Marital Status",
+      "gender": "Gender",
+      "dateOfJoining": "Date of Joining",
+      "nationality": "Nationality",
+      "memberSince": "Member Since"
+    },
+    "about": {
+      "title": "About Me",
+      "subtitle": "Tell us something about yourself"
+    },
+    "overview": {
+      "title": "Account Overview",
+      "userId": "User ID",
+      "sponsor": "Sponsor",
+      "rank": "Rank",
+      "totalReferrals": "Total Referrals",
+      "totalEarnings": "Total Earnings",
+      "walletBalance": "Wallet Balance"
+    },
+    "security": {
+      "title": "Account Security",
+      "emailVerified": "Email Verified",
+      "emailVerifiedDesc": "Your email address is verified",
+      "kycStatus": "KYC Status",
+      "kycStatusDesc": "Complete your KYC to increase transaction limits",
+      "verified": "Verified",
+      "pending": "Pending",
+      "verifyNow": "Verify Now"
+    },
+    "safe": {
+      "title": "Your information is safe with us.",
+      "desc": "We use industry-standard security to protect your data and privacy."
     }
   }
 }

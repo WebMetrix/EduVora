@@ -1,10 +1,11 @@
 import { 
   Home, Network, Users, BookOpen, ShoppingBag, 
   DollarSign, Wallet, ArrowUpRight, FileText, 
-  Award, User, Settings, HelpCircle, Crown 
+  Award, User, Settings, HelpCircle, Crown, X
 } from 'lucide-react';
 import { useTranslation } from '../../hooks/useTranslation';
 import { motion } from 'framer-motion';
+import { useNavigate, useLocation } from 'react-router-dom';
 
 const menuItems = [
   { id: 'dashboard', icon: Home, labelKey: 'nav.dashboard', active: true },
@@ -13,13 +14,8 @@ const menuItems = [
   { id: 'courses', icon: BookOpen, labelKey: 'nav.courses' },
   { id: 'orders', icon: ShoppingBag, labelKey: 'nav.orders' },
   { id: 'earnings', icon: DollarSign, labelKey: 'nav.earnings' },
-  { id: 'wallet', icon: Wallet, labelKey: 'nav.wallet' },
-  { id: 'payouts', icon: ArrowUpRight, labelKey: 'nav.payouts' },
   { id: 'reports', icon: FileText, labelKey: 'nav.reports' },
-  { id: 'rank', icon: Award, labelKey: 'nav.rank' },
-  { id: 'profile', icon: User, labelKey: 'nav.profile' },
-  { id: 'settings', icon: Settings, labelKey: 'nav.settings' },
-  { id: 'support', icon: HelpCircle, labelKey: 'nav.support' }
+  { id: 'rank', icon: Award, labelKey: 'nav.rank' }
 ];
 
 const sidebarVariants = {
@@ -44,6 +40,8 @@ const itemVariants = {
 
 export default function Sidebar({ isOpen, setIsOpen }) {
   const { t } = useTranslation();
+  const navigate = useNavigate();
+  const location = useLocation();
 
   return (
     <>
@@ -63,7 +61,7 @@ export default function Sidebar({ isOpen, setIsOpen }) {
         className={`fixed lg:static inset-y-0 left-0 z-50 w-[260px] h-full flex flex-col bg-white/70 backdrop-blur-xl border-r border-slate-200/60 shadow-[4px_0_24px_rgba(0,0,0,0.02)] transition-transform duration-300 lg:translate-x-0 ${isOpen ? 'translate-x-0' : '-translate-x-full'}`}
       >
         {/* Logo Area */}
-        <div className="h-14 flex items-center px-6 border-b border-slate-100 flex-shrink-0">
+        <div className="h-14 flex items-center justify-between px-6 border-b border-slate-100 flex-shrink-0">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-xl bg-indigo-600 flex items-center justify-center flex-shrink-0 shadow-lg shadow-indigo-600/30">
               <span className="text-white text-[10px] font-bold">Logo</span>
@@ -73,26 +71,41 @@ export default function Sidebar({ isOpen, setIsOpen }) {
               <p className="text-slate-500 text-[10px] font-semibold tracking-widest uppercase mt-0.5">{t('login.logoSubtitle')}</p>
             </div>
           </div>
+          {/* Mobile Close Button */}
+          <button 
+            onClick={() => setIsOpen(false)}
+            className="lg:hidden p-1.5 -mr-2 rounded-xl text-slate-500 hover:bg-slate-100 hover:text-slate-700 transition-colors"
+          >
+            <X className="w-5 h-5" />
+          </button>
         </div>
 
         {/* Navigation Menu */}
-        <div className="flex-1 flex flex-col justify-center px-4 py-1">
-          <nav className="space-y-1">
+        <div className="flex-1 flex flex-col px-4 pt-3 overflow-y-auto">
+          <nav className="space-y-2">
             {menuItems.map((item) => {
               const Icon = item.icon;
-              const isActive = item.active;
+              // Highlight dashboard only when location is '/dashboard'
+              const isActive = item.id === 'dashboard' ? location.pathname === '/dashboard' : item.active;
 
               return (
                 <a
                   key={item.id}
                   href="#"
-                  className={`group relative flex items-center gap-3 px-2.5 py-1.5 rounded-xl text-[12.5px] font-semibold transition-all duration-300 hover:-translate-y-0.5 hover:shadow-sm ${
+                  onClick={(e) => {
+                    e.preventDefault();
+                    if (item.id === 'dashboard') {
+                      navigate('/dashboard');
+                    }
+                    if (window.innerWidth < 1024) setIsOpen(false);
+                  }}
+                  className={`group relative flex items-center gap-3.5 px-3.5 py-2.5 rounded-xl text-[13px] font-semibold transition-all duration-300 hover:-translate-y-0.5 hover:shadow-sm ${
                     isActive 
                       ? 'text-white bg-indigo-600 shadow-md shadow-indigo-600/20' 
                       : 'text-slate-600 hover:text-indigo-600 hover:bg-indigo-50/50'
                   }`}
                 >
-                  <Icon className={`w-[16px] h-[16px] transition-transform duration-300 ${!isActive && 'group-hover:rotate-6'}`} />
+                  <Icon className={`w-[18px] h-[18px] transition-transform duration-300 ${!isActive ? 'group-hover:rotate-6' : ''}`} />
                   {t(`dashboard.${item.labelKey}`)}
                   
                   {/* Subtle active glow */}
