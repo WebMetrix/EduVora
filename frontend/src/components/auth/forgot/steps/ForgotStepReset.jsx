@@ -18,6 +18,17 @@ export default function ForgotStepReset({
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
+  const passwordsMatch = newPassword === confirmPassword;
+  const showMatchStatus = confirmPassword.length > 0;
+
+  const confirmBorderColor = showMatchStatus
+    ? (passwordsMatch ? 'border-emerald-500 focus:border-emerald-500 shadow-[0_0_0_4px_rgba(16,185,129,0.1)]' : 'border-red-500 focus:border-red-500 shadow-[0_0_0_4px_rgba(239,68,68,0.1)]')
+    : 'border-slate-200 focus:border-[#4f3bf3] focus:ring-2 focus:ring-indigo-500/20';
+
+  const confirmIconColor = showMatchStatus
+    ? (passwordsMatch ? 'text-emerald-500' : 'text-red-500')
+    : 'text-slate-400 group-focus-within:text-[#4f3bf3]';
+
   return (
     <div className="flex flex-col animate-fade-in">
       <form className="w-full space-y-4 md:space-y-6" onSubmit={(e) => { e.preventDefault(); }}>
@@ -90,13 +101,13 @@ export default function ForgotStepReset({
           </label>
           <div className="relative group">
             <div className="absolute inset-y-0 left-0 pl-3 md:pl-3.5 flex items-center pointer-events-none">
-              <Lock className="h-4 w-4 md:h-5 md:w-5 text-slate-400 group-focus-within:text-[#4f3bf3] transition-colors" />
+              <Lock className={`h-4 w-4 md:h-5 md:w-5 transition-colors ${confirmIconColor}`} />
             </div>
             <input
               type={showConfirmPassword ? 'text' : 'password'}
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
-              className="w-full pl-9 pr-9 py-2.5 md:pl-11 md:pr-11 md:py-3 bg-white border border-slate-200 rounded-lg focus:outline-none focus:border-[#4f3bf3] focus:ring-2 focus:ring-indigo-500/20 transition-all text-[13px] md:text-[15px] text-slate-900 placeholder:text-slate-400"
+              className={`w-full pl-9 pr-9 py-2.5 md:pl-11 md:pr-11 md:py-3 bg-white border rounded-lg focus:outline-none transition-all text-[13px] md:text-[15px] text-slate-900 placeholder:text-slate-400 ${confirmBorderColor}`}
               placeholder="••••••••••••"
             />
             <button
@@ -111,6 +122,11 @@ export default function ForgotStepReset({
               )}
             </button>
           </div>
+          {showMatchStatus && (
+            <p className={`mt-2 text-[12px] font-bold ${passwordsMatch ? 'text-emerald-500' : 'text-red-500'}`}>
+              {passwordsMatch ? "Passwords match" : "Passwords don't match"}
+            </p>
+          )}
         </div>
 
         <button

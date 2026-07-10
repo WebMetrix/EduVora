@@ -7,6 +7,7 @@ import AboutMeCard from './AboutMeCard';
 import SafeInfoCard from './SafeInfoCard';
 import AccountOverviewCard from './AccountOverviewCard';
 import AccountSecurityCard from './AccountSecurityCard';
+import ChangePasswordCard from './ChangePasswordCard';
 
 import { User as UserIcon, MapPin, Building, CreditCard, Key } from 'lucide-react';
 
@@ -28,21 +29,25 @@ export default function MyProfile() {
 
       <ProfileTabs tabs={tabs} activeTab={activeTab} setActiveTab={setActiveTab} />
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Left Column */}
-        <div className="lg:col-span-2 flex flex-col gap-6">
-          <PersonalInformationCard t={t} />
-          <AboutMeCard t={t} />
-          <SafeInfoCard t={t} className="hidden lg:flex" />
-        </div>
+      {activeTab === 'changePassword' ? (
+        <ChangePasswordCard setActiveTab={setActiveTab} />
+      ) : (
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          {/* Left Column */}
+          <div className="lg:col-span-2 flex flex-col gap-6">
+            <PersonalInformationCard t={t} />
+            <AboutMeCard t={t} />
+            <SafeInfoCard t={t} className="hidden lg:flex" />
+          </div>
 
-        {/* Right Column */}
-        <div className="flex flex-col gap-6">
-          <AccountOverviewCard t={t} />
-          <AccountSecurityCard t={t} />
-          <SafeInfoCard t={t} className="flex lg:hidden" />
+          {/* Right Column */}
+          <div className="flex flex-col gap-6">
+            <AccountOverviewCard t={t} />
+            <AccountSecurityCard t={t} />
+            <SafeInfoCard t={t} className="flex lg:hidden" />
+          </div>
         </div>
-      </div>
+      )}
     </div>
   );
 }

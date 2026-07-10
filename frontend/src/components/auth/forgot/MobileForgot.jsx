@@ -162,12 +162,14 @@ export default function MobileForgot() {
         )}
 
         {/* Back to Login Footer */}
-        <div className="mt-6 text-center">
-          <Link to="/login" className="inline-flex items-center gap-1.5 text-[13px] font-bold text-indigo-600 hover:text-indigo-700 transition-colors group">
-            <ArrowLeft className="w-3.5 h-3.5 group-hover:-translate-x-1 transition-transform" />
-            {t('forgot.backToLogin')}
-          </Link>
-        </div>
+        {step !== 4 && (
+          <div className="mt-6 text-center">
+            <Link to="/login" className="inline-flex items-center gap-1.5 text-[13px] font-bold text-indigo-600 hover:text-indigo-700 transition-colors group">
+              <ArrowLeft className="w-3.5 h-3.5 group-hover:-translate-x-1 transition-transform" />
+              {t('forgot.backToLogin')}
+            </Link>
+          </div>
+        )}
       </div>
 
       {/* Background Pattern */}

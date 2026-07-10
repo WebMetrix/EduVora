@@ -153,17 +153,19 @@ export default function ForgotRight() {
       </div>
 
       {/* Footer Area */}
-      <div className="w-full px-12 xl:px-24 pb-8 flex items-center justify-between animate-fade-in" style={{ animationDelay: '300ms' }}>
-        <Link to="/login" className="flex items-center gap-2 text-[14px] font-bold text-indigo-600 hover:text-indigo-700 transition-colors group">
-          <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
-          {t('forgot.backToLogin')}
-        </Link>
-        <div className="h-5 w-px bg-slate-300"></div>
-        <div className="flex items-center gap-2 text-[14px] font-medium text-slate-600">
-          <HeadphonesIcon className="w-4 h-4 text-slate-700" />
-          {t('forgot.needHelp')} <a href="#" className="font-bold text-indigo-600 hover:text-indigo-700">{t('forgot.contactSupport')}</a>
+      {step !== 4 && (
+        <div className="w-full px-12 xl:px-24 pb-8 flex items-center justify-between animate-fade-in" style={{ animationDelay: '300ms' }}>
+          <Link to="/login" className="flex items-center gap-2 text-[14px] font-bold text-indigo-600 hover:text-indigo-700 transition-colors group">
+            <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
+            {t('forgot.backToLogin')}
+          </Link>
+          <div className="h-5 w-px bg-slate-300"></div>
+          <div className="flex items-center gap-2 text-[14px] font-medium text-slate-600">
+            <HeadphonesIcon className="w-4 h-4 text-slate-700" />
+            {t('forgot.needHelp')} <a href="#" className="font-bold text-indigo-600 hover:text-indigo-700">{t('forgot.contactSupport')}</a>
+          </div>
         </div>
-      </div>
+      )}
     </div>
   );
 }
