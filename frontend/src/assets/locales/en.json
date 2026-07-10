@@ -1,10 +1,10 @@
 {
   "login": {
     "title": "Welcome Back!",
-    "subtitle": "Login to your account to continue",
-    "emailLabel": "Email / Username",
+    "subtitle": "Login to continue your learning journey",
+    "emailLabel": "EMAIL ADDRESS",
     "emailPlaceholder": "Enter your email or username",
-    "passwordLabel": "Password",
+    "passwordLabel": "PASSWORD",
     "passwordPlaceholder": "Enter your password",
     "rememberMe": "Remember me",
     "forgotPassword": "Forgot Password?",
@@ -128,6 +128,7 @@
     "courses": {
       "title": "Available Courses",
       "viewAll": "View All",
+      "view": "View",
       "beginner": "Beginner Level",
       "modules": "Modules",
       "complete": "Complete",
@@ -135,6 +136,7 @@
     },
     "activities": {
       "title": "Recent Activities",
+      "last24Hours": "Last 24 hours",
       "viewAll": "View All",
       "newSignup": "New Signup",
       "sale": "Sale",
@@ -148,6 +150,40 @@
       "tip1": "Share your referral link and grow your network",
       "tip2": "Upgrade your plan to unlock higher commissions",
       "tip3": "Complete courses and boost your sales"
+    },
+    "footer": {
+      "description": "EDUVORA is your trusted platform to learn, earn and grow together with your network.",
+      "platform": {
+        "title": "Platform",
+        "courses": "Courses",
+        "network": "My Network",
+        "earnings": "Earnings",
+        "wallet": "Wallet",
+        "reports": "Reports"
+      },
+      "company": {
+        "title": "Company",
+        "about": "About Us",
+        "contact": "Contact Us",
+        "privacy": "Privacy Policy",
+        "terms": "Terms & Conditions",
+        "refund": "Refund Policy"
+      },
+      "support": {
+        "title": "Support",
+        "help": "Help Center",
+        "live": "Live Support",
+        "faq": "FAQ",
+        "feedback": "Feedback"
+      },
+      "resources": {
+        "title": "Resources",
+        "blog": "Blog",
+        "guides": "Guides",
+        "community": "Community",
+        "news": "News & Updates"
+      },
+      "copyright": "© 2026 EDUVORA. All rights reserved."
     }
   }
 }

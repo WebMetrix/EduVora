@@ -76,7 +76,7 @@ export default function Sidebar({ isOpen, setIsOpen }) {
         </div>
 
         {/* Navigation Menu */}
-        <div className="flex-1 overflow-y-auto custom-scrollbar px-4 py-1.5">
+        <div className="flex-1 flex flex-col justify-center px-4 py-1">
           <nav className="space-y-1">
             {menuItems.map((item) => {
               const Icon = item.icon;
@@ -86,13 +86,13 @@ export default function Sidebar({ isOpen, setIsOpen }) {
                 <a
                   key={item.id}
                   href="#"
-                  className={`group relative flex items-center gap-3 px-3 py-2 rounded-xl text-[13px] font-semibold transition-all duration-300 hover:-translate-y-0.5 hover:shadow-sm ${
+                  className={`group relative flex items-center gap-3 px-2.5 py-1.5 rounded-xl text-[12.5px] font-semibold transition-all duration-300 hover:-translate-y-0.5 hover:shadow-sm ${
                     isActive 
                       ? 'text-white bg-indigo-600 shadow-md shadow-indigo-600/20' 
                       : 'text-slate-600 hover:text-indigo-600 hover:bg-indigo-50/50'
                   }`}
                 >
-                  <Icon className={`w-[18px] h-[18px] transition-transform duration-300 ${!isActive && 'group-hover:rotate-6'}`} />
+                  <Icon className={`w-[16px] h-[16px] transition-transform duration-300 ${!isActive && 'group-hover:rotate-6'}`} />
                   {t(`dashboard.${item.labelKey}`)}
                   
                   {/* Subtle active glow */}
@@ -105,22 +105,21 @@ export default function Sidebar({ isOpen, setIsOpen }) {
           </nav>
         </div>
 
-        {/* Upgrade Card */}
-        <div className="p-3 mb-1 flex-shrink-0">
+        <div className="p-2 mb-1 flex-shrink-0">
           <div 
-            className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-slate-50 to-indigo-50/30 border border-slate-200/60 p-4 shadow-sm hover:shadow-md hover:-translate-y-1 group cursor-pointer transition-all duration-300"
+            className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-slate-50 to-indigo-50/30 border border-slate-200/60 p-3 shadow-sm hover:shadow-md hover:-translate-y-1 group cursor-pointer transition-all duration-300"
           >
             {/* Background animated blob */}
             <div className="absolute -top-10 -right-10 w-32 h-32 bg-indigo-400/10 rounded-full blur-2xl group-hover:bg-indigo-400/20 transition-colors duration-500" />
             
             <div className="relative z-10">
-              <div className="w-10 h-10 rounded-full bg-indigo-100 flex items-center justify-center mb-3 group-hover:scale-110 transition-transform duration-300">
-                <Crown className="w-5 h-5 text-indigo-600" />
+              <div className="w-8 h-8 rounded-full bg-indigo-100 flex items-center justify-center mb-2 group-hover:scale-110 transition-transform duration-300">
+                <Crown className="w-4 h-4 text-indigo-600" />
               </div>
-              <h4 className="text-slate-900 text-[15px] font-bold mb-1">{t('dashboard.upgrade.title')}</h4>
-              <p className="text-slate-500 text-[12px] leading-relaxed mb-4">{t('dashboard.upgrade.desc')}</p>
+              <h4 className="text-slate-900 text-[14px] font-bold mb-0.5">{t('dashboard.upgrade.title')}</h4>
+              <p className="text-slate-500 text-[11px] leading-relaxed mb-3">{t('dashboard.upgrade.desc')}</p>
               
-              <button className="w-full py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white text-[13px] font-bold rounded-xl shadow-sm hover:shadow-md transition-all duration-300 hover:scale-[1.02] active:scale-95">
+              <button className="w-full py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-[12px] font-bold rounded-xl shadow-sm hover:shadow-md transition-all duration-300 hover:scale-[1.02] active:scale-95">
                 {t('dashboard.upgrade.button')}
               </button>
             </div>

@@ -7,7 +7,8 @@ import WalletCard from '../components/dashboard/WalletCard';
 import StatsGrid from '../components/dashboard/StatsGrid';
 import CourseCard from '../components/dashboard/CourseCard';
 import RecentActivities from '../components/dashboard/RecentActivities';
-import InfoSection from '../components/dashboard/InfoSection';
+import Footer from '../components/dashboard/Footer';
+import BottomNav from '../components/dashboard/BottomNav';
 
 export default function Dashboard() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -25,7 +26,7 @@ export default function Dashboard() {
 
   return (
     <div className="flex h-screen w-full bg-[#FAFAFC] overflow-hidden font-sans">
-      
+
       {/* Decorative premium background blobs */}
       <div className="fixed inset-0 pointer-events-none z-0">
         <div className="absolute top-[-10%] right-[-5%] w-[500px] h-[500px] bg-indigo-500/5 rounded-full blur-[120px]" />
@@ -38,11 +39,11 @@ export default function Dashboard() {
 
       <div className="flex-1 flex flex-col h-screen overflow-hidden relative z-10">
         <Header toggleSidebar={() => setIsSidebarOpen(!isSidebarOpen)} />
-        
-        <main className="flex-1 overflow-y-auto custom-scrollbar p-3 lg:p-4">
-          <div className="max-w-[1400px] mx-auto flex flex-col gap-3">
+
+        <main className="flex-1 overflow-y-auto custom-scrollbar p-4 lg:p-6 pb-[90px] lg:pb-6">
+          <div className="max-w-[1400px] mx-auto flex flex-col gap-4 lg:gap-5">
             {/* Top Row: Welcome & Wallet */}
-            <div className="grid grid-cols-1 xl:grid-cols-2 gap-3">
+            <div className="grid grid-cols-1 xl:grid-cols-2 gap-4 lg:gap-5">
               <WelcomeCard />
               <WalletCard />
             </div>
@@ -51,16 +52,19 @@ export default function Dashboard() {
             <StatsGrid />
 
             {/* Bottom Row: Courses & Activities */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 mt-3">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 lg:gap-5 mt-2 lg:mt-3">
               <CourseCard />
               <RecentActivities />
             </div>
 
-            {/* Bottom-most: Info Section */}
-            <InfoSection />
-            
+            {/* Bottom-most: Footer */}
+            <Footer />
+
           </div>
         </main>
+        
+        {/* Mobile Bottom Navigation */}
+        <BottomNav />
       </div>
     </div>
   );

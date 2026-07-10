@@ -9,25 +9,26 @@ export default function CourseCard() {
     <div className="flex flex-col h-full">
       <div className="flex items-center justify-between mb-2">
         <h3 className="text-[14px] font-bold text-slate-900">{t('dashboard.courses.title')}</h3>
-        <a href="#" className="text-[13px] font-bold text-indigo-600 hover:text-indigo-700 hover:underline underline-offset-4 transition-all">
-          {t('dashboard.courses.viewAll')}
+        <a href="#" className="text-[14px] lg:text-[16px] font-bold text-indigo-600 hover:text-indigo-700 hover:underline underline-offset-4 transition-all">
+          <span className="hidden sm:inline">{t('dashboard.courses.viewAll')}</span>
+          <span className="sm:hidden">{t('dashboard.courses.view')}</span>
         </a>
       </div>
 
-      <div 
-        className="flex-1 bg-gradient-to-br from-white/90 to-indigo-50/40 backdrop-blur-xl border border-indigo-100/50 rounded-2xl p-3 lg:p-4 shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col md:flex-row gap-3 group hover:-translate-y-1"
+      <div
+        className="flex-1 bg-gradient-to-br from-white/90 to-indigo-50/40 backdrop-blur-xl border border-indigo-100/50 rounded-2xl p-3 sm:p-4 lg:p-5 shadow-sm hover:shadow-[0_8px_30px_rgb(99,102,241,0.15)] hover:border-indigo-300 transition-all duration-300 flex flex-row gap-3 sm:gap-5 group hover:-translate-y-1"
       >
         {/* Course Thumbnail */}
-        <div className="relative w-full md:w-[160px] h-[110px] md:h-full rounded-xl bg-gradient-to-br from-[#1E1B4B] via-[#312E81] to-[#1E1B4B] overflow-hidden flex-shrink-0 shadow-inner group-hover:shadow-indigo-900/30 transition-shadow">
+        <div className="relative w-[100px] sm:w-[140px] md:w-[160px] h-auto md:h-full rounded-xl bg-gradient-to-br from-[#1E1B4B] via-[#312E81] to-[#1E1B4B] overflow-hidden flex-shrink-0 shadow-inner group-hover:shadow-indigo-900/30 transition-shadow">
           {/* Decorative shapes */}
           <div className="absolute -top-10 -right-10 w-24 h-24 bg-blue-500/20 rounded-full blur-xl group-hover:bg-blue-500/40 transition-colors duration-500" />
           <div className="absolute -bottom-10 -left-10 w-24 h-24 bg-purple-500/20 rounded-full blur-xl" />
-          
+
           <div className="absolute inset-0 flex flex-col items-center justify-center p-4 text-center z-10">
             <h4 className="text-white font-black text-[15px] uppercase tracking-wider leading-tight drop-shadow-md mb-2">
-              Digital<br/>Marketing<br/>Mastery
+              Digital<br />Marketing<br />Mastery
             </h4>
-            <motion.div 
+            <motion.div
               animate={{ rotate: [-5, 5, -5] }}
               transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
             >
@@ -37,24 +38,24 @@ export default function CourseCard() {
         </div>
 
         {/* Course Info */}
-        <div className="flex-1 flex flex-col justify-between py-1">
+        <div className="flex-1 flex flex-col justify-between py-2">
           <div>
-            <h3 className="text-[16px] font-bold text-slate-900 tracking-tight mb-1 group-hover:text-indigo-700 transition-colors">
+            <h3 className="text-[14px] sm:text-[16px] font-bold text-slate-900 tracking-tight mb-2 sm:mb-3 group-hover:text-indigo-700 transition-colors">
               Digital Marketing Mastery
             </h3>
-            <div className="flex items-center gap-2 text-[12px] font-medium text-slate-500 mb-3">
+            <div className="flex flex-wrap items-center gap-2 sm:gap-5 text-[11px] sm:text-[12px] font-medium text-slate-500 mb-3">
               <span>{t('dashboard.courses.beginner')}</span>
               <span className="w-1 h-1 rounded-full bg-slate-300"></span>
               <span>12 {t('dashboard.courses.modules')}</span>
             </div>
 
             {/* Progress */}
-            <div className="mb-3">
+            <div className="mb-2 sm:mb-3">
               <div className="flex justify-end mb-1">
-                <span className="text-[11px] font-bold text-indigo-600">60% {t('dashboard.courses.complete')}</span>
+                <span className="text-[10px] sm:text-[11px] font-bold text-indigo-600">60% {t('dashboard.courses.complete')}</span>
               </div>
               <div className="w-full h-1.5 bg-slate-100 rounded-full overflow-hidden">
-                <motion.div 
+                <motion.div
                   initial={{ width: 0 }}
                   whileInView={{ width: '60%' }}
                   viewport={{ once: true }}
@@ -66,12 +67,12 @@ export default function CourseCard() {
               </div>
             </div>
 
-            <p className="text-[12px] text-slate-600 leading-relaxed mb-2">
+            <p className="hidden sm:block text-[12px] text-slate-600 leading-relaxed mb-2">
               Learn the essential strategies of digital marketing and grow your online business.
             </p>
           </div>
 
-          <motion.button 
+          <motion.button
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
             className="w-full py-1.5 px-4 bg-white border border-indigo-200 hover:border-indigo-600 rounded-xl text-[13px] font-bold text-indigo-600 flex items-center justify-center gap-2 shadow-sm hover:shadow-md hover:bg-indigo-50 transition-all duration-300 group/btn"

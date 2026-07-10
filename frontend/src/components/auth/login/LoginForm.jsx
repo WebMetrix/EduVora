@@ -1,4 +1,4 @@
-import { Mail, Lock, Eye } from 'lucide-react';
+import { Mail, Lock, Eye, LogIn, Check } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from '../../../hooks/useTranslation';
 
@@ -6,9 +6,9 @@ export default function LoginForm() {
   const { t } = useTranslation();
 
   return (
-    <form className="w-full space-y-4 lg:space-y-5" onSubmit={(e) => e.preventDefault()}>
+    <form className="w-full space-y-3 lg:space-y-5" onSubmit={(e) => e.preventDefault()}>
       <div>
-        <label className="block text-[13px] font-bold text-slate-700 mb-2 uppercase tracking-wide">
+        <label className="block text-base md:text-[13px] font-bold text-slate-700 md:text-slate-700 mb-1.5 md:uppercase md:tracking-wide">
           {t('login.emailLabel')}
         </label>
         <div className="relative group">
@@ -17,14 +17,14 @@ export default function LoginForm() {
           </div>
           <input
             type="text"
-            className="w-full pl-10 lg:pl-12 pr-4 py-3 bg-white border border-slate-200 rounded-xl focus:outline-none focus:ring-1 focus:ring-indigo-600 focus:border-indigo-600 transition-all font-medium text-slate-900 placeholder-slate-400 text-sm lg:text-base shadow-sm"
+            className="w-full pl-11 md:pl-10 lg:pl-12 pr-4 py-3.5 md:py-3 bg-white border border-slate-200 rounded-xl focus:outline-none focus:ring-1 focus:ring-indigo-600 focus:border-indigo-600 transition-all font-medium text-slate-900 placeholder-slate-400 text-base md:text-sm lg:text-base shadow-sm"
             placeholder={t('login.emailPlaceholder')}
           />
         </div>
       </div>
 
       <div>
-        <label className="block text-[13px] font-bold text-slate-700 mb-2 uppercase tracking-wide">
+        <label className="block text-base md:text-[13px] font-bold text-slate-700 md:text-slate-700 mb-1.5 md:uppercase md:tracking-wide">
           {t('login.passwordLabel')}
         </label>
         <div className="relative group">
@@ -33,7 +33,7 @@ export default function LoginForm() {
           </div>
           <input
             type="password"
-            className="w-full pl-10 lg:pl-12 pr-12 py-3 bg-white border border-slate-200 rounded-xl focus:outline-none focus:ring-1 focus:ring-indigo-600 focus:border-indigo-600 transition-all font-medium text-slate-900 placeholder-slate-400 text-sm lg:text-base shadow-sm"
+            className="w-full pl-11 md:pl-10 lg:pl-12 pr-12 py-3.5 md:py-3 bg-white border border-slate-200 rounded-xl focus:outline-none focus:ring-1 focus:ring-indigo-600 focus:border-indigo-600 transition-all font-medium text-slate-900 placeholder-slate-400 text-base md:text-sm lg:text-base shadow-sm"
             placeholder={t('login.passwordPlaceholder')}
           />
           <button type="button" className="absolute inset-y-0 right-0 pr-4 flex items-center text-slate-400 hover:text-slate-600 transition-colors focus:outline-none">
@@ -42,32 +42,29 @@ export default function LoginForm() {
         </div>
       </div>
 
-      <div className="flex items-center justify-between pt-1 pb-2 lg:pt-2 lg:pb-3">
+      <div className="flex items-center justify-between pt-0.5 pb-1 lg:pt-2 lg:pb-3">
         <div className="flex items-center group cursor-pointer">
-          <div className="relative flex items-center justify-center">
-            <input
-              id="remember-me"
-              type="checkbox"
-              className="peer appearance-none w-4 h-4 lg:w-5 lg:h-5 border-2 border-slate-300 rounded-md checked:bg-indigo-600 checked:border-indigo-600 focus:outline-none focus:ring-4 focus:ring-indigo-500/20 transition-all cursor-pointer"
-              defaultChecked
-            />
-            <svg className="absolute w-2.5 h-2.5 lg:w-3 lg:h-3 text-white pointer-events-none opacity-0 peer-checked:opacity-100 transition-opacity" viewBox="0 0 14 10" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M1 5L4.5 8.5L13 1" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-            </svg>
+          <div className="relative w-4 h-4 lg:w-4 lg:h-4 flex-shrink-0 flex items-center justify-center">
+            <input type="checkbox" className="absolute inset-0 opacity-0 cursor-pointer z-10 w-full h-full peer" id="remember-me" defaultChecked />
+            <div className="w-4 h-4 border border-slate-300 rounded bg-white peer-checked:bg-indigo-600 peer-checked:border-indigo-600 transition-colors"></div>
+            <Check className="absolute inset-0 m-auto w-3 h-3 text-white opacity-0 peer-checked:opacity-100 pointer-events-none z-20" strokeWidth={4} />
           </div>
-          <label htmlFor="remember-me" className="ml-2.5 lg:ml-3 text-xs lg:text-sm font-semibold text-slate-600 group-hover:text-slate-900 cursor-pointer transition-colors">
+          <label htmlFor="remember-me" className="ml-2 text-[13px] font-semibold text-slate-600 group-hover:text-slate-900 cursor-pointer transition-colors select-none">
             {t('login.rememberMe')}
           </label>
         </div>
-        <Link to="/forgotpassword" className="text-sm font-bold text-indigo-600 hover:text-indigo-700 transition-colors">
-          {t('login.forgotPassword')}
-        </Link>
+        <div className="text-right">
+          <Link to="/forgotpassword" className="text-base md:text-sm font-bold text-indigo-600 hover:text-indigo-700 transition-colors inline-block pt-1 md:pt-0">
+            {t('login.forgotPassword')}
+          </Link>
+        </div>
       </div>
 
       <button
         type="submit"
-        className="w-full py-3 lg:py-3.5 px-6 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl font-bold text-sm lg:text-[15px] shadow-sm transform hover:-translate-y-0.5 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+        className="w-full py-3.5 md:py-3 lg:py-3.5 px-6 bg-gradient-to-r from-[#7C4DFF] to-[#4F46E5] md:bg-none md:bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl font-bold text-[18px] md:text-sm lg:text-[15px] shadow-sm transform hover:-translate-y-0.5 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 flex items-center justify-center gap-2"
       >
+        <LogIn className="w-5 h-5 md:hidden" />
         {t('login.submit')}
       </button>
     </form>

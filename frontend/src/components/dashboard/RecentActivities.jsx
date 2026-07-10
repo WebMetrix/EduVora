@@ -1,6 +1,6 @@
 import { useTranslation } from '../../hooks/useTranslation';
 import ActivityItem from './ActivityItem';
-import { UserPlus, ShoppingCart, User, IndianRupee, ChevronLeft, ChevronRight } from 'lucide-react';
+import { UserPlus, ShoppingCart, User, IndianRupee, ChevronLeft, ChevronRight, Clock } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 export default function RecentActivities() {
@@ -57,14 +57,14 @@ export default function RecentActivities() {
   return (
     <div className="flex flex-col h-full">
       <div className="flex items-center justify-between mb-2">
-        <h3 className="text-[16px] font-bold text-slate-900">{t('dashboard.activities.title')}</h3>
-        <a href="#" className="text-[13px] font-bold text-indigo-600 hover:text-indigo-700 hover:underline underline-offset-4 transition-all">
+        <h3 className="text-[14px] lg:text-[16px] font-bold text-slate-900">{t('dashboard.activities.title')}</h3>
+        <a href="#" className="text-[13px] lg:text-[14px] font-bold text-indigo-600 hover:text-indigo-700 hover:underline underline-offset-4 transition-all">
           {t('dashboard.activities.viewAll')}
         </a>
       </div>
 
-      <div className="flex-1 bg-gradient-to-br from-white/90 to-indigo-50/40 backdrop-blur-xl border border-indigo-100/50 rounded-2xl p-3 lg:p-4 shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col justify-between group hover:-translate-y-1">
-        
+      <div className="flex-1 bg-gradient-to-br from-white/90 to-indigo-50/40 backdrop-blur-xl border border-indigo-100/50 rounded-2xl p-4 lg:p-5 shadow-sm hover:shadow-[0_8px_30px_rgb(99,102,241,0.15)] hover:border-indigo-300 transition-all duration-300 flex flex-col justify-between group hover:-translate-y-1">
+
         <div className="mb-2">
           {activities.map(activity => (
             <ActivityItem key={activity.id} {...activity} />
@@ -76,15 +76,14 @@ export default function RecentActivities() {
           <button className="w-8 h-8 rounded-full flex items-center justify-center text-slate-400 hover:bg-slate-100 transition-colors">
             <ChevronLeft className="w-4 h-4" />
           </button>
-          
+
           {[1, 2, 3, 4, 5].map((page) => (
-            <button 
-              key={page} 
-              className={`w-8 h-8 rounded-full flex items-center justify-center text-[13px] font-bold transition-all ${
-                page === 1 
-                  ? 'bg-indigo-600 text-white shadow-md shadow-indigo-600/20' 
+            <button
+              key={page}
+              className={`w-8 h-8 rounded-full flex items-center justify-center text-[13px] font-bold transition-all ${page === 1
+                  ? 'bg-indigo-600 text-white shadow-md shadow-indigo-600/20'
                   : 'text-slate-600 hover:bg-indigo-50 hover:text-indigo-600'
-              }`}
+                }`}
             >
               {page}
             </button>

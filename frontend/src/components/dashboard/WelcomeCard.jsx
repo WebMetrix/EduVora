@@ -7,17 +7,17 @@ export default function WelcomeCard() {
 
   return (
     <div 
-      className="relative w-full rounded-3xl bg-gradient-to-br from-white/80 to-indigo-50/60 backdrop-blur-xl border border-indigo-100/60 p-4 lg:p-5 flex flex-col md:flex-row items-start md:items-center justify-between gap-3 shadow-[0_8px_30px_rgb(0,0,0,0.04)] overflow-hidden group transition-all duration-300 hover:shadow-xl hover:-translate-y-1"
+      className="relative w-full h-full rounded-3xl bg-gradient-to-br from-indigo-50/70 to-indigo-100/40 backdrop-blur-xl border border-indigo-100/60 p-4 flex flex-row items-center justify-between gap-4 shadow-[0_8px_30px_rgb(0,0,0,0.04)] overflow-hidden group transition-all duration-300 hover:shadow-[0_8px_30px_rgb(99,102,241,0.15)] hover:border-indigo-300 hover:-translate-y-1"
     >
       {/* Background flare */}
       <div className="absolute top-0 right-0 w-64 h-64 bg-indigo-400/10 rounded-full blur-[80px] -translate-y-1/2 translate-x-1/3 pointer-events-none group-hover:bg-indigo-400/20 transition-colors duration-700" />
       
       {/* Left Content */}
-      <div className="relative z-10">
-        <p className="text-[14px] text-slate-500 font-medium mb-0.5">
+      <div className="relative z-10 w-[60%] sm:w-auto">
+        <p className="text-[13px] text-slate-500 font-medium mb-1">
           {t('dashboard.welcome.greeting')}
         </p>
-        <h2 className="text-2xl lg:text-[28px] font-extrabold text-slate-900 mb-1 tracking-tight flex items-center gap-2">
+        <h2 className="text-[26px] lg:text-[28px] leading-[1.1] font-extrabold text-slate-900 mb-2 tracking-tight flex flex-wrap items-center gap-x-2">
           Priya Sharma
           <motion.span 
             animate={{ rotate: [0, 14, -8, 14, -4, 10, 0] }}
@@ -27,31 +27,28 @@ export default function WelcomeCard() {
             👋
           </motion.span>
         </h2>
-        <p className="text-[14px] text-slate-600">
+        <p className="text-[13px] text-slate-600 leading-snug pr-4">
           {t('dashboard.welcome.subtitle')}
         </p>
       </div>
 
       {/* Right Content - Rank Badge */}
       <motion.div 
-        whileHover={{ scale: 1.03 }}
-        className="relative z-10 shrink-0 w-full md:w-auto bg-gradient-to-br from-indigo-600 to-indigo-700 rounded-2xl p-4 flex items-center gap-4 shadow-lg shadow-indigo-600/20 cursor-pointer"
+        whileHover={{ scale: 1.02 }}
+        className="relative z-10 shrink-0 bg-gradient-to-br from-indigo-600 to-indigo-700 rounded-2xl p-3 sm:p-4 flex items-center gap-3 sm:gap-4 shadow-lg shadow-indigo-600/20 cursor-pointer"
       >
-        <div className="w-10 h-10 rounded-full bg-white/20 backdrop-blur-md flex items-center justify-center border border-white/20 shadow-inner">
-          <Award className="w-6 h-6 text-yellow-300" />
+        <div className="flex items-center gap-3">
+          <div className="w-10 h-10 rounded-full bg-white/20 backdrop-blur-md flex items-center justify-center border border-white/20 shadow-inner shrink-0">
+            <Award className="w-5 h-5 text-yellow-300" />
+          </div>
+          <div className="flex flex-col">
+            <h3 className="text-white font-bold text-[15px] leading-tight">Gold</h3>
+            <p className="text-indigo-200 text-[11px] font-medium">{t('dashboard.welcome.rank')}</p>
+          </div>
         </div>
-        <div className="pr-2">
-          <h3 className="text-white font-bold text-[18px] leading-tight mb-0.5">Gold</h3>
-          <p className="text-indigo-200 text-[12px] font-medium">{t('dashboard.welcome.rank')}</p>
-        </div>
-        
-        {/* Animated View Details Link */}
-        <div className="ml-2 pl-4 border-l border-indigo-500/50 flex flex-col items-end">
-          <span className="flex items-center gap-1 text-[12px] text-indigo-100 font-medium group-hover:text-white transition-colors">
-            {t('dashboard.welcome.viewDetails')}
-            <ArrowRight className="w-3 h-3 group-hover:translate-x-1 transition-transform" />
-          </span>
-          <div className="h-px w-0 bg-white mt-0.5 group-hover:w-full transition-all duration-300"></div>
+        <div className="hidden sm:flex items-center gap-1 border-l border-white/20 pl-4 ml-1">
+          <span className="text-white text-[12px] font-medium">{t('dashboard.welcome.viewDetails')}</span>
+          <ArrowRight className="w-3.5 h-3.5 text-white" />
         </div>
       </motion.div>
     </div>

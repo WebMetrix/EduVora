@@ -23,7 +23,7 @@ export default function RegisterRight() {
           
           <div className="mb-6">
             <h1 className="text-3xl lg:text-[34px] font-extrabold text-slate-900 mb-1 tracking-tight">{t('register.title')}</h1>
-            <p className="text-slate-500 text-[15px] font-medium">{t('register.subtitle')}</p>
+            <p className="text-indigo-500 text-[15px] font-medium">{t('register.subtitle')}</p>
           </div>
 
           <RegisterForm />
@@ -40,6 +40,7 @@ export default function RegisterRight() {
 
           {/* Social Buttons (inline for this layout) */}
           <div className="flex gap-4 mb-8">
+            {/* GOOGLE PART */}
             <button type="button" className="flex-1 flex items-center justify-center gap-2 py-2.5 border border-slate-200 rounded-lg hover:bg-slate-50 transition-colors font-semibold text-slate-700 text-sm shadow-sm">
               <svg className="w-5 h-5 flex-shrink-0" viewBox="0 0 24 24">
                 <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4" />
@@ -49,7 +50,9 @@ export default function RegisterRight() {
               </svg>
               {t('register.signUpWithGoogle')}
             </button>
-            <button type="button" className="flex-1 flex items-center justify-center gap-2 py-2.5 border border-slate-200 rounded-lg hover:bg-slate-50 transition-colors font-semibold text-slate-700 text-sm shadow-sm">
+
+            {/* MICROSOFT PART */}
+            {/* <button type="button" className="flex-1 flex items-center justify-center gap-2 py-2.5 border border-slate-200 rounded-lg hover:bg-slate-50 transition-colors font-semibold text-slate-700 text-sm shadow-sm">
               <svg className="w-5 h-5 flex-shrink-0" viewBox="0 0 21 21">
                 <path d="M10 0H0v10h10V0z" fill="#f25022" />
                 <path d="M21 0H11v10h10V0z" fill="#7fba00" />
@@ -57,7 +60,7 @@ export default function RegisterRight() {
                 <path d="M21 11H11v10h10V11z" fill="#ffb900" />
               </svg>
               {t('register.signUpWithMicrosoft')}
-            </button>
+            </button> */}
           </div>
 
           {/* Login Link */}
