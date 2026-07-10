@@ -1,8 +1,42 @@
-import { User, Mail, Shield, Phone, Lock, Eye, Users, UserPlus, Check } from 'lucide-react';
+import { useState } from 'react';
+import { User, Mail, Shield, Phone, Lock, Eye, EyeOff, Users, UserPlus, Check } from 'lucide-react';
 import { useTranslation } from '../../../hooks/useTranslation';
 
 export default function RegisterForm() {
   const { t } = useTranslation();
+  const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+
+  const getStrength = (pass) => {
+    let score = 0;
+    if (pass.length >= 8) score++;
+    if (/[A-Z]/.test(pass) && /[a-z]/.test(pass)) score++;
+    if (/[0-9]/.test(pass) && /[^A-Za-z0-9]/.test(pass)) score++;
+    if (pass.length >= 12 && score === 3) score++;
+    return score;
+  };
+
+  const strengthScore = getStrength(password);
+
+  const getStrengthConfig = () => {
+    if (!password) return { color: 'text-slate-300', bg: 'bg-slate-200', border: 'border-slate-200 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20', shadow: '', label: '' };
+    switch (strengthScore) {
+      case 0:
+      case 1:
+        return { color: 'text-red-500', bg: 'bg-red-500', border: 'border-red-500 focus:border-red-500', shadow: 'shadow-[0_0_0_4px_rgba(239,68,68,0.1)]', label: t('forgot.strengthWeak') };
+      case 2:
+        return { color: 'text-amber-500', bg: 'bg-amber-500', border: 'border-amber-500 focus:border-amber-500', shadow: 'shadow-[0_0_0_4px_rgba(245,158,11,0.1)]', label: t('forgot.strengthFair') };
+      case 3:
+        return { color: 'text-emerald-400', bg: 'bg-emerald-400', border: 'border-emerald-400 focus:border-emerald-400', shadow: 'shadow-[0_0_0_4px_rgba(52,211,153,0.1)]', label: t('forgot.strengthGood') };
+      case 4:
+      default:
+        return { color: 'text-emerald-500', bg: 'bg-emerald-500', border: 'border-emerald-500 focus:border-emerald-500', shadow: 'shadow-[0_0_0_4px_rgba(16,185,129,0.1)]', label: t('forgot.strengthStrong') };
+    }
+  };
+
+  const strengthConfig = getStrengthConfig();
 
   return (
     <form className="w-full space-y-4" onSubmit={(e) => e.preventDefault()}>
@@ -93,15 +127,17 @@ export default function RegisterForm() {
         </label>
         <div className="relative group">
           <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none">
-            <Lock className="h-5 w-5 text-slate-400 group-focus-within:text-indigo-600 transition-colors" />
+            <Lock className={`h-5 w-5 transition-colors ${password ? strengthConfig.color : 'text-slate-400 group-focus-within:text-indigo-600'}`} />
           </div>
           <input
-            type="password"
+            type={showPassword ? 'text' : 'password'}
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
             placeholder={t('register.passwordPlaceholder')}
-            className="w-full pl-11 pr-11 py-3 md:py-2.5 bg-white border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all text-sm text-slate-900 placeholder:text-slate-400"
+            className={`w-full pl-11 pr-11 py-3 md:py-2.5 bg-white border rounded-lg focus:outline-none transition-all text-sm text-slate-900 placeholder:text-slate-400 ${strengthConfig.border} ${strengthConfig.shadow}`}
           />
-          <button type="button" className="absolute inset-y-0 right-0 pr-3.5 flex items-center text-slate-400 hover:text-slate-600 transition-colors">
-            <Eye className="h-5 w-5" />
+          <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute inset-y-0 right-0 pr-3.5 flex items-center text-slate-400 hover:text-slate-600 transition-colors">
+            {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
           </button>
         </div>
         <p className="mt-1.5 text-[11px] text-slate-500">
@@ -114,19 +150,32 @@ export default function RegisterForm() {
         <label className="block text-[14px] md:text-[13px] font-bold text-slate-800 mb-1.5">
           {t('register.confirmPasswordLabel')} <span className="text-red-500">*</span>
         </label>
-        <div className="relative group">
+        <div className="relative group mb-1">
           <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none">
-            <Lock className="h-5 w-5 text-slate-400 group-focus-within:text-indigo-600 transition-colors" />
+            <Lock className={`h-5 w-5 transition-colors ${confirmPassword ? (password === confirmPassword ? 'text-emerald-500' : 'text-red-500') : 'text-slate-400 group-focus-within:text-indigo-600'}`} />
           </div>
           <input
-            type="password"
+            type={showConfirmPassword ? 'text' : 'password'}
+            value={confirmPassword}
+            onChange={(e) => setConfirmPassword(e.target.value)}
             placeholder={t('register.confirmPasswordPlaceholder')}
-            className="w-full pl-11 pr-11 py-3 md:py-2.5 bg-white border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all text-sm text-slate-900 placeholder:text-slate-400"
+            className={`w-full pl-11 pr-11 py-3 md:py-2.5 bg-white border rounded-lg focus:outline-none transition-all text-sm text-slate-900 placeholder:text-slate-400 ${
+              confirmPassword 
+                ? (password === confirmPassword 
+                    ? 'border-emerald-500 focus:border-emerald-500 shadow-[0_0_0_4px_rgba(16,185,129,0.1)]' 
+                    : 'border-red-500 focus:border-red-500 shadow-[0_0_0_4px_rgba(239,68,68,0.1)]')
+                : 'border-slate-200 focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500'
+            }`}
           />
-          <button type="button" className="absolute inset-y-0 right-0 pr-3.5 flex items-center text-slate-400 hover:text-slate-600 transition-colors">
-            <Eye className="h-5 w-5" />
+          <button type="button" onClick={() => setShowConfirmPassword(!showConfirmPassword)} className="absolute inset-y-0 right-0 pr-3.5 flex items-center text-slate-400 hover:text-slate-600 transition-colors">
+            {showConfirmPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
           </button>
         </div>
+        {confirmPassword && (
+          <p className={`text-[12px] font-bold ${password === confirmPassword ? 'text-emerald-500' : 'text-red-500'}`}>
+            {password === confirmPassword ? t('register.passwordsMatch') : t('register.passwordsDoNotMatch')}
+          </p>
+        )}
       </div>
 
       {/* 7. Referral Code */}
