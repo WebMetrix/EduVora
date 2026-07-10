@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useTranslation } from '../../hooks/useTranslation';
-import { Camera, Edit2, Calendar, ChevronDown, CheckCircle, Lock, Shield, User as UserIcon, MapPin, Building, CreditCard, Key } from 'lucide-react';
+import { Camera, Edit2, Calendar, ChevronDown, CheckCircle, Lock, Shield, User as UserIcon, MapPin, Building, CreditCard, Key, AtSign, Mail, Phone, Heart, Flag } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 export default function MyProfile() {
@@ -29,7 +29,7 @@ export default function MyProfile() {
           <button
             key={tab.id}
             onClick={() => setActiveTab(tab.id)}
-            className={`flex items-center gap-2 pb-3 border-b-2 transition-colors whitespace-nowrap ${activeTab === tab.id
+            className={`flex items-center gap-2 pb-3 border-b-2 transition-colors  ${activeTab === tab.id
                 ? 'border-indigo-600 text-indigo-700'
                 : 'border-transparent text-slate-500 hover:text-slate-700 hover:border-slate-300'
               }`}
@@ -88,55 +88,82 @@ export default function MyProfile() {
               <div className="flex-1 grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-5">
                 {/* Full Name */}
                 <div className="flex flex-col gap-1.5">
-                  <label className="text-[12px] font-bold text-slate-900">{t('profile.personal.fullName')}</label>
+                  <div className="flex items-center gap-2">
+                    <UserIcon className="w-4 h-4 text-slate-500" />
+                    <label className="text-[12px] font-bold text-slate-900">{t('profile.personal.fullName')}</label>
+                  </div>
                   <div className="px-4 py-2.5 bg-white border border-slate-200 rounded-xl text-[13px] text-slate-700 font-semibold shadow-[0_2px_10px_rgb(0,0,0,0.02)]">Priya Sharma</div>
                 </div>
                 {/* Email */}
                 <div className="flex flex-col gap-1.5">
-                  <label className="text-[12px] font-bold text-slate-900">{t('profile.personal.email')}</label>
+                  <div className="flex items-center gap-2">
+                    <Mail className="w-4 h-4 text-slate-500" />
+                    <label className="text-[12px] font-bold text-slate-900">{t('profile.personal.email')}</label>
+                  </div>
                   <div className="px-4 py-2.5 bg-white border border-slate-200 rounded-xl text-[13px] text-slate-700 font-semibold shadow-[0_2px_10px_rgb(0,0,0,0.02)]">priya.sharma25@gmail.com</div>
                 </div>
                 {/* Username */}
                 <div className="flex flex-col gap-1.5">
-                  <label className="text-[12px] font-bold text-slate-900">{t('profile.personal.username')}</label>
+                  <div className="flex items-center gap-2">
+                    <AtSign className="w-4 h-4 text-slate-500" />
+                    <label className="text-[12px] font-bold text-slate-900">{t('profile.personal.username')}</label>
+                  </div>
                   <div className="px-4 py-2.5 bg-white border border-slate-200 rounded-xl text-[13px] text-slate-700 font-semibold shadow-[0_2px_10px_rgb(0,0,0,0.02)]">priyasharma25</div>
                 </div>
                 {/* Mobile */}
                 <div className="flex flex-col gap-1.5">
-                  <label className="text-[12px] font-bold text-slate-900">{t('profile.personal.mobile')}</label>
+                  <div className="flex items-center gap-2">
+                    <Phone className="w-4 h-4 text-slate-500" />
+                    <label className="text-[12px] font-bold text-slate-900">{t('profile.personal.mobile')}</label>
+                  </div>
                   <div className="px-4 py-2.5 bg-white border border-slate-200 rounded-xl text-[13px] text-slate-700 font-semibold shadow-[0_2px_10px_rgb(0,0,0,0.02)]">+91 98765 43210</div>
                 </div>
                 {/* DOB */}
                 <div className="flex flex-col gap-1.5">
-                  <label className="text-[12px] font-bold text-slate-900">{t('profile.personal.dob')}</label>
+                  <div className="flex items-center gap-2">
+                    <Calendar className="w-4 h-4 text-slate-500" />
+                    <label className="text-[12px] font-bold text-slate-900">{t('profile.personal.dob')}</label>
+                  </div>
                   <div className="px-4 py-2.5 bg-white border border-slate-200 rounded-xl text-[13px] text-slate-700 font-semibold shadow-[0_2px_10px_rgb(0,0,0,0.02)] flex justify-between items-center cursor-pointer hover:border-indigo-300 transition-colors">
                     15 Oct 1995 <Calendar className="w-4 h-4 text-slate-400" />
                   </div>
                 </div>
                 {/* Marital Status */}
                 <div className="flex flex-col gap-1.5">
-                  <label className="text-[12px] font-bold text-slate-900">{t('profile.personal.maritalStatus')}</label>
+                  <div className="flex items-center gap-2">
+                    <Heart className="w-4 h-4 text-slate-500" />
+                    <label className="text-[12px] font-bold text-slate-900">{t('profile.personal.maritalStatus')}</label>
+                  </div>
                   <div className="px-4 py-2.5 bg-white border border-slate-200 rounded-xl text-[13px] text-slate-700 font-semibold shadow-[0_2px_10px_rgb(0,0,0,0.02)] flex justify-between items-center cursor-pointer hover:border-indigo-300 transition-colors">
                     Single <ChevronDown className="w-4 h-4 text-slate-400" />
                   </div>
                 </div>
                 {/* Gender */}
                 <div className="flex flex-col gap-1.5">
-                  <label className="text-[12px] font-bold text-slate-900">{t('profile.personal.gender')}</label>
+                  <div className="flex items-center gap-2">
+                    <UserIcon className="w-4 h-4 text-slate-500" />
+                    <label className="text-[12px] font-bold text-slate-900">{t('profile.personal.gender')}</label>
+                  </div>
                   <div className="px-4 py-2.5 bg-white border border-slate-200 rounded-xl text-[13px] text-slate-700 font-semibold shadow-[0_2px_10px_rgb(0,0,0,0.02)] flex justify-between items-center cursor-pointer hover:border-indigo-300 transition-colors">
                     Female <ChevronDown className="w-4 h-4 text-slate-400" />
                   </div>
                 </div>
                 {/* Date of Joining */}
                 <div className="flex flex-col gap-1.5">
-                  <label className="text-[12px] font-bold text-slate-900">{t('profile.personal.dateOfJoining')}</label>
+                  <div className="flex items-center gap-2">
+                    <Calendar className="w-4 h-4 text-slate-500" />
+                    <label className="text-[12px] font-bold text-slate-900">{t('profile.personal.dateOfJoining')}</label>
+                  </div>
                   <div className="px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-[13px] text-slate-500 font-semibold flex justify-between items-center">
                     15 May 2024 <Calendar className="w-4 h-4 text-slate-400" />
                   </div>
                 </div>
                 {/* Nationality */}
                 <div className="flex flex-col gap-1.5 md:col-span-2">
-                  <label className="text-[12px] font-bold text-slate-900">{t('profile.personal.nationality')}</label>
+                  <div className="flex items-center gap-2">
+                    <Flag className="w-4 h-4 text-slate-500" />
+                    <label className="text-[12px] font-bold text-slate-900">{t('profile.personal.nationality')}</label>
+                  </div>
                   <div className="px-4 py-2.5 bg-white border border-slate-200 rounded-xl text-[13px] text-slate-700 font-semibold shadow-[0_2px_10px_rgb(0,0,0,0.02)] flex justify-between items-center w-full md:w-[calc(50%-12px)] cursor-pointer hover:border-indigo-300 transition-colors">
                     Indian <ChevronDown className="w-4 h-4 text-slate-400" />
                   </div>
