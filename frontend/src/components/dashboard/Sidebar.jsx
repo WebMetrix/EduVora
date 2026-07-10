@@ -61,9 +61,9 @@ export default function Sidebar({ isOpen, setIsOpen }) {
         className={`fixed lg:static inset-y-0 left-0 z-50 w-[260px] h-full flex flex-col bg-white/70 backdrop-blur-xl border-r border-slate-200/60 shadow-[4px_0_24px_rgba(0,0,0,0.02)] transition-transform duration-300 lg:translate-x-0 ${isOpen ? 'translate-x-0' : '-translate-x-full'}`}
       >
         {/* Logo Area */}
-        <div className="h-14 flex items-center justify-between px-6 border-b border-slate-100 flex-shrink-0">
+        <div className="h-14 flex items-center justify-between px-6 border-b border-slate-100 shrink-0">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-indigo-600 flex items-center justify-center flex-shrink-0 shadow-lg shadow-indigo-600/30">
+            <div className="w-10 h-10 rounded-xl bg-indigo-600 flex items-center justify-center shrink-0 shadow-lg shadow-indigo-600/30">
               <span className="text-white text-[10px] font-bold">Logo</span>
             </div>
             <div>
@@ -118,9 +118,9 @@ export default function Sidebar({ isOpen, setIsOpen }) {
           </nav>
         </div>
 
-        <div className="p-2 mb-1 flex-shrink-0">
+        <div className="p-2 mb-1 shrink-0">
           <div 
-            className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-slate-50 to-indigo-50/30 border border-slate-200/60 p-3 shadow-sm hover:shadow-md hover:-translate-y-1 group cursor-pointer transition-all duration-300"
+            className="relative overflow-hidden rounded-2xl bg-linear-to-br from-slate-50 to-indigo-50/30 border border-slate-200/60 p-3 shadow-sm hover:shadow-md hover:-translate-y-1 group cursor-pointer transition-all duration-300"
           >
             {/* Background animated blob */}
             <div className="absolute -top-10 -right-10 w-32 h-32 bg-indigo-400/10 rounded-full blur-2xl group-hover:bg-indigo-400/20 transition-colors duration-500" />

@@ -16,10 +16,10 @@ export default function CourseCard() {
       </div>
 
       <div
-        className="flex-1 bg-gradient-to-br from-white/90 to-indigo-50/40 backdrop-blur-xl border border-indigo-100/50 rounded-2xl p-3 sm:p-4 lg:p-5 shadow-sm hover:shadow-[0_8px_30px_rgb(99,102,241,0.15)] hover:border-indigo-300 transition-all duration-300 flex flex-row gap-3 sm:gap-5 group hover:-translate-y-1"
+        className="flex-1 bg-linear-to-br from-white/90 to-indigo-50/40 backdrop-blur-xl border border-indigo-100/50 rounded-2xl p-3 sm:p-4 lg:p-5 shadow-sm hover:shadow-[0_8px_30px_rgb(99,102,241,0.15)] hover:border-indigo-300 transition-all duration-300 flex flex-row gap-3 sm:gap-5 group hover:-translate-y-1"
       >
         {/* Course Thumbnail */}
-        <div className="relative w-[100px] sm:w-[140px] md:w-[160px] h-auto md:h-full rounded-xl bg-gradient-to-br from-[#1E1B4B] via-[#312E81] to-[#1E1B4B] overflow-hidden flex-shrink-0 shadow-inner group-hover:shadow-indigo-900/30 transition-shadow">
+        <div className="relative w-[100px] sm:w-[140px] md:w-[160px] h-auto md:h-full rounded-xl bg-linear-to-br from-[#1E1B4B] via-[#312E81] to-[#1E1B4B] overflow-hidden shrink-0 shadow-inner group-hover:shadow-indigo-900/30 transition-shadow">
           {/* Decorative shapes */}
           <div className="absolute -top-10 -right-10 w-24 h-24 bg-blue-500/20 rounded-full blur-xl group-hover:bg-blue-500/40 transition-colors duration-500" />
           <div className="absolute -bottom-10 -left-10 w-24 h-24 bg-purple-500/20 rounded-full blur-xl" />

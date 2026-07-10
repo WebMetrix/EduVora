@@ -6,9 +6,9 @@ export default function SocialButtons() {
   return (
     <div className="w-full animate-fade-in" style={{ animationDelay: '300ms' }}>
       <div className="relative flex items-center py-3 md:py-5 lg:py-6">
-        <div className="flex-grow border-t border-slate-200/80"></div>
-        <span className="flex-shrink-0 mx-5 text-slate-400 text-[14px] md:text-xs lg:text-[13px] font-medium md:font-semibold md:uppercase md:tracking-wider">{t('login.orContinueWith')}</span>
-        <div className="flex-grow border-t border-slate-200/80"></div>
+        <div className="grow border-t border-slate-200/80"></div>
+        <span className="shrink-0 mx-5 text-slate-400 text-[14px] md:text-xs lg:text-[13px] font-medium md:font-semibold md:uppercase md:tracking-wider">{t('login.orContinueWith')}</span>
+        <div className="grow border-t border-slate-200/80"></div>
       </div>
       <div className="flex flex-col md:flex-row gap-2.5 md:gap-3 lg:gap-4">
         {/* GOOGLE PART */}

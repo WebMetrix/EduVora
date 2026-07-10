@@ -7,7 +7,7 @@ export default function WelcomeCard() {
 
   return (
     <div 
-      className="relative w-full h-full rounded-3xl bg-gradient-to-br from-indigo-50/70 to-indigo-100/40 backdrop-blur-xl border border-indigo-100/60 p-4 flex flex-row items-center justify-between gap-4 shadow-[0_8px_30px_rgb(0,0,0,0.04)] overflow-hidden group transition-all duration-300 hover:shadow-[0_8px_30px_rgb(99,102,241,0.15)] hover:border-indigo-300 hover:-translate-y-1"
+      className="relative w-full h-full rounded-3xl bg-linear-to-br from-indigo-50/70 to-indigo-100/40 backdrop-blur-xl border border-indigo-100/60 p-4 flex flex-row items-center justify-between gap-4 shadow-[0_8px_30px_rgb(0,0,0,0.04)] overflow-hidden group transition-all duration-300 hover:shadow-[0_8px_30px_rgb(99,102,241,0.15)] hover:border-indigo-300 hover:-translate-y-1"
     >
       {/* Background flare */}
       <div className="absolute top-0 right-0 w-64 h-64 bg-indigo-400/10 rounded-full blur-[80px] -translate-y-1/2 translate-x-1/3 pointer-events-none group-hover:bg-indigo-400/20 transition-colors duration-700" />
@@ -35,7 +35,7 @@ export default function WelcomeCard() {
       {/* Right Content - Rank Badge */}
       <motion.div 
         whileHover={{ scale: 1.02 }}
-        className="relative z-10 shrink-0 bg-gradient-to-br from-indigo-600 to-indigo-700 rounded-2xl p-3 sm:p-4 flex items-center gap-3 sm:gap-4 shadow-lg shadow-indigo-600/20 cursor-pointer"
+        className="relative z-10 shrink-0 bg-linear-to-br from-indigo-600 to-indigo-700 rounded-2xl p-3 sm:p-4 flex items-center gap-3 sm:gap-4 shadow-lg shadow-indigo-600/20 cursor-pointer"
       >
         <div className="flex items-center gap-3">
           <div className="w-10 h-10 rounded-full bg-white/20 backdrop-blur-md flex items-center justify-center border border-white/20 shadow-inner shrink-0">

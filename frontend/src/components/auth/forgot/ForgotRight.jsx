@@ -15,7 +15,7 @@ export default function ForgotRight() {
       </div>
 
       {/* Main Content Container */}
-      <div className="flex-grow flex flex-col justify-center px-6 lg:px-12 xl:px-16 w-full animate-slide-up" style={{ animationDelay: '100ms' }}>
+      <div className="grow flex flex-col justify-center px-6 lg:px-12 xl:px-16 w-full animate-slide-up" style={{ animationDelay: '100ms' }}>
         <div className="max-w-[480px] w-full mx-auto">
           
           <div className="mb-8">
@@ -71,7 +71,7 @@ export default function ForgotRight() {
 
           {/* Info Box */}
           <div className="mt-8 bg-[#f8f6ff] border border-indigo-100 rounded-xl p-5 flex gap-4">
-            <div className="w-6 h-6 rounded-full bg-indigo-600 flex items-center justify-center flex-shrink-0 mt-0.5">
+            <div className="w-6 h-6 rounded-full bg-indigo-600 flex items-center justify-center shrink-0 mt-0.5">
               <Info className="w-4 h-4 text-white" />
             </div>
             <div>

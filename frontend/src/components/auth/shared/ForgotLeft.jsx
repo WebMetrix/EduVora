@@ -25,7 +25,7 @@ export default function ForgotLeft() {
           {/* ========================================== */}
           {/* TODO: ADD YOUR CUSTOM LOGO IMAGE/SVG HERE */}
           {/* ========================================== */}
-          <div className="w-10 h-10 rounded-xl border-2 border-dashed border-slate-600 flex items-center justify-center flex-shrink-0">
+          <div className="w-10 h-10 rounded-xl border-2 border-dashed border-slate-600 flex items-center justify-center shrink-0">
             <span className="text-slate-500 text-[10px] font-bold">Logo</span>
           </div>
           <div>
@@ -49,7 +49,7 @@ export default function ForgotLeft() {
         <div className="space-y-3.5 animate-fade-in max-w-[380px]" style={{ animationDelay: '300ms' }}>
 
           <div className="flex items-center gap-5 px-5 py-4 rounded-xl bg-slate-900/20 backdrop-blur-md border border-slate-600/20 hover:bg-slate-800/60 hover:border-indigo-500/40 hover:scale-[1.02] hover:shadow-xl hover:shadow-indigo-900/20 transition-all duration-300 cursor-default">
-            <div className="w-10 h-10 rounded-xl bg-indigo-600 flex items-center justify-center flex-shrink-0 shadow-lg shadow-indigo-900/40">
+            <div className="w-10 h-10 rounded-xl bg-indigo-600 flex items-center justify-center shrink-0 shadow-lg shadow-indigo-900/40">
               <Shield className="text-white w-5 h-5" />
             </div>
             <div>
@@ -59,7 +59,7 @@ export default function ForgotLeft() {
           </div>
 
           <div className="flex items-center gap-5 px-5 py-4 rounded-xl bg-slate-900/20 backdrop-blur-md border border-slate-600/20 hover:bg-slate-800/60 hover:border-blue-500/40 hover:scale-[1.02] hover:shadow-xl hover:shadow-blue-900/20 transition-all duration-300 cursor-default">
-            <div className="w-10 h-10 rounded-xl bg-blue-500 flex items-center justify-center flex-shrink-0 shadow-lg shadow-blue-900/40">
+            <div className="w-10 h-10 rounded-xl bg-blue-500 flex items-center justify-center shrink-0 shadow-lg shadow-blue-900/40">
               <RotateCcw className="text-white w-5 h-5" />
             </div>
             <div>
@@ -69,7 +69,7 @@ export default function ForgotLeft() {
           </div>
 
           <div className="flex items-center gap-5 px-5 py-4 rounded-xl bg-slate-900/20 backdrop-blur-md border border-slate-600/20 hover:bg-slate-800/60 hover:border-emerald-500/40 hover:scale-[1.02] hover:shadow-xl hover:shadow-emerald-900/20 transition-all duration-300 cursor-default">
-            <div className="w-10 h-10 rounded-xl bg-emerald-500 flex items-center justify-center flex-shrink-0 shadow-lg shadow-emerald-900/40">
+            <div className="w-10 h-10 rounded-xl bg-emerald-500 flex items-center justify-center shrink-0 shadow-lg shadow-emerald-900/40">
               <Lock className="text-white w-5 h-5" />
             </div>
             <div>

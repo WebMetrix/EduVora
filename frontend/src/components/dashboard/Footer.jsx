@@ -100,7 +100,7 @@ export default function Footer() {
         {/* Brand & Social Section */}
         <div className="flex flex-col max-w-[220px]">
           <div className="flex items-center gap-2 mb-3 group/brand cursor-pointer">
-            <div className="w-6 h-6 rounded-md bg-gradient-to-br from-indigo-500 to-indigo-700 flex items-center justify-center shadow-md group-hover/brand:shadow-indigo-500/30 transition-all duration-300">
+            <div className="w-6 h-6 rounded-md bg-linear-to-br from-indigo-500 to-indigo-700 flex items-center justify-center shadow-md group-hover/brand:shadow-indigo-500/30 transition-all duration-300">
               <span className="text-white font-black text-[12px]">E</span>
             </div>
             <div className="flex flex-col">
@@ -116,7 +116,7 @@ export default function Footer() {
               <a
                 key={index}
                 href="#"
-                className="w-6 h-6 rounded-full bg-white/50 border border-white/80 flex items-center justify-center text-slate-500 hover:bg-gradient-to-tr hover:from-indigo-600 hover:to-indigo-500 hover:text-white hover:border-transparent hover:-translate-y-0.5 hover:shadow-md transition-all duration-300"
+                className="w-6 h-6 rounded-full bg-white/50 border border-white/80 flex items-center justify-center text-slate-500 hover:bg-linear-to-tr hover:from-indigo-600 hover:to-indigo-500 hover:text-white hover:border-transparent hover:-translate-y-0.5 hover:shadow-md transition-all duration-300"
               >
                 <div className="scale-[0.7] flex items-center justify-center">
                   <Icon />

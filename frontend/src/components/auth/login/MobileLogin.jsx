@@ -9,7 +9,7 @@ export default function MobileLogin() {
   const { t } = useTranslation();
 
   return (
-    <div className="w-full h-[100dvh] flex flex-col relative pb-safe pt-safe bg-white px-5 py-4 md:hidden overflow-hidden">
+    <div className="w-full h-dvh flex flex-col relative pb-safe pt-safe bg-white px-5 py-4 md:hidden overflow-hidden">
       {/* Header with Language Dropdown and Logo */}
       <div className="flex justify-between items-start w-full mb-3 relative z-10">
         <div className="flex flex-col items-center flex-1 mt-2">
@@ -24,7 +24,7 @@ export default function MobileLogin() {
         {/* Language Dropdown removed to match the 2nd mockup */}
       </div>
 
-      <div className="w-full max-w-[360px] mx-auto flex-grow flex flex-col justify-center relative z-10">
+      <div className="w-full max-w-[360px] mx-auto grow flex flex-col justify-center relative z-10">
         {/* Welcome Back & Subtitle */}
         <div className="mb-5 text-center">
           <h1 className="text-[32px] font-extrabold text-slate-900 leading-tight mb-1 tracking-tight">{t('login.title')}</h1>

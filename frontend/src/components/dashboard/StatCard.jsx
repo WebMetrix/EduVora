@@ -14,13 +14,13 @@ export default function StatCard({
 }) {
   return (
     <div 
-      className="relative p-3 sm:p-5 bg-gradient-to-br from-white/90 to-indigo-50/40 backdrop-blur-xl border border-indigo-100/50 rounded-2xl shadow-sm hover:shadow-[0_8px_30px_rgb(99,102,241,0.15)] hover:border-indigo-300 transition-all duration-300 group overflow-hidden hover:-translate-y-1 flex flex-col items-center sm:items-start text-center sm:text-left"
+      className="relative p-3 sm:p-5 bg-linear-to-br from-white/90 to-indigo-50/40 backdrop-blur-xl border border-indigo-100/50 rounded-2xl shadow-sm hover:shadow-[0_8px_30px_rgb(99,102,241,0.15)] hover:border-indigo-300 transition-all duration-300 group overflow-hidden hover:-translate-y-1 flex flex-col items-center sm:items-start text-center sm:text-left"
     >
       {/* Decorative hover gradient blur */}
       <div className={`absolute -right-10 -top-10 w-32 h-32 rounded-full blur-[50px] opacity-0 group-hover:opacity-20 transition-opacity duration-500 pointer-events-none ${iconBgClass.replace('bg-', 'bg-')}`} />
 
       <div className="flex flex-col sm:flex-row items-center gap-2 sm:gap-3 mb-2 relative z-10 w-full">
-        <div className={`w-10 h-10 rounded-full sm:rounded-2xl flex items-center justify-center flex-shrink-0 shadow-sm group-hover:shadow-md transition-shadow mx-auto sm:mx-0 ${iconBgClass}`}>
+        <div className={`w-10 h-10 rounded-full sm:rounded-2xl flex items-center justify-center shrink-0 shadow-sm group-hover:shadow-md transition-shadow mx-auto sm:mx-0 ${iconBgClass}`}>
           <Icon className={`w-5 h-5 ${iconColorClass} group-hover:scale-110 transition-transform duration-300`} />
         </div>
         <div className="flex flex-col items-center sm:items-start w-full">

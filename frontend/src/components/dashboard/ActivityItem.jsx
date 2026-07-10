@@ -18,7 +18,7 @@ export default function ActivityItem({
       className="flex items-center justify-between py-1.5 px-2 rounded-xl transition-all duration-300 cursor-default group"
     >
       <div className="flex items-center gap-2.5">
-        <div className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 shadow-sm ${iconBg}`}>
+        <div className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 shadow-sm ${iconBg}`}>
           <Icon className={`w-4 h-4 ${iconColor} group-hover:scale-110 transition-transform`} />
         </div>
         <div>

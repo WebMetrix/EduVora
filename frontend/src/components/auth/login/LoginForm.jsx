@@ -44,7 +44,7 @@ export default function LoginForm() {
 
       <div className="flex items-center justify-between pt-0.5 pb-1 lg:pt-2 lg:pb-3">
         <div className="flex items-center group cursor-pointer">
-          <div className="relative w-4 h-4 lg:w-4 lg:h-4 flex-shrink-0 flex items-center justify-center">
+          <div className="relative w-4 h-4 lg:w-4 lg:h-4 shrink-0 flex items-center justify-center">
             <input type="checkbox" className="absolute inset-0 opacity-0 cursor-pointer z-10 w-full h-full peer" id="remember-me" defaultChecked />
             <div className="w-4 h-4 border border-slate-300 rounded bg-white peer-checked:bg-indigo-600 peer-checked:border-indigo-600 transition-colors"></div>
             <Check className="absolute inset-0 m-auto w-3 h-3 text-white opacity-0 peer-checked:opacity-100 pointer-events-none z-20" strokeWidth={4} />
@@ -62,7 +62,7 @@ export default function LoginForm() {
 
       <button
         type="submit"
-        className="w-full py-3.5 md:py-3 lg:py-3.5 px-6 bg-gradient-to-r from-[#7C4DFF] to-[#4F46E5] md:bg-none md:bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl font-bold text-[18px] md:text-sm lg:text-[15px] shadow-sm transform hover:-translate-y-0.5 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 flex items-center justify-center gap-2"
+        className="w-full py-3.5 md:py-3 lg:py-3.5 px-6 bg-linear-to-r from-[#7C4DFF] to-[#4F46E5] md:bg-none md:bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl font-bold text-[18px] md:text-sm lg:text-[15px] shadow-sm transform hover:-translate-y-0.5 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 flex items-center justify-center gap-2"
       >
         <LogIn className="w-5 h-5 md:hidden" />
         {t('login.submit')}

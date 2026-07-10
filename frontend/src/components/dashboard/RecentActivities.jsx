@@ -63,7 +63,7 @@ export default function RecentActivities() {
         </a>
       </div>
 
-      <div className="flex-1 bg-gradient-to-br from-white/90 to-indigo-50/40 backdrop-blur-xl border border-indigo-100/50 rounded-2xl p-4 lg:p-5 shadow-sm hover:shadow-[0_8px_30px_rgb(99,102,241,0.15)] hover:border-indigo-300 transition-all duration-300 flex flex-col justify-between group hover:-translate-y-1">
+      <div className="flex-1 bg-linear-to-br from-white/90 to-indigo-50/40 backdrop-blur-xl border border-indigo-100/50 rounded-2xl p-4 lg:p-5 shadow-sm hover:shadow-[0_8px_30px_rgb(99,102,241,0.15)] hover:border-indigo-300 transition-all duration-300 flex flex-col justify-between group hover:-translate-y-1">
 
         <div className="mb-2">
           {activities.map(activity => (

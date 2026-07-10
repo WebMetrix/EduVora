@@ -8,14 +8,14 @@ export default function WalletCard() {
   return (
     <motion.div 
       whileHover={{ y: -4 }}
-      className="relative w-full h-full rounded-3xl bg-gradient-to-br from-indigo-700 via-indigo-800 to-indigo-900 p-4 shadow-xl shadow-indigo-900/20 overflow-hidden group"
+      className="relative w-full h-full rounded-3xl bg-linear-to-br from-indigo-700 via-indigo-800 to-indigo-900 p-4 shadow-xl shadow-indigo-900/20 overflow-hidden group"
     >
       {/* Decorative background elements */}
       <div className="absolute top-0 right-0 w-[400px] h-[400px] bg-indigo-500/20 rounded-full blur-[80px] -translate-y-1/2 translate-x-1/3 group-hover:bg-indigo-400/20 transition-colors duration-700" />
       <div className="absolute bottom-0 left-0 w-64 h-64 bg-purple-500/20 rounded-full blur-[60px] translate-y-1/3 -translate-x-1/4" />
       
       {/* Wave pattern overlay */}
-      <div className="absolute inset-0 opacity-10 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-white via-transparent to-transparent pointer-events-none" />
+      <div className="absolute inset-0 opacity-10 bg-[radial-gradient(ellipse_at_top,var(--tw-gradient-stops))] from-white via-transparent to-transparent pointer-events-none" />
 
       <div className="relative z-10 flex flex-row items-center justify-between gap-4 h-full">
         

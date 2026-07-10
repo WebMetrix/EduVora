@@ -13,7 +13,7 @@ export default function LoginRight() {
         <LanguageDropdown />
       </div>
 
-      <div className="flex-grow flex flex-col justify-center max-w-[460px] mx-auto w-full animate-slide-up" style={{ animationDelay: '200ms' }}>
+      <div className="grow flex flex-col justify-center max-w-[460px] mx-auto w-full animate-slide-up" style={{ animationDelay: '200ms' }}>
         <div className="mb-6 lg:mb-8 mt-12 lg:mt-0">
           <h1 className="text-3xl lg:text-4xl font-extrabold text-slate-900 mb-2 tracking-tight">{t('login.title')}</h1>
           <p className="text-indigo-500 text-sm lg:text-[15px] font-medium">{t('login.subtitle')}</p>

@@ -96,7 +96,7 @@ export default function Header({ toggleSidebar }) {
                 animate={{ opacity: 1, y: 0, scale: 1 }}
                 exit={{ opacity: 0, y: 10, scale: 0.95 }}
                 transition={{ duration: 0.15, ease: "easeOut" }}
-                className="absolute right-0 top-full mt-2 w-[160px] lg:w-[170px] bg-white rounded-xl shadow-[0_10px_40px_rgb(0,0,0,0.12)] border border-slate-100 overflow-hidden z-[100] origin-top-right"
+                className="absolute right-0 top-full mt-2 w-[160px] lg:w-[170px] bg-white rounded-xl shadow-[0_10px_40px_rgb(0,0,0,0.12)] border border-slate-100 overflow-hidden z-100 origin-top-right"
               >
                 <div className="py-1.5 flex flex-col">
                   {dropdownItems.map((item, idx) => (

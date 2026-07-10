@@ -6,12 +6,12 @@ export default function InfoSection() {
   const { t } = useTranslation();
 
   return (
-    <div className="bg-gradient-to-br from-indigo-50/40 to-slate-50/80 border border-indigo-100/50 rounded-2xl overflow-hidden flex flex-col md:flex-row group hover:shadow-[0_8px_30px_rgb(99,102,241,0.15)] hover:border-indigo-300 hover:-translate-y-1 transition-all duration-300">
+    <div className="bg-linear-to-br from-indigo-50/40 to-slate-50/80 border border-indigo-100/50 rounded-2xl overflow-hidden flex flex-col md:flex-row group hover:shadow-[0_8px_30px_rgb(99,102,241,0.15)] hover:border-indigo-300 hover:-translate-y-1 transition-all duration-300">
       {/* Left Box - Secure & Safe */}
       <div className="flex-1 p-3 lg:p-4 flex items-start gap-2.5 relative overflow-hidden transition-colors hover:bg-slate-100/50">
-        <div className="absolute -left-10 top-0 w-32 h-32 bg-indigo-500/5 rounded-full blur-[40px] pointer-events-none group-hover:bg-indigo-500/10 transition-colors" />
+        <div className="absolute -left-10 top-0 w-32 h-32 bg-indigo-500/5 rounded-full blur-2xl pointer-events-none group-hover:bg-indigo-500/10 transition-colors" />
         
-        <div className="relative w-8 h-8 rounded-xl bg-indigo-100 flex flex-shrink-0 items-center justify-center shadow-inner group-hover:scale-105 transition-transform duration-300">
+        <div className="relative w-8 h-8 rounded-xl bg-indigo-100 flex shrink-0 items-center justify-center shadow-inner group-hover:scale-105 transition-transform duration-300">
           <ShieldCheck className="w-4 h-4 text-indigo-600" />
         </div>
         
@@ -25,8 +25,8 @@ export default function InfoSection() {
       </div>
 
       {/* Divider */}
-      <div className="hidden md:block w-px bg-gradient-to-b from-transparent via-slate-200 to-transparent"></div>
-      <div className="md:hidden h-px bg-gradient-to-r from-transparent via-slate-200 to-transparent mx-5"></div>
+      <div className="hidden md:block w-px bg-linear-to-b from-transparent via-slate-200 to-transparent"></div>
+      <div className="md:hidden h-px bg-linear-to-r from-transparent via-slate-200 to-transparent mx-5"></div>
 
       {/* Right Box - Quick Tips */}
       <div className="flex-1 p-3 lg:p-4 transition-colors hover:bg-slate-100/50">
@@ -38,7 +38,7 @@ export default function InfoSection() {
               whileHover={{ x: 4 }}
               className="flex items-start gap-2 text-[11px] text-slate-600 font-medium group/item"
             >
-              <span className="w-1.5 h-1.5 rounded-full bg-indigo-400 mt-1 group-hover/item:bg-indigo-600 transition-colors flex-shrink-0"></span>
+              <span className="w-1.5 h-1.5 rounded-full bg-indigo-400 mt-1 group-hover/item:bg-indigo-600 transition-colors shrink-0"></span>
               {t(`dashboard.info.tip${num}`)}
             </motion.li>
           ))}
