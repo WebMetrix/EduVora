@@ -26,18 +26,18 @@ export default function ChangePasswordCard({ setActiveTab }) {
   const strengthScore = getStrength(newPassword);
 
   const getStrengthConfig = () => {
-    if (!newPassword) return { color: 'text-slate-300', border: 'border-slate-200 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20', shadow: '' };
+    if (!newPassword) return { label: '', bg: 'bg-slate-200', color: 'text-slate-300', border: 'border-slate-200 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20', shadow: '' };
     switch (strengthScore) {
       case 0:
       case 1:
-        return { color: 'text-red-500', border: 'border-red-500 focus:border-red-500', shadow: 'shadow-[0_0_0_4px_rgba(239,68,68,0.1)]' };
+        return { label: t('forgot.strengthWeak'), bg: 'bg-red-500', color: 'text-red-500', border: 'border-red-500 focus:border-red-500', shadow: 'shadow-[0_0_0_4px_rgba(239,68,68,0.1)]' };
       case 2:
-        return { color: 'text-amber-500', border: 'border-amber-500 focus:border-amber-500', shadow: 'shadow-[0_0_0_4px_rgba(245,158,11,0.1)]' };
+        return { label: t('forgot.strengthFair'), bg: 'bg-amber-500', color: 'text-amber-500', border: 'border-amber-500 focus:border-amber-500', shadow: 'shadow-[0_0_0_4px_rgba(245,158,11,0.1)]' };
       case 3:
-        return { color: 'text-emerald-400', border: 'border-emerald-400 focus:border-emerald-400', shadow: 'shadow-[0_0_0_4px_rgba(52,211,153,0.1)]' };
+        return { label: t('forgot.strengthGood'), bg: 'bg-emerald-400', color: 'text-emerald-400', border: 'border-emerald-400 focus:border-emerald-400', shadow: 'shadow-[0_0_0_4px_rgba(52,211,153,0.1)]' };
       case 4:
       default:
-        return { color: 'text-emerald-500', border: 'border-emerald-500 focus:border-emerald-500', shadow: 'shadow-[0_0_0_4px_rgba(16,185,129,0.1)]' };
+        return { label: t('forgot.strengthStrong'), bg: 'bg-emerald-500', color: 'text-emerald-500', border: 'border-emerald-500 focus:border-emerald-500', shadow: 'shadow-[0_0_0_4px_rgba(16,185,129,0.1)]' };
     }
   };
 
@@ -64,7 +64,7 @@ export default function ChangePasswordCard({ setActiveTab }) {
 
   return (
     <div className="flex flex-col gap-6">
-      <div className="bg-white rounded-2xl p-6 lg:p-10 shadow-[0_2px_10px_rgba(0,0,0,0.04)] border border-slate-100 flex flex-col md:flex-row gap-8 lg:gap-16">
+      <div className="bg-white rounded-2xl p-4 sm:p-6 lg:p-10 shadow-[0_2px_10px_rgba(0,0,0,0.04)] border border-slate-100 flex flex-col md:flex-row gap-6 md:gap-8 lg:gap-16">
         
         {/* Left Column: Info & Illustration */}
       <div className="w-full md:w-1/3 flex flex-col items-center text-center">
@@ -154,6 +154,21 @@ export default function ChangePasswordCard({ setActiveTab }) {
               </button>
             </div>
 
+            {/* Strength Meter */}
+            <div className="flex items-center gap-1.5 md:gap-2 mb-4 md:mb-5">
+              <div className="flex-1 flex gap-1 md:gap-1.5 h-1 md:h-1.5">
+                {[1, 2, 3, 4].map((level) => (
+                  <div
+                    key={level}
+                    className={`flex-1 rounded-full transition-all duration-300 ${level <= (strengthScore === 0 && newPassword ? 1 : strengthScore) ? strengthConfig.bg : 'bg-slate-200'}`}
+                  />
+                ))}
+              </div>
+              <span className={`text-[10px] md:text-[12px] font-bold min-w-[40px] md:min-w-[45px] text-right ${strengthConfig.color}`}>
+                {strengthConfig.label}
+              </span>
+            </div>
+
             {/* Rules Checklist */}
             <div className="mb-2">
               <p className="text-[13px] font-bold text-slate-900 mb-2">Password must contain:</p>
@@ -218,11 +233,11 @@ export default function ChangePasswordCard({ setActiveTab }) {
           </div>
 
           {/* Buttons */}
-          <div className="flex justify-end items-center gap-3 mt-8 pt-4">
+          <div className="flex flex-col-reverse sm:flex-row justify-end items-stretch sm:items-center gap-3 mt-8 pt-4">
             <button
               type="button"
               onClick={() => setActiveTab('personalInfo')}
-              className="px-6 py-2.5 rounded-lg border border-slate-200 text-slate-700 font-bold text-[14px] hover:bg-slate-50 hover:border-slate-300 hover:shadow-sm transition-all"
+              className="w-full sm:w-auto px-6 py-2.5 rounded-lg border border-slate-200 text-slate-700 font-bold text-[14px] hover:bg-slate-50 hover:border-slate-300 hover:shadow-sm transition-all"
             >
               Cancel
             </button>
@@ -235,7 +250,7 @@ export default function ChangePasswordCard({ setActiveTab }) {
                 setNewPassword('');
                 setConfirmPassword('');
               }}
-              className="px-6 py-2.5 rounded-lg bg-[#4f3bf3] text-white font-bold text-[14px] hover:bg-indigo-700 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-indigo-500/30 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:translate-y-0 disabled:hover:shadow-none transition-all duration-300"
+              className="w-full sm:w-auto px-6 py-2.5 rounded-lg bg-[#4f3bf3] text-white font-bold text-[14px] hover:bg-indigo-700 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-indigo-500/30 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:translate-y-0 disabled:hover:shadow-none transition-all duration-300"
             >
               Update Password
             </button>
@@ -247,8 +262,8 @@ export default function ChangePasswordCard({ setActiveTab }) {
       </div>
 
       {/* Tip Banner */}
-      <div className="bg-[#f8f6ff] rounded-2xl p-4 md:p-5 border border-indigo-50 flex items-center gap-3 shadow-sm">
-        <Info className="w-5 h-5 text-[#603af0] shrink-0" />
+      <div className="bg-[#f8f6ff] rounded-2xl p-4 md:p-5 border border-indigo-50 flex items-start sm:items-center gap-3 shadow-sm">
+        <Info className="w-5 h-5 text-[#603af0] shrink-0 mt-0.5 sm:mt-0" />
         <p className="text-[13px] md:text-[14px] text-slate-700">
           <span className="font-bold text-slate-900">Tip:</span> Avoid using easily guessable information like your name, birthdate, or common words.
         </p>

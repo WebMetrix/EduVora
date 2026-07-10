@@ -140,7 +140,23 @@ export default function RegisterForm() {
             {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
           </button>
         </div>
-        <p className="mt-1.5 text-[11px] text-slate-500">
+
+        {/* Strength Meter */}
+        <div className="flex items-center gap-1.5 md:gap-2 mt-2 mb-1.5">
+          <div className="flex-1 flex gap-1 md:gap-1.5 h-1 md:h-1.5">
+            {[1, 2, 3, 4].map((level) => (
+              <div
+                key={level}
+                className={`flex-1 rounded-full transition-all duration-300 ${level <= (strengthScore === 0 && password ? 1 : strengthScore) ? strengthConfig.bg : 'bg-slate-200'}`}
+              />
+            ))}
+          </div>
+          <span className={`text-[10px] md:text-[12px] font-bold min-w-[40px] md:min-w-[45px] text-right ${strengthConfig.color}`}>
+            {strengthConfig.label}
+          </span>
+        </div>
+
+        <p className="mt-1 text-[11px] text-slate-500">
           {t('register.passwordHint')}
         </p>
       </div>
