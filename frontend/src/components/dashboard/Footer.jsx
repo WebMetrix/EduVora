@@ -3,6 +3,7 @@ import { useTranslation } from '../../hooks/useTranslation';
 import { ChevronDown } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
+
 // Raw SVGs for social icons to avoid lucide-react missing export issues
 const SocialIcons = {
   Facebook: () => <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path></svg>,
@@ -104,8 +105,8 @@ export default function Footer() {
               <span className="text-white font-black text-[12px]">E</span>
             </div>
             <div className="flex flex-col">
-              <span className="text-[13px] font-black text-indigo-950 leading-none tracking-tight group-hover/brand:text-indigo-700 transition-colors">EDUVORA</span>
-              <span className="text-[6.5px] font-extrabold text-slate-500 tracking-widest mt-0.5">MLM PLATFORM</span>
+              <span className="text-[13px] font-black text-indigo-950 leading-none tracking-tight group-hover/brand:text-indigo-700 transition-colors">{t('login.logoTitle')}</span>
+              <span className="text-[6.5px] font-extrabold text-slate-500 tracking-widest mt-0.5">{t('login.logoSubtitle')}</span>
             </div>
           </div>
           <p className="text-[10.5px] lg:text-[11px] text-slate-500/90 font-medium leading-relaxed mb-4">

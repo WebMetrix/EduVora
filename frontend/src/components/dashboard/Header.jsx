@@ -46,8 +46,8 @@ export default function Header({ toggleSidebar, isSuperAdmin }) {
         <div className="flex lg:hidden items-center gap-2 ml-1">
           {/* TODO: Add mobile logo here */}
           <div className="flex flex-col pt-1">
-            <span className="text-[15px] font-extrabold text-indigo-900 leading-none tracking-tight">EDUVORA</span>
-            <span className="text-[8px] font-bold text-slate-500 tracking-wider">MLM PLATFORM</span>
+            <span className="text-[15px] font-extrabold text-indigo-900 leading-none tracking-tight">{t('login.logoTitle')}</span>
+            <span className="text-[8px] font-bold text-slate-500 tracking-wider">{t('login.logoSubtitle')}</span>
           </div>
         </div>
       </div>
