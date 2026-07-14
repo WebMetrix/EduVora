@@ -99,9 +99,11 @@ export default function ForgotRight() {
         <LanguageDropdown />
       </div>
 
-      {/* Main Content Container */}
-      <div className="grow flex flex-col justify-center px-6 lg:px-12 xl:px-16 w-full animate-slide-up" style={{ animationDelay: '100ms' }}>
-        <div className="max-w-[480px] w-full mx-auto">
+      {/* Scrollable Container */}
+      <div className="flex-1 overflow-y-auto px-6 lg:px-12 xl:px-16 py-10 custom-scrollbar flex flex-col">
+        {/* Main Content Container */}
+        <div className="grow flex flex-col justify-center w-full animate-slide-up" style={{ animationDelay: '100ms' }}>
+          <div className="max-w-[480px] w-full mx-auto">
           {(step === 1 || step === 3 || step === 4) && (
             <>
               {step !== 4 && (
@@ -154,7 +156,7 @@ export default function ForgotRight() {
 
       {/* Footer Area */}
       {step !== 4 && (
-        <div className="w-full px-12 xl:px-24 pb-8 flex items-center justify-between animate-fade-in" style={{ animationDelay: '300ms' }}>
+        <div className="w-full px-6 lg:px-12 xl:px-24 pt-8 mt-auto flex items-center justify-between animate-fade-in shrink-0" style={{ animationDelay: '300ms' }}>
           <Link to="/login" className="flex items-center gap-2 text-[14px] font-bold text-indigo-600 hover:text-indigo-700 transition-colors group">
             <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
             {t('forgot.backToLogin')}
@@ -166,6 +168,7 @@ export default function ForgotRight() {
           </div>
         </div>
       )}
+      </div>
     </div>
   );
 }

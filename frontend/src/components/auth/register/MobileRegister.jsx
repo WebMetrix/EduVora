@@ -2,7 +2,7 @@ import React from 'react';
 import { useTranslation } from '../../../hooks/useTranslation';
 import RegisterForm from './RegisterForm';
 import { Link } from 'react-router-dom';
-import authMobileBg from '../../../assets/authMobile.png';
+import authMobileBg from '../../../assets/images/authMobile.png';
 
 export default function MobileRegister() {
   const { t } = useTranslation();

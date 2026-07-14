@@ -1,5 +1,5 @@
 import { GraduationCap, Network, BarChart2 } from 'lucide-react';
-import illustration from '../../../assets/Auth.png';
+import illustration from '../../../assets/images/Auth.png';
 import { useTranslation } from '../../../hooks/useTranslation';
 
 export default function LoginLeft() {

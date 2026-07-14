@@ -1,5 +1,5 @@
 import { Shield, RotateCcw, Lock } from 'lucide-react';
-import illustration from '../../../assets/forgotPass.png';
+import illustration from '../../../assets/images/forgotPass.png';
 import { useTranslation } from '../../../hooks/useTranslation';
 
 export default function ForgotLeft() {

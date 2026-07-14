@@ -2,7 +2,7 @@ import { useState, useRef, useEffect } from 'react';
 import { ArrowLeft } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from '../../../hooks/useTranslation';
-import authMobileBg from '../../../assets/authMobile.png';
+import authMobileBg from '../../../assets/images/authMobile.png';
 
 // Import subcomponents
 import ForgotStepper from './steps/ForgotStepper';

@@ -3,7 +3,7 @@ import LoginForm from './LoginForm';
 import SocialButtons from '../shared/SocialButtons';
 import LanguageDropdown from '../shared/LanguageDropdown';
 import { Link } from 'react-router-dom';
-import authMobileBg from '../../../assets/authMobile.png';
+import authMobileBg from '../../../assets/images/authMobile.png';
 
 export default function MobileLogin() {
   const { t } = useTranslation();

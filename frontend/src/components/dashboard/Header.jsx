@@ -4,7 +4,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useTranslation } from '../../hooks/useTranslation';
 import { useNavigate } from 'react-router-dom';
 
-export default function Header({ toggleSidebar }) {
+export default function Header({ toggleSidebar, isSuperAdmin }) {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const [isProfileOpen, setIsProfileOpen] = useState(false);
@@ -69,15 +69,30 @@ export default function Header({ toggleSidebar }) {
           >
             {/* Avatar */}
             <div className="relative">
-              <div className="w-8 h-8 lg:w-9 lg:h-9 rounded-full bg-indigo-50 flex items-center justify-center text-indigo-700 font-bold text-[13px] shadow-sm">
-                PS
-              </div>
+              {isSuperAdmin ? (
+                <div className="w-8 h-8 lg:w-9 lg:h-9 rounded-full bg-[#f3edff] flex items-center justify-center text-[#4f3bf3] font-bold text-[13px] shadow-sm">
+                  SA
+                </div>
+              ) : (
+                <div className="w-8 h-8 lg:w-9 lg:h-9 rounded-full bg-indigo-50 flex items-center justify-center text-indigo-700 font-bold text-[13px] shadow-sm">
+                  PS
+                </div>
+              )}
             </div>
 
             {/* User Name & Rank */}
             <div className="hidden lg:flex flex-col text-left">
-              <h4 className="text-[13px] font-extrabold text-slate-900 leading-tight group-hover:text-indigo-700 transition-colors">Priya Sharma</h4>
-              <p className="text-[11px] font-medium text-slate-500 mt-0.5 tracking-wide">Gold Rank</p>
+              {isSuperAdmin ? (
+                <>
+                  <h4 className="text-[13px] font-extrabold text-[#1a1446] leading-tight group-hover:text-indigo-700 transition-colors">Super Admin</h4>
+                  <p className="text-[11px] font-medium text-slate-500 mt-0.5 tracking-wide">Super Admin</p>
+                </>
+              ) : (
+                <>
+                  <h4 className="text-[13px] font-extrabold text-slate-900 leading-tight group-hover:text-indigo-700 transition-colors">Priya Sharma</h4>
+                  <p className="text-[11px] font-medium text-slate-500 mt-0.5 tracking-wide">Gold Rank</p>
+                </>
+              )}
             </div>
 
             <motion.div 

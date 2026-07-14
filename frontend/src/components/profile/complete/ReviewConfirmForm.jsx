@@ -1,0 +1,228 @@
+import React, { useState } from 'react';
+import { User, Phone, MapPin, Landmark, Check, ChevronDown } from 'lucide-react';
+
+export default function ReviewConfirmForm({ t, onEditStep, onSubmit }) {
+  const [isChecked, setIsChecked] = useState(false);
+  const [expandedSection, setExpandedSection] = useState('personal'); // 'personal', 'contact', 'address', 'bank'
+
+  const toggleSection = (section) => {
+    setExpandedSection(expandedSection === section ? null : section);
+  };
+
+  // Mock data to match the image
+  const personalData = [
+    { label: t('completeProfile.fullName') || 'Full Name', value: 'Priya Sharma' },
+    { label: t('completeProfile.username') || 'Username', value: 'priyasharma25' },
+    { label: t('completeProfile.dob') || 'Date of Birth', value: '15 Oct 1995' },
+    { label: t('completeProfile.gender') || 'Gender', value: 'Female' },
+    { label: t('completeProfile.nationality') || 'Nationality', value: 'Indian' },
+  ];
+
+  const contactData = [
+    { label: t('completeProfile.emailAddress') || 'Email Address', value: 'priya@example.com' },
+    { label: t('completeProfile.mobileNumber') || 'Mobile Number', value: '+91 9876543210' },
+    { label: t('completeProfile.altMobileNumber') || 'Alternate Mobile Number', value: '+91 8765432109' },
+    { label: t('completeProfile.whatsappNumber') || 'WhatsApp Number', value: '+91 9876543210' },
+    { label: t('completeProfile.emergencyContactName') || 'Emergency Contact Name', value: 'Rahul Sharma' },
+    { label: t('completeProfile.emergencyContactNumber') || 'Emergency Contact Number', value: '+91 7654321098' },
+  ];
+
+  const addressData = [
+    { label: t('completeProfile.addressLine1') || 'Address Line 1', value: '123, MG Road' },
+    { label: t('completeProfile.addressLine2') || 'Address Line 2', value: 'Near City Center' },
+    { label: t('completeProfile.country') || 'Country', value: 'India' },
+    { label: t('completeProfile.state') || 'State', value: 'Maharashtra' },
+    { label: t('completeProfile.city') || 'City', value: 'Mumbai' },
+    { label: t('completeProfile.pincode') || 'Pincode', value: '400001' },
+  ];
+
+  const bankData = [
+    { label: t('completeProfile.accountHolderName') || 'Account Holder Name', value: 'Priya Sharma' },
+    { label: t('completeProfile.bankName') || 'Bank Name', value: 'State Bank of India' },
+    { label: t('completeProfile.accountNumber') || 'Account Number', value: 'xxxxxx1234' },
+    { label: t('completeProfile.ifscCode') || 'IFSC Code', value: 'SBIN0001234' },
+    { label: t('completeProfile.accountType') || 'Account Type', value: 'Savings' },
+  ];
+
+  return (
+    <div className="space-y-6">
+      
+      {/* Sections Container */}
+      <div className="bg-[#f8fafd] rounded-2xl p-2 space-y-2">
+        
+        {/* Personal Information */}
+        <div 
+          className={`transition-colors rounded-xl p-5 cursor-pointer ${expandedSection === 'personal' ? 'bg-white shadow-[0_2px_10px_rgba(0,0,0,0.02)]' : 'bg-transparent hover:bg-white'}`}
+          onClick={() => toggleSection('personal')}
+        >
+          <div className={`flex items-center justify-between ${expandedSection === 'personal' ? 'mb-5' : ''}`}>
+            <div className="flex items-center gap-3 text-[#1a1446]">
+              <User className="w-5 h-5 text-slate-400" />
+              <h4 className="font-bold text-[14px]">{t('completeProfile.personalInfo')}</h4>
+            </div>
+            {expandedSection === 'personal' ? (
+              <button 
+                onClick={(e) => { e.stopPropagation(); onEditStep(1); }}
+                className="text-[#4f3bf3] font-bold text-[13px] hover:underline"
+              >
+                {t('completeProfile.editBtn')}
+              </button>
+            ) : (
+              <ChevronDown className="w-5 h-5 text-slate-400" />
+            )}
+          </div>
+          
+          {expandedSection === 'personal' && (
+            <div className="space-y-4">
+              {personalData.map((item, idx) => (
+                <div key={idx} className="flex justify-between items-center text-[13px]">
+                  <span className="text-slate-500 font-medium">{item.label}</span>
+                  <span className="text-[#1a1446] font-bold text-right">{item.value}</span>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+
+        {/* Contact Information */}
+        <div 
+          className={`transition-colors rounded-xl p-5 cursor-pointer ${expandedSection === 'contact' ? 'bg-white shadow-[0_2px_10px_rgba(0,0,0,0.02)]' : 'bg-transparent hover:bg-white'}`}
+          onClick={() => toggleSection('contact')}
+        >
+          <div className={`flex items-center justify-between ${expandedSection === 'contact' ? 'mb-5' : ''}`}>
+            <div className="flex items-center gap-3 text-[#1a1446]">
+              <Phone className="w-5 h-5 text-slate-400" />
+              <h4 className="font-bold text-[14px]">{t('completeProfile.contactInfoTitle')}</h4>
+            </div>
+            {expandedSection === 'contact' ? (
+              <button 
+                onClick={(e) => { e.stopPropagation(); onEditStep(2); }}
+                className="text-[#4f3bf3] font-bold text-[13px] hover:underline"
+              >
+                {t('completeProfile.editBtn')}
+              </button>
+            ) : (
+              <ChevronDown className="w-5 h-5 text-slate-400" />
+            )}
+          </div>
+          
+          {expandedSection === 'contact' && (
+            <div className="space-y-4">
+              {contactData.map((item, idx) => (
+                <div key={idx} className="flex justify-between items-center text-[13px]">
+                  <span className="text-slate-500 font-medium">{item.label}</span>
+                  <span className="text-[#1a1446] font-bold text-right">{item.value}</span>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+
+        {/* Address Information */}
+        <div 
+          className={`transition-colors rounded-xl p-5 cursor-pointer ${expandedSection === 'address' ? 'bg-white shadow-[0_2px_10px_rgba(0,0,0,0.02)]' : 'bg-transparent hover:bg-white'}`}
+          onClick={() => toggleSection('address')}
+        >
+          <div className={`flex items-center justify-between ${expandedSection === 'address' ? 'mb-5' : ''}`}>
+            <div className="flex items-center gap-3 text-[#1a1446]">
+              <MapPin className="w-5 h-5 text-slate-400" />
+              <h4 className="font-bold text-[14px]">{t('completeProfile.addressInfoTitle')}</h4>
+            </div>
+            {expandedSection === 'address' ? (
+              <button 
+                onClick={(e) => { e.stopPropagation(); onEditStep(3); }}
+                className="text-[#4f3bf3] font-bold text-[13px] hover:underline"
+              >
+                {t('completeProfile.editBtn')}
+              </button>
+            ) : (
+              <ChevronDown className="w-5 h-5 text-slate-400" />
+            )}
+          </div>
+          
+          {expandedSection === 'address' && (
+            <div className="space-y-4">
+              {addressData.map((item, idx) => (
+                <div key={idx} className="flex justify-between items-center text-[13px]">
+                  <span className="text-slate-500 font-medium">{item.label}</span>
+                  <span className="text-[#1a1446] font-bold text-right">{item.value}</span>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+
+        {/* Bank Information */}
+        <div 
+          className={`transition-colors rounded-xl p-5 cursor-pointer ${expandedSection === 'bank' ? 'bg-white shadow-[0_2px_10px_rgba(0,0,0,0.02)]' : 'bg-transparent hover:bg-white'}`}
+          onClick={() => toggleSection('bank')}
+        >
+          <div className={`flex items-center justify-between ${expandedSection === 'bank' ? 'mb-5' : ''}`}>
+            <div className="flex items-center gap-3 text-[#1a1446]">
+              <Landmark className="w-5 h-5 text-slate-400" />
+              <h4 className="font-bold text-[14px]">{t('completeProfile.bankInfoTitle')}</h4>
+            </div>
+            {expandedSection === 'bank' ? (
+              <button 
+                onClick={(e) => { e.stopPropagation(); onEditStep(4); }}
+                className="text-[#4f3bf3] font-bold text-[13px] hover:underline"
+              >
+                {t('completeProfile.editBtn')}
+              </button>
+            ) : (
+              <ChevronDown className="w-5 h-5 text-slate-400" />
+            )}
+          </div>
+          
+          {expandedSection === 'bank' && (
+            <div className="space-y-4">
+              {bankData.map((item, idx) => (
+                <div key={idx} className="flex justify-between items-center text-[13px]">
+                  <span className="text-slate-500 font-medium">{item.label}</span>
+                  <span className="text-[#1a1446] font-bold text-right">{item.value}</span>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+
+      </div>
+
+      {/* Checkbox */}
+      <div 
+        className={`flex items-center gap-4 p-5 rounded-2xl cursor-pointer transition-all duration-300 border ${
+          isChecked 
+            ? 'bg-indigo-50 border-indigo-50 shadow-none' 
+            : 'bg-white shadow-[0_2px_12px_rgba(0,0,0,0.04)] border-slate-100'
+        }`}
+        onClick={() => setIsChecked(!isChecked)}
+      >
+        <div className={`shrink-0 w-6 h-6 rounded-[8px] flex items-center justify-center transition-all duration-200 ${
+          isChecked 
+            ? 'bg-[#4f3bf3]' 
+            : 'bg-white border-2 border-slate-300'
+        }`}>
+          {isChecked && <Check className="w-4 h-4 text-white" strokeWidth={3} />}
+        </div>
+        <p className="text-[14px] text-[#1a1446] font-bold select-none">
+          {t('completeProfile.confirmCheckbox')}
+        </p>
+      </div>
+
+      {/* Complete Button */}
+      <div className="pt-2">
+        <button
+          onClick={onSubmit}
+          disabled={!isChecked}
+          className={`w-full py-4 rounded-xl text-white font-bold text-[15px] transition-all duration-300 flex items-center justify-center ${
+            isChecked 
+              ? 'bg-[#4f3bf3] hover:bg-indigo-700 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-indigo-500/30' 
+              : 'bg-indigo-300 cursor-not-allowed'
+          }`}
+        >
+          {t('completeProfile.completeProfileBtn')}
+        </button>
+      </div>
+    </div>
+  );
+}
