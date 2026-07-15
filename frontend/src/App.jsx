@@ -9,18 +9,16 @@ import SuperAdmin from './pages/SuperAdmin';
 
 function App() {
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<Navigate to="/login" replace />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
-        <Route path="/forgotpassword" element={<Forgot />} />
-        <Route path="/dashboard" element={<Dashboard />} />
-        <Route path="/profile" element={<Profile />} />
-        <Route path="/completeprofile" element={<CompleteProfile />} />
-        <Route path="/superadmin/*" element={<SuperAdmin />} />
-      </Routes>
-    </BrowserRouter>
+    <Routes>
+      <Route path="/" element={<Navigate to="/login" replace />} />
+      <Route path="/login" element={<Login />} />
+      <Route path="/register" element={<Register />} />
+      <Route path="/forgotpassword" element={<Forgot />} />
+      <Route path="/dashboard" element={<Dashboard />} />
+      <Route path="/profile" element={<Profile />} />
+      <Route path="/completeprofile" element={<CompleteProfile />} />
+      <Route path="/superadmin/*" element={<SuperAdmin />} />
+    </Routes>
   );
 }
 

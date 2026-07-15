@@ -1,18 +1,14 @@
 import express from 'express';
-import { registerUser, loginUser, logoutUser } from '../controllers/authController.js';
+import { registerUser, loginUser, logoutUser, googleAuth } from '../controllers/authController.js';
 import { isLoggedIn } from '../middlewares/authMiddleware.js';
 
 const router = express.Router();
 
 
-// Register route
-router.post('/register', registerUser);
-
-// Login route
+router.post('/register', registerUser); // Generates temporary username
 router.post('/login', loginUser);
-
-// Logout route
 router.post('/logout', isLoggedIn, logoutUser);
+router.post('/google', googleAuth);
 
 
 
