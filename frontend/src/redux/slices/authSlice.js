@@ -33,6 +33,7 @@ export const logoutUser = createAsyncThunk(
         try {
             const response = await api.post('/auth/logout');
             return response.data;
+            sessionStorage.removeItem('sessionid'); // Clear session storage on logout
         } catch (error) {
             return rejectWithValue(error.response?.data?.message || 'Logout failed');
         }
