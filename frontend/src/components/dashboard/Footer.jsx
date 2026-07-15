@@ -106,7 +106,9 @@ export default function Footer() {
             </div>
             <div className="flex flex-col">
               <span className="text-[13px] font-black text-indigo-950 leading-none tracking-tight group-hover/brand:text-indigo-700 transition-colors">{t('login.logoTitle')}</span>
-              <span className="text-[6.5px] font-extrabold text-slate-500 tracking-widest mt-0.5">{t('login.logoSubtitle')}</span>
+              <span className="text-[6.5px] font-extrabold text-slate-500 tracking-widest mt-0.5">
+                {t('login.logoSubtitle').toUpperCase()}
+              </span>
             </div>
           </div>
           <p className="text-[10.5px] lg:text-[11px] text-slate-500/90 font-medium leading-relaxed mb-4">

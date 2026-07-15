@@ -18,7 +18,7 @@ export default function WelcomeCard() {
           {t('dashboard.welcome.greeting')}
         </p>
         <h2 className="text-[26px] lg:text-[28px] leading-[1.1] font-extrabold text-slate-900 mb-2 tracking-tight flex flex-wrap items-center gap-x-2">
-          Priya Sharma
+          {t('dashboard.mock.userName')}
           <motion.span 
             animate={{ rotate: [0, 14, -8, 14, -4, 10, 0] }}
             transition={{ duration: 2.5, repeat: Infinity, repeatDelay: 5 }}
@@ -42,7 +42,7 @@ export default function WelcomeCard() {
             <Award className="w-5 h-5 text-yellow-300" />
           </div>
           <div className="flex flex-col">
-            <h3 className="text-white font-bold text-[15px] leading-tight">Gold</h3>
+            <h3 className="text-white font-bold text-[15px] leading-tight">{t('dashboard.mock.gold')}</h3>
             <p className="text-indigo-200 text-[11px] font-medium">{t('dashboard.welcome.rank')}</p>
           </div>
         </div>

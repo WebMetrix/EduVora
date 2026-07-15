@@ -46,7 +46,7 @@ export default function WalletCard() {
           >
             <Wallet className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
             <span className="hidden sm:inline">{t('dashboard.wallet.withdraw')}</span>
-            <span className="sm:hidden">Withdraw</span>
+            <span className="sm:hidden">{t('dashboard.wallet.withdraw')}</span>
           </motion.button>
         </div>
 

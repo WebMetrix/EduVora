@@ -132,6 +132,18 @@
       "desc": "Upgrade your plan and unlock more benefits.",
       "button": "Upgrade Now"
     },
+    "superadmin": {
+      "userManagement": "User Management",
+      "allUsers": "All Users",
+      "createUser": "Create User",
+      "title": "Super Admin",
+      "accessDesc": "You have full access to manage all users and system settings."
+    },
+    "mock": {
+      "userName": "Priya Sharma",
+      "userRank": "Gold Rank",
+      "gold": "Gold"
+    },
     "welcome": {
       "greeting": "Welcome back,",
       "subtitle": "Here's what's happening with your network today.",

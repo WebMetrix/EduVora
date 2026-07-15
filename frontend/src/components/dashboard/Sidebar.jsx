@@ -7,6 +7,7 @@ import { useState } from 'react';
 import { useTranslation } from '../../hooks/useTranslation';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate, useLocation } from 'react-router-dom';
+import logoImg from '../../assets/images/Eduvora.png';
 
 const menuItems = [
   { id: 'dashboard', icon: Home, labelKey: 'nav.dashboard', active: true },
@@ -65,8 +66,8 @@ export default function Sidebar({ isOpen, setIsOpen, isSuperAdmin }) {
         {/* Logo Area */}
         <div className="h-14 flex items-center justify-between px-6 border-b border-slate-100 shrink-0">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-indigo-600 flex items-center justify-center shrink-0 shadow-lg shadow-indigo-600/30">
-              <span className="text-white text-[10px] font-bold">Logo</span>
+            <div className="w-10 h-10 shrink-0">
+              <img src={logoImg} alt="Eduvora Logo" className="w-full h-full object-contain" />
             </div>
             <div>
               <h2 className="text-slate-900 text-[17px] font-bold tracking-tight leading-tight">{t('login.logoTitle')}</h2>
@@ -125,16 +126,16 @@ export default function Sidebar({ isOpen, setIsOpen, isSuperAdmin }) {
                   <button
                     onClick={() => setIsUserManagementOpen(!isUserManagementOpen)}
                     className={`w-full group relative flex items-center justify-between px-3.5 py-2.5 rounded-xl text-[13px] font-semibold transition-all duration-300 hover:-translate-y-0.5 hover:shadow-sm ${isUserManagementOpen || location.pathname.includes('/superadmin/users')
-                      ? 'text-indigo-600 bg-indigo-50/50'
+                      ? 'text-white bg-indigo-600 shadow-md shadow-indigo-600/20'
                       : 'text-slate-600 hover:text-indigo-600 hover:bg-indigo-50/50'
                       }`}
                   >
                     <div className="flex items-center gap-3.5">
                       <UserCog className="w-[18px] h-[18px] transition-transform duration-300 group-hover:rotate-6" />
-                      User Management
+                      {t('dashboard.superadmin.userManagement')}
                     </div>
                     <motion.div animate={{ rotate: isUserManagementOpen ? 180 : 0 }}>
-                      <ChevronDown className="w-4 h-4 text-slate-400 group-hover:text-indigo-600" />
+                      <ChevronDown className={`w-4 h-4 transition-colors ${isUserManagementOpen || location.pathname.includes('/superadmin/users') ? 'text-white' : 'text-slate-400 group-hover:text-indigo-600'}`} />
                     </motion.div>
                   </button>
 
@@ -151,7 +152,7 @@ export default function Sidebar({ isOpen, setIsOpen, isSuperAdmin }) {
                             href="#"
                             className="px-3 py-2 text-[13px] font-medium text-slate-500 rounded-lg hover:text-indigo-600 hover:bg-indigo-50/50 transition-colors"
                           >
-                            All Users
+                            {t('dashboard.superadmin.allUsers')}
                           </a>
                           <a
                             href="#"
@@ -161,11 +162,11 @@ export default function Sidebar({ isOpen, setIsOpen, isSuperAdmin }) {
                               if (window.innerWidth < 1024) setIsOpen(false);
                             }}
                             className={`px-3 py-2 text-[13px] font-medium rounded-lg transition-colors ${location.pathname.includes('/superadmin/users/create')
-                              ? 'text-indigo-600 bg-indigo-50/80 font-bold shadow-[0_2px_8px_rgba(79,59,243,0.08)]'
+                              ? 'text-white bg-indigo-600 shadow-md shadow-indigo-600/20'
                               : 'text-slate-500 hover:text-indigo-600 hover:bg-indigo-50/50'
                               }`}
                           >
-                            Create User
+                            {t('dashboard.superadmin.createUser')}
                           </a>
                         </div>
                       </motion.div>
@@ -184,8 +185,8 @@ export default function Sidebar({ isOpen, setIsOpen, isSuperAdmin }) {
                 <div className="w-10 h-10 rounded-full bg-[#4f3bf3] flex items-center justify-center mb-3 shadow-md shadow-indigo-500/30">
                   <ShieldCheck className="w-5 h-5 text-white" />
                 </div>
-                <h4 className="text-[#1a1446] text-[15px] font-extrabold mb-2">Super Admin</h4>
-                <p className="text-slate-500 text-[12px] leading-relaxed font-medium">You have full access to manage all users and system settings.</p>
+                <h4 className="text-[#1a1446] text-[15px] font-extrabold mb-2">{t('dashboard.superadmin.title')}</h4>
+                <p className="text-slate-500 text-[12px] leading-relaxed font-medium">{t('dashboard.superadmin.accessDesc')}</p>
               </div>
             </div>
           ) : (

@@ -1,5 +1,6 @@
 import { Shield, RotateCcw, Lock } from 'lucide-react';
 import illustration from '../../../assets/images/forgotPass.png';
+import logoImg from '../../../assets/images/Eduvora.png';
 import { useTranslation } from '../../../hooks/useTranslation';
 
 export default function ForgotLeft() {
@@ -25,8 +26,8 @@ export default function ForgotLeft() {
           {/* ========================================== */}
           {/* TODO: ADD YOUR CUSTOM LOGO IMAGE/SVG HERE */}
           {/* ========================================== */}
-          <div className="w-10 h-10 rounded-xl border-2 border-dashed border-slate-600 flex items-center justify-center shrink-0">
-            <span className="text-slate-500 text-[10px] font-bold">Logo</span>
+          <div className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0 overflow-hidden">
+            <img src={logoImg} alt="Eduvora Logo" className="w-full h-full object-contain" />
           </div>
           <div>
             <h2 className="text-white text-lg lg:text-xl font-bold tracking-tight leading-tight">{t('login.logoTitle')}</h2>

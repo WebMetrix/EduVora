@@ -4,6 +4,7 @@ import SocialButtons from '../shared/SocialButtons';
 import LanguageDropdown from '../shared/LanguageDropdown';
 import { Link } from 'react-router-dom';
 import authMobileBg from '../../../assets/images/authMobile.png';
+import logoImg from '../../../assets/images/Eduvora.png';
 
 export default function MobileLogin() {
   const { t } = useTranslation();
@@ -14,9 +15,8 @@ export default function MobileLogin() {
       <div className="flex justify-between items-start w-full mb-3 relative z-10">
         <div className="flex flex-col items-center flex-1 mt-2">
           {/* Logo Container - will provide custom logo here */}
-          <div className="w-16 h-16 rounded-2xl bg-white/40 backdrop-blur-md border border-white/60 shadow-[0_4px_30px_rgba(0,0,0,0.1)] flex items-center justify-center mb-2">
-            {/* TODO: Insert Custom Logo Here */}
-            <span className="text-slate-400 text-[10px] font-bold uppercase tracking-wider">Logo</span>
+          <div className="w-16 h-16 rounded-2xl flex items-center justify-center mb-2 overflow-hidden shadow-[0_4px_30px_rgba(0,0,0,0.1)]">
+            <img src={logoImg} alt="Eduvora Logo" className="w-full h-full object-contain" />
           </div>
           <h2 className="text-[24px] font-bold text-slate-900 leading-tight tracking-tight">{t('login.logoTitle')}</h2>
           <p className="text-slate-500 text-[10px] font-semibold tracking-[0.2em] uppercase mt-0.5">{t('login.logoSubtitle')}</p>

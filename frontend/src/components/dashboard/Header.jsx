@@ -3,6 +3,7 @@ import { Menu, ChevronDown, Bell, User, Settings, Wallet, BarChart2, HelpCircle,
 import { motion, AnimatePresence } from 'framer-motion';
 import { useTranslation } from '../../hooks/useTranslation';
 import { useNavigate } from 'react-router-dom';
+import logoImg from '../../assets/images/Eduvora.png';
 
 export default function Header({ toggleSidebar, isSuperAdmin }) {
   const { t } = useTranslation();
@@ -44,10 +45,12 @@ export default function Header({ toggleSidebar, isSuperAdmin }) {
 
         {/* Mobile Logo & Name */}
         <div className="flex lg:hidden items-center gap-2 ml-1">
-          {/* TODO: Add mobile logo here */}
+          <img src={logoImg} alt="Eduvora Logo" className="w-8 h-8 object-contain shrink-0" />
           <div className="flex flex-col pt-1">
             <span className="text-[15px] font-extrabold text-indigo-900 leading-none tracking-tight">{t('login.logoTitle')}</span>
-            <span className="text-[8px] font-bold text-slate-500 tracking-wider">{t('login.logoSubtitle')}</span>
+            <span className="text-[8px] font-bold text-slate-500 tracking-wider">
+              {t('login.logoSubtitle').toUpperCase()}
+            </span>
           </div>
         </div>
       </div>
@@ -84,18 +87,18 @@ export default function Header({ toggleSidebar, isSuperAdmin }) {
             <div className="hidden lg:flex flex-col text-left">
               {isSuperAdmin ? (
                 <>
-                  <h4 className="text-[13px] font-extrabold text-[#1a1446] leading-tight group-hover:text-indigo-700 transition-colors">Super Admin</h4>
-                  <p className="text-[11px] font-medium text-slate-500 mt-0.5 tracking-wide">Super Admin</p>
+                  <h4 className="text-[13px] font-extrabold text-[#1a1446] leading-tight group-hover:text-indigo-700 transition-colors">{t('dashboard.superadmin.title')}</h4>
+                  <p className="text-[11px] font-medium text-slate-500 mt-0.5 tracking-wide">{t('dashboard.superadmin.title')}</p>
                 </>
               ) : (
                 <>
-                  <h4 className="text-[13px] font-extrabold text-slate-900 leading-tight group-hover:text-indigo-700 transition-colors">Priya Sharma</h4>
-                  <p className="text-[11px] font-medium text-slate-500 mt-0.5 tracking-wide">Gold Rank</p>
+                  <h4 className="text-[13px] font-extrabold text-slate-900 leading-tight group-hover:text-indigo-700 transition-colors">{t('dashboard.mock.userName')}</h4>
+                  <p className="text-[11px] font-medium text-slate-500 mt-0.5 tracking-wide">{t('dashboard.mock.userRank')}</p>
                 </>
               )}
             </div>
 
-            <motion.div 
+            <motion.div
               animate={{ rotate: isProfileOpen ? 180 : 0 }}
               transition={{ duration: 0.2 }}
             >
@@ -115,8 +118,8 @@ export default function Header({ toggleSidebar, isSuperAdmin }) {
               >
                 <div className="py-1.5 flex flex-col">
                   {dropdownItems.map((item, idx) => (
-                    <button 
-                      key={idx} 
+                    <button
+                      key={idx}
                       onClick={() => {
                         if (item.id === 'profile') {
                           navigate('/profile');
@@ -129,9 +132,9 @@ export default function Header({ toggleSidebar, isSuperAdmin }) {
                       <span className="text-[12px] font-semibold text-slate-700 group-hover/item:text-indigo-600 transition-colors">{item.label}</span>
                     </button>
                   ))}
-                  
+
                   <div className="h-px bg-slate-100 my-1 mx-3" />
-                  
+
                   <button className="flex items-center gap-2.5 px-4 py-2 hover:bg-red-50 transition-colors w-full text-left group/logout">
                     <LogOut className="w-[15px] h-[15px] text-red-500 group-hover/logout:text-red-600 transition-colors" />
                     <span className="text-[12px] font-semibold text-red-500 group-hover/logout:text-red-600 transition-colors">{t('dashboard.nav.logout')}</span>
