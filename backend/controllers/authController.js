@@ -157,7 +157,7 @@ export const loginUser = async (req, res) => {
 
 
 // Google Auth (Handles both Login & Register via Stored Procedures)
-export const googleAuth = async (req, res) => {
+export const googleAuthUser = async (req, res) => {
     const { credential } = req.body; // The token string from Google
 
     try {
