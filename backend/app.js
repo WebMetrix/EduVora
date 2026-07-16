@@ -8,6 +8,7 @@ const app = express();
 
 // import routes
 import authRoutes from "./routes/authRoutes.js";
+import otpRoutes from "./routes/otpRoutes.js";
 
 
 // Cors configuration
@@ -40,6 +41,8 @@ app.get("/", async (req, res) => {
 
 // routes 
 app.use("/auth", authRoutes);
+app.use('/otp', otpRoutes);
+
 
 
 const PORT = process.env.PORT;

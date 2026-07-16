@@ -4,6 +4,7 @@ import pool, { sql } from "../config/db.js";
 import "dotenv/config"
 import { OAuth2Client } from 'google-auth-library';
 import crypto from 'crypto';
+import logger from '../utils/logger.js';
 
 // Initialize the Google Client
 const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
@@ -26,6 +27,7 @@ export const registerUser = async (req, res) => {
 
         // 3. Pre-sign JWT (since we already generated the UUID)
         let token = jwt.sign({ id: userUUID, email: emailAddress }, process.env.JWT_SECRET, { expiresIn: '1d' });
+        let dbSessionId = crypto.randomUUID();
 
         // 4. Execute Stored Procedure
         const request = pool.request();
@@ -35,7 +37,7 @@ export const registerUser = async (req, res) => {
         request.input('MobileNumber', sql.VarChar(20), mobileNumber || null);
         request.input('Password', sql.VarChar(255), hash);
         request.input('ReferralCode', sql.VarChar(50), referralCode || null);
-        request.input('SessionId', sql.VarChar(255), token);
+        request.input('SessionId', sql.VarChar(255), dbSessionId);
         request.input('SignupMethod', sql.VarChar(50), '1');    // 1 = Standard
         request.input('UserID', sql.VarChar(100), derivedUserID);
         request.input('Username', sql.VarChar(50), derivedUsername);
@@ -63,7 +65,7 @@ export const registerUser = async (req, res) => {
         res.status(200).send({ message: 'User registered successfully', token });
 
     } catch (err) {
-        console.error("REGISTER ERROR:", err);
+        logger.error(`REGISTER ERROR: ${err.message}`, { stack: err.stack });
         res.status(400).send({ message: 'Something went wrong' });
     }
 };
@@ -88,7 +90,7 @@ export const logoutUser = async (req, res) => {
         // res.redirect('/login');
         res.status(200).send({ message: 'Logged out successfully' });
     } catch (err) {
-        console.error("LOGOUT ERROR:", err);
+        logger.error(`LOGOUT ERROR: ${err.message}`, { stack: err.stack });
         res.status(500).send({ message: 'Something went wrong during logout' });
     }
 
@@ -124,10 +126,11 @@ export const loginUser = async (req, res) => {
 
         // 4. Sign JWT 
         let token = jwt.sign({ id: user.UUID, email: user.EmailAddress }, process.env.JWT_SECRET, { expiresIn: '1d' });
+        let dbSessionId = crypto.randomUUID();
 
         // EV_LogIn doesn't update the SessionId, so we run a quick update here
         const updateSessionReq = pool.request();
-        updateSessionReq.input('SessionId', sql.VarChar(255), token);
+        updateSessionReq.input('SessionId', sql.VarChar(255), dbSessionId);
         updateSessionReq.input('UUID', sql.VarChar(36), user.UUID);
         await updateSessionReq.query(`UPDATE dbo.Tb_User SET SessionId = @SessionId WHERE UUID = @UUID`);
 
@@ -146,7 +149,7 @@ export const loginUser = async (req, res) => {
         });
 
     } catch (err) {
-        console.log("LOGIN ERROR:", err);
+        logger.error(`LOGIN ERROR: ${err.message}`, { stack: err.stack });
         res.status(500).send({ message: 'Something went wrong' });
     }
 };
@@ -226,10 +229,11 @@ export const googleAuth = async (req, res) => {
 
         // 3. Sign JWT for the user (whether newly created or existing)
         let token = jwt.sign({ id: user.UUID, email: user.EmailAddress }, process.env.JWT_SECRET, { expiresIn: '1d' });
+        let dbSessionId = crypto.randomUUID();
 
         // 4. Update the Database with the new SessionId
         const updateSessionReq = pool.request();
-        updateSessionReq.input('SessionId', sql.VarChar(255), token);
+        updateSessionReq.input('SessionId', sql.VarChar(255), dbSessionId);
         updateSessionReq.input('UUID', sql.VarChar(36), user.UUID);
         await updateSessionReq.query(`UPDATE dbo.Tb_User SET SessionId = @SessionId WHERE UUID = @UUID`);
 
@@ -252,7 +256,7 @@ export const googleAuth = async (req, res) => {
         });
 
     } catch (err) {
-        console.error("GOOGLE AUTH ERROR:", err);
+        logger.error(`GOOGLE AUTH ERROR: ${err.message}`, { stack: err.stack });
         res.status(500).send({ message: 'Google authentication failed' });
     }
 }
