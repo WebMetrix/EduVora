@@ -256,6 +256,38 @@
       "nationality": "Nationality",
       "memberSince": "Member Since"
     },
+    "contact": {
+      "title": "Contact Information",
+      "subtitle": "Update your contact details",
+      "email": "Email Address",
+      "phone": "Phone Number",
+      "whatsapp": "WhatsApp Number",
+      "edit": "Edit",
+      "verified": "Verified"
+    },
+    "address": {
+      "title": "Address Information",
+      "subtitle": "Update your residential address",
+      "addressLine1": "Address Line 1",
+      "addressLine2": "Address Line 2 (Optional)",
+      "landmark": "Landmark (Optional)",
+      "city": "City",
+      "state": "State",
+      "pincode": "Pincode",
+      "country": "Country",
+      "edit": "Edit"
+    },
+    "bank": {
+      "title": "Bank Information",
+      "subtitle": "Update your bank details",
+      "accountHolder": "Account Holder Name",
+      "bankName": "Bank Name",
+      "accountNumber": "Account Number",
+      "ifscCode": "IFSC Code",
+      "accountType": "Account Type",
+      "branch": "Branch",
+      "edit": "Edit"
+    },
     "about": {
       "title": "About Me",
       "subtitle": "Tell us something about yourself"

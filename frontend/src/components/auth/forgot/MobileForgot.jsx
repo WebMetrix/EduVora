@@ -4,6 +4,9 @@ import { Link } from 'react-router-dom';
 import { useTranslation } from '../../../hooks/useTranslation';
 import authMobileBg from '../../../assets/images/authMobile.png';
 import logoImg from '../../../assets/images/Eduvora.png';
+import { useDispatch, useSelector } from 'react-redux';
+import { sendOtp, verifyOtp, resendOtp, resetPassword } from '../../../redux/slices/authSlice';
+import { toast } from 'react-toastify';
 
 // Import subcomponents
 import ForgotStepper from './steps/ForgotStepper';
@@ -14,6 +17,9 @@ import ForgotStepDone from './steps/ForgotStepDone';
 
 export default function MobileForgot() {
   const { t } = useTranslation();
+  const dispatch = useDispatch();
+  const { loading } = useSelector((state) => state.auth);
+
   const [step, setStep] = useState(1);
   const [email, setEmail] = useState('');
   const [otp, setOtp] = useState(['', '', '', '', '', '']);
@@ -61,25 +67,43 @@ export default function MobileForgot() {
     }
   }, [step, timeLeft]);
 
-  const handleSendOtp = (e) => {
+  const handleSendOtp = async (e) => {
     e.preventDefault();
-    if (email) {
+    if (!email) return toast.error('Please enter your email');
+    const result = await dispatch(sendOtp({ emailAddress: email }));
+    if (sendOtp.fulfilled.match(result)) {
       setStep(2);
-      setTimeLeft(45);
+      setTimeLeft(300);
+      toast.success(result.payload.message);
+    }
+  };
+
+  const handleVerifyOtp = async () => {
+    const otpString = otp.join('');
+    if (otpString.length !== 6) return toast.error('Please enter the complete 6-digit OTP');
+    const result = await dispatch(verifyOtp({ emailAddress: email, otp: otpString }));
+    if (verifyOtp.fulfilled.match(result)) {
+      setStep(3);
+      toast.success(result.payload.message);
+    }
+  };
+
+  const handleResend = async () => {
+    const result = await dispatch(resendOtp({ emailAddress: email }));
+    if (resendOtp.fulfilled.match(result)) {
+      setTimeLeft(300);
+      setOtp(['', '', '', '', '', '']);
+      toast.success(result.payload.message);
     }
   };
 
   const handleOtpChange = (index, value) => {
     if (value.length > 1) return;
     if (!/^\d*$/.test(value)) return;
-
     const newOtp = [...otp];
     newOtp[index] = value;
     setOtp(newOtp);
-
-    if (value !== '' && index < 5) {
-      inputRefs.current[index + 1]?.focus();
-    }
+    if (value !== '' && index < 5) inputRefs.current[index + 1]?.focus();
   };
 
   const handleOtpKeyDown = (index, e) => {
@@ -88,9 +112,21 @@ export default function MobileForgot() {
     }
   };
 
-  const handleResend = () => {
-    setTimeLeft(45);
-    // Add logic to resend OTP here
+  const handleResetPassword = async (e) => {
+    e.preventDefault();
+    if (newPassword !== confirmPassword) return toast.error('Passwords do not match');
+    const otpString = otp.join('');
+
+    const result = await dispatch(resetPassword({
+      emailAddress: email,
+      otp: otpString,
+      newPassword
+    }));
+
+    if (resetPassword.fulfilled.match(result)) {
+      setStep(4);
+      toast.success('Password successfully reset');
+    }
   };
 
   return (
@@ -104,10 +140,10 @@ export default function MobileForgot() {
           </div>
           <h2 className="text-[24px] font-bold text-slate-900 leading-tight tracking-tight">{t('login.logoTitle')}</h2>
           <p className="text-slate-500 text-[10px] font-semibold tracking-[0.2em] uppercase mt-0.5">{t('login.logoSubtitle')}</p>
-          
+
           {/* Empty space where title used to be, now moved down */}
           {step === 4 && (
-             <h2 className="text-[20px] font-bold text-slate-900 leading-tight tracking-tight text-center">{t('forgot.doneTitle')}</h2>
+            <h2 className="text-[20px] font-bold text-slate-900 leading-tight tracking-tight text-center">{t('forgot.doneTitle')}</h2>
           )}
         </div>
       </div>
@@ -122,31 +158,33 @@ export default function MobileForgot() {
                 <p className="text-[13px] text-indigo-600 font-medium px-4">{step === 1 ? t('forgot.subtitle') : t('forgot.resetSubtitle')}</p>
               </div>
             )}
-            
+
             <ForgotStepper step={step} />
           </>
         )}
 
         {step === 1 ? (
-          <ForgotStepEmail 
-            email={email} 
-            setEmail={setEmail} 
-            handleSendOtp={handleSendOtp} 
+          <ForgotStepEmail
+            email={email}
+            setEmail={setEmail}
+            handleSendOtp={handleSendOtp}
+            loading={loading}
           />
         ) : step === 2 ? (
-          <ForgotStepOTP 
+          <ForgotStepOTP
             email={email}
             otp={otp}
             setOtp={setOtp}
             inputRefs={inputRefs}
             timeLeft={timeLeft}
             handleResend={handleResend}
+            handleVerifyOtp={handleVerifyOtp}
             handleOtpChange={handleOtpChange}
             handleOtpKeyDown={handleOtpKeyDown}
-            setStep={setStep}
+            loading={loading}
           />
         ) : step === 3 ? (
-          <ForgotStepReset 
+          <ForgotStepReset
             newPassword={newPassword}
             setNewPassword={setNewPassword}
             confirmPassword={confirmPassword}
@@ -156,7 +194,8 @@ export default function MobileForgot() {
             hasLength={hasLength}
             hasMixed={hasMixed}
             hasNumberSpecial={hasNumberSpecial}
-            setStep={setStep}
+            handleResetPassword={handleResetPassword}
+            loading={loading}
           />
         ) : (
           <ForgotStepDone />

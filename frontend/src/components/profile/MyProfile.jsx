@@ -3,6 +3,9 @@ import { useTranslation } from '../../hooks/useTranslation';
 import ProfileHeader from './ProfileHeader';
 import ProfileTabs from './ProfileTabs';
 import PersonalInformationCard from './PersonalInformationCard';
+import ContactInformationCard from './ContactInformationCard';
+import AddressInformationCard from './AddressInformationCard';
+import BankInformationCard from './BankInformationCard';
 import AboutMeCard from './AboutMeCard';
 import SafeInfoCard from './SafeInfoCard';
 import AccountOverviewCard from './AccountOverviewCard';
@@ -35,8 +38,21 @@ export default function MyProfile() {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Left Column */}
           <div className="lg:col-span-2 flex flex-col gap-6">
-            <PersonalInformationCard t={t} />
-            <AboutMeCard t={t} />
+            {activeTab === 'personalInfo' && (
+              <>
+                <PersonalInformationCard t={t} />
+                <AboutMeCard t={t} />
+              </>
+            )}
+            {activeTab === 'contactInfo' && (
+              <ContactInformationCard t={t} />
+            )}
+            {activeTab === 'addressInfo' && (
+              <AddressInformationCard t={t} />
+            )}
+            {activeTab === 'bankInfo' && (
+              <BankInformationCard t={t} />
+            )}
             <SafeInfoCard t={t} className="hidden lg:flex" />
           </div>
 
