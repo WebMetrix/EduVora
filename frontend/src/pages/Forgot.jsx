@@ -10,7 +10,7 @@ export default function Forgot() {
         <ForgotLeft />
         <ForgotRight />
       </div>
-
+    
       {/* Mobile Container */}
       <div className="md:hidden w-full">
         <MobileForgot />

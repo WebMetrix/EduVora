@@ -3,6 +3,9 @@ import LanguageDropdown from '../shared/LanguageDropdown';
 import { ArrowLeft, HeadphonesIcon } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from '../../../hooks/useTranslation';
+import { useDispatch, useSelector } from 'react-redux';
+import { sendOtp, verifyOtp, resendOtp, resetPassword } from '../../../redux/slices/authSlice';
+import { toast } from 'react-toastify';
 
 // Import subcomponents
 import ForgotStepper from './steps/ForgotStepper';
@@ -11,8 +14,12 @@ import ForgotStepOTP from './steps/ForgotStepOTP';
 import ForgotStepReset from './steps/ForgotStepReset';
 import ForgotStepDone from './steps/ForgotStepDone';
 
+
 export default function ForgotRight() {
   const { t } = useTranslation();
+  const dispatch = useDispatch();
+  const { loading } = useSelector((state) => state.auth);
+
   const [step, setStep] = useState(1);
   const [email, setEmail] = useState('');
   const [otp, setOtp] = useState(['', '', '', '', '', '']);
@@ -60,25 +67,43 @@ export default function ForgotRight() {
     }
   }, [step, timeLeft]);
 
-  const handleSendOtp = (e) => {
+  const handleSendOtp = async (e) => {
     e.preventDefault();
-    if (email) {
+    if (!email) return toast.error('Please enter your email');
+    const result = await dispatch(sendOtp({ emailAddress: email }));
+    if (sendOtp.fulfilled.match(result)) {
       setStep(2);
-      setTimeLeft(45);
+      setTimeLeft(300);
+      toast.success(result.payload.message);
+    }
+  };
+
+  const handleVerifyOtp = async () => {
+    const otpString = otp.join('');
+    if (otpString.length !== 6) return toast.error('Please enter the complete 6-digit OTP');
+    const result = await dispatch(verifyOtp({ emailAddress: email, otp: otpString }));
+    if (verifyOtp.fulfilled.match(result)) {
+      setStep(3);
+      toast.success(result.payload.message);
+    }
+  };
+
+  const handleResend = async () => {
+    const result = await dispatch(resendOtp({ emailAddress: email }));
+    if (resendOtp.fulfilled.match(result)) {
+      setTimeLeft(300);
+      setOtp(['', '', '', '', '', '']);
+      toast.success(result.payload.message);
     }
   };
 
   const handleOtpChange = (index, value) => {
     if (value.length > 1) return;
     if (!/^\d*$/.test(value)) return;
-
     const newOtp = [...otp];
     newOtp[index] = value;
     setOtp(newOtp);
-
-    if (value !== '' && index < 5) {
-      inputRefs.current[index + 1]?.focus();
-    }
+    if (value !== '' && index < 5) inputRefs.current[index + 1]?.focus();
   };
 
   const handleOtpKeyDown = (index, e) => {
@@ -87,87 +112,84 @@ export default function ForgotRight() {
     }
   };
 
-  const handleResend = () => {
-    setTimeLeft(45);
-    // Add logic to resend OTP here
+  const handleResetPassword = async (e) => {
+    e.preventDefault();
+    if (newPassword !== confirmPassword) return toast.error('Passwords do not match');
+    const otpString = otp.join('');
+
+    const result = await dispatch(resetPassword({
+      emailAddress: email,
+      otp: otpString,
+      newPassword
+    }));
+
+    if (resetPassword.fulfilled.match(result)) {
+      setStep(4);
+      toast.success('Password successfully reset');
+    }
   };
+
 
   return (
     <div className="w-[55%] h-full bg-white flex flex-col relative">
-      {/* Top right language dropdown */}
-      <div className="absolute top-6 right-6 lg:top-8 lg:right-10 z-20">
-        <LanguageDropdown />
-      </div>
-
       {/* Scrollable Container */}
-      <div className="flex-1 overflow-y-auto px-6 lg:px-12 xl:px-16 py-10 custom-scrollbar flex flex-col">
-        {/* Main Content Container */}
-        <div className="grow flex flex-col justify-center w-full animate-slide-up" style={{ animationDelay: '100ms' }}>
-          <div className="max-w-[480px] w-full mx-auto">
-          {(step === 1 || step === 3 || step === 4) && (
-            <>
-              {step !== 4 && (
-                <div className="mb-8 hidden md:block">
-                  <h1 className="text-3xl lg:text-[34px] font-extrabold text-slate-900 mb-2 tracking-tight">{t('forgot.title')}</h1>
-                  <p className="text-slate-600 text-[15px] leading-relaxed pr-8">{step === 1 ? t('forgot.subtitle') : t('forgot.resetSubtitle')}</p>
-                </div>
-              )}
-              
-              <ForgotStepper step={step} />
-            </>
-          )}
+      <div className="flex-1 overflow-y-auto custom-scrollbar flex flex-col relative">
 
-          {step === 1 ? (
-            <ForgotStepEmail 
-              email={email} 
-              setEmail={setEmail} 
-              handleSendOtp={handleSendOtp} 
-            />
-          ) : step === 2 ? (
-            <ForgotStepOTP 
-              email={email}
-              otp={otp}
-              setOtp={setOtp}
-              inputRefs={inputRefs}
-              timeLeft={timeLeft}
-              handleResend={handleResend}
-              handleOtpChange={handleOtpChange}
-              handleOtpKeyDown={handleOtpKeyDown}
-              setStep={setStep}
-            />
-          ) : step === 3 ? (
-            <ForgotStepReset 
-              newPassword={newPassword}
-              setNewPassword={setNewPassword}
-              confirmPassword={confirmPassword}
-              setConfirmPassword={setConfirmPassword}
-              strengthScore={strengthScore}
-              strengthConfig={strengthConfig}
-              hasLength={hasLength}
-              hasMixed={hasMixed}
-              hasNumberSpecial={hasNumberSpecial}
-              setStep={setStep}
-            />
-          ) : (
-            <ForgotStepDone />
-          )}
+        {/* Language Dropdown - scrolls with content */}
+        <div className="w-full flex justify-end px-6 lg:px-12 xl:px-16 pt-6 lg:pt-8 pb-4 shrink-0">
+          <LanguageDropdown />
         </div>
-      </div>
 
-      {/* Footer Area */}
-      {step !== 4 && (
-        <div className="w-full px-6 lg:px-12 xl:px-24 pt-8 mt-auto flex items-center justify-between animate-fade-in shrink-0" style={{ animationDelay: '300ms' }}>
-          <Link to="/login" className="flex items-center gap-2 text-[14px] font-bold text-indigo-600 hover:text-indigo-700 transition-colors group">
-            <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
-            {t('forgot.backToLogin')}
-          </Link>
-          <div className="h-5 w-px bg-slate-300"></div>
-          <div className="flex items-center gap-2 text-[14px] font-medium text-slate-600">
-            <HeadphonesIcon className="w-4 h-4 text-slate-700" />
-            {t('forgot.needHelp')} <a href="#" className="font-bold text-indigo-600 hover:text-indigo-700">{t('forgot.contactSupport')}</a>
+        {/* Main Content Container */}
+        <div className="grow flex flex-col px-6 lg:px-12 xl:px-16 pb-10 w-full animate-slide-up" style={{ animationDelay: '100ms' }}>
+          <div className="max-w-[480px] w-full mx-auto my-auto">
+            {(step === 1 || step === 3 || step === 4) && (
+              <>
+                {step !== 4 && (
+                  <div className="mb-8 hidden md:block">
+                    <h1 className="text-3xl lg:text-[34px] font-extrabold text-slate-900 mb-2 tracking-tight">{t('forgot.title')}</h1>
+                    <p className="text-slate-600 text-[15px] leading-relaxed pr-8">{step === 1 ? t('forgot.subtitle') : t('forgot.resetSubtitle')}</p>
+                  </div>
+                )}
+                <ForgotStepper step={step} />
+              </>
+            )}
+
+            {step === 1 ? (
+              <ForgotStepEmail email={email} setEmail={setEmail} handleSendOtp={handleSendOtp} loading={loading} />
+            ) : step === 2 ? (
+              <ForgotStepOTP
+                email={email} otp={otp} setOtp={setOtp} inputRefs={inputRefs} timeLeft={timeLeft}
+                handleResend={handleResend} handleVerifyOtp={handleVerifyOtp} handleOtpChange={handleOtpChange}
+                handleOtpKeyDown={handleOtpKeyDown} loading={loading}
+              />
+            ) : step === 3 ? (
+              <ForgotStepReset
+                newPassword={newPassword} setNewPassword={setNewPassword} confirmPassword={confirmPassword}
+                setConfirmPassword={setConfirmPassword} strengthScore={strengthScore} strengthConfig={strengthConfig}
+                hasLength={hasLength} hasMixed={hasMixed} hasNumberSpecial={hasNumberSpecial}
+                handleResetPassword={handleResetPassword} loading={loading}
+              />
+            ) : (
+              <ForgotStepDone />
+            )}
           </div>
         </div>
-      )}
+
+        {/* Footer Area */}
+        {step !== 4 && (
+          <div className="w-full px-6 lg:px-12 xl:px-24 pt-8 pb-10 mt-auto flex items-center justify-between animate-fade-in shrink-0" style={{ animationDelay: '300ms' }}>
+            <Link to="/login" className="flex items-center gap-2 text-[14px] font-bold text-indigo-600 hover:text-indigo-700 transition-colors group">
+              <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
+              {t('forgot.backToLogin')}
+            </Link>
+            <div className="h-5 w-px bg-slate-300"></div>
+            <div className="flex items-center gap-2 text-[14px] font-medium text-slate-600">
+              <HeadphonesIcon className="w-4 h-4 text-slate-700" />
+              {t('forgot.needHelp')} <a href="#" className="font-bold text-indigo-600 hover:text-indigo-700">{t('forgot.contactSupport')}</a>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );

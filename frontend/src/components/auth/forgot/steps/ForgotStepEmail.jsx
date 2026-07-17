@@ -1,7 +1,7 @@
 import { Mail, Send, Info } from 'lucide-react';
 import { useTranslation } from '../../../../hooks/useTranslation';
 
-export default function ForgotStepEmail({ email, setEmail, handleSendOtp }) {
+export default function ForgotStepEmail({ email, setEmail, handleSendOtp, loading }) {
   const { t } = useTranslation();
 
   return (
@@ -25,12 +25,13 @@ export default function ForgotStepEmail({ email, setEmail, handleSendOtp }) {
                 className="w-full pl-9 pr-3 py-2.5 md:pl-11 md:pr-4 md:py-3 bg-white border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all text-[13px] md:text-[15px] text-slate-900 placeholder:text-slate-400"
               />
             </div>
-            <button 
-              type="submit" 
-              className="w-full md:w-auto mt-3 md:mt-0 flex items-center justify-center gap-2 px-5 py-2.5 md:py-3 whitespace-nowrap text-[14px] md:text-[15px] font-bold text-white bg-indigo-600 hover:bg-indigo-700 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-indigo-500/30 rounded-lg shadow-sm transition-all duration-300"
+            <button
+              type="submit"
+              disabled={loading}
+              className="w-full md:w-auto mt-3 md:mt-0 flex items-center justify-center gap-2 px-5 py-2.5 md:py-3 whitespace-nowrap text-[14px] md:text-[15px] font-bold text-white bg-indigo-600 hover:bg-indigo-700 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-indigo-500/30 rounded-lg shadow-sm transition-all duration-300 disabled:opacity-70 disabled:cursor-not-allowed disabled:hover:bg-indigo-600 disabled:hover:translate-y-0 disabled:hover:shadow-sm"
             >
               <Send className="w-4 h-4" />
-              {t('forgot.sendOTP')}
+              {loading ? t('common.sending') : t('forgot.sendOTP')}
             </button>
           </div>
           <p className="mt-2 text-[11px] md:text-[13px] text-slate-500 font-medium text-center md:text-left">

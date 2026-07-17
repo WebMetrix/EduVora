@@ -2,14 +2,24 @@ import { useTranslation } from '../../../hooks/useTranslation';
 import { GoogleLogin } from '@react-oauth/google';
 import { useDispatch } from 'react-redux';
 import { googleAuthUser } from '../../../redux/slices/authSlice';
+import { useNavigate } from 'react-router-dom';
 
 export default function SocialButtons({ mode = 'login' }) {
   const { t } = useTranslation();
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
-  const handleGoogleSuccess = (credentialResponse) => {
+  const handleGoogleSuccess = async (credentialResponse) => {
     // Dispatch the Google credential to the Redux thunk
-    dispatch(googleAuthUser(credentialResponse.credential));
+    const resultAction = await dispatch(googleAuthUser(credentialResponse.credential));
+    
+    if (googleAuthUser.fulfilled.match(resultAction)) {
+      if (mode === 'register') {
+        navigate('/login');
+      } else {
+        navigate('/dashboard');
+      }
+    }
   };
 
   // Dynamically set text based on the mode prop

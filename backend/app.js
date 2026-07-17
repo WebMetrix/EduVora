@@ -9,6 +9,8 @@ const app = express();
 // import routes
 import authRoutes from "./routes/authRoutes.js";
 import otpRoutes from "./routes/otpRoutes.js";
+import profileRoutes from "./routes/profileRoutes.js";
+import passwordRoutes from './routes/passwordRoutes.js';
 
 
 // Cors configuration
@@ -29,19 +31,21 @@ app.use(cookieParser());
 
 
 
-app.get("/", async (req, res) => {
-    try {
-        const result = await pool.request().query("SELECT * FROM dbo.Tb_User");
-        res.json(result.recordset);
-    } catch (err) {
-        res.status(500).json({ error: err.message });
-    }
-});
+// app.get("/", async (req, res) => {
+//     try {
+//         const result = await pool.request().query("SELECT * FROM dbo.Tb_User");
+//         res.json(result.recordset);
+//     } catch (err) {
+//         res.status(500).json({ error: err.message });
+//     }
+// });
 
 
 // routes 
 app.use("/auth", authRoutes);
 app.use('/otp', otpRoutes);
+app.use('/profile', profileRoutes);
+app.use('/password', passwordRoutes);
 
 
 

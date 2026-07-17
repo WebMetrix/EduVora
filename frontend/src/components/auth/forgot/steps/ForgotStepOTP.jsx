@@ -8,11 +8,19 @@ export default function ForgotStepOTP({
   inputRefs,
   timeLeft,
   handleResend,
+  handleVerifyOtp,
   handleOtpChange,
   handleOtpKeyDown,
-  setStep
+  setStep,
+  loading
 }) {
   const { t } = useTranslation();
+
+  const formatTime = (seconds) => {
+    const m = Math.floor(seconds / 60);
+    const s = seconds % 60;
+    return `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
+  };
 
   return (
     <div className="flex flex-col items-center text-center animate-fade-in">
@@ -47,17 +55,21 @@ export default function ForgotStepOTP({
       <div className="text-[12px] md:text-[13px] font-medium text-slate-500 mb-6 md:mb-8">
         {t('forgot.didNotReceiveOtp')}{' '}
         {timeLeft > 0 ? (
-          <span>{t('forgot.resendIn')} 00:{timeLeft.toString().padStart(2, '0')}</span>
+          <span>{t('forgot.resendIn')} {formatTime(timeLeft)}</span>
         ) : (
-          <button onClick={handleResend} className="text-[#4f3bf3] font-bold hover:underline">
+          <button onClick={handleResend} disabled={loading} className="text-[#4f3bf3] font-bold hover:underline">
             {t('forgot.resendOtp')}
           </button>
         )}
       </div>
 
-      <button onClick={() => setStep(3)} className="w-full flex items-center justify-center gap-2 px-5 py-2.5 md:py-3.5 text-[14px] md:text-[15px] font-bold text-white bg-[#4f3bf3] hover:bg-indigo-700 rounded-lg shadow-sm transition-colors">
+      <button
+        onClick={handleVerifyOtp}
+        disabled={loading}
+        className="w-full flex items-center justify-center gap-2 px-5 py-2.5 md:py-3.5 text-[14px] md:text-[15px] font-bold text-white bg-[#4f3bf3] hover:bg-indigo-700 rounded-lg shadow-sm transition-colors disabled:opacity-70 disabled:cursor-not-allowed disabled:hover:bg-[#4f3bf3]"
+      >
         <Send className="w-4 h-4" />
-        {t('forgot.verifyOtpBtn')}
+        {loading ? t('common.verifying') : t('forgot.verifyOtpBtn')}
       </button>
     </div>
   );

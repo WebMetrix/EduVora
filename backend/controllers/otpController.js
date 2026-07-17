@@ -3,7 +3,7 @@ import logger from '../utils/logger.js';
 import "dotenv/config";
 
 // Simple In-Memory Cache for OTPs
-const otpCache = new Map();
+export const otpCache = new Map();
 
 const transporter = nodemailer.createTransport({
     service: 'gmail',
@@ -72,8 +72,9 @@ export const verifyOtp = async (req, res) => {
             return res.status(400).send({ message: 'Invalid OTP. Please try again.' });
         }
 
-        // Success - Clear the cache
-        otpCache.delete(emailAddress);
+        // Success - Do NOT clear the cache yet! 
+        // We need it for the final password reset step.
+        // It will expire in 5 minutes anyway or be deleted by the password reset endpoint.
         logger.info(`Email ${emailAddress} verified successfully.`);
 
         res.status(200).send({ message: 'Email verified successfully.' });

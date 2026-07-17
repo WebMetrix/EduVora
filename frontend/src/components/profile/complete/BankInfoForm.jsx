@@ -23,6 +23,26 @@ export default function BankInfoForm({ t, onBack, onNext }) {
     }}>
       <div className="grid grid-cols-1 gap-y-5">
         
+        {/* IFSC Code with Verify Button */}
+        <div>
+          <label className="block text-[13px] font-bold text-[#111] mb-2">
+            {t('completeProfile.ifscCode')} <span className="text-red-500">*</span>
+          </label>
+          <div className="relative">
+            <input
+              type="text"
+              className="w-full px-4 py-3.5 pr-20 bg-white border border-slate-200 rounded-xl focus:outline-none focus:border-[#4f3bf3] focus:ring-1 focus:ring-[#4f3bf3] transition-all text-[14px] text-slate-900 placeholder:text-slate-400 font-medium uppercase"
+              placeholder={t('completeProfile.ifscCodePlaceholder')}
+            />
+            <button
+              type="button"
+              className="absolute right-4 top-1/2 -translate-y-1/2 text-[#4f3bf3] font-bold text-[13px] hover:text-indigo-700 transition-colors"
+            >
+              {t('completeProfile.verifyBtn')}
+            </button>
+          </div>
+        </div>
+
         {/* Account Holder Name */}
         <div>
           <label className="block text-[13px] font-bold text-[#111] mb-2">
@@ -65,26 +85,6 @@ export default function BankInfoForm({ t, onBack, onNext }) {
             className="w-full px-4 py-3.5 bg-white border border-slate-200 rounded-xl focus:outline-none focus:border-[#4f3bf3] focus:ring-1 focus:ring-[#4f3bf3] transition-all text-[14px] text-slate-900 placeholder:text-slate-400 font-medium"
             placeholder={t('completeProfile.confirmAccountNumberPlaceholder')}
           />
-        </div>
-
-        {/* IFSC Code with Verify Button */}
-        <div>
-          <label className="block text-[13px] font-bold text-[#111] mb-2">
-            {t('completeProfile.ifscCode')} <span className="text-red-500">*</span>
-          </label>
-          <div className="relative">
-            <input
-              type="text"
-              className="w-full px-4 py-3.5 pr-20 bg-white border border-slate-200 rounded-xl focus:outline-none focus:border-[#4f3bf3] focus:ring-1 focus:ring-[#4f3bf3] transition-all text-[14px] text-slate-900 placeholder:text-slate-400 font-medium uppercase"
-              placeholder={t('completeProfile.ifscCodePlaceholder')}
-            />
-            <button
-              type="button"
-              className="absolute right-4 top-1/2 -translate-y-1/2 text-[#4f3bf3] font-bold text-[13px] hover:text-indigo-700 transition-colors"
-            >
-              {t('completeProfile.verifyBtn')}
-            </button>
-          </div>
         </div>
 
         {/* Account Type */}

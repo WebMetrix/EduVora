@@ -1,4 +1,8 @@
 {
+  "common": {
+    "sending": "Sending...",
+    "verifying": "Verifying..."
+  },
   "login": {
     "title": "Welcome Back!",
     "subtitle": "Login to continue your learning journey",
@@ -106,7 +110,10 @@
     "infoDesc": "Check your spam or junk folder. If you still don't see it, try again or contact our support team.",
     "backToLogin": "Back to Login",
     "needHelp": "Need help?",
-    "contactSupport": "Contact Support"
+    "contactSupport": "Contact Support",
+    "passwordsMatch": "Passwords match",
+    "passwordsDoNotMatch": "Passwords don't match",
+    "resettingBtn": "Resetting..."
   },
   "dashboard": {
     "nav": {
