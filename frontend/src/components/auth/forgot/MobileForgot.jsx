@@ -70,7 +70,7 @@ export default function MobileForgot() {
   const handleSendOtp = async (e) => {
     e.preventDefault();
     if (!email) return toast.error('Please enter your email');
-    const result = await dispatch(sendOtp({ emailAddress: email }));
+    const result = await dispatch(sendOtp({ emailAddress: email, type: 'forgot_password' }));
     if (sendOtp.fulfilled.match(result)) {
       setStep(2);
       setTimeLeft(300);

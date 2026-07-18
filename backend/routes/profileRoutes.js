@@ -4,7 +4,7 @@ import { isLoggedIn } from '../middlewares/authMiddleware.js';
 
 const router = express.Router();
 
-router.post('/check-username', checkUsername);
+router.post('/checkusername', checkUsername);
 router.get('/dropdowns/genders', getGenders);
 router.get('/dropdowns/states', getStates);
 router.get('/dropdowns/cities', getCities);

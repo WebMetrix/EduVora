@@ -3,11 +3,15 @@ import { Menu, ChevronDown, Bell, User, Settings, Wallet, BarChart2, HelpCircle,
 import { motion, AnimatePresence } from 'framer-motion';
 import { useTranslation } from '../../hooks/useTranslation';
 import { useNavigate } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { logoutUser } from '../../redux/slices/authSlice';
+import { toast } from 'react-toastify';
 import logoImg from '../../assets/images/Eduvora.png';
 
 export default function Header({ toggleSidebar, isSuperAdmin }) {
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const profileRef = useRef(null);
 
@@ -29,6 +33,18 @@ export default function Header({ toggleSidebar, isSuperAdmin }) {
     { id: 'payouts', icon: BarChart2, label: t('dashboard.nav.payouts') },
     { id: 'help', icon: HelpCircle, label: t('dashboard.nav.helpSupport') }
   ];
+
+  // Handle user logout action
+  const handleLogout = async () => {
+    try {
+      const result = await dispatch(logoutUser());
+      if (logoutUser.fulfilled.match(result)) {
+        navigate('/login'); // Redirect to login page after logout
+      }
+    } catch (error) {
+      toast.error('Failed to logout');
+    }
+  };
 
   return (
     <header
@@ -135,7 +151,10 @@ export default function Header({ toggleSidebar, isSuperAdmin }) {
 
                   <div className="h-px bg-slate-100 my-1 mx-3" />
 
-                  <button className="flex items-center gap-2.5 px-4 py-2 hover:bg-red-50 transition-colors w-full text-left group/logout">
+                  <button 
+                    onClick={handleLogout}
+                    className="flex items-center gap-2.5 px-4 py-2 hover:bg-red-50 transition-colors w-full text-left group/logout"
+                  >
                     <LogOut className="w-[15px] h-[15px] text-red-500 group-hover/logout:text-red-600 transition-colors" />
                     <span className="text-[12px] font-semibold text-red-500 group-hover/logout:text-red-600 transition-colors">{t('dashboard.nav.logout')}</span>
                   </button>

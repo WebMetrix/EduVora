@@ -9,6 +9,31 @@ import logger from '../utils/logger.js';
 // Initialize the Google Client
 const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
+// Helper to generate a unique username from email
+const generateUniqueUsername = async (emailAddress) => {
+    let baseUsername = emailAddress.split('@')[0];
+    let username = baseUsername;
+    let isUnique = false;
+
+    while (!isUnique) {
+        const request = pool.request();
+        request.input('Username', sql.VarChar(50), username);
+        request.output('IsAvailable', sql.Bit);
+        
+        const result = await request.execute('dbo.EV_CheckUsernameAvailability');
+        const isAvailable = result.output.IsAvailable;
+        
+        if (isAvailable === true || isAvailable === 1) {
+            isUnique = true;
+        } else {
+            // Append random 4-digit suffix and retry
+            username = baseUsername + Math.floor(1000 + Math.random() * 9000);
+        }
+    }
+    
+    return username;
+};
+
 
 // Register User
 export const registerUser = async (req, res) => {
@@ -17,7 +42,7 @@ export const registerUser = async (req, res) => {
     try {
         // 1. Generate core identifiers
         const userUUID = crypto.randomUUID();
-        const derivedUsername = emailAddress.split('@')[0] + Math.floor(1000 + Math.random() * 9000);
+        const derivedUsername = await generateUniqueUsername(emailAddress);
         const derivedUserID = 'USR-' + crypto.randomBytes(4).toString('hex').toUpperCase();
 
 
@@ -53,24 +78,8 @@ export const registerUser = async (req, res) => {
         if (procResult === -2) return res.status(400).send({ message: 'Username or UserID already taken' });
         if (procResult === 0) return res.status(500).send({ message: 'System error during registration' });
 
-        // 6. Insert Audit Log (ActionType '1' = Login upon registration)
-        const auditReq = pool.request();
-        auditReq.input('UUID', sql.VarChar(36), userUUID);
-        auditReq.input('SessionId', sql.VarChar(255), dbSessionId);
-        auditReq.input('MacID', sql.VarChar(255), null);
-        auditReq.input('ActionType', sql.VarChar(10), '1');
-        await auditReq.execute('dbo.EV_InsertLogUserSession');
-
-        // 7. Set Cookie & Respond on Success (Result === 1)
-        res.cookie('token', token, {
-            httpOnly: true,
-            secure: false,
-            sameSite: 'none',
-            maxAge: 24 * 60 * 60 * 1000
-        });
-
-        // The frontend will use this token payload to save to sessionStorage
-        res.status(200).send({ message: 'User registered successfully', token });
+        // 6. Respond on Success (Result === 1)
+        res.status(200).send({ message: 'User registered successfully' });
 
     } catch (err) {
         logger.error(`REGISTER ERROR: ${err.message}`, { stack: err.stack });
@@ -115,7 +124,8 @@ export const logoutUser = async (req, res) => {
                 WHERE UUID = @UUID;
             `);
         }
-        res.clearCookie('token', { sameSite: 'none', secure: false });
+        // res.clearCookie('token', { sameSite: 'lax', secure: process.env.NODE_ENV === 'production' });
+        res.clearCookie('token', { sameSite: 'none', secure: true });
         // res.redirect('/login');
         res.status(200).send({ message: 'Logged out successfully' });
     } catch (err) {
@@ -142,7 +152,7 @@ export const loginUser = async (req, res) => {
         const procResult = result.output.Result;
 
         // 2. Handle SP Outputs
-        if (procResult === -1) return res.status(400).send({ message: 'Invalid credentials or user not found' });
+        if (procResult === -1) return res.status(400).send({ message: 'User not found' });
         if (procResult === -2) return res.status(403).send({ message: 'Account is inactive. Please contact support.' });
 
         // 3. User found, validate password
@@ -177,8 +187,10 @@ export const loginUser = async (req, res) => {
         // 7. Set Cookie & Respond
         res.cookie('token', token, {
             httpOnly: true,
-            secure: false,
+            secure: true,
             sameSite: 'none',
+            // secure: process.env.NODE_ENV === 'production',
+            // sameSite: 'lax',
             maxAge: 24 * 60 * 60 * 1000
         });
 
@@ -228,7 +240,7 @@ export const googleAuthUser = async (req, res) => {
         } else if (loginStatus === -1) {
             // USER DOES NOT EXIST: Create them using the EV_CreateUser SP
             const userUUID = crypto.randomUUID();
-            const derivedUsername = emailAddress.split('@')[0] + Math.floor(1000 + Math.random() * 9000);
+            const derivedUsername = await generateUniqueUsername(emailAddress);
             const derivedUserID = 'USR-' + crypto.randomBytes(4).toString('hex').toUpperCase();
 
             // Generate a random dummy password for Google users so they can't login via standard form
@@ -291,8 +303,10 @@ export const googleAuthUser = async (req, res) => {
         // 6. Set Cookie & Respond
         res.cookie('token', token, {
             httpOnly: true,
-            secure: false,
+            secure: true,
             sameSite: 'none',
+            // secure: process.env.NODE_ENV === 'production',
+            // sameSite: 'lax',
             maxAge: 24 * 60 * 60 * 1000
         });
 

@@ -24,6 +24,9 @@ export default function RegisterForm() {
   // Password Visibility
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  
+  // Validation State
+  const [formErrors, setFormErrors] = useState({});
 
   // OTP & Verification States
   const [otpValue, setOtpValue] = useState('');
@@ -114,11 +117,24 @@ export default function RegisterForm() {
 
   const handleRegister = async (e) => {
     e.preventDefault();
+    
+    // Check for empty required fields
+    const newErrors = {};
+    if (!fullName) newErrors.fullName = true;
+    if (!emailAddress) newErrors.emailAddress = true;
+    if (!mobileNumber) newErrors.mobileNumber = true;
+    if (!password) newErrors.password = true;
+    if (!confirmPassword) newErrors.confirmPassword = true;
+    if (!referralCode) newErrors.referralCode = true;
 
-    // Strict form validation
-    if (!fullName || !emailAddress || !mobileNumber || !password || !referralCode) {
+    if (Object.keys(newErrors).length > 0) {
+      setFormErrors(newErrors);
       return toast.error("Please fill in all required fields.");
     }
+    
+    setFormErrors({}); // Clear errors if all fields are filled
+
+    // Strict form validation
     if (!isEmailVerified) {
       return toast.error("Please verify your email address first.");
     }
@@ -154,6 +170,7 @@ export default function RegisterForm() {
   let emailBorderColor = 'border-slate-200 focus:border-indigo-500';
   if (emailHighlight === 'green') emailBorderColor = 'border-emerald-500 focus:border-emerald-500 bg-emerald-50';
   if (emailHighlight === 'red') emailBorderColor = 'border-red-500 focus:border-red-500 bg-red-50';
+  if (formErrors.emailAddress) emailBorderColor = 'border-red-500 focus:border-red-500 shadow-[0_0_0_4px_rgba(239,68,68,0.1)]';
 
   return (
     <form className="w-full space-y-4" onSubmit={handleRegister}>
@@ -170,9 +187,12 @@ export default function RegisterForm() {
           <input
             type="text"
             value={fullName}
-            onChange={(e) => setFullName(e.target.value)}
+            onChange={(e) => {
+              setFullName(e.target.value);
+              if (formErrors.fullName) setFormErrors({ ...formErrors, fullName: false });
+            }}
             placeholder={t('register.fullNamePlaceholder')}
-            className="w-full pl-11 pr-4 py-3 md:py-2.5 bg-white border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all text-sm text-slate-900 placeholder:text-slate-400"
+            className={`w-full pl-11 pr-4 py-3 md:py-2.5 bg-white border rounded-lg focus:outline-none focus:ring-2 transition-all text-sm text-slate-900 placeholder:text-slate-400 ${formErrors.fullName ? 'border-red-500 focus:ring-red-500/20 shadow-[0_0_0_4px_rgba(239,68,68,0.1)]' : 'border-slate-200 focus:ring-indigo-500/20 focus:border-indigo-500'}`}
           />
         </div>
       </div>
@@ -195,6 +215,7 @@ export default function RegisterForm() {
                 setEmailAddress(e.target.value);
                 setIsOtpBoxVisible(false); // Hide OTP box if they change email
                 setEmailHighlight('neutral');
+                if (formErrors.emailAddress) setFormErrors({ ...formErrors, emailAddress: false });
               }}
               placeholder={t('register.emailPlaceholder')}
               className={`w-full pl-11 pr-4 py-3 md:py-2.5 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500/20 transition-all text-sm text-slate-900 placeholder:text-slate-400 border ${emailBorderColor} ${isEmailVerified ? 'opacity-80' : 'bg-white'}`}
@@ -283,9 +304,12 @@ export default function RegisterForm() {
           <input
             type="tel"
             value={mobileNumber}
-            onChange={(e) => setMobileNumber(e.target.value)}
+            onChange={(e) => {
+              setMobileNumber(e.target.value);
+              if (formErrors.mobileNumber) setFormErrors({ ...formErrors, mobileNumber: false });
+            }}
             placeholder={t('register.mobilePlaceholder')}
-            className="w-full pl-11 pr-4 py-3 md:py-2.5 bg-white border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all text-sm text-slate-900 placeholder:text-slate-400"
+            className={`w-full pl-11 pr-4 py-3 md:py-2.5 bg-white border rounded-lg focus:outline-none focus:ring-2 transition-all text-sm text-slate-900 placeholder:text-slate-400 ${formErrors.mobileNumber ? 'border-red-500 focus:ring-red-500/20 shadow-[0_0_0_4px_rgba(239,68,68,0.1)]' : 'border-slate-200 focus:ring-indigo-500/20 focus:border-indigo-500'}`}
           />
         </div>
       </div>
@@ -302,9 +326,12 @@ export default function RegisterForm() {
           <input
             type={showPassword ? 'text' : 'password'}
             value={password}
-            onChange={(e) => setPassword(e.target.value)}
+            onChange={(e) => {
+              setPassword(e.target.value);
+              if (formErrors.password) setFormErrors({ ...formErrors, password: false });
+            }}
             placeholder={t('register.passwordPlaceholder')}
-            className={`w-full pl-11 pr-11 py-3 md:py-2.5 bg-white border rounded-lg focus:outline-none transition-all text-sm text-slate-900 placeholder:text-slate-400 ${strengthConfig.border} ${strengthConfig.shadow}`}
+            className={`w-full pl-11 pr-11 py-3 md:py-2.5 bg-white border rounded-lg focus:outline-none transition-all text-sm text-slate-900 placeholder:text-slate-400 ${formErrors.password ? 'border-red-500 shadow-[0_0_0_4px_rgba(239,68,68,0.1)] focus:ring-2 focus:ring-red-500/20' : `${strengthConfig.border} ${strengthConfig.shadow}`}`}
           />
           <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute inset-y-0 right-0 pr-3.5 flex items-center text-slate-400 hover:text-slate-600 transition-colors">
             {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
@@ -343,9 +370,15 @@ export default function RegisterForm() {
           <input
             type={showConfirmPassword ? 'text' : 'password'}
             value={confirmPassword}
-            onChange={(e) => setConfirmPassword(e.target.value)}
+            onChange={(e) => {
+              setConfirmPassword(e.target.value);
+              if (formErrors.confirmPassword) setFormErrors({ ...formErrors, confirmPassword: false });
+            }}
             placeholder={t('register.confirmPasswordPlaceholder')}
-            className={`w-full pl-11 pr-11 py-3 md:py-2.5 bg-white border rounded-lg focus:outline-none transition-all text-sm text-slate-900 placeholder:text-slate-400 ${confirmPassword
+            className={`w-full pl-11 pr-11 py-3 md:py-2.5 bg-white border rounded-lg focus:outline-none transition-all text-sm text-slate-900 placeholder:text-slate-400 ${
+              formErrors.confirmPassword 
+                ? 'border-red-500 shadow-[0_0_0_4px_rgba(239,68,68,0.1)] focus:ring-2 focus:ring-red-500/20'
+                : confirmPassword
                 ? (passwordsMatch
                   ? 'border-emerald-500 focus:border-emerald-500 shadow-[0_0_0_4px_rgba(16,185,129,0.1)]'
                   : 'border-red-500 focus:border-red-500 shadow-[0_0_0_4px_rgba(239,68,68,0.1)]')
@@ -375,9 +408,12 @@ export default function RegisterForm() {
           <input
             type="text"
             value={referralCode}
-            onChange={(e) => setReferralCode(e.target.value)}
+            onChange={(e) => {
+              setReferralCode(e.target.value);
+              if (formErrors.referralCode) setFormErrors({ ...formErrors, referralCode: false });
+            }}
             placeholder={t('register.referralPlaceholder')}
-            className="w-full pl-11 pr-4 py-3 md:py-2.5 bg-white border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all text-sm text-slate-900 placeholder:text-slate-400"
+            className={`w-full pl-11 pr-4 py-3 md:py-2.5 bg-white border rounded-lg focus:outline-none focus:ring-2 transition-all text-sm text-slate-900 placeholder:text-slate-400 ${formErrors.referralCode ? 'border-red-500 focus:ring-red-500/20 shadow-[0_0_0_4px_rgba(239,68,68,0.1)]' : 'border-slate-200 focus:ring-indigo-500/20 focus:border-indigo-500'}`}
           />
         </div>
       </div>

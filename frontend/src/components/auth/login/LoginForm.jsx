@@ -40,7 +40,7 @@ export default function LoginForm() {
   return (
     <form className="w-full space-y-3 lg:space-y-5" onSubmit={handleLogin}>
       <div>
-        <label className="block text-base md:text-[13px] font-bold text-slate-700 md:text-slate-700 mb-1.5 md:uppercase md:tracking-wide">
+        <label className="block text-[14px] md:text-[13px] font-bold text-slate-800 mb-1.5">
           {t('login.emailLabel')}
         </label>
         <div className="relative group">
@@ -58,7 +58,7 @@ export default function LoginForm() {
       </div>
 
       <div>
-        <label className="block text-base md:text-[13px] font-bold text-slate-700 md:text-slate-700 mb-1.5 md:uppercase md:tracking-wide">
+        <label className="block text-[14px] md:text-[13px] font-bold text-slate-800 mb-1.5">
           {t('login.passwordLabel')}
         </label>
         <div className="relative group">

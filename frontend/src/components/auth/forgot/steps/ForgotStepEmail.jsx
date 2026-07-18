@@ -1,7 +1,7 @@
 import { Mail, Send, Info } from 'lucide-react';
 import { useTranslation } from '../../../../hooks/useTranslation';
 
-export default function ForgotStepEmail({ email, setEmail, handleSendOtp, loading }) {
+export default function ForgotStepEmail({ email, setEmail, handleSendOtp, loading, formErrors }) {
   const { t } = useTranslation();
 
   return (
@@ -22,7 +22,7 @@ export default function ForgotStepEmail({ email, setEmail, handleSendOtp, loadin
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder={t('forgot.emailPlaceholder')}
-                className="w-full pl-9 pr-3 py-2.5 md:pl-11 md:pr-4 md:py-3 bg-white border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all text-[13px] md:text-[15px] text-slate-900 placeholder:text-slate-400"
+                className={`w-full pl-9 pr-3 py-2.5 md:pl-11 md:pr-4 md:py-3 bg-white border rounded-lg focus:outline-none transition-all text-[13px] md:text-[15px] text-slate-900 placeholder:text-slate-400 ${formErrors?.email ? 'border-red-500 shadow-[0_0_0_4px_rgba(239,68,68,0.1)] focus:ring-2 focus:ring-red-500/20' : 'border-slate-200 focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500'}`}
               />
             </div>
             <button

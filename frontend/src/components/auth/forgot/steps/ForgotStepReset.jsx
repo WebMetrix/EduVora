@@ -14,7 +14,8 @@ export default function ForgotStepReset({
   hasNumberSpecial,
   setStep,
   handleResetPassword,
-  loading
+  loading,
+  formErrors
 }) {
   const { t } = useTranslation();
   const [showNewPassword, setShowNewPassword] = useState(false);
@@ -23,7 +24,9 @@ export default function ForgotStepReset({
   const passwordsMatch = newPassword === confirmPassword;
   const showMatchStatus = confirmPassword.length > 0;
 
-  const confirmBorderColor = showMatchStatus
+  const confirmBorderColor = formErrors?.confirmPassword
+    ? 'border-red-500 focus:border-red-500 shadow-[0_0_0_4px_rgba(239,68,68,0.1)] focus:ring-2 focus:ring-red-500/20'
+    : showMatchStatus
     ? (passwordsMatch ? 'border-emerald-500 focus:border-emerald-500 shadow-[0_0_0_4px_rgba(16,185,129,0.1)]' : 'border-red-500 focus:border-red-500 shadow-[0_0_0_4px_rgba(239,68,68,0.1)]')
     : 'border-slate-200 focus:border-[#4f3bf3] focus:ring-2 focus:ring-indigo-500/20';
 
@@ -48,7 +51,7 @@ export default function ForgotStepReset({
               type={showNewPassword ? 'text' : 'password'}
               value={newPassword}
               onChange={(e) => setNewPassword(e.target.value)}
-              className={`w-full pl-9 pr-9 py-2.5 md:pl-11 md:pr-11 md:py-3 bg-white border rounded-lg focus:outline-none transition-all text-[13px] md:text-[15px] text-slate-900 placeholder:text-slate-400 ${strengthConfig.border} ${strengthConfig.shadow}`}
+              className={`w-full pl-9 pr-9 py-2.5 md:pl-11 md:pr-11 md:py-3 bg-white border rounded-lg focus:outline-none transition-all text-[13px] md:text-[15px] text-slate-900 placeholder:text-slate-400 ${formErrors?.newPassword ? 'border-red-500 shadow-[0_0_0_4px_rgba(239,68,68,0.1)] focus:ring-2 focus:ring-red-500/20' : `${strengthConfig.border} ${strengthConfig.shadow}`}`}
               placeholder="••••••••••••"
             />
             <button
@@ -133,7 +136,7 @@ export default function ForgotStepReset({
 
         <button
           type="submit"
-          disabled={loading || !newPassword || newPassword !== confirmPassword || strengthScore < 2}
+          disabled={loading}
           className="w-full flex items-center justify-center gap-2 px-5 py-2.5 md:py-3.5 text-[14px] md:text-[15px] font-bold text-white bg-[#4f3bf3] hover:bg-indigo-700 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-indigo-500/30 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:translate-y-0 disabled:hover:shadow-sm disabled:hover:bg-[#4f3bf3] rounded-lg shadow-sm transition-all duration-300"
         >
           <Lock className="w-4 h-4" />

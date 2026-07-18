@@ -26,6 +26,7 @@ export default function ForgotRight() {
   const [timeLeft, setTimeLeft] = useState(45);
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+  const [formErrors, setFormErrors] = useState({});
   const inputRefs = useRef([]);
 
   const getStrength = (pass) => {
@@ -69,8 +70,12 @@ export default function ForgotRight() {
 
   const handleSendOtp = async (e) => {
     e.preventDefault();
-    if (!email) return toast.error('Please enter your email');
-    const result = await dispatch(sendOtp({ emailAddress: email }));
+    if (!email) {
+      setFormErrors({ email: true });
+      return toast.error('Please enter your email');
+    }
+    setFormErrors({});
+    const result = await dispatch(sendOtp({ emailAddress: email, type: 'forgot_password' }));
     if (sendOtp.fulfilled.match(result)) {
       setStep(2);
       setTimeLeft(300);
@@ -114,7 +119,21 @@ export default function ForgotRight() {
 
   const handleResetPassword = async (e) => {
     e.preventDefault();
-    if (newPassword !== confirmPassword) return toast.error('Passwords do not match');
+    
+    const newErrors = {};
+    if (!newPassword) newErrors.newPassword = true;
+    if (!confirmPassword) newErrors.confirmPassword = true;
+
+    if (Object.keys(newErrors).length > 0) {
+      setFormErrors(newErrors);
+      return toast.error('Please fill in all required fields');
+    }
+    
+    if (newPassword !== confirmPassword) {
+      setFormErrors({ confirmPassword: true });
+      return toast.error('Passwords do not match');
+    }
+    setFormErrors({});
     const otpString = otp.join('');
 
     const result = await dispatch(resetPassword({
@@ -156,7 +175,16 @@ export default function ForgotRight() {
             )}
 
             {step === 1 ? (
-              <ForgotStepEmail email={email} setEmail={setEmail} handleSendOtp={handleSendOtp} loading={loading} />
+              <ForgotStepEmail
+                email={email}
+                setEmail={(val) => {
+                  setEmail(val);
+                  if (formErrors.email) setFormErrors({ ...formErrors, email: false });
+                }}
+                handleSendOtp={handleSendOtp}
+                loading={loading}
+                formErrors={formErrors}
+              />
             ) : step === 2 ? (
               <ForgotStepOTP
                 email={email} otp={otp} setOtp={setOtp} inputRefs={inputRefs} timeLeft={timeLeft}
@@ -165,10 +193,25 @@ export default function ForgotRight() {
               />
             ) : step === 3 ? (
               <ForgotStepReset
-                newPassword={newPassword} setNewPassword={setNewPassword} confirmPassword={confirmPassword}
-                setConfirmPassword={setConfirmPassword} strengthScore={strengthScore} strengthConfig={strengthConfig}
-                hasLength={hasLength} hasMixed={hasMixed} hasNumberSpecial={hasNumberSpecial}
-                handleResetPassword={handleResetPassword} loading={loading}
+                newPassword={newPassword}
+                setNewPassword={(val) => {
+                  setNewPassword(val);
+                  if (formErrors.newPassword) setFormErrors({ ...formErrors, newPassword: false });
+                }}
+                confirmPassword={confirmPassword}
+                setConfirmPassword={(val) => {
+                  setConfirmPassword(val);
+                  if (formErrors.confirmPassword) setFormErrors({ ...formErrors, confirmPassword: false });
+                }}
+                strengthScore={strengthScore}
+                strengthConfig={strengthConfig}
+                hasLength={hasLength}
+                hasMixed={hasMixed}
+                hasNumberSpecial={hasNumberSpecial}
+                setStep={setStep}
+                handleResetPassword={handleResetPassword}
+                loading={loading}
+                formErrors={formErrors}
               />
             ) : (
               <ForgotStepDone />

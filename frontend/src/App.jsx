@@ -7,6 +7,8 @@ import Profile from './pages/Profile';
 import CompleteProfile from './pages/CompleteProfile';
 import SuperAdmin from './pages/SuperAdmin';
 
+import ProtectedRoute from './components/common/ProtectedRoute';
+
 function App() {
   return (
     <Routes>
@@ -14,9 +16,14 @@ function App() {
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
       <Route path="/forgotpassword" element={<Forgot />} />
-      <Route path="/dashboard" element={<Dashboard />} />
-      <Route path="/profile" element={<Profile />} />
-      <Route path="/completeprofile" element={<CompleteProfile />} />
+      
+      {/* Protected Routes */}
+      <Route element={<ProtectedRoute />}>
+        <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/profile" element={<Profile />} />
+        <Route path="/completeprofile" element={<CompleteProfile />} />
+      </Route>
+
       <Route path="/superadmin/*" element={<SuperAdmin />} />
     </Routes>
   );

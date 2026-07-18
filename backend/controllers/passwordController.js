@@ -18,6 +18,21 @@ export const resetPassword = async (req, res) => {
             return res.status(400).send({ message: 'Invalid or expired OTP. Please restart the process.' });
         }
 
+        // Fetch user to check current password
+        const checkUserReq = pool.request();
+        checkUserReq.input('Email', sql.VarChar(150), emailAddress);
+        checkUserReq.output('Result', sql.Int);
+        const userResult = await checkUserReq.execute('dbo.EV_LogIn');
+        
+        if (userResult.output.Result === 1) {
+            const currentHash = userResult.recordset[0].Password;
+            const isSameAsOld = await bcrypt.compare(newPassword, currentHash);
+            
+            if (isSameAsOld) {
+                return res.status(400).send({ message: 'New password cannot be the same as your current password.' });
+            }
+        }
+
         const salt = await bcrypt.genSalt(10);
         const hashedPassword = await bcrypt.hash(newPassword, salt);
 

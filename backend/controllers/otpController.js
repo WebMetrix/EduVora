@@ -1,6 +1,7 @@
 import nodemailer from 'nodemailer';
 import logger from '../utils/logger.js';
 import "dotenv/config";
+import pool, { sql } from "../config/db.js";
 
 // Simple In-Memory Cache for OTPs
 export const otpCache = new Map();
@@ -13,16 +14,24 @@ const transporter = nodemailer.createTransport({
     },
 });
 
-
-
 export const sendOtp = async (req, res) => {
-    const { emailAddress } = req.body;
+    const { emailAddress, type } = req.body;
 
     if (!emailAddress) {
         return res.status(400).send({ message: 'Email address is required' });
     }
 
     try {
+        if (type === 'forgot_password') {
+            const userCheckReq = pool.request();
+            userCheckReq.input('EmailAddress', sql.VarChar(150), emailAddress);
+            const userCheckRes = await userCheckReq.query('SELECT 1 FROM dbo.Tb_User WHERE EmailAddress = @EmailAddress AND IsActive = 1');
+            
+            if (userCheckRes.recordset.length === 0) {
+                return res.status(404).send({ message: 'User not found or account is inactive.' });
+            }
+        }
+
         const otp = Math.floor(100000 + Math.random() * 900000).toString();
 
         // Save to memory cache (Expires in 5 minutes)
