@@ -78,7 +78,7 @@ export default function RegisterForm() {
   const handleVerifyEmailClick = async () => {
     if (!emailAddress) return toast.error("Please enter an email address first.");
 
-    const resultAction = await dispatch(sendOtp({ emailAddress }));
+    const resultAction = await dispatch(sendOtp({ emailAddress, type: 'register', fullName }));
 
     if (sendOtp.fulfilled.match(resultAction)) {
       setIsOtpBoxVisible(true);

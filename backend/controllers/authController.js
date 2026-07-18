@@ -43,7 +43,10 @@ export const registerUser = async (req, res) => {
         // 1. Generate core identifiers
         const userUUID = crypto.randomUUID();
         const derivedUsername = await generateUniqueUsername(emailAddress);
-        const derivedUserID = 'USR-' + crypto.randomBytes(4).toString('hex').toUpperCase();
+        // const derivedUserID = 'USR-' + crypto.randomBytes(4).toString('hex').toUpperCase();
+        const year = new Date().getFullYear();
+        const random = Math.floor(1000 + Math.random() * 9000); // Random 4-digit number
+        const derivedUserID = `EV-${year}-${random}`;
 
 
         // 2. Hash Password
@@ -111,18 +114,18 @@ export const logoutUser = async (req, res) => {
             }
 
             // 3. Clear SessionId from database upon logout
-            const clearSessionRequest = pool.request();
-            clearSessionRequest.input('UUID', sql.VarChar(36), req.user.id);
+            // const clearSessionRequest = pool.request();
+            // clearSessionRequest.input('UUID', sql.VarChar(36), req.user.id);
 
-            await clearSessionRequest.query(`
-                UPDATE dbo.Tb_User 
-                SET SessionId = NULL 
-                WHERE UUID = @UUID
+            // await clearSessionRequest.query(`
+            //     UPDATE dbo.Tb_User 
+            //     SET SessionId = NULL 
+            //     WHERE UUID = @UUID
 
-                UPDATE dbo.Tb_UserDesc 
-                SET SessionId = NULL 
-                WHERE UUID = @UUID;
-            `);
+            //     UPDATE dbo.Tb_UserDesc 
+            //     SET SessionId = NULL 
+            //     WHERE UUID = @UUID;
+            // `);
         }
         // res.clearCookie('token', { sameSite: 'lax', secure: process.env.NODE_ENV === 'production' });
         res.clearCookie('token', { sameSite: 'none', secure: true });
@@ -168,13 +171,10 @@ export const loginUser = async (req, res) => {
         let dbSessionId = crypto.randomUUID();
 
         // 5. Update the Database with the new SessionId
-        const updateSessionReq = pool.request();
-        updateSessionReq.input('SessionId', sql.VarChar(255), dbSessionId);
-        updateSessionReq.input('UUID', sql.VarChar(36), user.UUID);
-        await updateSessionReq.query(`
-            UPDATE dbo.Tb_User SET SessionId = @SessionId WHERE UUID = @UUID;
-            UPDATE dbo.Tb_UserDesc SET SessionId = @SessionId WHERE UUID = @UUID;
-        `);
+        // const updateSessionReq = pool.request();
+        // updateSessionReq.input('SessionId', sql.VarChar(255), dbSessionId);
+        // updateSessionReq.input('UUID', sql.VarChar(36), user.UUID);
+        // await updateSessionReq.execute("EV_UpdateUserSession");
 
         // 6. Insert Audit Log (ActionType '1' = Login)
         const auditReq = pool.request();
@@ -182,7 +182,7 @@ export const loginUser = async (req, res) => {
         auditReq.input('SessionId', sql.VarChar(255), dbSessionId);
         auditReq.input('MacID', sql.VarChar(255), null);
         auditReq.input('ActionType', sql.VarChar(10), '1');
-        await auditReq.execute('dbo.EV_InsertLogUserSession');
+        await auditReq.execute("EV_InsertLogUserSession");
 
         // 7. Set Cookie & Respond
         res.cookie('token', token, {
@@ -287,10 +287,7 @@ export const googleAuthUser = async (req, res) => {
         const updateSessionReq = pool.request();
         updateSessionReq.input('SessionId', sql.VarChar(255), dbSessionId);
         updateSessionReq.input('UUID', sql.VarChar(36), user.UUID);
-        await updateSessionReq.query(`
-            UPDATE dbo.Tb_User SET SessionId = @SessionId WHERE UUID = @UUID;
-            UPDATE dbo.Tb_UserDesc SET SessionId = @SessionId WHERE UUID = @UUID;
-        `);
+        await updateSessionReq.execute("EV_UpdateUserSession");
 
         // 5. Insert Audit Log (ActionType '1' = Login)
         const auditReq = pool.request();
@@ -298,7 +295,7 @@ export const googleAuthUser = async (req, res) => {
         auditReq.input('SessionId', sql.VarChar(255), dbSessionId);
         auditReq.input('MacID', sql.VarChar(255), null); 
         auditReq.input('ActionType', sql.VarChar(10), '1');
-        await auditReq.execute('dbo.EV_InsertLogUserSession');
+        await auditReq.execute("EV_InsertLogUserSession");
 
         // 6. Set Cookie & Respond
         res.cookie('token', token, {

@@ -2,6 +2,7 @@ import nodemailer from 'nodemailer';
 import logger from '../utils/logger.js';
 import "dotenv/config";
 import pool, { sql } from "../config/db.js";
+import path from 'path';
 
 // Simple In-Memory Cache for OTPs
 export const otpCache = new Map();
@@ -15,7 +16,7 @@ const transporter = nodemailer.createTransport({
 });
 
 export const sendOtp = async (req, res) => {
-    const { emailAddress, type } = req.body;
+    const { emailAddress, type, fullName } = req.body;
 
     if (!emailAddress) {
         return res.status(400).send({ message: 'Email address is required' });
@@ -25,9 +26,10 @@ export const sendOtp = async (req, res) => {
         if (type === 'forgot_password') {
             const userCheckReq = pool.request();
             userCheckReq.input('EmailAddress', sql.VarChar(150), emailAddress);
-            const userCheckRes = await userCheckReq.query('SELECT 1 FROM dbo.Tb_User WHERE EmailAddress = @EmailAddress AND IsActive = 1');
-            
-            if (userCheckRes.recordset.length === 0) {
+            const userCheckRes = await userCheckReq.execute("EV_CheckUserExistsByEmail");
+            const userExists = userCheckRes.recordset[0].EmailExists;
+
+            if (!userExists) {
                 return res.status(404).send({ message: 'User not found or account is inactive.' });
             }
         }
@@ -40,15 +42,63 @@ export const sendOtp = async (req, res) => {
             expiresAt: Date.now() + 5 * 60 * 1000
         });
 
+        // await transporter.sendMail({
+        //     from: `"Eduvora Platform" <${process.env.SMTP_USER}>`,
+        //     to: emailAddress,
+        //     subject: 'Your Eduvora Verification Code',
+        //     html: `
+        //         <h3>Welcome to Eduvora!</h3>
+        //         <p>Your email verification code is: <strong>${otp}</strong></p>
+        //         <p>This code is valid for 5 minutes. Do not share it with anyone.</p>
+        //     `
+        // });
+
+         // Fetch Email Template
+        const templateReq = pool.request();
+        templateReq.input("EventId", sql.Int, 1);
+
+        const templateRes = await templateReq.execute("EV_GetEmailTemplate");
+
+        if (templateRes.recordset.length === 0) {
+            return res.status(500).json({
+                message: "Email template not found."
+            });
+        }
+
+        const {
+            EmailSubject,
+            EmailTemplate
+        } = templateRes.recordset[0];
+
+        // Replace placeholders
+        let html = EmailTemplate;
+
+        const replacements = {
+            LogoUrl: process.env.COMPANY_LOGO_URL,
+            FullName: fullName,
+            CompanyName: process.env.COMPANY_NAME,
+            OTP: otp,
+            OtpExpiryMinutes: process.env.OTP_Expiration_Time,
+            LoginUrl: process.env.LOGIN_URL,
+            TermsUrl: process.env.TERMS_URL,
+            PrivacyUrl: process.env.PRIVACY_URL,
+            SupportEmail: process.env.SUPPORT_EMAIL,
+            CurrentYear: new Date().getFullYear()
+        };
+
+        Object.keys(replacements).forEach(key => {
+            html = html.replace(
+                new RegExp(`{{${key}}}`, "g"),
+                replacements[key]
+            );
+        });
+
+        // Send Email
         await transporter.sendMail({
-            from: `"Eduvora Platform" <${process.env.SMTP_USER}>`,
+            from: `"${process.env.COMPANY_NAME}" <${process.env.SMTP_USER}>`,
             to: emailAddress,
-            subject: 'Your Eduvora Verification Code',
-            html: `
-                <h3>Welcome to Eduvora!</h3>
-                <p>Your email verification code is: <strong>${otp}</strong></p>
-                <p>This code is valid for 5 minutes. Do not share it with anyone.</p>
-            `
+            subject: EmailSubject,
+            html
         });
 
         logger.info(`OTP successfully sent to ${emailAddress}`);
