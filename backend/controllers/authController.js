@@ -55,7 +55,8 @@ export const registerUser = async (req, res) => {
 
         // 3. Pre-sign JWT (since we already generated the UUID)
         let token = jwt.sign({ id: userUUID, email: emailAddress }, process.env.JWT_SECRET, { expiresIn: '1d' });
-        let dbSessionId = crypto.randomUUID();
+        // let dbSessionId = crypto.randomUUID();
+        const sessionId = token.slice(-30);
 
         // 4. Execute Stored Procedure
         const request = pool.request();
@@ -65,7 +66,7 @@ export const registerUser = async (req, res) => {
         request.input('MobileNumber', sql.VarChar(20), mobileNumber || null);
         request.input('Password', sql.VarChar(255), hash);
         request.input('ReferralCode', sql.VarChar(50), referralCode || null);
-        request.input('SessionId', sql.VarChar(255), dbSessionId);
+        request.input('SessionId', sql.VarChar(255), sessionId);
         request.input('SignupMethod', sql.VarChar(50), '1');    // 1 = Standard
         request.input('UserID', sql.VarChar(100), derivedUserID);
         request.input('Username', sql.VarChar(50), derivedUsername);
@@ -100,15 +101,17 @@ export const logoutUser = async (req, res) => {
             // 1. Fetch current SessionId to pass to the Audit Log
             const sessionReq = pool.request();
             sessionReq.input('UUID', sql.VarChar(36), req.user.id);
-            const sessionResult = await sessionReq.query('SELECT SessionId FROM dbo.Tb_User WHERE UUID = @UUID');
-            const currentSessionId = sessionResult.recordset[0]?.SessionId;
+            // const sessionResult = await sessionReq.query('SELECT SessionId FROM dbo.Tb_User WHERE UUID = @UUID');
+
+            // const currentSessionId = sessionResult.recordset[0]?.SessionId;
 
             // 2. Update Audit Log (ActionType '2' = Logout)
-            if (currentSessionId) {
+            if (req.body.sessionId) {
                 const auditReq = pool.request();
                 auditReq.input('UUID', sql.VarChar(36), req.user.id);
-                auditReq.input('SessionId', sql.VarChar(255), currentSessionId);
-                auditReq.input('MacID', sql.VarChar(255), null);
+                auditReq.input('SessionId', sql.VarChar(255), req.body.sessionId);
+                console.log('Session ID for Audit Log:', req.body.sessionId);
+                auditReq.input('MacID', sql.VarChar(255), req.socket.remoteAddress);
                 auditReq.input('ActionType', sql.VarChar(10), '2');
                 await auditReq.execute('dbo.EV_InsertLogUserSession');
             }
@@ -168,7 +171,9 @@ export const loginUser = async (req, res) => {
 
         // 4. Sign JWT 
         let token = jwt.sign({ id: user.UUID, email: user.EmailAddress }, process.env.JWT_SECRET, { expiresIn: '1d' });
-        let dbSessionId = crypto.randomUUID();
+        const sessionId = token.slice(-30);
+        const macId = req.socket.remoteAddress;
+        // let dbSessionId = crypto.randomUUID();
 
         // 5. Update the Database with the new SessionId
         // const updateSessionReq = pool.request();
@@ -179,8 +184,8 @@ export const loginUser = async (req, res) => {
         // 6. Insert Audit Log (ActionType '1' = Login)
         const auditReq = pool.request();
         auditReq.input('UUID', sql.VarChar(36), user.UUID);
-        auditReq.input('SessionId', sql.VarChar(255), dbSessionId);
-        auditReq.input('MacID', sql.VarChar(255), null);
+        auditReq.input('SessionId', sql.VarChar(255), sessionId);
+        auditReq.input('MacID', sql.VarChar(255), macId);
         auditReq.input('ActionType', sql.VarChar(10), '1');
         await auditReq.execute("EV_InsertLogUserSession");
 
@@ -195,7 +200,7 @@ export const loginUser = async (req, res) => {
         });
 
         res.send({
-            message: 'Login successful', token, user: {
+            message: 'Login successful', token, sessionId, user: {
                 id: user.UUID, name: user.FullName, email: user.EmailAddress, username: user.Username, role: user.RoleID
             }
         });
@@ -231,7 +236,7 @@ export const googleAuthUser = async (req, res) => {
         const loginStatus = loginResult.output.Result;
 
         let user;
-        let dbSessionId = crypto.randomUUID(); // Generate session ID for Google user
+        // let dbSessionId = crypto.randomUUID(); // Generate session ID for Google user
 
         if (loginStatus === 1) {
             // USER EXISTS: Set user data from the login SP result
@@ -241,8 +246,9 @@ export const googleAuthUser = async (req, res) => {
             // USER DOES NOT EXIST: Create them using the EV_CreateUser SP
             const userUUID = crypto.randomUUID();
             const derivedUsername = await generateUniqueUsername(emailAddress);
-            const derivedUserID = 'USR-' + crypto.randomBytes(4).toString('hex').toUpperCase();
-
+            const year = new Date().getFullYear();
+            const random = Math.floor(1000 + Math.random() * 9000); // Random 4-digit number
+            const derivedUserID = `EV-${year}-${random}`;
             // Generate a random dummy password for Google users so they can't login via standard form
             const dummyPassword = crypto.randomBytes(16).toString('hex');
             const salt = await bcrypt.genSalt(10);
@@ -282,18 +288,20 @@ export const googleAuthUser = async (req, res) => {
 
         // 3. Sign JWT for the user (whether newly created or existing)
         let token = jwt.sign({ id: user.UUID, email: user.EmailAddress }, process.env.JWT_SECRET, { expiresIn: '1d' });
+        const sessionId = token.slice(-30);
+        const macId = req.socket.remoteAddress;
 
         // 4. Update the Database with the new SessionId
-        const updateSessionReq = pool.request();
-        updateSessionReq.input('SessionId', sql.VarChar(255), dbSessionId);
-        updateSessionReq.input('UUID', sql.VarChar(36), user.UUID);
-        await updateSessionReq.execute("EV_UpdateUserSession");
+        // const updateSessionReq = pool.request();
+        // updateSessionReq.input('SessionId', sql.VarChar(255), dbSessionId);
+        // updateSessionReq.input('UUID', sql.VarChar(36), user.UUID);
+        // await updateSessionReq.execute("EV_UpdateUserSession");
 
         // 5. Insert Audit Log (ActionType '1' = Login)
         const auditReq = pool.request();
         auditReq.input('UUID', sql.VarChar(36), user.UUID);
-        auditReq.input('SessionId', sql.VarChar(255), dbSessionId);
-        auditReq.input('MacID', sql.VarChar(255), null);
+        auditReq.input('SessionId', sql.VarChar(255), sessionId);
+        auditReq.input('MacID', sql.VarChar(255), macId);
         auditReq.input('ActionType', sql.VarChar(10), '1');
         await auditReq.execute("EV_InsertLogUserSession");
 

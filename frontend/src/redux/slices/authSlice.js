@@ -48,7 +48,9 @@ export const logoutUser = createAsyncThunk(
     'auth/logoutUser',
     async (_, { rejectWithValue }) => {
         try {
-            const response = await api.post('/auth/logout');
+            const response = await api.post('/auth/logout', {
+                sessionId: sessionStorage.getItem('sessionid')
+            });
             sessionStorage.removeItem('sessionid'); // Clear session storage on logout
             return response.data;
         } catch (error) {
@@ -99,7 +101,7 @@ export const resetPassword = createAsyncThunk(
     'auth/resetPassword',
     async (resetData, { rejectWithValue }) => {
         try {
-            // CHANGED: Point to the new dedicated password route
+            //Point to the new dedicated password route
             const response = await api.post('/password/reset', resetData);
             return response.data;
         } catch (error) {
@@ -122,7 +124,7 @@ const authSlice = createSlice({
             state.user = null;
             state.isAuthenticated = false;
             // Clear session storage on manual reducer logout
-            sessionStorage.removeItem('sessionid');
+            // sessionStorage.removeItem('sessionid');
         }
     },
     extraReducers: (builder) => {
@@ -137,9 +139,9 @@ const authSlice = createSlice({
                 state.user = action.payload.user;
                 state.isAuthenticated = true;
 
-                // ✅ STORE TOKEN IN SESSION STORAGE
+                // STORE TOKEN IN SESSION STORAGE
                 if (action.payload.token) {
-                    sessionStorage.setItem('sessionid', action.payload.token);
+                    sessionStorage.setItem('sessionid', action.payload.sessionId);
                 }
 
                 toast.success('Login successful');
@@ -158,9 +160,9 @@ const authSlice = createSlice({
             .addCase(registerUser.fulfilled, (state, action) => {
                 state.loading = false;
 
-                // ✅ STORE TOKEN IN SESSION STORAGE (Since backend sends token on register)
+                //STORE TOKEN IN SESSION STORAGE (Since backend sends token on register)
                 if (action.payload.token) {
-                    sessionStorage.setItem('sessionid', action.payload.token);
+                    sessionStorage.setItem('sessionid', action.payload.sessionId);
                 }
 
                 toast.success('Registration successful! Please log in.');
@@ -181,9 +183,9 @@ const authSlice = createSlice({
                 state.user = action.payload.user;
                 state.isAuthenticated = true;
 
-                // ✅ STORE TOKEN IN SESSION STORAGE
+                //STORE TOKEN IN SESSION STORAGE
                 if (action.payload.token) {
-                    sessionStorage.setItem('sessionid', action.payload.token);
+                    sessionStorage.setItem('sessionid', action.payload.sessionId);
                 }
                 toast.success('Google Authentication successful!');
             })
@@ -198,8 +200,8 @@ const authSlice = createSlice({
                 state.user = null;
                 state.isAuthenticated = false;
 
-                // ✅ REMOVE TOKEN FROM SESSION STORAGE ON LOGOUT
-                sessionStorage.removeItem('sessionid');
+                //REMOVE TOKEN FROM SESSION STORAGE ON LOGOUT
+                // sessionStorage.removeItem('sessionid');
 
                 toast.success('Logged out successfully');
             })
