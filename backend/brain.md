@@ -105,3 +105,17 @@ Validates user credentials and retrieves user profile data and hashed password f
 Resets a user's password based on their email address.
 - **Inputs**: `@EmailAddress`, `@Password`
 - **Outputs**: `@Result INT` (1 = Success, -1 = Not found/inactive, 0 = System Error)
+
+### `EV_CheckUserExistsByEmail`
+Checks if a user exists and is active by their email address.
+- **Inputs**: `@EmailAddress VARCHAR(150)`
+- **Outputs**: `EmailExists BIT` (1 = True, 0 = False)
+
+### `EV_GetEmailTemplate`
+Fetches the email subject and template for a specific event.
+- **Inputs**: `@EventId INT`
+- **Outputs**: Result Set (`EmailSubject`, `EmailTemplate`)
+
+### `EV_UpdateUserSession`
+Updates the SessionId for a user across `Tb_User` and `Tb_UserDesc` tables.
+- **Inputs**: `@UUID VARCHAR(36)`, `@SessionId VARCHAR(255)`

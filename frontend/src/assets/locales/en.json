@@ -1,7 +1,9 @@
 {
   "common": {
     "sending": "Sending...",
-    "verifying": "Verifying..."
+    "verifying": "Verifying...",
+    "loadingDots": "...",
+    "editing": "Validating Credentials"
   },
   "login": {
     "title": "Welcome Back!",
@@ -254,7 +256,8 @@
       "gender": "Gender",
       "dateOfJoining": "Date of Joining",
       "nationality": "Nationality",
-      "memberSince": "Member Since"
+      "memberSince": "Member Since",
+      "goldRank": "★ Gold Rank"
     },
     "contact": {
       "title": "Contact Information",

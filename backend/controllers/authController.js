@@ -19,10 +19,10 @@ const generateUniqueUsername = async (emailAddress) => {
         const request = pool.request();
         request.input('Username', sql.VarChar(50), username);
         request.output('IsAvailable', sql.Bit);
-        
+
         const result = await request.execute('dbo.EV_CheckUsernameAvailability');
         const isAvailable = result.output.IsAvailable;
-        
+
         if (isAvailable === true || isAvailable === 1) {
             isUnique = true;
         } else {
@@ -30,7 +30,7 @@ const generateUniqueUsername = async (emailAddress) => {
             username = baseUsername + Math.floor(1000 + Math.random() * 9000);
         }
     }
-    
+
     return username;
 };
 
@@ -293,7 +293,7 @@ export const googleAuthUser = async (req, res) => {
         const auditReq = pool.request();
         auditReq.input('UUID', sql.VarChar(36), user.UUID);
         auditReq.input('SessionId', sql.VarChar(255), dbSessionId);
-        auditReq.input('MacID', sql.VarChar(255), null); 
+        auditReq.input('MacID', sql.VarChar(255), null);
         auditReq.input('ActionType', sql.VarChar(10), '1');
         await auditReq.execute("EV_InsertLogUserSession");
 

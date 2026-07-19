@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ArrowRight, Loader2, CheckCircle2 } from 'lucide-react';
+import { ArrowRight, Loader2, CheckCircle2, Hash, User, Landmark, Building } from 'lucide-react';
 import CustomSelect from '../../common/CustomSelect';
 import { toast } from 'react-toastify';
 import api from '../../../https/axios';
@@ -47,17 +47,20 @@ export default function BankInfoForm({ t, onBack, onNext }) {
   };
 
   return (
-    <form className="space-y-6" onSubmit={(e) => { 
-      e.preventDefault(); 
+    <form className="space-y-6" onSubmit={(e) => {
+      e.preventDefault();
       onNext();
     }}>
       <div className="grid grid-cols-1 gap-y-5">
-        
+
         {/* IFSC Code with Verify Button */}
         <div>
-          <label className="block text-[13px] font-bold text-[#111] mb-2">
-            {t('completeProfile.ifscCode')} <span className="text-red-500">*</span>
-          </label>
+          <div className="flex items-center gap-2 mb-2">
+            <Hash className="w-4 h-4 text-slate-500" />
+            <label className="text-[13px] font-bold text-[#111]">
+              {t('completeProfile.ifscCode')} <span className="text-red-500">*</span>
+            </label>
+          </div>
           <div className="relative">
             <input
               type="text"
@@ -74,19 +77,19 @@ export default function BankInfoForm({ t, onBack, onNext }) {
               onClick={handleVerify}
               disabled={isVerifying || !ifsc.trim() || verifiedDetails !== null}
               className={`absolute right-2 top-1/2 -translate-y-1/2 px-4 py-1.5 rounded-lg font-bold text-[12px] transition-all flex items-center gap-1.5 
-                ${verifiedDetails 
-                  ? 'bg-emerald-50 text-emerald-600 cursor-default' 
-                  : isVerifying 
+                ${verifiedDetails
+                  ? 'bg-emerald-50 text-emerald-600 cursor-default'
+                  : isVerifying
                     ? 'bg-indigo-50 text-indigo-400 cursor-not-allowed'
                     : 'bg-indigo-50 text-indigo-600 hover:bg-indigo-600 hover:text-white cursor-pointer shadow-sm hover:shadow-md'
                 }`}
             >
               {isVerifying && <Loader2 className="w-3.5 h-3.5 animate-spin" />}
               {verifiedDetails && <CheckCircle2 className="w-3.5 h-3.5" />}
-              {verifiedDetails ? 'Verified' : isVerifying ? 'Verifying...' : t('completeProfile.verifyBtn')}
+              {verifiedDetails ? t('profile.contact.verified') : isVerifying ? t('common.verifying') : t('completeProfile.verifyBtn')}
             </button>
           </div>
-          
+
           {verifiedDetails && (
             <div className="mt-3 p-3.5 bg-emerald-50/80 border border-emerald-100 rounded-xl flex items-start gap-3 animate-fade-in">
               <div className="w-8 h-8 rounded-full bg-emerald-100 flex items-center justify-center shrink-0 mt-0.5">
@@ -102,9 +105,12 @@ export default function BankInfoForm({ t, onBack, onNext }) {
 
         {/* Account Holder Name */}
         <div>
-          <label className="block text-[13px] font-bold text-[#111] mb-2">
-            {t('completeProfile.accountHolderName')} <span className="text-red-500">*</span>
-          </label>
+          <div className="flex items-center gap-2 mb-2">
+            <User className="w-4 h-4 text-slate-500" />
+            <label className="text-[13px] font-bold text-[#111]">
+              {t('completeProfile.accountHolderName')} <span className="text-red-500">*</span>
+            </label>
+          </div>
           <input
             type="text"
             className="w-full px-4 py-3.5 bg-white border border-slate-200 rounded-xl focus:outline-none focus:border-[#4f3bf3] focus:ring-1 focus:ring-[#4f3bf3] transition-all text-[14px] text-slate-900 placeholder:text-slate-400 font-medium"
@@ -114,9 +120,12 @@ export default function BankInfoForm({ t, onBack, onNext }) {
 
         {/* Bank Name */}
         <div>
-          <label className="block text-[13px] font-bold text-[#111] mb-2">
-            {t('completeProfile.bankName')} <span className="text-red-500">*</span>
-          </label>
+          <div className="flex items-center gap-2 mb-2">
+            <Landmark className="w-4 h-4 text-slate-500" />
+            <label className="text-[13px] font-bold text-[#111]">
+              {t('completeProfile.bankName')} <span className="text-red-500">*</span>
+            </label>
+          </div>
           <input
             type="text"
             value={bankName}
@@ -128,9 +137,12 @@ export default function BankInfoForm({ t, onBack, onNext }) {
 
         {/* Account Number */}
         <div>
-          <label className="block text-[13px] font-bold text-[#111] mb-2">
-            {t('completeProfile.accountNumber')} <span className="text-red-500">*</span>
-          </label>
+          <div className="flex items-center gap-2 mb-2">
+            <Hash className="w-4 h-4 text-slate-500" />
+            <label className="text-[13px] font-bold text-[#111]">
+              {t('completeProfile.accountNumber')} <span className="text-red-500">*</span>
+            </label>
+          </div>
           <input
             type="text"
             className="w-full px-4 py-3.5 bg-white border border-slate-200 rounded-xl focus:outline-none focus:border-[#4f3bf3] focus:ring-1 focus:ring-[#4f3bf3] transition-all text-[14px] text-slate-900 placeholder:text-slate-400 font-medium"
@@ -140,9 +152,12 @@ export default function BankInfoForm({ t, onBack, onNext }) {
 
         {/* Confirm Account Number */}
         <div>
-          <label className="block text-[13px] font-bold text-[#111] mb-2">
-            {t('completeProfile.confirmAccountNumber')} <span className="text-red-500">*</span>
-          </label>
+          <div className="flex items-center gap-2 mb-2">
+            <CheckCircle2 className="w-4 h-4 text-slate-500" />
+            <label className="text-[13px] font-bold text-[#111]">
+              {t('completeProfile.confirmAccountNumber')} <span className="text-red-500">*</span>
+            </label>
+          </div>
           <input
             type="text"
             className="w-full px-4 py-3.5 bg-white border border-slate-200 rounded-xl focus:outline-none focus:border-[#4f3bf3] focus:ring-1 focus:ring-[#4f3bf3] transition-all text-[14px] text-slate-900 placeholder:text-slate-400 font-medium"
@@ -152,9 +167,12 @@ export default function BankInfoForm({ t, onBack, onNext }) {
 
         {/* Account Type */}
         <div>
-          <label className="block text-[13px] font-bold text-[#111] mb-2">
-            {t('completeProfile.accountType')} <span className="text-red-500">*</span>
-          </label>
+          <div className="flex items-center gap-2 mb-2">
+            <Building className="w-4 h-4 text-slate-500" />
+            <label className="text-[13px] font-bold text-[#111]">
+              {t('completeProfile.accountType')} <span className="text-red-500">*</span>
+            </label>
+          </div>
           <CustomSelect options={accountTypeOptions} placeholder={t('completeProfile.accountTypePlaceholder')} />
         </div>
 

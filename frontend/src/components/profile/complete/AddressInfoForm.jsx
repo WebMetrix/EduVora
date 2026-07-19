@@ -1,5 +1,5 @@
 import React from 'react';
-import { ArrowRight } from 'lucide-react';
+import { ArrowRight, MapPin, Globe, Map, Building, Hash } from 'lucide-react';
 import CustomSelect from '../../common/CustomSelect';
 
 export default function AddressInfoForm({ t, onBack, onNext }) {
@@ -21,17 +21,20 @@ export default function AddressInfoForm({ t, onBack, onNext }) {
   ];
 
   return (
-    <form className="space-y-6" onSubmit={(e) => { 
-      e.preventDefault(); 
+    <form className="space-y-6" onSubmit={(e) => {
+      e.preventDefault();
       onNext();
     }}>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-5">
-        
+
         {/* Address Line 1 (Full Width) */}
         <div className="md:col-span-2">
-          <label className="block text-[13px] font-bold text-[#111] mb-2">
-            {t('completeProfile.addressLine1')} <span className="text-red-500">*</span>
-          </label>
+          <div className="flex items-center gap-2 mb-2">
+            <MapPin className="w-4 h-4 text-slate-500" />
+            <label className="text-[13px] font-bold text-[#111]">
+              {t('completeProfile.addressLine1')} <span className="text-red-500">*</span>
+            </label>
+          </div>
           <input
             type="text"
             className="w-full px-4 py-3.5 bg-white border border-slate-200 rounded-xl focus:outline-none focus:border-[#4f3bf3] focus:ring-1 focus:ring-[#4f3bf3] transition-all text-[14px] text-slate-900 placeholder:text-slate-400 font-medium"
@@ -41,9 +44,12 @@ export default function AddressInfoForm({ t, onBack, onNext }) {
 
         {/* Address Line 2 (Full Width) */}
         <div className="md:col-span-2">
-          <label className="block text-[13px] font-bold text-[#111] mb-2">
-            {t('completeProfile.addressLine2')}
-          </label>
+          <div className="flex items-center gap-2 mb-2">
+            <MapPin className="w-4 h-4 text-slate-500" />
+            <label className="text-[13px] font-bold text-[#111]">
+              {t('completeProfile.addressLine2')}
+            </label>
+          </div>
           <input
             type="text"
             className="w-full px-4 py-3.5 bg-white border border-slate-200 rounded-xl focus:outline-none focus:border-[#4f3bf3] focus:ring-1 focus:ring-[#4f3bf3] transition-all text-[14px] text-slate-900 placeholder:text-slate-400 font-medium"
@@ -53,25 +59,34 @@ export default function AddressInfoForm({ t, onBack, onNext }) {
 
         {/* Country */}
         <div>
-          <label className="block text-[13px] font-bold text-[#111] mb-2">
-            {t('completeProfile.country')} <span className="text-red-500">*</span>
-          </label>
+          <div className="flex items-center gap-2 mb-2">
+            <Globe className="w-4 h-4 text-slate-500" />
+            <label className="text-[13px] font-bold text-[#111]">
+              {t('completeProfile.country')} <span className="text-red-500">*</span>
+            </label>
+          </div>
           <CustomSelect options={countryOptions} placeholder={t('completeProfile.countryPlaceholder')} />
         </div>
 
         {/* State */}
         <div>
-          <label className="block text-[13px] font-bold text-[#111] mb-2">
-            {t('completeProfile.state')} <span className="text-red-500">*</span>
-          </label>
+          <div className="flex items-center gap-2 mb-2">
+            <Map className="w-4 h-4 text-slate-500" />
+            <label className="text-[13px] font-bold text-[#111]">
+              {t('completeProfile.state')} <span className="text-red-500">*</span>
+            </label>
+          </div>
           <CustomSelect options={stateOptions} placeholder={t('completeProfile.statePlaceholder')} />
         </div>
 
         {/* City */}
         <div>
-          <label className="block text-[13px] font-bold text-[#111] mb-2">
-            {t('completeProfile.city')} <span className="text-red-500">*</span>
-          </label>
+          <div className="flex items-center gap-2 mb-2">
+            <Building className="w-4 h-4 text-slate-500" />
+            <label className="text-[13px] font-bold text-[#111]">
+              {t('completeProfile.city')} <span className="text-red-500">*</span>
+            </label>
+          </div>
           <input
             type="text"
             className="w-full px-4 py-3.5 bg-white border border-slate-200 rounded-xl focus:outline-none focus:border-[#4f3bf3] focus:ring-1 focus:ring-[#4f3bf3] transition-all text-[14px] text-slate-900 placeholder:text-slate-400 font-medium"
@@ -81,9 +96,12 @@ export default function AddressInfoForm({ t, onBack, onNext }) {
 
         {/* Pincode */}
         <div>
-          <label className="block text-[13px] font-bold text-[#111] mb-2">
-            {t('completeProfile.pincode')} <span className="text-red-500">*</span>
-          </label>
+          <div className="flex items-center gap-2 mb-2">
+            <Hash className="w-4 h-4 text-slate-500" />
+            <label className="text-[13px] font-bold text-[#111]">
+              {t('completeProfile.pincode')} <span className="text-red-500">*</span>
+            </label>
+          </div>
           <input
             type="text"
             className="w-full px-4 py-3.5 bg-white border border-slate-200 rounded-xl focus:outline-none focus:border-[#4f3bf3] focus:ring-1 focus:ring-[#4f3bf3] transition-all text-[14px] text-slate-900 placeholder:text-slate-400 font-medium"

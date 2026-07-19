@@ -1,5 +1,5 @@
 import React from 'react';
-import { User, ArrowRight } from 'lucide-react';
+import { User, ArrowRight, Calendar, ChevronDown, Flag, Heart } from 'lucide-react';
 import CustomDatePicker from '../../common/CustomDatePicker';
 import CustomSelect from '../../common/CustomSelect';
 
@@ -24,17 +24,20 @@ export default function PersonalInfoForm({ t, onNext }) {
   ];
 
   return (
-    <form className="space-y-6" onSubmit={(e) => { 
-      e.preventDefault(); 
+    <form className="space-y-6" onSubmit={(e) => {
+      e.preventDefault();
       onNext();
     }}>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-5">
         {/* Full Name */}
         <div>
-          <label className="block text-[13px] font-bold text-[#111] mb-2">
-            {t('completeProfile.fullName')} <span className="text-red-500">*</span>
-          </label>
+          <div className="flex items-center gap-2 mb-2">
+            <User className="w-4 h-4 text-slate-500" />
+            <label className="text-[13px] font-bold text-[#111]">
+              {t('completeProfile.fullName')} <span className="text-red-500">*</span>
+            </label>
+          </div>
           <input
             type="text"
             className="w-full px-4 py-3.5 bg-white border border-slate-200 rounded-xl focus:outline-none focus:border-[#4f3bf3] focus:ring-1 focus:ring-[#4f3bf3] transition-all text-[14px] text-slate-900 placeholder:text-slate-400 font-medium"
@@ -44,9 +47,12 @@ export default function PersonalInfoForm({ t, onNext }) {
 
         {/* Username */}
         <div>
-          <label className="block text-[13px] font-bold text-[#111] mb-2">
-            {t('completeProfile.username')} <span className="text-red-500">*</span>
-          </label>
+          <div className="flex items-center gap-2 mb-2">
+            <User className="w-4 h-4 text-slate-500" />
+            <label className="text-[13px] font-bold text-[#111]">
+              {t('completeProfile.username')} <span className="text-red-500">*</span>
+            </label>
+          </div>
           <input
             type="text"
             className="w-full px-4 py-3.5 bg-white border border-slate-200 rounded-xl focus:outline-none focus:border-[#4f3bf3] focus:ring-1 focus:ring-[#4f3bf3] transition-all text-[14px] text-slate-900 placeholder:text-slate-400 font-medium"
@@ -56,33 +62,45 @@ export default function PersonalInfoForm({ t, onNext }) {
 
         {/* Date of Birth */}
         <div>
-          <label className="block text-[13px] font-bold text-[#111] mb-2">
-            {t('completeProfile.dob')} <span className="text-red-500">*</span>
-          </label>
+          <div className="flex items-center gap-2 mb-2">
+            <Calendar className="w-4 h-4 text-slate-500" />
+            <label className="text-[13px] font-bold text-[#111]">
+              {t('completeProfile.dob')} <span className="text-red-500">*</span>
+            </label>
+          </div>
           <CustomDatePicker placeholder={t('completeProfile.dobPlaceholder')} />
         </div>
 
         {/* Gender */}
         <div>
-          <label className="block text-[13px] font-bold text-[#111] mb-2">
-            {t('completeProfile.gender')} <span className="text-red-500">*</span>
-          </label>
+          <div className="flex items-center gap-2 mb-2">
+            <User className="w-4 h-4 text-slate-500" />
+            <label className="text-[13px] font-bold text-[#111]">
+              {t('completeProfile.gender')} <span className="text-red-500">*</span>
+            </label>
+          </div>
           <CustomSelect options={genderOptions} placeholder={t('completeProfile.genderPlaceholder')} />
         </div>
 
         {/* Marital Status */}
         <div>
-          <label className="block text-[13px] font-bold text-[#111] mb-2">
-            {t('completeProfile.maritalStatus')}
-          </label>
+          <div className="flex items-center gap-2 mb-2">
+            <Heart className="w-4 h-4 text-slate-500" />
+            <label className="text-[13px] font-bold text-[#111]">
+              {t('completeProfile.maritalStatus')}
+            </label>
+          </div>
           <CustomSelect options={maritalOptions} placeholder={t('completeProfile.maritalStatusPlaceholder')} />
         </div>
 
         {/* Nationality */}
         <div>
-          <label className="block text-[13px] font-bold text-[#111] mb-2">
-            {t('completeProfile.nationality')}
-          </label>
+          <div className="flex items-center gap-2 mb-2">
+            <Flag className="w-4 h-4 text-slate-500" />
+            <label className="text-[13px] font-bold text-[#111]">
+              {t('completeProfile.nationality')}
+            </label>
+          </div>
           <CustomSelect options={nationalityOptions} placeholder={t('completeProfile.nationalityPlaceholder')} />
         </div>
       </div>
