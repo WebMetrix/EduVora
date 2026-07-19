@@ -383,6 +383,12 @@
     "editBtn": "Edit",
     "confirmCheckbox": "I confirm that all the information provided is correct.",
     "completeProfileBtn": "Complete Profile",
+    "aboutNotes": "About / Notes",
+    "aboutNotesPlaceholder": "Write something about yourself or add any notes...",
+    "completeAddress": "Complete Address",
+    "completeAddressPlaceholder": "Enter complete address details...",
+    "additionalBankNotes": "Additional Bank Notes",
+    "additionalBankNotesPlaceholder": "Enter any additional bank notes...",
     "options": {
       "male": "Male",
       "female": "Female",

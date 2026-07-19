@@ -1,6 +1,8 @@
-import React from 'react';
-import { ArrowRight } from 'lucide-react';
+import React, { useState } from 'react';
+import { ArrowRight, Loader2, CheckCircle2 } from 'lucide-react';
 import CustomSelect from '../../common/CustomSelect';
+import { toast } from 'react-toastify';
+import api from '../../../https/axios';
 
 export default function BankInfoForm({ t, onBack, onNext }) {
   const bankOptions = [
@@ -15,6 +17,34 @@ export default function BankInfoForm({ t, onBack, onNext }) {
     { value: 'savings', label: 'Savings Account' },
     { value: 'current', label: 'Current Account' },
   ];
+
+  const [ifsc, setIfsc] = useState('');
+  const [isVerifying, setIsVerifying] = useState(false);
+  const [verifiedDetails, setVerifiedDetails] = useState(null);
+  const [bankName, setBankName] = useState('');
+
+  const handleVerify = async () => {
+    if (!ifsc.trim()) {
+      toast.error('Please enter an IFSC code first');
+      return;
+    }
+
+    setIsVerifying(true);
+    setVerifiedDetails(null);
+    try {
+      const response = await api.get(`/profile/verifyifsc/${ifsc.trim()}`);
+      if (response.data && response.data.bankDetails) {
+        setVerifiedDetails(response.data.bankDetails);
+        setBankName(response.data.bankDetails.bankName);
+        toast.success(response.data.message || 'IFSC verified successfully');
+      }
+    } catch (error) {
+      console.error('IFSC verification error:', error);
+      toast.error(error.response?.data?.message || 'Failed to verify IFSC code');
+    } finally {
+      setIsVerifying(false);
+    }
+  };
 
   return (
     <form className="space-y-6" onSubmit={(e) => { 
@@ -31,16 +61,43 @@ export default function BankInfoForm({ t, onBack, onNext }) {
           <div className="relative">
             <input
               type="text"
-              className="w-full px-4 py-3.5 pr-20 bg-white border border-slate-200 rounded-xl focus:outline-none focus:border-[#4f3bf3] focus:ring-1 focus:ring-[#4f3bf3] transition-all text-[14px] text-slate-900 placeholder:text-slate-400 font-medium uppercase"
+              value={ifsc}
+              onChange={(e) => {
+                setIfsc(e.target.value);
+                setVerifiedDetails(null); // Reset verification if they type again
+              }}
+              className={`w-full px-4 py-3.5 pr-[100px] bg-white border ${verifiedDetails ? 'border-emerald-300 ring-1 ring-emerald-300' : 'border-slate-200'} rounded-xl focus:outline-none focus:border-[#4f3bf3] focus:ring-1 focus:ring-[#4f3bf3] transition-all text-[14px] text-slate-900 placeholder:text-slate-400 font-medium uppercase`}
               placeholder={t('completeProfile.ifscCodePlaceholder')}
             />
             <button
               type="button"
-              className="absolute right-4 top-1/2 -translate-y-1/2 text-[#4f3bf3] font-bold text-[13px] hover:text-indigo-700 transition-colors"
+              onClick={handleVerify}
+              disabled={isVerifying || !ifsc.trim() || verifiedDetails !== null}
+              className={`absolute right-2 top-1/2 -translate-y-1/2 px-4 py-1.5 rounded-lg font-bold text-[12px] transition-all flex items-center gap-1.5 
+                ${verifiedDetails 
+                  ? 'bg-emerald-50 text-emerald-600 cursor-default' 
+                  : isVerifying 
+                    ? 'bg-indigo-50 text-indigo-400 cursor-not-allowed'
+                    : 'bg-indigo-50 text-indigo-600 hover:bg-indigo-600 hover:text-white cursor-pointer shadow-sm hover:shadow-md'
+                }`}
             >
-              {t('completeProfile.verifyBtn')}
+              {isVerifying && <Loader2 className="w-3.5 h-3.5 animate-spin" />}
+              {verifiedDetails && <CheckCircle2 className="w-3.5 h-3.5" />}
+              {verifiedDetails ? 'Verified' : isVerifying ? 'Verifying...' : t('completeProfile.verifyBtn')}
             </button>
           </div>
+          
+          {verifiedDetails && (
+            <div className="mt-3 p-3.5 bg-emerald-50/80 border border-emerald-100 rounded-xl flex items-start gap-3 animate-fade-in">
+              <div className="w-8 h-8 rounded-full bg-emerald-100 flex items-center justify-center shrink-0 mt-0.5">
+                <CheckCircle2 className="w-4 h-4 text-emerald-600" />
+              </div>
+              <div className="flex flex-col gap-0.5">
+                <p className="text-[13px] font-extrabold text-emerald-900">{verifiedDetails.bankName}</p>
+                <p className="text-[12px] font-bold text-emerald-600/80">{verifiedDetails.branchName}, {verifiedDetails.city}, {verifiedDetails.state}</p>
+              </div>
+            </div>
+          )}
         </div>
 
         {/* Account Holder Name */}
@@ -60,7 +117,13 @@ export default function BankInfoForm({ t, onBack, onNext }) {
           <label className="block text-[13px] font-bold text-[#111] mb-2">
             {t('completeProfile.bankName')} <span className="text-red-500">*</span>
           </label>
-          <CustomSelect options={bankOptions} placeholder={t('completeProfile.bankNamePlaceholder')} />
+          <input
+            type="text"
+            value={bankName}
+            onChange={(e) => setBankName(e.target.value)}
+            className="w-full px-4 py-3.5 bg-white border border-slate-200 rounded-xl focus:outline-none focus:border-[#4f3bf3] focus:ring-1 focus:ring-[#4f3bf3] transition-all text-[14px] text-slate-900 placeholder:text-slate-400 font-medium"
+            placeholder={t('completeProfile.bankNamePlaceholder')}
+          />
         </div>
 
         {/* Account Number */}

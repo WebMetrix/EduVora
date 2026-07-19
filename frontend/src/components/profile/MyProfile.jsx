@@ -1,4 +1,6 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import api from '../../https/axios';
+import { toast } from 'react-toastify';
 import { useTranslation } from '../../hooks/useTranslation';
 import ProfileHeader from './ProfileHeader';
 import ProfileTabs from './ProfileTabs';
@@ -17,6 +19,23 @@ import { User as UserIcon, MapPin, Building, CreditCard, Key } from 'lucide-reac
 export default function MyProfile() {
   const { t } = useTranslation();
   const [activeTab, setActiveTab] = useState('personalInfo');
+  const [profileData, setProfileData] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchProfile = async () => {
+      try {
+        const response = await api.get('/profile');
+        setProfileData(response.data);
+      } catch (error) {
+        console.error('Error fetching profile:', error);
+        toast.error('Failed to load profile data');
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchProfile();
+  }, []);
 
   const tabs = [
     { id: 'personalInfo', icon: UserIcon, label: t('profile.tabs.personalInfo') },
@@ -25,6 +44,14 @@ export default function MyProfile() {
     { id: 'bankInfo', icon: CreditCard, label: t('profile.tabs.bankInfo') },
     { id: 'changePassword', icon: Key, label: t('profile.tabs.changePassword') },
   ];
+
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center h-64">
+        <div className="animate-spin rounded-full h-12 w-12 border-4 border-indigo-200 border-t-indigo-600"></div>
+      </div>
+    );
+  }
 
   return (
     <div className="flex flex-col gap-6 animate-fade-in pb-4">
@@ -40,18 +67,18 @@ export default function MyProfile() {
           <div className="lg:col-span-2 flex flex-col gap-6">
             {activeTab === 'personalInfo' && (
               <>
-                <PersonalInformationCard t={t} />
+                <PersonalInformationCard t={t} profileData={profileData} />
                 <AboutMeCard t={t} />
               </>
             )}
             {activeTab === 'contactInfo' && (
-              <ContactInformationCard t={t} />
+              <ContactInformationCard t={t} profileData={profileData} />
             )}
             {activeTab === 'addressInfo' && (
-              <AddressInformationCard t={t} />
+              <AddressInformationCard t={t} profileData={profileData} />
             )}
             {activeTab === 'bankInfo' && (
-              <BankInformationCard t={t} />
+              <BankInformationCard t={t} profileData={profileData} />
             )}
             <SafeInfoCard t={t} className="hidden lg:flex" />
           </div>

@@ -8,10 +8,10 @@ router.post('/checkusername', checkUsername);
 router.get('/dropdowns/genders', getGenders);
 router.get('/dropdowns/states', getStates);
 router.get('/dropdowns/cities', getCities);
-router.get('/dropdowns/bank-types', getBankAccountTypes);
+router.get('/dropdowns/banktypes', getBankAccountTypes);
 
 // IFSC Verification Route 
-router.get('/verify-ifsc/:ifscCode', verifyIfsc);
+router.get('/verifyifsc/:ifscCode', verifyIfsc);
 
 // Protected Routes
 router.get('/', isLoggedIn, getUserProfile);

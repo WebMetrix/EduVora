@@ -1,6 +1,6 @@
-import { Edit2, Landmark } from 'lucide-react';
+import { Edit2, Landmark, Hash, User, Building, FileText, CheckCircle2 } from 'lucide-react';
 
-export default function BankInformationCard({ t }) {
+export default function BankInformationCard({ t, profileData }) {
     return (
         <div className="bg-white/60 backdrop-blur-xl border border-white/60 rounded-2xl p-6 shadow-[0_4px_24px_rgba(0,0,0,0.02)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_8px_30px_rgba(79,70,229,0.15)] hover:border-indigo-200/50 flex flex-col relative overflow-hidden group">
             <div className="absolute top-6 right-6">
@@ -20,52 +20,83 @@ export default function BankInformationCard({ t }) {
                 </div>
             </div>
 
-            <div className="flex flex-col gap-8">
-                {/* Row 1 */}
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-                    <div className="flex flex-col gap-1.5 relative md:after:content-[''] md:after:absolute md:after:right-0 md:after:top-[10%] md:after:h-[80%] md:after:w-px md:after:bg-slate-100 pr-4">
-                        <label className="text-[12px] font-bold text-slate-500">{t('profile.bank.accountHolder')}</label>
-                        <div className="mt-1">
-                            <span className="text-[14px] text-slate-900 font-bold">Priya Sharma</span>
-                        </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-5">
+                {/* IFSC Code */}
+                <div className="flex flex-col gap-1.5">
+                    <div className="flex items-center gap-2">
+                        <Hash className="w-4 h-4 text-slate-500" />
+                        <label className="text-[12px] font-bold text-slate-900">{t('completeProfile.ifscCode')}</label>
                     </div>
-
-                    <div className="flex flex-col gap-1.5 relative md:after:content-[''] md:after:absolute md:after:right-0 md:after:top-[10%] md:after:h-[80%] md:after:w-px md:after:bg-slate-100 md:px-4">
-                        <label className="text-[12px] font-bold text-slate-500">{t('profile.bank.bankName')}</label>
-                        <div className="mt-1">
-                            <span className="text-[14px] text-slate-900 font-bold">HDFC Bank</span>
-                        </div>
-                    </div>
-
-                    <div className="flex flex-col gap-1.5 relative md:after:content-[''] md:after:absolute md:after:right-0 md:after:top-[10%] md:after:h-[80%] md:after:w-px md:after:bg-slate-100 md:px-4">
-                        <label className="text-[12px] font-bold text-slate-500">{t('profile.bank.accountNumber')}</label>
-                        <div className="mt-1">
-                            <span className="text-[14px] text-slate-900 font-bold">5010 1234 5678 90</span>
-                        </div>
-                    </div>
-
-                    <div className="flex flex-col gap-1.5 md:pl-4">
-                        <label className="text-[12px] font-bold text-slate-500">{t('profile.bank.ifscCode')}</label>
-                        <div className="mt-1">
-                            <span className="text-[14px] text-slate-900 font-bold">HDFC0001234</span>
-                        </div>
+                    <div className="px-4 py-2.5 bg-white border border-slate-200 rounded-xl text-[13px] text-slate-700 font-semibold shadow-[0_2px_10px_rgb(0,0,0,0.02)]">
+                        {profileData?.IFSCCode || '-'}
                     </div>
                 </div>
 
-                {/* Row 2 */}
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-                    <div className="flex flex-col gap-1.5 relative md:after:content-[''] md:after:absolute md:after:right-0 md:after:top-[10%] md:after:h-[80%] md:after:w-px md:after:bg-slate-100 pr-4">
-                        <label className="text-[12px] font-bold text-slate-500">{t('profile.bank.accountType')}</label>
-                        <div className="mt-1">
-                            <span className="text-[14px] text-slate-900 font-bold">Savings Account</span>
-                        </div>
+                {/* Account Holder Name */}
+                <div className="flex flex-col gap-1.5">
+                    <div className="flex items-center gap-2">
+                        <User className="w-4 h-4 text-slate-500" />
+                        <label className="text-[12px] font-bold text-slate-900">{t('completeProfile.accountHolderName')}</label>
                     </div>
+                    <div className="px-4 py-2.5 bg-white border border-slate-200 rounded-xl text-[13px] text-slate-700 font-semibold shadow-[0_2px_10px_rgb(0,0,0,0.02)]">
+                        {profileData?.AccountHolderName || '-'}
+                    </div>
+                </div>
 
-                    <div className="flex flex-col gap-1.5 md:px-4">
-                        <label className="text-[12px] font-bold text-slate-500">{t('profile.bank.branch')}</label>
-                        <div className="mt-1">
-                            <span className="text-[14px] text-slate-900 font-bold">Jaipur Main Branch</span>
-                        </div>
+                {/* Bank Name */}
+                <div className="flex flex-col gap-1.5">
+                    <div className="flex items-center gap-2">
+                        <Landmark className="w-4 h-4 text-slate-500" />
+                        <label className="text-[12px] font-bold text-slate-900">{t('completeProfile.bankName')}</label>
+                    </div>
+                    <div className="px-4 py-2.5 bg-white border border-slate-200 rounded-xl text-[13px] text-slate-700 font-semibold shadow-[0_2px_10px_rgb(0,0,0,0.02)]">
+                        {profileData?.BankName || '-'}
+                    </div>
+                </div>
+
+                {/* Account Number */}
+                <div className="flex flex-col gap-1.5">
+                    <div className="flex items-center gap-2">
+                        <Hash className="w-4 h-4 text-slate-500" />
+                        <label className="text-[12px] font-bold text-slate-900">{t('completeProfile.accountNumber')}</label>
+                    </div>
+                    <div className="px-4 py-2.5 bg-white border border-slate-200 rounded-xl text-[13px] text-slate-700 font-semibold shadow-[0_2px_10px_rgb(0,0,0,0.02)]">
+                        {profileData?.AccountNumber || '-'}
+                    </div>
+                </div>
+
+                {/* Confirm Account Number */}
+                <div className="flex flex-col gap-1.5">
+                    <div className="flex items-center gap-2">
+                        <CheckCircle2 className="w-4 h-4 text-slate-500" />
+                        <label className="text-[12px] font-bold text-slate-900">{t('completeProfile.confirmAccountNumber')}</label>
+                    </div>
+                    <div className="px-4 py-2.5 bg-white border border-slate-200 rounded-xl text-[13px] text-slate-700 font-semibold shadow-[0_2px_10px_rgb(0,0,0,0.02)]">
+                        {profileData?.AccountNumber || '-'}
+                    </div>
+                </div>
+
+                {/* Account Type */}
+                <div className="flex flex-col gap-1.5">
+                    <div className="flex items-center gap-2">
+                        <Building className="w-4 h-4 text-slate-500" />
+                        <label className="text-[12px] font-bold text-slate-900">{t('completeProfile.accountType')}</label>
+                    </div>
+                    <div className="px-4 py-2.5 bg-white border border-slate-200 rounded-xl text-[13px] text-slate-700 font-semibold shadow-[0_2px_10px_rgb(0,0,0,0.02)]">
+                        {profileData?.AccountType || '-'}
+                    </div>
+                </div>
+            </div>
+
+            {/* Additional Bank Notes Textarea */}
+            <div className="mt-6 border-t border-slate-100 pt-6">
+                <div className="flex flex-col gap-1.5">
+                    <div className="flex items-center gap-2">
+                        <FileText className="w-4 h-4 text-slate-500" />
+                        <label className="text-[12px] font-bold text-slate-900">{t('completeProfile.additionalBankNotes')}</label>
+                    </div>
+                    <div className="px-4 py-3 bg-white border border-slate-200 rounded-xl text-[13px] text-slate-400 font-semibold shadow-[0_2px_10px_rgb(0,0,0,0.02)] min-h-[100px]">
+                        {t('completeProfile.additionalBankNotesPlaceholder')}
                     </div>
                 </div>
             </div>

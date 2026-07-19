@@ -1,7 +1,7 @@
-import { Edit2, Phone, Mail } from 'lucide-react';
+import { Edit2, Phone, Mail, FileText, User } from 'lucide-react';
 import { FaWhatsapp } from 'react-icons/fa';
 
-export default function ContactInformationCard({ t }) {
+export default function ContactInformationCard({ t, profileData }) {
     return (
         <div className="bg-white/60 backdrop-blur-xl border border-white/60 rounded-2xl p-6 shadow-[0_4px_24px_rgba(0,0,0,0.02)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_8px_30px_rgba(79,70,229,0.15)] hover:border-indigo-200/50 flex flex-col relative overflow-hidden group">
             <div className="absolute top-6 right-6">
@@ -21,35 +21,78 @@ export default function ContactInformationCard({ t }) {
                 </div>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-5">
                 {/* Email Address */}
-                <div className="flex flex-col gap-1.5 relative md:after:content-[''] md:after:absolute md:after:right-0 md:after:top-[10%] md:after:h-[80%] md:after:w-px md:after:bg-slate-100 pr-4">
-                    <label className="text-[12px] font-bold text-slate-500">{t('profile.contact.email')}</label>
-                    <div className="flex justify-between items-center mt-1">
-                        <span className="text-[14px] text-slate-900 font-bold">priya.sharma25@gmail.com</span>
-                        <span className="px-2.5 py-1 bg-emerald-100 text-emerald-600 text-[10px] font-bold rounded-full">
-                            {t('profile.contact.verified')}
+                <div className="flex flex-col gap-1.5">
+                    <div className="flex items-center gap-2">
+                        <Mail className="w-4 h-4 text-slate-500" />
+                        <label className="text-[12px] font-bold text-slate-900">{t('completeProfile.emailAddress')}</label>
+                    </div>
+                    <div className="px-4 py-2.5 bg-white border border-slate-200 rounded-xl text-[13px] text-slate-700 font-semibold shadow-[0_2px_10px_rgb(0,0,0,0.02)] flex justify-between items-center">
+                        <span>{profileData?.EmailAddress || '-'}</span>
+                        <span className="px-2 py-0.5 bg-emerald-100 text-emerald-600 text-[10px] font-bold rounded-full">
+                            {t('profile.contact.verified') || 'Verified'}
                         </span>
                     </div>
                 </div>
 
-                {/* Phone Number */}
-                <div className="flex flex-col gap-1.5 relative md:after:content-[''] md:after:absolute md:after:right-0 md:after:top-[10%] md:after:h-[80%] md:after:w-px md:after:bg-slate-100 md:px-4">
-                    <label className="text-[12px] font-bold text-slate-500">{t('profile.contact.phone')}</label>
-                    <div className="flex items-center mt-1">
-                        <span className="text-[14px] text-slate-900 font-bold">+91 98765 43210</span>
+                {/* Mobile Number */}
+                <div className="flex flex-col gap-1.5">
+                    <div className="flex items-center gap-2">
+                        <Phone className="w-4 h-4 text-slate-500" />
+                        <label className="text-[12px] font-bold text-slate-900">{t('completeProfile.mobileNumber')}</label>
+                    </div>
+                    <div className="px-4 py-2.5 bg-white border border-slate-200 rounded-xl text-[13px] text-slate-700 font-semibold shadow-[0_2px_10px_rgb(0,0,0,0.02)]">
+                        {profileData?.MobileNumber || '-'}
+                    </div>
+                </div>
+
+                {/* Alternate Mobile Number */}
+                <div className="flex flex-col gap-1.5">
+                    <div className="flex items-center gap-2">
+                        <Phone className="w-4 h-4 text-slate-500" />
+                        <label className="text-[12px] font-bold text-slate-900">{t('completeProfile.altMobileNumber')}</label>
+                    </div>
+                    <div className="px-4 py-2.5 bg-white border border-slate-200 rounded-xl text-[13px] text-slate-400 font-semibold shadow-[0_2px_10px_rgb(0,0,0,0.02)]">
+                        -
                     </div>
                 </div>
 
                 {/* WhatsApp Number */}
-                <div className="flex flex-col gap-1.5 md:pl-4">
-                    <label className="text-[12px] font-bold text-slate-500">{t('profile.contact.whatsapp')}</label>
-                    <div className="flex items-center justify-between mt-1">
-                        <span className="text-[14px] text-slate-900 font-bold">+91 98765 43210</span>
-                        <FaWhatsapp className="w-5 h-5 text-emerald-500" />
+                <div className="flex flex-col gap-1.5">
+                    <div className="flex items-center gap-2">
+                        <FaWhatsapp className="w-4 h-4 text-slate-500" />
+                        <label className="text-[12px] font-bold text-slate-900">{t('completeProfile.whatsappNumber')}</label>
+                    </div>
+                    <div className="px-4 py-2.5 bg-white border border-slate-200 rounded-xl text-[13px] text-slate-700 font-semibold shadow-[0_2px_10px_rgb(0,0,0,0.02)] flex justify-between items-center">
+                        <span>{profileData?.WhatsAppNumber || '-'}</span>
+                        <FaWhatsapp className="w-4 h-4 text-emerald-500" />
+                    </div>
+                </div>
+
+                {/* Emergency Contact Name */}
+                <div className="flex flex-col gap-1.5">
+                    <div className="flex items-center gap-2">
+                        <User className="w-4 h-4 text-slate-500" />
+                        <label className="text-[12px] font-bold text-slate-900">{t('completeProfile.emergencyContactName')}</label>
+                    </div>
+                    <div className="px-4 py-2.5 bg-white border border-slate-200 rounded-xl text-[13px] text-slate-400 font-semibold shadow-[0_2px_10px_rgb(0,0,0,0.02)]">
+                        -
+                    </div>
+                </div>
+
+                {/* Emergency Contact Number */}
+                <div className="flex flex-col gap-1.5">
+                    <div className="flex items-center gap-2">
+                        <Phone className="w-4 h-4 text-slate-500" />
+                        <label className="text-[12px] font-bold text-slate-900">{t('completeProfile.emergencyContactNumber')}</label>
+                    </div>
+                    <div className="px-4 py-2.5 bg-white border border-slate-200 rounded-xl text-[13px] text-slate-400 font-semibold shadow-[0_2px_10px_rgb(0,0,0,0.02)]">
+                        -
                     </div>
                 </div>
             </div>
+
         </div>
     );
 }

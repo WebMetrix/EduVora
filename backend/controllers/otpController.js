@@ -53,7 +53,7 @@ export const sendOtp = async (req, res) => {
         //     `
         // });
 
-         // Fetch Email Template
+        // Fetch Email Template
         const templateReq = pool.request();
         templateReq.input("EventId", sql.Int, 1);
 

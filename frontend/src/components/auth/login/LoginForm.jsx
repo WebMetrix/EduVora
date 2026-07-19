@@ -51,7 +51,7 @@ export default function LoginForm() {
             type="text"
             value={emailAddress}
             onChange={(e) => setEmailAddress(e.target.value)}
-            className="w-full pl-11 md:pl-10 lg:pl-12 pr-4 py-3.5 md:py-3 bg-white border border-slate-200 rounded-xl focus:outline-none focus:ring-1 focus:ring-indigo-600 focus:border-indigo-600 transition-all font-medium text-slate-900 placeholder-slate-400 text-base md:text-sm lg:text-base shadow-sm"
+            className="w-full pl-11 md:pl-10 lg:pl-12 pr-4 py-3.5 md:py-3 bg-white border border-slate-200 rounded-xl focus:outline-none focus:ring-1 focus:ring-indigo-600 focus:border-indigo-600 transition-all text-sm text-slate-900 placeholder:text-slate-400 shadow-sm"
             placeholder={t('login.emailPlaceholder')}
           />
         </div>
@@ -69,7 +69,7 @@ export default function LoginForm() {
             type={showPassword ? 'text' : 'password'}
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            className="w-full pl-11 md:pl-10 lg:pl-12 pr-12 py-3.5 md:py-3 bg-white border border-slate-200 rounded-xl focus:outline-none focus:ring-1 focus:ring-indigo-600 focus:border-indigo-600 transition-all font-medium text-slate-900 placeholder-slate-400 text-base md:text-sm lg:text-base shadow-sm"
+            className="w-full pl-11 md:pl-10 lg:pl-12 pr-12 py-3.5 md:py-3 bg-white border border-slate-200 rounded-xl focus:outline-none focus:ring-1 focus:ring-indigo-600 focus:border-indigo-600 transition-all text-sm text-slate-900 placeholder:text-slate-400 shadow-sm"
             placeholder={t('login.passwordPlaceholder')}
           />
           <button
