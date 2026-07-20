@@ -34,7 +34,6 @@ const generateUniqueUsername = async (emailAddress) => {
     return username;
 };
 
-
 // Register User
 export const registerUser = async (req, res) => {
     let { fullName, emailAddress, mobileNumber, password, referralCode } = req.body;
@@ -91,8 +90,6 @@ export const registerUser = async (req, res) => {
     }
 };
 
-
-
 // Logout User
 export const logoutUser = async (req, res) => {
     try {
@@ -110,25 +107,10 @@ export const logoutUser = async (req, res) => {
                 const auditReq = pool.request();
                 auditReq.input('UUID', sql.VarChar(36), req.user.id);
                 auditReq.input('SessionId', sql.VarChar(255), req.body.sessionId);
-                console.log('Session ID for Audit Log:', req.body.sessionId);
                 auditReq.input('MacID', sql.VarChar(255), req.socket.remoteAddress);
                 auditReq.input('ActionType', sql.VarChar(10), '2');
                 await auditReq.execute('dbo.EV_InsertLogUserSession');
             }
-
-            // 3. Clear SessionId from database upon logout
-            // const clearSessionRequest = pool.request();
-            // clearSessionRequest.input('UUID', sql.VarChar(36), req.user.id);
-
-            // await clearSessionRequest.query(`
-            //     UPDATE dbo.Tb_User 
-            //     SET SessionId = NULL 
-            //     WHERE UUID = @UUID
-
-            //     UPDATE dbo.Tb_UserDesc 
-            //     SET SessionId = NULL 
-            //     WHERE UUID = @UUID;
-            // `);
         }
         // res.clearCookie('token', { sameSite: 'lax', secure: process.env.NODE_ENV === 'production' });
         res.clearCookie('token', { sameSite: 'none', secure: true });
@@ -138,11 +120,7 @@ export const logoutUser = async (req, res) => {
         logger.error(`LOGOUT ERROR: ${err.message}`, { stack: err.stack });
         res.status(500).send({ message: 'Something went wrong during logout' });
     }
-
-
 };
-
-
 
 // Login User
 export const loginUser = async (req, res) => {
@@ -175,13 +153,7 @@ export const loginUser = async (req, res) => {
         const macId = req.socket.remoteAddress;
         // let dbSessionId = crypto.randomUUID();
 
-        // 5. Update the Database with the new SessionId
-        // const updateSessionReq = pool.request();
-        // updateSessionReq.input('SessionId', sql.VarChar(255), dbSessionId);
-        // updateSessionReq.input('UUID', sql.VarChar(36), user.UUID);
-        // await updateSessionReq.execute("EV_UpdateUserSession");
-
-        // 6. Insert Audit Log (ActionType '1' = Login)
+        // 5. Insert Audit Log (ActionType '1' = Login)
         const auditReq = pool.request();
         auditReq.input('UUID', sql.VarChar(36), user.UUID);
         auditReq.input('SessionId', sql.VarChar(255), sessionId);
@@ -210,8 +182,6 @@ export const loginUser = async (req, res) => {
         res.status(500).send({ message: 'Something went wrong' });
     }
 };
-
-
 
 // Google Auth (Handles both Login & Register via Stored Procedures)
 export const googleAuthUser = async (req, res) => {

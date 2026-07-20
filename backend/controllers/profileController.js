@@ -181,9 +181,6 @@ export const verifyIfsc = async (req, res) => {
     }
 
     try {
-        // We use Razorpay's public, free IFSC API which is the industry standard in India
-        // Note: Node.js 18+ natively supports 'fetch'. 
-        // const response = await fetch(`https://ifsc.razorpay.com/${ifscCode}`);
         const response = await fetch(`${process.env.IFSC_API_URL}/${ifscCode}`);
 
         if (!response.ok) {
