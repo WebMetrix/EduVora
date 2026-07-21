@@ -98,9 +98,6 @@ export const logoutUser = async (req, res) => {
             // 1. Fetch current SessionId to pass to the Audit Log
             const sessionReq = pool.request();
             sessionReq.input('UUID', sql.VarChar(36), req.user.id);
-            // const sessionResult = await sessionReq.query('SELECT SessionId FROM dbo.Tb_User WHERE UUID = @UUID');
-
-            // const currentSessionId = sessionResult.recordset[0]?.SessionId;
 
             // 2. Update Audit Log (ActionType '2' = Logout)
             if (req.body.sessionId) {
@@ -260,13 +257,7 @@ export const googleAuthUser = async (req, res) => {
         let token = jwt.sign({ id: user.UUID, email: user.EmailAddress }, process.env.JWT_SECRET, { expiresIn: '1d' });
         const sessionId = token.slice(-30);
         const macId = req.socket.remoteAddress;
-
-        // 4. Update the Database with the new SessionId
-        // const updateSessionReq = pool.request();
-        // updateSessionReq.input('SessionId', sql.VarChar(255), dbSessionId);
-        // updateSessionReq.input('UUID', sql.VarChar(36), user.UUID);
-        // await updateSessionReq.execute("EV_UpdateUserSession");
-
+        console.log(sessionId, macId);
         // 5. Insert Audit Log (ActionType '1' = Login)
         const auditReq = pool.request();
         auditReq.input('UUID', sql.VarChar(36), user.UUID);

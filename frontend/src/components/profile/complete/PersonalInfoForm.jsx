@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { User, ArrowRight, Calendar, ChevronDown, Flag, Heart } from 'lucide-react';
 import CustomDatePicker from '../../common/CustomDatePicker';
 import CustomSelect from '../../common/CustomSelect';
@@ -6,6 +6,23 @@ import api from '../../../https/axios';
 
 export default function PersonalInfoForm({ t, onNext, formData, updateFormData }) {
   const [genderOptions, setGenderOptions] = useState([]);
+
+  const fileInputRef = useRef(null);
+
+  const handleUploadClick = () => {
+    if (fileInputRef.current) {
+      fileInputRef.current.click();
+    }
+  };
+
+  const handleFileChange = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      console.log("Selected file:", file.name);
+      // Optional: Save the file to your form data
+      updateFormData('profileImage', file);
+    }
+  }
 
   useEffect(() => {
     const fetchGenders = async () => {
@@ -136,7 +153,14 @@ export default function PersonalInfoForm({ t, onNext, formData, updateFormData }
               <p className="text-[10px] md:text-[12px] font-bold text-slate-400 uppercase tracking-wide">{t('completeProfile.uploadFormats')}</p>
             </div>
           </div>
-          <button type="button" className="text-[#4f3bf3] border-2 border-[#4f3bf3]/20 bg-white hover:border-[#4f3bf3] hover:bg-indigo-50 shadow-sm px-6 py-2.5 rounded-xl text-[13px] font-bold transition-all ml-auto md:ml-4">
+          <input
+              type="file"
+              ref={fileInputRef}
+              className="hidden"
+              accept=".jpg, .jpeg, .png" // Restricts picker to JPG and PNG
+              onChange={handleFileChange}
+            />
+          <button type="button" onClick={handleUploadClick} className="text-[#4f3bf3] border-2 border-[#4f3bf3]/20 bg-white hover:border-[#4f3bf3] hover:bg-indigo-50 shadow-sm px-6 py-2.5 rounded-xl text-[13px] font-bold transition-all ml-auto md:ml-4">
             {t('completeProfile.uploadBtn')}
           </button>
         </div>

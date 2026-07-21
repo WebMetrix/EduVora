@@ -12,6 +12,43 @@ export default function ReviewConfirmForm({ t, onEditStep, onSubmit, formData })
     setExpandedSection(expandedSection === section ? null : section);
   };
 
+  // const handleComplete = async () => {
+  //   if (formData.accountNumber !== formData.confirmAccountNumber) {
+  //     toast.error('Account numbers do not match');
+  //     return;
+  //   }
+
+  //   setIsSubmitting(true);
+  //   try {
+  //     // Create a payload matching the backend expectations
+  //     // Format the date for SQL Date if it exists
+  //     let dateOfBirth = null;
+  //     if (formData.dateOfBirth) {
+  //       // Assume format is DD-MM-YYYY based on CustomDatePicker
+  //       const parts = formData.dateOfBirth.split('-');
+  //       if (parts.length === 3) {
+  //         dateOfBirth = `${parts[2]}-${parts[1]}-${parts[0]}`; // YYYY-MM-DD
+  //       }
+  //     }
+
+  //     const payload = {
+  //       ...formData,
+  //       dateOfBirth
+  //     };
+
+  //     const response = await api.put('/profile/edit', payload);
+  //     toast.success(response.data.message || 'Profile updated successfully!');
+  //     if (onSubmit) onSubmit();
+  //   } catch (error) {
+  //     console.error('Update profile error:', error);
+  //     toast.error(error.response?.data?.message || 'Failed to update profile. Please try again.');
+  //   } finally {
+  //     setIsSubmitting(false);
+  //   }
+  // };
+
+  // Map formData to display objects
+  
   const handleComplete = async () => {
     if (formData.accountNumber !== formData.confirmAccountNumber) {
       toast.error('Account numbers do not match');
@@ -20,23 +57,44 @@ export default function ReviewConfirmForm({ t, onEditStep, onSubmit, formData })
 
     setIsSubmitting(true);
     try {
-      // Create a payload matching the backend expectations
-      // Format the date for SQL Date if it exists
+      // 1. Format the date for SQL Date if it exists
       let dateOfBirth = null;
       if (formData.dateOfBirth) {
-        // Assume format is DD-MM-YYYY based on CustomDatePicker
         const parts = formData.dateOfBirth.split('-');
         if (parts.length === 3) {
           dateOfBirth = `${parts[2]}-${parts[1]}-${parts[0]}`; // YYYY-MM-DD
         }
       }
 
-      const payload = {
-        ...formData,
-        dateOfBirth
-      };
+      // 2. Create a FormData instance instead of a JSON object
+      const payload = new FormData();
 
-      const response = await api.put('/profile/edit', payload);
+      // Append all text fields from formData
+      Object.keys(formData).forEach(key => {
+        // Skip specific fields that we handle manually
+        if (key !== 'dateOfBirth' && key !== 'profileImage') {
+           // Ensure undefined/null values are passed as empty strings
+           payload.append(key, formData[key] || '');
+        }
+      });
+
+      // Append manually formatted date
+      if (dateOfBirth) {
+        payload.append('dateOfBirth', dateOfBirth);
+      }
+
+      // 3. Append the file (Assuming you saved the file as 'profileImage' in your state)
+      if (formData.profileImage) {
+        payload.append('profileImage', formData.profileImage);
+      }
+
+      // 4. Send the request (Axios automatically handles multipart/form-data headers when given FormData)
+      const response = await api.put('/profile/edit', payload, {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      });
+      
       toast.success(response.data.message || 'Profile updated successfully!');
       if (onSubmit) onSubmit();
     } catch (error) {
@@ -46,8 +104,7 @@ export default function ReviewConfirmForm({ t, onEditStep, onSubmit, formData })
       setIsSubmitting(false);
     }
   };
-
-  // Map formData to display objects
+  
   const personalData = [
     { label: t('completeProfile.fullName') || 'Full Name', value: formData.fullName || '-' },
     { label: t('completeProfile.username') || 'Username', value: formData.username || '-' },

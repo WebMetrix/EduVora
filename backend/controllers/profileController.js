@@ -1,8 +1,6 @@
 import pool, { sql } from "../config/db.js";
 import logger from '../utils/logger.js';
 
-
-
 // Get Complete User Profile
 export const getUserProfile = async (req, res) => {
     try {
@@ -27,8 +25,6 @@ export const getUserProfile = async (req, res) => {
     }
 };
 
-
-
 // Edit User Profile
 export const editUser = async (req, res) => {
     // Extracting all fields from the frontend request body, including Bank details
@@ -39,6 +35,8 @@ export const editUser = async (req, res) => {
         country, state, city, pincode,
         accountHolderName, accountNumber, bankName, branchName, ifscCode, accountType, additionalBankNotes
     } = req.body;
+
+    const profilePicturePath = req.file ? req.file.path : null;
 
     try {
         const request = pool.request();
@@ -54,6 +52,7 @@ export const editUser = async (req, res) => {
         request.input('DateOfBirth', sql.Date, dateOfBirth || null);
         request.input('Gender', sql.VarChar(50), gender || null);
         request.input('Nationality', sql.VarChar(50), nationality || null);
+        request.input('ProfilePicturePath', sql.VarChar(500), profilePicturePath || null);
         request.input('MobileNumber', sql.VarChar(20), mobileNumber || null);
         request.input('WhatsAppNumber', sql.VarChar(20), whatsAppNumber || null);
 
