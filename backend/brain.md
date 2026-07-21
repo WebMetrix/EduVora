@@ -1,5 +1,7 @@
 # Database Schema & Stored Procedures (QADevEduvora)
 
+**CRITICAL RULE: NO DIRECT QUERIES SHOULD BE USED IN THE CODING OF THIS BACKEND. ALL DATABASE INTERACTIONS MUST BE HANDLED VIA STORED PROCEDURES AND NO DATABASE CHANGE WITHOUT ASKING PERMISSION.**
+
 This document serves as a reference for the database tables and stored procedures used in the EDUVORA backend application.
 
 ## Tables
@@ -57,6 +59,162 @@ Master table for bank account types (Savings, Current, etc.).
 | AccountTypeID   | int         | No          | Primary Key |
 | AccountTypeName | varchar(50) | No          |             |
 | IsActive        | bit         | Yes         |             |
+
+### 6. `Tb_EventMaster`
+Master table for system events and their email templates.
+| Column Name   | Data Type     | Allow Nulls | Notes       |
+|---------------|---------------|-------------|-------------|
+| EventId       | int           | No          | Primary Key |
+| EventName     | varchar(100)  | No          |             |
+| EmailSubject  | nvarchar(255) | No          |             |
+| EmailTemplate | nvarchar(MAX) | No          |             |
+| IsActive      | bit           | No          |             |
+| CreatedDate   | datetime      | No          |             |
+
+### 7. `Tb_FileRepositoryMaster`
+Maps document types to their storage repository paths.
+| Column Name    | Data Type     | Allow Nulls | Notes       |
+|----------------|---------------|-------------|-------------|
+| Id             | int           | No          | Primary Key |
+| DocumentType   | varchar(100)  | No          |             |
+| RepositoryPath | nvarchar(MAX) | No          |             |
+| IsActive       | bit           | No          |             |
+| CreatedDate    | datetime      | No          |             |
+| UpdatedDate    | datetime      | Yes         |             |
+
+### 8. `Tb_Package`
+Stores the course packages and their prices.
+| Column Name | Data Type      | Allow Nulls | Notes       |
+|-------------|----------------|-------------|-------------|
+| PackageId   | int            | No          | Primary Key |
+| PackageName | varchar(100)   | No          |             |
+| Price       | decimal(18,2)  | No          |             |
+| Description | nvarchar(MAX)  | Yes         |             |
+| IsActive    | bit            | No          |             |
+
+### 9. `Tb_RankMaster`
+Defines ranks and the required minimum business logic.
+| Column Name     | Data Type      | Allow Nulls | Notes       |
+|-----------------|----------------|-------------|-------------|
+| RankId          | int            | No          | Primary Key |
+| RankName        | varchar(100)   | No          |             |
+| MinimumBusiness | decimal(18,2)  | No          |             |
+| Color           | varchar(20)    | Yes         |             |
+| IconPath        | nvarchar(MAX)  | Yes         |             |
+| IsActive        | bit            | No          |             |
+| CreatedDate     | datetime       | No          |             |
+
+### 10. `Tb_Referral`
+Tracks referrals, sponsors, and their status.
+| Column Name      | Data Type    | Allow Nulls | Notes       |
+|------------------|--------------|-------------|-------------|
+| ReferralId       | int          | No          | Primary Key |
+| SponsorUUId      | varchar(36)  | No          |             |
+| ReferredUserId   | varchar(100) | No          |             |
+| ReferralCode     | varchar(50)  | Yes         |             |
+| ReferralLevel    | int          | No          |             |
+| StatusId         | int          | No          |             |
+| RegistrationDate | datetime     | No          |             |
+
+### 11. `Tb_ReferralStatusMaster`
+Master table for referral statuses.
+| Column Name | Data Type   | Allow Nulls | Notes       |
+|-------------|-------------|-------------|-------------|
+| StatusId    | int         | No          | Primary Key |
+| StatusName  | varchar(50) | No          |             |
+| IsActive    | bit         | No          |             |
+
+### 12. `Tb_RoleTypeDesc`
+Master table for user roles.
+| Column Name | Data Type   | Allow Nulls | Notes       |
+|-------------|-------------|-------------|-------------|
+| RoleID      | int         | No          | Primary Key |
+| RoleName    | varchar(50) | No          |             |
+| IsActive    | bit         | Yes         |             |
+
+### 13. `Tb_SignUpMethodMaster`
+Master table for signup methods (e.g., standard, Google).
+| Column Name | Data Type   | Allow Nulls | Notes       |
+|-------------|-------------|-------------|-------------|
+| MethodID    | int         | No          | Primary Key |
+| MethodName  | varchar(50) | No          |             |
+| IsActive    | bit         | No          |             |
+
+### 14. `Tb_User`
+Core table for user authentication and basic info.
+| Column Name     | Data Type    | Allow Nulls | Notes       |
+|-----------------|--------------|-------------|-------------|
+| UUID            | varchar(36)  | No          | Primary Key |
+| FullName        | varchar(100) | No          |             |
+| EmailAddress    | varchar(150) | No          |             |
+| MobileNumber    | varchar(20)  | Yes         |             |
+| Password        | varchar(255) | No          |             |
+| ReferralCode    | varchar(50)  | Yes         |             |
+| IsEmailVerified | bit          | Yes         |             |
+| SignupMethod    | varchar(50)  | Yes         |             |
+| CreatedDate     | datetime     | Yes         |             |
+| IsActive        | bit          | Yes         |             |
+| SessionId       | varchar(255) | No          |             |
+
+### 15. `Tb_UserDesc`
+Detailed profile information for users.
+| Column Name        | Data Type    | Allow Nulls | Notes       |
+|--------------------|--------------|-------------|-------------|
+| UUID               | varchar(36)  | No          | Primary Key |
+| UserID             | varchar(100) | No          |             |
+| RoleID             | int          | No          |             |
+| FullName           | varchar(100) | No          |             |
+| Username           | varchar(50)  | No          |             |
+| DateOfBirth        | date         | Yes         |             |
+| Gender             | varchar(20)  | Yes         |             |
+| Nationality        | varchar(50)  | Yes         |             |
+| ProfilePicturePath | varchar(500) | Yes         |             |
+| EmailAddress       | varchar(150) | No          |             |
+| MobileNumber       | varchar(20)  | Yes         |             |
+| WhatsAppNumber     | varchar(20)  | Yes         |             |
+| AddressLine1       | varchar(255) | Yes         |             |
+| AddressLine2       | varchar(255) | Yes         |             |
+| Country            | varchar(100) | Yes         |             |
+| State              | varchar(100) | Yes         |             |
+| City               | varchar(100) | Yes         |             |
+| Pincode            | varchar(20)  | Yes         |             |
+| CreatedBy          | varchar(100) | Yes         |             |
+| CreatedDate        | datetime     | Yes         |             |
+| ModifiedBy         | varchar(100) | Yes         |             |
+| ModifiedDate       | datetime     | Yes         |             |
+| SessionId          | varchar(100) | Yes         |             |
+| isActive           | bit          | Yes         |             |
+
+### 16. `Tb_UserPackage`
+Maps users to the packages they have purchased.
+| Column Name   | Data Type   | Allow Nulls | Notes       |
+|---------------|-------------|-------------|-------------|
+| UserPackageId | int         | No          | Primary Key |
+| UUID          | varchar(36) | No          |             |
+| PackageId     | int         | No          |             |
+| PurchaseDate  | datetime    | No          |             |
+| IsActive      | bit         | No          |             |
+
+### 17. `Tb_UserRank`
+Tracks rank progression and history for users.
+| Column Name   | Data Type    | Allow Nulls | Notes       |
+|---------------|--------------|-------------|-------------|
+| UserRankId    | int          | No          | Primary Key |
+| UserId        | varchar(100) | No          |             |
+| RankId        | int          | No          |             |
+| AchievedDate  | datetime     | No          |             |
+| CurrentStatus | varchar(50)  | No          |             |
+
+### 18. `Tb_UserRelationship`
+Tracks hierarchical relationships between users (e.g. referrals/sponsors).
+| Column Name    | Data Type    | Allow Nulls | Notes       |
+|----------------|--------------|-------------|-------------|
+| RelationshipId | int          | No          | Primary Key |
+| ParentUserId   | varchar(100) | No          |             |
+| ChildUserId    | varchar(100) | No          |             |
+| Level          | int          | No          |             |
+| CreatedDate    | datetime     | No          |             |
+
 
 
 ## Stored Procedures
@@ -119,3 +277,8 @@ Fetches the email subject and template for a specific event.
 ### `EV_UpdateUserSession`
 Updates the SessionId for a user across `Tb_User` and `Tb_UserDesc` tables.
 - **Inputs**: `@UUID VARCHAR(36)`, `@SessionId VARCHAR(255)`
+
+### `EV_GetFileRepositoryPath`
+Fetches the file repository path based on the document type.
+- **Inputs**: `@DocumentType VARCHAR(100)`
+- **Outputs**: Result Set (`path`)

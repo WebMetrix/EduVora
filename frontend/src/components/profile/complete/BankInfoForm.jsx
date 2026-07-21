@@ -1,30 +1,36 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { ArrowRight, Loader2, CheckCircle2, Hash, User, Landmark, Building } from 'lucide-react';
 import CustomSelect from '../../common/CustomSelect';
 import { toast } from 'react-toastify';
 import api from '../../../https/axios';
 
-export default function BankInfoForm({ t, onBack, onNext }) {
-  const bankOptions = [
-    { value: 'sbi', label: 'State Bank of India' },
-    { value: 'hdfc', label: 'HDFC Bank' },
-    { value: 'icici', label: 'ICICI Bank' },
-    { value: 'axis', label: 'Axis Bank' },
-    { value: 'pnb', label: 'Punjab National Bank' },
-  ];
+export default function BankInfoForm({ t, onBack, onNext, formData, updateFormData }) {
+  const [accountTypeOptions, setAccountTypeOptions] = useState([]);
 
-  const accountTypeOptions = [
-    { value: 'savings', label: 'Savings Account' },
-    { value: 'current', label: 'Current Account' },
-  ];
+  useEffect(() => {
+    const fetchAccountTypes = async () => {
+      try {
+        const res = await api.get('/profile/dropdowns/banktypes');
+        if (res.data && Array.isArray(res.data)) {
+          const types = res.data.map(item => {
+            // Check possible keys the backend might return, or just grab the first string value
+            const val = item.BankAccountTypeDesc || item.AccountType || item.AccountTypeName || item.BankAccountType || Object.values(item).find(v => typeof v === 'string') || Object.values(item)[0];
+            return { value: val, label: val };
+          });
+          setAccountTypeOptions(types);
+        }
+      } catch (err) {
+        console.error('Error fetching account types:', err);
+      }
+    };
+    fetchAccountTypes();
+  }, []);
 
-  const [ifsc, setIfsc] = useState('');
   const [isVerifying, setIsVerifying] = useState(false);
   const [verifiedDetails, setVerifiedDetails] = useState(null);
-  const [bankName, setBankName] = useState('');
 
   const handleVerify = async () => {
-    if (!ifsc.trim()) {
+    if (!formData.ifscCode?.trim()) {
       toast.error('Please enter an IFSC code first');
       return;
     }
@@ -32,10 +38,11 @@ export default function BankInfoForm({ t, onBack, onNext }) {
     setIsVerifying(true);
     setVerifiedDetails(null);
     try {
-      const response = await api.get(`/profile/verifyifsc/${ifsc.trim()}`);
+      const response = await api.get(`/profile/verifyifsc/${formData.ifscCode.trim()}`);
       if (response.data && response.data.bankDetails) {
         setVerifiedDetails(response.data.bankDetails);
-        setBankName(response.data.bankDetails.bankName);
+        updateFormData('bankName', response.data.bankDetails.bankName);
+        updateFormData('branchName', response.data.bankDetails.branchName);
         toast.success(response.data.message || 'IFSC verified successfully');
       }
     } catch (error) {
@@ -46,9 +53,16 @@ export default function BankInfoForm({ t, onBack, onNext }) {
     }
   };
 
+  const isMatch = formData.accountNumber && formData.confirmAccountNumber && formData.accountNumber === formData.confirmAccountNumber;
+  const isMismatch = formData.confirmAccountNumber && formData.accountNumber !== formData.confirmAccountNumber;
+
   return (
     <form className="space-y-6" onSubmit={(e) => {
       e.preventDefault();
+      if (formData.accountNumber !== formData.confirmAccountNumber) {
+        toast.error('Account numbers do not match!');
+        return;
+      }
       onNext();
     }}>
       <div className="grid grid-cols-1 gap-y-5">
@@ -64,20 +78,23 @@ export default function BankInfoForm({ t, onBack, onNext }) {
           <div className="relative">
             <input
               type="text"
-              value={ifsc}
+              required
+              value={formData.ifscCode}
               onChange={(e) => {
-                setIfsc(e.target.value);
+                updateFormData('ifscCode', e.target.value);
                 setVerifiedDetails(null); // Reset verification if they type again
+                updateFormData('bankName', '');
+                updateFormData('branchName', '');
               }}
-              className={`w-full px-4 py-3.5 pr-[100px] bg-white border ${verifiedDetails ? 'border-emerald-300 ring-1 ring-emerald-300' : 'border-slate-200'} rounded-xl focus:outline-none focus:border-[#4f3bf3] focus:ring-1 focus:ring-[#4f3bf3] transition-all text-[14px] text-slate-900 placeholder:text-slate-400 font-medium uppercase`}
+              className={`w-full px-4 py-3.5 pr-[100px] bg-white border ${(verifiedDetails || formData.bankName) ? 'border-emerald-300 ring-1 ring-emerald-300' : 'border-slate-200'} rounded-xl focus:outline-none focus:border-[#4f3bf3] focus:ring-1 focus:ring-[#4f3bf3] transition-all text-[14px] text-slate-900 placeholder:text-slate-400 font-medium uppercase`}
               placeholder={t('completeProfile.ifscCodePlaceholder')}
             />
             <button
               type="button"
               onClick={handleVerify}
-              disabled={isVerifying || !ifsc.trim() || verifiedDetails !== null}
+              disabled={isVerifying || !formData.ifscCode?.trim() || (verifiedDetails !== null || !!formData.bankName)}
               className={`absolute right-2 top-1/2 -translate-y-1/2 px-4 py-1.5 rounded-lg font-bold text-[12px] transition-all flex items-center gap-1.5 
-                ${verifiedDetails
+                ${(verifiedDetails || formData.bankName)
                   ? 'bg-emerald-50 text-emerald-600 cursor-default'
                   : isVerifying
                     ? 'bg-indigo-50 text-indigo-400 cursor-not-allowed'
@@ -85,19 +102,23 @@ export default function BankInfoForm({ t, onBack, onNext }) {
                 }`}
             >
               {isVerifying && <Loader2 className="w-3.5 h-3.5 animate-spin" />}
-              {verifiedDetails && <CheckCircle2 className="w-3.5 h-3.5" />}
-              {verifiedDetails ? t('profile.contact.verified') : isVerifying ? t('common.verifying') : t('completeProfile.verifyBtn')}
+              {(verifiedDetails || formData.bankName) && <CheckCircle2 className="w-3.5 h-3.5" />}
+              {(verifiedDetails || formData.bankName) ? t('profile.contact.verified') : isVerifying ? t('common.verifying') : t('completeProfile.verifyBtn')}
             </button>
           </div>
 
-          {verifiedDetails && (
+          {(verifiedDetails || formData.bankName) && (
             <div className="mt-3 p-3.5 bg-emerald-50/80 border border-emerald-100 rounded-xl flex items-start gap-3 animate-fade-in">
               <div className="w-8 h-8 rounded-full bg-emerald-100 flex items-center justify-center shrink-0 mt-0.5">
                 <CheckCircle2 className="w-4 h-4 text-emerald-600" />
               </div>
               <div className="flex flex-col gap-0.5">
-                <p className="text-[13px] font-extrabold text-emerald-900">{verifiedDetails.bankName}</p>
-                <p className="text-[12px] font-bold text-emerald-600/80">{verifiedDetails.branchName}, {verifiedDetails.city}, {verifiedDetails.state}</p>
+                <p className="text-[13px] font-extrabold text-emerald-900">{verifiedDetails?.bankName || formData.bankName}</p>
+                {(verifiedDetails?.branchName || formData.branchName) && (
+                  <p className="text-[12px] font-bold text-emerald-600/80">
+                    {verifiedDetails ? `${verifiedDetails.branchName}, ${verifiedDetails.city}, ${verifiedDetails.state}` : formData.branchName}
+                  </p>
+                )}
               </div>
             </div>
           )}
@@ -113,26 +134,27 @@ export default function BankInfoForm({ t, onBack, onNext }) {
           </div>
           <input
             type="text"
+            required
+            value={formData.accountHolderName}
+            onChange={(e) => updateFormData('accountHolderName', e.target.value)}
             className="w-full px-4 py-3.5 bg-white border border-slate-200 rounded-xl focus:outline-none focus:border-[#4f3bf3] focus:ring-1 focus:ring-[#4f3bf3] transition-all text-[14px] text-slate-900 placeholder:text-slate-400 font-medium"
             placeholder={t('completeProfile.accountHolderNamePlaceholder')}
           />
         </div>
 
-        {/* Bank Name */}
+        {/* Bank Name (Read Only) */}
         <div>
-          <div className="flex items-center gap-2 mb-2">
-            <Landmark className="w-4 h-4 text-slate-500" />
-            <label className="text-[13px] font-bold text-[#111]">
-              {t('completeProfile.bankName')} <span className="text-red-500">*</span>
-            </label>
+          <div className="group flex flex-col gap-1 p-3.5 rounded-xl bg-slate-50/80 border border-slate-100 hover:bg-indigo-50/60 hover:border-indigo-200 shadow-sm transition-all duration-300 h-[74px] justify-center mt-[4px]">
+            <div className="flex items-center gap-2 text-slate-500 group-hover:text-indigo-500 transition-colors">
+              <Landmark className="w-4 h-4" />
+              <label className="text-[11px] font-bold uppercase tracking-wider">{t('completeProfile.bankName')}</label>
+            </div>
+            <div className="pl-6 pr-2">
+              <span className={`font-bold text-[14px] block truncate ${formData.bankName ? 'text-[#1a1446]' : 'text-slate-400 font-medium'}`}>
+                {formData.bankName || 'Verify IFSC code first'}
+              </span>
+            </div>
           </div>
-          <input
-            type="text"
-            value={bankName}
-            onChange={(e) => setBankName(e.target.value)}
-            className="w-full px-4 py-3.5 bg-white border border-slate-200 rounded-xl focus:outline-none focus:border-[#4f3bf3] focus:ring-1 focus:ring-[#4f3bf3] transition-all text-[14px] text-slate-900 placeholder:text-slate-400 font-medium"
-            placeholder={t('completeProfile.bankNamePlaceholder')}
-          />
         </div>
 
         {/* Account Number */}
@@ -145,6 +167,9 @@ export default function BankInfoForm({ t, onBack, onNext }) {
           </div>
           <input
             type="text"
+            required
+            value={formData.accountNumber}
+            onChange={(e) => updateFormData('accountNumber', e.target.value)}
             className="w-full px-4 py-3.5 bg-white border border-slate-200 rounded-xl focus:outline-none focus:border-[#4f3bf3] focus:ring-1 focus:ring-[#4f3bf3] transition-all text-[14px] text-slate-900 placeholder:text-slate-400 font-medium"
             placeholder={t('completeProfile.accountNumberPlaceholder')}
           />
@@ -152,15 +177,26 @@ export default function BankInfoForm({ t, onBack, onNext }) {
 
         {/* Confirm Account Number */}
         <div>
-          <div className="flex items-center gap-2 mb-2">
-            <CheckCircle2 className="w-4 h-4 text-slate-500" />
-            <label className="text-[13px] font-bold text-[#111]">
-              {t('completeProfile.confirmAccountNumber')} <span className="text-red-500">*</span>
-            </label>
+          <div className="flex items-center justify-between mb-2">
+            <div className="flex items-center gap-2">
+              <CheckCircle2 className={`w-4 h-4 ${isMatch ? 'text-emerald-500' : isMismatch ? 'text-rose-500' : 'text-slate-500'}`} />
+              <label className="text-[13px] font-bold text-[#111]">
+                {t('completeProfile.confirmAccountNumber')} <span className="text-red-500">*</span>
+              </label>
+            </div>
+            {isMatch && <span className="text-[11px] font-bold text-emerald-500 bg-emerald-50 px-2 py-0.5 rounded-md">Matched</span>}
+            {isMismatch && <span className="text-[11px] font-bold text-rose-500 bg-rose-50 px-2 py-0.5 rounded-md">Mismatch</span>}
           </div>
           <input
             type="text"
-            className="w-full px-4 py-3.5 bg-white border border-slate-200 rounded-xl focus:outline-none focus:border-[#4f3bf3] focus:ring-1 focus:ring-[#4f3bf3] transition-all text-[14px] text-slate-900 placeholder:text-slate-400 font-medium"
+            required
+            value={formData.confirmAccountNumber}
+            onChange={(e) => updateFormData('confirmAccountNumber', e.target.value)}
+            className={`w-full px-4 py-3.5 bg-white border ${
+              isMatch ? 'border-emerald-400 ring-1 ring-emerald-400 bg-emerald-50/10' : 
+              isMismatch ? 'border-rose-400 ring-1 ring-rose-400 bg-rose-50/10' : 
+              'border-slate-200 focus:border-[#4f3bf3] focus:ring-[#4f3bf3]'
+            } rounded-xl focus:outline-none focus:ring-1 transition-all text-[14px] text-slate-900 placeholder:text-slate-400 font-medium`}
             placeholder={t('completeProfile.confirmAccountNumberPlaceholder')}
           />
         </div>
@@ -173,7 +209,12 @@ export default function BankInfoForm({ t, onBack, onNext }) {
               {t('completeProfile.accountType')} <span className="text-red-500">*</span>
             </label>
           </div>
-          <CustomSelect options={accountTypeOptions} placeholder={t('completeProfile.accountTypePlaceholder')} />
+          <CustomSelect 
+            options={accountTypeOptions} 
+            placeholder={t('completeProfile.accountTypePlaceholder')} 
+            value={formData.accountType}
+            onChange={(val) => updateFormData('accountType', val)}
+          />
         </div>
 
       </div>

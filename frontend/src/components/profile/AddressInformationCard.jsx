@@ -33,69 +33,69 @@ export default function AddressInformationCard({ t, profileData }) {
                 </button>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-5">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-3">
                 {/* Address Line 1 */}
-                <div className="flex flex-col gap-1.5 md:col-span-2">
-                    <div className="flex items-center gap-2">
-                        <MapPin className="w-4 h-4 text-slate-500" />
-                        <label className="text-[12px] font-bold text-slate-900">{t('completeProfile.addressLine1')}</label>
+                <div className="group flex flex-col gap-1 p-3.5 rounded-xl bg-slate-50/80 border border-slate-100 hover:bg-indigo-50/60 hover:border-indigo-200 shadow-sm transition-all duration-300 md:col-span-2">
+                    <div className="flex items-center gap-2 text-slate-500 group-hover:text-indigo-500 transition-colors">
+                        <MapPin className="w-4 h-4" />
+                        <label className="text-[11px] font-bold uppercase tracking-wider">{t('completeProfile.addressLine1')}</label>
                     </div>
-                    <div className="px-4 py-2.5 bg-white border border-slate-200 rounded-xl text-[13px] text-slate-700 font-semibold shadow-[0_2px_10px_rgb(0,0,0,0.02)]">
+                    <div className="pl-6 text-[14px] text-slate-900 font-bold">
                         {profileData?.AddressLine1 || '-'}
                     </div>
                 </div>
 
                 {/* Address Line 2 */}
-                <div className="flex flex-col gap-1.5 md:col-span-2">
-                    <div className="flex items-center gap-2">
-                        <MapPin className="w-4 h-4 text-slate-500" />
-                        <label className="text-[12px] font-bold text-slate-900">{t('completeProfile.addressLine2')}</label>
+                <div className="group flex flex-col gap-1 p-3.5 rounded-xl bg-slate-50/80 border border-slate-100 hover:bg-indigo-50/60 hover:border-indigo-200 shadow-sm transition-all duration-300 md:col-span-2">
+                    <div className="flex items-center gap-2 text-slate-500 group-hover:text-indigo-500 transition-colors">
+                        <MapPin className="w-4 h-4" />
+                        <label className="text-[11px] font-bold uppercase tracking-wider">{t('completeProfile.addressLine2')}</label>
                     </div>
-                    <div className="px-4 py-2.5 bg-white border border-slate-200 rounded-xl text-[13px] text-slate-700 font-semibold shadow-[0_2px_10px_rgb(0,0,0,0.02)]">
+                    <div className="pl-6 text-[14px] text-slate-900 font-bold">
                         {profileData?.AddressLine2 || '-'}
                     </div>
                 </div>
 
                 {/* Country */}
-                <div className="flex flex-col gap-1.5">
-                    <div className="flex items-center gap-2">
-                        <Globe className="w-4 h-4 text-slate-500" />
-                        <label className="text-[12px] font-bold text-slate-900">{t('completeProfile.country')}</label>
+                <div className="group flex flex-col gap-1 p-3.5 rounded-xl bg-slate-50/80 border border-slate-100 hover:bg-indigo-50/60 hover:border-indigo-200 shadow-sm transition-all duration-300">
+                    <div className="flex items-center gap-2 text-slate-500 group-hover:text-indigo-500 transition-colors">
+                        <Globe className="w-4 h-4" />
+                        <label className="text-[11px] font-bold uppercase tracking-wider">{t('completeProfile.country')}</label>
                     </div>
-                    <div className="px-4 py-2.5 bg-white border border-slate-200 rounded-xl text-[13px] text-slate-700 font-semibold shadow-[0_2px_10px_rgb(0,0,0,0.02)]">
+                    <div className="pl-6 text-[14px] text-slate-900 font-bold">
                         {profileData?.Country || '-'}
                     </div>
                 </div>
 
                 {/* State */}
-                <div className="flex flex-col gap-1.5">
-                    <div className="flex items-center gap-2">
-                        <Map className="w-4 h-4 text-slate-500" />
-                        <label className="text-[12px] font-bold text-slate-900">{t('completeProfile.state')}</label>
+                <div className="group flex flex-col gap-1 p-3.5 rounded-xl bg-slate-50/80 border border-slate-100 hover:bg-indigo-50/60 hover:border-indigo-200 shadow-sm transition-all duration-300">
+                    <div className="flex items-center gap-2 text-slate-500 group-hover:text-indigo-500 transition-colors">
+                        <Map className="w-4 h-4" />
+                        <label className="text-[11px] font-bold uppercase tracking-wider">{t('completeProfile.state')}</label>
                     </div>
-                    <div className="px-4 py-2.5 bg-white border border-slate-200 rounded-xl text-[13px] text-slate-700 font-semibold shadow-[0_2px_10px_rgb(0,0,0,0.02)]">
+                    <div className="pl-6 text-[14px] text-slate-900 font-bold">
                         {profileData?.State || '-'}
                     </div>
                 </div>
 
                 {/* City */}
-                <div className="flex flex-col gap-1.5">
-                    <div className="flex items-center gap-2">
-                        <Building className="w-4 h-4 text-slate-500" />
-                        <label className="text-[12px] font-bold text-slate-900">{t('completeProfile.city')}</label>
+                <div className="group flex flex-col gap-1 p-3.5 rounded-xl bg-slate-50/80 border border-slate-100 hover:bg-indigo-50/60 hover:border-indigo-200 shadow-sm transition-all duration-300">
+                    <div className="flex items-center gap-2 text-slate-500 group-hover:text-indigo-500 transition-colors">
+                        <Building className="w-4 h-4" />
+                        <label className="text-[11px] font-bold uppercase tracking-wider">{t('completeProfile.city')}</label>
                     </div>
-                    <div className="px-4 py-2.5 bg-white border border-slate-200 rounded-xl text-[13px] text-slate-700 font-semibold shadow-[0_2px_10px_rgb(0,0,0,0.02)]">
+                    <div className="pl-6 text-[14px] text-slate-900 font-bold">
                         {profileData?.City || '-'}
                     </div>
                 </div>
 
                 {/* Pincode */}
-                <div className="flex flex-col gap-1.5">
-                    <div className="flex items-center gap-2">
-                        <Hash className="w-4 h-4 text-slate-500" />
-                        <label className="text-[12px] font-bold text-slate-900">{t('completeProfile.pincode')}</label>
+                <div className="group flex flex-col gap-1 p-3.5 rounded-xl bg-slate-50/80 border border-slate-100 hover:bg-indigo-50/60 hover:border-indigo-200 shadow-sm transition-all duration-300">
+                    <div className="flex items-center gap-2 text-slate-500 group-hover:text-indigo-500 transition-colors">
+                        <Hash className="w-4 h-4" />
+                        <label className="text-[11px] font-bold uppercase tracking-wider">{t('completeProfile.pincode')}</label>
                     </div>
-                    <div className="px-4 py-2.5 bg-white border border-slate-200 rounded-xl text-[13px] text-slate-700 font-semibold shadow-[0_2px_10px_rgb(0,0,0,0.02)]">
+                    <div className="pl-6 text-[14px] text-slate-900 font-bold">
                         {profileData?.Pincode || '-'}
                     </div>
                 </div>
@@ -103,12 +103,12 @@ export default function AddressInformationCard({ t, profileData }) {
 
             {/* Complete Address Textarea */}
             <div className="mt-6 border-t border-slate-100 pt-6">
-                <div className="flex flex-col gap-1.5">
-                    <div className="flex items-center gap-2">
-                        <Navigation className="w-4 h-4 text-slate-500" />
-                        <label className="text-[12px] font-bold text-slate-900">{t('completeProfile.completeAddress')}</label>
+                <div className="group flex flex-col gap-1 p-3.5 rounded-xl bg-slate-50/80 border border-slate-100 hover:bg-indigo-50/60 hover:border-indigo-200 shadow-sm transition-all duration-300">
+                    <div className="flex items-center gap-2 text-slate-500 group-hover:text-indigo-500 transition-colors">
+                        <Navigation className="w-4 h-4" />
+                        <label className="text-[11px] font-bold uppercase tracking-wider">{t('completeProfile.completeAddress')}</label>
                     </div>
-                    <div className="px-4 py-3 bg-white border border-slate-200 rounded-xl text-[13px] text-slate-400 font-semibold shadow-[0_2px_10px_rgb(0,0,0,0.02)] min-h-[100px]">
+                    <div className="pl-6 text-[14px] text-slate-400 font-bold min-h-[60px] whitespace-pre-wrap">
                         {t('completeProfile.completeAddressPlaceholder')}
                     </div>
                 </div>

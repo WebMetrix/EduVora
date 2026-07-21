@@ -55,74 +55,74 @@ export default function PersonalInformationCard({ t, profileData }) {
                 </div>
 
                 {/* Fields */}
-                <div className="flex-1 grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-5">
-                    <div className="flex flex-col gap-1.5">
-                        <div className="flex items-center gap-2">
-                            <UserIcon className="w-4 h-4 text-slate-500" />
-                            <label className="text-[12px] font-bold text-slate-900">{t('completeProfile.fullName')}</label>
+                <div className="flex-1 grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-3">
+                    <div className="group flex flex-col gap-1 p-3.5 rounded-xl bg-slate-50/80 border border-slate-100 hover:bg-indigo-50/60 hover:border-indigo-200 shadow-sm transition-all duration-300">
+                        <div className="flex items-center gap-2 text-slate-500 group-hover:text-indigo-500 transition-colors">
+                            <UserIcon className="w-4 h-4" />
+                            <label className="text-[11px] font-bold uppercase tracking-wider">{t('completeProfile.fullName')}</label>
                         </div>
-                        <div className="px-4 py-2.5 bg-white border border-slate-200 rounded-xl text-[13px] text-slate-700 font-semibold shadow-[0_2px_10px_rgb(0,0,0,0.02)]">
+                        <div className="pl-6 text-[14px] text-slate-900 font-bold">
                             {profileData?.FullName || '-'}
                         </div>
                     </div>
 
-                    <div className="flex flex-col gap-1.5">
-                        <div className="flex items-center gap-2">
-                            <UserIcon className="w-4 h-4 text-slate-500" />
-                            <label className="text-[12px] font-bold text-slate-900">{t('completeProfile.username')}</label>
+                    <div className="group flex flex-col gap-1 p-3.5 rounded-xl bg-slate-50/80 border border-slate-100 hover:bg-indigo-50/60 hover:border-indigo-200 shadow-sm transition-all duration-300">
+                        <div className="flex items-center gap-2 text-slate-500 group-hover:text-indigo-500 transition-colors">
+                            <UserIcon className="w-4 h-4" />
+                            <label className="text-[11px] font-bold uppercase tracking-wider">{t('completeProfile.username')}</label>
                         </div>
-                        <div className="px-4 py-2.5 bg-white border border-slate-200 rounded-xl text-[13px] text-slate-700 font-semibold shadow-[0_2px_10px_rgb(0,0,0,0.02)]">
+                        <div className="pl-6 text-[14px] text-slate-900 font-bold">
                             {profileData?.Username || '-'}
                         </div>
                     </div>
 
-                    <div className="flex flex-col gap-1.5">
-                        <div className="flex items-center gap-2">
-                            <Calendar className="w-4 h-4 text-slate-500" />
-                            <label className="text-[12px] font-bold text-slate-900">{t('completeProfile.dob')}</label>
+                    <div className="group flex flex-col gap-1 p-3.5 rounded-xl bg-slate-50/80 border border-slate-100 hover:bg-indigo-50/60 hover:border-indigo-200 shadow-sm transition-all duration-300">
+                        <div className="flex items-center gap-2 text-slate-500 group-hover:text-indigo-500 transition-colors">
+                            <Calendar className="w-4 h-4" />
+                            <label className="text-[11px] font-bold uppercase tracking-wider">{t('completeProfile.dob')}</label>
                         </div>
-                        <div className="px-4 py-2.5 bg-white border border-slate-200 rounded-xl text-[13px] text-slate-700 font-semibold shadow-[0_2px_10px_rgb(0,0,0,0.02)] flex justify-between items-center cursor-pointer hover:border-indigo-300 transition-colors">
-                            {profileData?.DateOfBirth ? new Date(profileData.DateOfBirth).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }) : '-'} <Calendar className="w-4 h-4 text-slate-400" />
-                        </div>
-                    </div>
-
-                    <div className="flex flex-col gap-1.5">
-                        <div className="flex items-center gap-2">
-                            <UserIcon className="w-4 h-4 text-slate-500" />
-                            <label className="text-[12px] font-bold text-slate-900">{t('completeProfile.gender')}</label>
-                        </div>
-                        <div className="px-4 py-2.5 bg-white border border-slate-200 rounded-xl text-[13px] text-slate-700 font-semibold shadow-[0_2px_10px_rgb(0,0,0,0.02)] flex justify-between items-center cursor-pointer hover:border-indigo-300 transition-colors">
-                            {profileData?.Gender || '-'} <ChevronDown className="w-4 h-4 text-slate-400" />
+                        <div className="pl-6 text-[14px] text-slate-900 font-bold">
+                            {profileData?.DateOfBirth ? new Date(profileData.DateOfBirth).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }) : '-'}
                         </div>
                     </div>
 
-                    <div className="flex flex-col gap-1.5">
-                        <div className="flex items-center gap-2">
-                            <Heart className="w-4 h-4 text-slate-500" />
-                            <label className="text-[12px] font-bold text-slate-900">{t('completeProfile.maritalStatus')}</label>
+                    <div className="group flex flex-col gap-1 p-3.5 rounded-xl bg-slate-50/80 border border-slate-100 hover:bg-indigo-50/60 hover:border-indigo-200 shadow-sm transition-all duration-300">
+                        <div className="flex items-center gap-2 text-slate-500 group-hover:text-indigo-500 transition-colors">
+                            <UserIcon className="w-4 h-4" />
+                            <label className="text-[11px] font-bold uppercase tracking-wider">{t('completeProfile.gender')}</label>
                         </div>
-                        <div className="px-4 py-2.5 bg-white border border-slate-200 rounded-xl text-[13px] text-slate-700 font-semibold shadow-[0_2px_10px_rgb(0,0,0,0.02)] flex justify-between items-center cursor-pointer hover:border-indigo-300 transition-colors">
-                            {profileData?.MaritalStatus || '-'} <ChevronDown className="w-4 h-4 text-slate-400" />
-                        </div>
-                    </div>
-
-                    <div className="flex flex-col gap-1.5">
-                        <div className="flex items-center gap-2">
-                            <Flag className="w-4 h-4 text-slate-500" />
-                            <label className="text-[12px] font-bold text-slate-900">{t('completeProfile.nationality')}</label>
-                        </div>
-                        <div className="px-4 py-2.5 bg-white border border-slate-200 rounded-xl text-[13px] text-slate-700 font-semibold shadow-[0_2px_10px_rgb(0,0,0,0.02)] flex justify-between items-center cursor-pointer hover:border-indigo-300 transition-colors">
-                            {profileData?.Nationality || '-'} <ChevronDown className="w-4 h-4 text-slate-400" />
+                        <div className="pl-6 text-[14px] text-slate-900 font-bold">
+                            {profileData?.Gender || '-'}
                         </div>
                     </div>
 
-                    <div className="flex flex-col gap-1.5 md:col-span-2">
-                        <div className="flex items-center gap-2">
-                            <Calendar className="w-4 h-4 text-slate-500" />
-                            <label className="text-[12px] font-bold text-slate-900">{t('profile.personal.dateOfJoining')}</label>
+                    <div className="group flex flex-col gap-1 p-3.5 rounded-xl bg-slate-50/80 border border-slate-100 hover:bg-indigo-50/60 hover:border-indigo-200 shadow-sm transition-all duration-300">
+                        <div className="flex items-center gap-2 text-slate-500 group-hover:text-indigo-500 transition-colors">
+                            <Heart className="w-4 h-4" />
+                            <label className="text-[11px] font-bold uppercase tracking-wider">{t('completeProfile.maritalStatus')}</label>
                         </div>
-                        <div className="px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-[13px] text-slate-500 font-semibold flex justify-between items-center w-full md:w-[calc(50%-12px)]">
-                            {profileData?.CreatedDate ? new Date(profileData.CreatedDate).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }) : '-'} <Calendar className="w-4 h-4 text-slate-400" />
+                        <div className="pl-6 text-[14px] text-slate-900 font-bold">
+                            {profileData?.MaritalStatus || '-'}
+                        </div>
+                    </div>
+
+                    <div className="group flex flex-col gap-1 p-3.5 rounded-xl bg-slate-50/80 border border-slate-100 hover:bg-indigo-50/60 hover:border-indigo-200 shadow-sm transition-all duration-300">
+                        <div className="flex items-center gap-2 text-slate-500 group-hover:text-indigo-500 transition-colors">
+                            <Flag className="w-4 h-4" />
+                            <label className="text-[11px] font-bold uppercase tracking-wider">{t('completeProfile.nationality')}</label>
+                        </div>
+                        <div className="pl-6 text-[14px] text-slate-900 font-bold">
+                            {profileData?.Nationality || '-'}
+                        </div>
+                    </div>
+
+                    <div className="group flex flex-col gap-1 p-3.5 rounded-xl bg-slate-50/80 border border-slate-100 hover:bg-indigo-50/60 hover:border-indigo-200 shadow-sm transition-all duration-300 md:col-span-2">
+                        <div className="flex items-center gap-2 text-slate-500 group-hover:text-indigo-500 transition-colors">
+                            <Calendar className="w-4 h-4" />
+                            <label className="text-[11px] font-bold uppercase tracking-wider">{t('profile.personal.dateOfJoining')}</label>
+                        </div>
+                        <div className="pl-6 text-[14px] text-slate-900 font-bold">
+                            {profileData?.CreatedDate ? new Date(profileData.CreatedDate).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }) : '-'}
                         </div>
                     </div>
                 </div>

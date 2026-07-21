@@ -3,6 +3,7 @@ import { Check, Phone, User, MapPin, Landmark, ClipboardCheck } from 'lucide-rea
 import SafeInfoCard from '../SafeInfoCard';
 import { useTranslation } from '../../../hooks/useTranslation';
 import { useNavigate } from 'react-router-dom';
+import api from '../../../https/axios';
 
 import PersonalInfoForm from './PersonalInfoForm';
 import ContactInfoForm from './ContactInfoForm';
@@ -15,6 +16,96 @@ export default function CompleteProfileContent() {
   const navigate = useNavigate();
   const [step, setStep] = useState(1);
   const topRef = useRef(null);
+
+  // Centralized form state
+  const [formData, setFormData] = useState({
+    // Personal Info
+    fullName: '',
+    username: '',
+    dateOfBirth: '',
+    gender: '',
+    maritalStatus: '',
+    nationality: '',
+
+    // Contact Info
+    emailAddress: '',
+    mobileNumber: '',
+    altMobileNumber: '',
+    whatsAppNumber: '',
+    emergencyContactName: '',
+    emergencyContactNumber: '',
+
+    // Address Info
+    addressLine1: '',
+    addressLine2: '',
+    country: '',
+    state: '',
+    city: '',
+    pincode: '',
+
+    // Bank Info
+    accountHolderName: '',
+    accountNumber: '',
+    confirmAccountNumber: '',
+    bankName: '',
+    branchName: '',
+    ifscCode: '',
+    accountType: '',
+    additionalBankNotes: ''
+  });
+
+  useEffect(() => {
+    const fetchProfile = async () => {
+      try {
+        const response = await api.get('/profile');
+        const data = response.data;
+        
+        let dob = '';
+        if (data.DateOfBirth) {
+            const d = new Date(data.DateOfBirth);
+            if (!isNaN(d.getTime())) {
+                dob = `${d.getDate().toString().padStart(2, '0')}-${(d.getMonth() + 1).toString().padStart(2, '0')}-${d.getFullYear()}`;
+            }
+        }
+
+        setFormData({
+            fullName: data.FullName || '',
+            username: data.Username || '',
+            dateOfBirth: dob,
+            gender: data.Gender || '',
+            maritalStatus: data.MaritalStatus || '',
+            nationality: data.Nationality || '',
+            emailAddress: data.EmailAddress || '',
+            mobileNumber: data.MobileNumber || data.PrimaryMobile || data.ContactMobile || '',
+            altMobileNumber: data.AltMobileNumber || '',
+            whatsAppNumber: data.WhatsAppNumber || '',
+            emergencyContactName: data.EmergencyContactName || '',
+            emergencyContactNumber: data.EmergencyContactNumber || '',
+            addressLine1: data.AddressLine1 || '',
+            addressLine2: data.AddressLine2 || '',
+            country: data.Country || '',
+            state: data.State || '',
+            city: data.City || '',
+            pincode: data.Pincode || '',
+            accountHolderName: data.AccountHolderName || '',
+            accountNumber: data.AccountNumber || '',
+            confirmAccountNumber: data.AccountNumber || '',
+            bankName: data.BankName || '',
+            branchName: data.BranchName || '',
+            ifscCode: data.IFSCCode || '',
+            accountType: data.AccountType || '',
+            additionalBankNotes: ''
+        });
+      } catch (error) {
+        console.error('Error fetching profile:', error);
+      }
+    };
+    fetchProfile();
+  }, []);
+
+  const updateFormData = (key, value) => {
+    setFormData(prev => ({ ...prev, [key]: value }));
+  };
 
   const scrollToTop = () => {
     if (topRef.current) {
@@ -111,6 +202,8 @@ export default function CompleteProfileContent() {
         {step === 1 && (
           <PersonalInfoForm
             t={t}
+            formData={formData}
+            updateFormData={updateFormData}
             onNext={() => {
               setStep(2);
               scrollToTop();
@@ -122,6 +215,8 @@ export default function CompleteProfileContent() {
         {step === 2 && (
           <ContactInfoForm
             t={t}
+            formData={formData}
+            updateFormData={updateFormData}
             onBack={() => {
               setStep(1);
               scrollToTop();
@@ -137,6 +232,8 @@ export default function CompleteProfileContent() {
         {step === 3 && (
           <AddressInfoForm
             t={t}
+            formData={formData}
+            updateFormData={updateFormData}
             onBack={() => {
               setStep(2);
               scrollToTop();
@@ -152,6 +249,8 @@ export default function CompleteProfileContent() {
         {step === 4 && (
           <BankInfoForm
             t={t}
+            formData={formData}
+            updateFormData={updateFormData}
             onBack={() => {
               setStep(3);
               scrollToTop();
@@ -167,6 +266,7 @@ export default function CompleteProfileContent() {
         {step === 5 && (
           <ReviewConfirmForm
             t={t}
+            formData={formData}
             onEditStep={(stepNum) => {
               setStep(stepNum);
               scrollToTop();

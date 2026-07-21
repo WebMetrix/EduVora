@@ -3,7 +3,7 @@ import { ArrowRight, Mail, Phone, User } from 'lucide-react';
 import { FaWhatsapp } from 'react-icons/fa';
 import PhoneInputGroup from './PhoneInputGroup';
 
-export default function ContactInfoForm({ t, onBack, onNext }) {
+export default function ContactInfoForm({ t, onBack, onNext, formData, updateFormData }) {
   return (
     <form className="space-y-6" onSubmit={(e) => {
       e.preventDefault();
@@ -11,19 +11,17 @@ export default function ContactInfoForm({ t, onBack, onNext }) {
     }}>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-5">
 
-        {/* Email Address */}
+        {/* Email Address (Read Only) */}
         <div>
-          <div className="flex items-center gap-2 mb-2">
-            <Mail className="w-4 h-4 text-slate-500" />
-            <label className="text-[13px] font-bold text-[#111]">
-              {t('completeProfile.emailAddress')} <span className="text-red-500">*</span>
-            </label>
+          <div className="group flex flex-col gap-1 p-3.5 rounded-xl bg-slate-50/80 border border-slate-100 hover:bg-indigo-50/60 hover:border-indigo-200 shadow-sm transition-all duration-300 h-[74px] justify-center mt-[4px]">
+            <div className="flex items-center gap-2 text-slate-500 group-hover:text-indigo-500 transition-colors">
+              <Mail className="w-4 h-4" />
+              <label className="text-[11px] font-bold uppercase tracking-wider">{t('completeProfile.emailAddress')}</label>
+            </div>
+            <div className="pl-6 pr-2">
+              <span className="text-[#1a1446] font-bold text-[14px] block truncate">{formData.emailAddress || '-'}</span>
+            </div>
           </div>
-          <input
-            type="email"
-            className="w-full px-4 py-3.5 bg-white border border-slate-200 rounded-xl focus:outline-none focus:border-[#4f3bf3] focus:ring-1 focus:ring-[#4f3bf3] transition-all text-[14px] text-slate-900 placeholder:text-slate-400 font-medium"
-            placeholder={t('completeProfile.emailAddressPlaceholder')}
-          />
         </div>
 
         {/* Mobile Number */}
@@ -32,6 +30,8 @@ export default function ContactInfoForm({ t, onBack, onNext }) {
           placeholder={t('completeProfile.mobileNumberPlaceholder')}
           required={true}
           icon={Phone}
+          value={formData.mobileNumber}
+          onChange={(val) => updateFormData('mobileNumber', val)}
         />
 
         {/* Alternate Mobile Number */}
@@ -39,6 +39,8 @@ export default function ContactInfoForm({ t, onBack, onNext }) {
           label={t('completeProfile.altMobileNumber')}
           placeholder={t('completeProfile.altMobileNumberPlaceholder')}
           icon={Phone}
+          value={formData.altMobileNumber}
+          onChange={(val) => updateFormData('altMobileNumber', val)}
         />
 
         {/* WhatsApp Number */}
@@ -46,6 +48,8 @@ export default function ContactInfoForm({ t, onBack, onNext }) {
           label={t('completeProfile.whatsappNumber')}
           placeholder={t('completeProfile.whatsappNumberPlaceholder')}
           icon={FaWhatsapp}
+          value={formData.whatsAppNumber}
+          onChange={(val) => updateFormData('whatsAppNumber', val)}
         />
 
         {/* Emergency Contact Name */}
@@ -58,6 +62,8 @@ export default function ContactInfoForm({ t, onBack, onNext }) {
           </div>
           <input
             type="text"
+            value={formData.emergencyContactName}
+            onChange={(e) => updateFormData('emergencyContactName', e.target.value)}
             className="w-full px-4 py-3.5 bg-white border border-slate-200 rounded-xl focus:outline-none focus:border-[#4f3bf3] focus:ring-1 focus:ring-[#4f3bf3] transition-all text-[14px] text-slate-900 placeholder:text-slate-400 font-medium"
             placeholder={t('completeProfile.emergencyContactNamePlaceholder')}
           />
@@ -68,6 +74,8 @@ export default function ContactInfoForm({ t, onBack, onNext }) {
           label={t('completeProfile.emergencyContactNumber')}
           placeholder={t('completeProfile.emergencyContactNumberPlaceholder')}
           icon={Phone}
+          value={formData.emergencyContactNumber}
+          onChange={(val) => updateFormData('emergencyContactNumber', val)}
         />
 
       </div>

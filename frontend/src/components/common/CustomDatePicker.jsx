@@ -1,9 +1,14 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Calendar, ChevronLeft, ChevronRight } from 'lucide-react';
 
-const CustomDatePicker = ({ placeholder }) => {
+const CustomDatePicker = ({ placeholder, value, onChange }) => {
   const [isOpen, setIsOpen] = useState(false);
-  const [selectedDate, setSelectedDate] = useState(null);
+  const [selectedDate, setSelectedDate] = useState(value || null);
+  
+  useEffect(() => {
+    if (value !== undefined) setSelectedDate(value);
+  }, [value]);
+  
   const dropdownRef = useRef(null);
   const [currentMonth, setCurrentMonth] = useState(new Date());
   const [viewMode, setViewMode] = useState('days'); // 'days' | 'months' | 'years'
@@ -67,6 +72,7 @@ const CustomDatePicker = ({ placeholder }) => {
     const formattedDate = `${fullDate.getDate().toString().padStart(2, '0')}-${(fullDate.getMonth() + 1).toString().padStart(2, '0')}-${fullDate.getFullYear()}`;
     setSelectedDate(formattedDate);
     setIsOpen(false);
+    if (onChange) onChange(formattedDate);
   };
 
   const handleCalendarIconClick = (e) => {
@@ -77,6 +83,7 @@ const CustomDatePicker = ({ placeholder }) => {
     setCurrentMonth(today);
     setViewMode('days');
     setIsOpen(true);
+    if (onChange) onChange(formattedDate);
   };
 
   const toggleDropdown = () => {

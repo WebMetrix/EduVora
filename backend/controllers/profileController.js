@@ -17,8 +17,10 @@ export const getUserProfile = async (req, res) => {
             return res.status(404).send({ message: 'User profile not found.' });
         }
 
+        let userProfile = result.recordset[0];
+
         // Return the first record (since UUID is unique)
-        res.status(200).send(result.recordset[0]);
+        res.status(200).send(userProfile);
     } catch (err) {
         logger.error(`GET PROFILE ERROR: ${err.message}`, { stack: err.stack });
         res.status(500).send({ message: 'Failed to fetch user profile.' });

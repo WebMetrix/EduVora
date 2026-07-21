@@ -397,12 +397,7 @@
       "female": "Female",
       "other": "Other",
       "single": "Single",
-      "married": "Married",
-      "us": "United States",
-      "uk": "United Kingdom",
-      "in": "India",
-      "ca": "Canada",
-      "au": "Australia"
+      "married": "Married"
     }
   }
 }

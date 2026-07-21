@@ -1,47 +1,85 @@
 import React, { useState } from 'react';
-import { User, Phone, MapPin, Landmark, Check, ChevronDown } from 'lucide-react';
+import { User, Phone, MapPin, Landmark, Check, ChevronDown, Loader2 } from 'lucide-react';
+import { toast } from 'react-toastify';
+import api from '../../../https/axios';
 
-export default function ReviewConfirmForm({ t, onEditStep, onSubmit }) {
+export default function ReviewConfirmForm({ t, onEditStep, onSubmit, formData }) {
   const [isChecked, setIsChecked] = useState(false);
   const [expandedSection, setExpandedSection] = useState('personal'); // 'personal', 'contact', 'address', 'bank'
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const toggleSection = (section) => {
     setExpandedSection(expandedSection === section ? null : section);
   };
 
-  // Mock data to match the image
+  const handleComplete = async () => {
+    if (formData.accountNumber !== formData.confirmAccountNumber) {
+      toast.error('Account numbers do not match');
+      return;
+    }
+    
+    setIsSubmitting(true);
+    try {
+      // Create a payload matching the backend expectations
+      // Format the date for SQL Date if it exists
+      let dateOfBirth = null;
+      if (formData.dateOfBirth) {
+        // Assume format is DD-MM-YYYY based on CustomDatePicker
+        const parts = formData.dateOfBirth.split('-');
+        if (parts.length === 3) {
+          dateOfBirth = `${parts[2]}-${parts[1]}-${parts[0]}`; // YYYY-MM-DD
+        }
+      }
+
+      const payload = {
+        ...formData,
+        dateOfBirth
+      };
+
+      const response = await api.put('/profile/edit', payload);
+      toast.success(response.data.message || 'Profile updated successfully!');
+      if (onSubmit) onSubmit();
+    } catch (error) {
+      console.error('Update profile error:', error);
+      toast.error(error.response?.data?.message || 'Failed to update profile. Please try again.');
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  // Map formData to display objects
   const personalData = [
-    { label: t('completeProfile.fullName') || 'Full Name', value: 'Priya Sharma' },
-    { label: t('completeProfile.username') || 'Username', value: 'priyasharma25' },
-    { label: t('completeProfile.dob') || 'Date of Birth', value: '15 Oct 1995' },
-    { label: t('completeProfile.gender') || 'Gender', value: 'Female' },
-    { label: t('completeProfile.nationality') || 'Nationality', value: 'Indian' },
+    { label: t('completeProfile.fullName') || 'Full Name', value: formData.fullName || '-' },
+    { label: t('completeProfile.username') || 'Username', value: formData.username || '-' },
+    { label: t('completeProfile.dob') || 'Date of Birth', value: formData.dateOfBirth || '-' },
+    { label: t('completeProfile.gender') || 'Gender', value: formData.gender || '-' },
+    { label: t('completeProfile.nationality') || 'Nationality', value: formData.nationality || '-' },
   ];
 
   const contactData = [
-    { label: t('completeProfile.emailAddress') || 'Email Address', value: 'priya@example.com' },
-    { label: t('completeProfile.mobileNumber') || 'Mobile Number', value: '+91 9876543210' },
-    { label: t('completeProfile.altMobileNumber') || 'Alternate Mobile Number', value: '+91 8765432109' },
-    { label: t('completeProfile.whatsappNumber') || 'WhatsApp Number', value: '+91 9876543210' },
-    { label: t('completeProfile.emergencyContactName') || 'Emergency Contact Name', value: 'Rahul Sharma' },
-    { label: t('completeProfile.emergencyContactNumber') || 'Emergency Contact Number', value: '+91 7654321098' },
+    { label: t('completeProfile.emailAddress') || 'Email Address', value: formData.emailAddress || '-' },
+    { label: t('completeProfile.mobileNumber') || 'Mobile Number', value: formData.mobileNumber || '-' },
+    { label: t('completeProfile.altMobileNumber') || 'Alternate Mobile Number', value: formData.altMobileNumber || '-' },
+    { label: t('completeProfile.whatsappNumber') || 'WhatsApp Number', value: formData.whatsAppNumber || '-' },
+    { label: t('completeProfile.emergencyContactName') || 'Emergency Contact Name', value: formData.emergencyContactName || '-' },
+    { label: t('completeProfile.emergencyContactNumber') || 'Emergency Contact Number', value: formData.emergencyContactNumber || '-' },
   ];
 
   const addressData = [
-    { label: t('completeProfile.addressLine1') || 'Address Line 1', value: '123, MG Road' },
-    { label: t('completeProfile.addressLine2') || 'Address Line 2', value: 'Near City Center' },
-    { label: t('completeProfile.country') || 'Country', value: 'India' },
-    { label: t('completeProfile.state') || 'State', value: 'Maharashtra' },
-    { label: t('completeProfile.city') || 'City', value: 'Mumbai' },
-    { label: t('completeProfile.pincode') || 'Pincode', value: '400001' },
+    { label: t('completeProfile.addressLine1') || 'Address Line 1', value: formData.addressLine1 || '-' },
+    { label: t('completeProfile.addressLine2') || 'Address Line 2', value: formData.addressLine2 || '-' },
+    { label: t('completeProfile.country') || 'Country', value: formData.country || '-' },
+    { label: t('completeProfile.state') || 'State', value: formData.state || '-' },
+    { label: t('completeProfile.city') || 'City', value: formData.city || '-' },
+    { label: t('completeProfile.pincode') || 'Pincode', value: formData.pincode || '-' },
   ];
 
   const bankData = [
-    { label: t('completeProfile.accountHolderName') || 'Account Holder Name', value: 'Priya Sharma' },
-    { label: t('completeProfile.bankName') || 'Bank Name', value: 'State Bank of India' },
-    { label: t('completeProfile.accountNumber') || 'Account Number', value: 'xxxxxx1234' },
-    { label: t('completeProfile.ifscCode') || 'IFSC Code', value: 'SBIN0001234' },
-    { label: t('completeProfile.accountType') || 'Account Type', value: 'Savings' },
+    { label: t('completeProfile.accountHolderName') || 'Account Holder Name', value: formData.accountHolderName || '-' },
+    { label: t('completeProfile.bankName') || 'Bank Name', value: formData.bankName || '-' },
+    { label: t('completeProfile.accountNumber') || 'Account Number', value: formData.accountNumber || '-' },
+    { label: t('completeProfile.ifscCode') || 'IFSC Code', value: formData.ifscCode || '-' },
+    { label: t('completeProfile.accountType') || 'Account Type', value: formData.accountType || '-' },
   ];
 
   return (
@@ -212,15 +250,22 @@ export default function ReviewConfirmForm({ t, onEditStep, onSubmit }) {
       {/* Complete Button */}
       <div className="pt-2">
         <button
-          onClick={onSubmit}
-          disabled={!isChecked}
-          className={`w-full py-4 rounded-xl text-white font-bold text-[15px] transition-all duration-300 flex items-center justify-center ${
-            isChecked 
+          onClick={handleComplete}
+          disabled={!isChecked || isSubmitting}
+          className={`w-full py-4 rounded-xl text-white font-bold text-[15px] transition-all duration-300 flex items-center justify-center gap-2 ${
+            isChecked && !isSubmitting
               ? 'bg-[#4f3bf3] hover:bg-indigo-700 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-indigo-500/30' 
               : 'bg-indigo-300 cursor-not-allowed'
           }`}
         >
-          {t('completeProfile.completeProfileBtn')}
+          {isSubmitting ? (
+            <>
+              <Loader2 className="w-5 h-5 animate-spin" />
+              {t('common.processing') || 'Processing...'}
+            </>
+          ) : (
+            t('completeProfile.completeProfileBtn')
+          )}
         </button>
       </div>
     </div>
