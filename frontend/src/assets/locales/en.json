@@ -3,7 +3,8 @@
     "sending": "Sending...",
     "verifying": "Verifying...",
     "loadingDots": "...",
-    "editing": "Validating Credentials"
+    "editing": "Validating Credentials",
+    "processing":"Saving"
   },
   "login": {
     "title": "Welcome Back!",
@@ -232,6 +233,57 @@
         "news": "News & Updates"
       },
       "copyright": "© 2026 EDUVORA. All rights reserved."
+    }
+  },
+  "network": {
+    "title": "My Network",
+    "breadcrumb1": "Home",
+    "breadcrumb2": "My Network",
+    "breadcrumb3": "Genealogy Tree",
+    "dashboard": {
+      "title": "Team Dashboard",
+      "directTeam": "Direct Team",
+      "level1": "Level 1",
+      "level2": "Level 2",
+      "totalTeam": "Total Team",
+      "monthlyGrowth": "Monthly Growth",
+      "thisMonth": "This Month",
+      "vsLastMonth": "vs last month"
+    },
+    "charts": {
+      "referralGrowth": "Referral Growth",
+      "packageDistribution": "Package Distribution",
+      "registrationTrend": "Registration Trend",
+      "thisMonth": "This Month",
+      "total": "Total"
+    },
+    "toolbar": {
+      "expandAll": "Expand All",
+      "collapseAll": "Collapse All",
+      "zoomIn": "Zoom In",
+      "zoomOut": "Zoom Out",
+      "center": "Center",
+      "search": "Search",
+      "refresh": "Refresh",
+      "totalMembers": "Total Members",
+      "levels": "Levels"
+    },
+    "tree": {
+      "you": "You",
+      "level1": "Level 1",
+      "level2": "Level 2",
+      "active": "Active",
+      "inactive": "Inactive",
+      "pending": "Pending"
+    },
+    "details": {
+      "userId": "User ID",
+      "sponsor": "Sponsor",
+      "joiningDate": "Joining Date",
+      "package": "Package",
+      "childrenCount": "Children Count",
+      "viewFullProfile": "View Full Profile",
+      "system": "System"
     }
   },
   "profile": {

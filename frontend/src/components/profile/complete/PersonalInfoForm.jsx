@@ -25,11 +25,6 @@ export default function PersonalInfoForm({ t, onNext, formData, updateFormData }
     fetchGenders();
   }, []);
 
-  const maritalOptions = [
-    { value: 'single', label: t('completeProfile.options.single') || 'Single' },
-    { value: 'married', label: t('completeProfile.options.married') || 'Married' },
-  ];
-
   const nationalityOptions = [
     { value: 'us', label: t('completeProfile.options.us') || 'American' },
     { value: 'uk', label: t('completeProfile.options.uk') || 'British' },
@@ -104,22 +99,6 @@ export default function PersonalInfoForm({ t, onNext, formData, updateFormData }
             placeholder={t('completeProfile.genderPlaceholder')} 
             value={formData.gender}
             onChange={(val) => updateFormData('gender', val)}
-          />
-        </div>
-
-        {/* Marital Status */}
-        <div>
-          <div className="flex items-center gap-2 mb-2">
-            <Heart className="w-4 h-4 text-slate-500" />
-            <label className="text-[13px] font-bold text-[#111]">
-              {t('completeProfile.maritalStatus')}
-            </label>
-          </div>
-          <CustomSelect 
-            options={maritalOptions} 
-            placeholder={t('completeProfile.maritalStatusPlaceholder')}
-            value={formData.maritalStatus}
-            onChange={(val) => updateFormData('maritalStatus', val)}
           />
         </div>
 

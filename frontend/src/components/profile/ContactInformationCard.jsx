@@ -60,16 +60,7 @@ export default function ContactInformationCard({ t, profileData }) {
                     </div>
                 </div>
 
-                {/* Alternate Mobile Number */}
-                <div className="group flex flex-col gap-1 p-3.5 rounded-xl bg-slate-50/80 border border-slate-100 hover:bg-indigo-50/60 hover:border-indigo-200 shadow-sm transition-all duration-300">
-                    <div className="flex items-center gap-2 text-slate-500 group-hover:text-indigo-500 transition-colors">
-                        <Phone className="w-4 h-4" />
-                        <label className="text-[11px] font-bold uppercase tracking-wider">{t('completeProfile.altMobileNumber')}</label>
-                    </div>
-                    <div className="pl-6 text-[14px] text-slate-400 font-bold">
-                        -
-                    </div>
-                </div>
+
 
                 {/* WhatsApp Number */}
                 <div className="group flex flex-col gap-1 p-3.5 rounded-xl bg-slate-50/80 border border-slate-100 hover:bg-indigo-50/60 hover:border-indigo-200 shadow-sm transition-all duration-300">
@@ -83,27 +74,7 @@ export default function ContactInformationCard({ t, profileData }) {
                     </div>
                 </div>
 
-                {/* Emergency Contact Name */}
-                <div className="group flex flex-col gap-1 p-3.5 rounded-xl bg-slate-50/80 border border-slate-100 hover:bg-indigo-50/60 hover:border-indigo-200 shadow-sm transition-all duration-300">
-                    <div className="flex items-center gap-2 text-slate-500 group-hover:text-indigo-500 transition-colors">
-                        <User className="w-4 h-4" />
-                        <label className="text-[11px] font-bold uppercase tracking-wider">{t('completeProfile.emergencyContactName')}</label>
-                    </div>
-                    <div className="pl-6 text-[14px] text-slate-400 font-bold">
-                        -
-                    </div>
-                </div>
 
-                {/* Emergency Contact Number */}
-                <div className="group flex flex-col gap-1 p-3.5 rounded-xl bg-slate-50/80 border border-slate-100 hover:bg-indigo-50/60 hover:border-indigo-200 shadow-sm transition-all duration-300">
-                    <div className="flex items-center gap-2 text-slate-500 group-hover:text-indigo-500 transition-colors">
-                        <Phone className="w-4 h-4" />
-                        <label className="text-[11px] font-bold uppercase tracking-wider">{t('completeProfile.emergencyContactNumber')}</label>
-                    </div>
-                    <div className="pl-6 text-[14px] text-slate-400 font-bold">
-                        -
-                    </div>
-                </div>
             </div>
 
         </div>

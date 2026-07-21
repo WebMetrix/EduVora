@@ -1,4 +1,4 @@
-import { Edit2, MapPin, Building, Globe, Map, Hash, Navigation } from 'lucide-react';
+import { Edit2, MapPin, Building, Globe, Map, MapPinned, Navigation } from 'lucide-react';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
@@ -92,7 +92,7 @@ export default function AddressInformationCard({ t, profileData }) {
                 {/* Pincode */}
                 <div className="group flex flex-col gap-1 p-3.5 rounded-xl bg-slate-50/80 border border-slate-100 hover:bg-indigo-50/60 hover:border-indigo-200 shadow-sm transition-all duration-300">
                     <div className="flex items-center gap-2 text-slate-500 group-hover:text-indigo-500 transition-colors">
-                        <Hash className="w-4 h-4" />
+                        <MapPinned className="w-4 h-4" />
                         <label className="text-[11px] font-bold uppercase tracking-wider">{t('completeProfile.pincode')}</label>
                     </div>
                     <div className="pl-6 text-[14px] text-slate-900 font-bold">

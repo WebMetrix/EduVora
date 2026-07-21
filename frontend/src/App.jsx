@@ -4,6 +4,7 @@ import Register from './pages/Register';
 import Forgot from './pages/Forgot';
 import Dashboard from './pages/Dashboard';
 import Profile from './pages/Profile';
+import MyNetwork from './pages/MyNetwork';
 import CompleteProfile from './pages/CompleteProfile';
 import SuperAdmin from './pages/SuperAdmin';
 
@@ -21,6 +22,7 @@ function App() {
       <Route element={<ProtectedRoute />}>
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/profile" element={<Profile />} />
+        <Route path="/mynetwork" element={<MyNetwork />} />
         <Route path="/completeprofile" element={<CompleteProfile />} />
       </Route>
 

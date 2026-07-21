@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { ArrowRight, Loader2, CheckCircle2, Hash, User, Landmark, Building } from 'lucide-react';
+import { ArrowRight, Loader2, CheckCircle2, QrCode, User, Landmark, Building, Hash, FileText } from 'lucide-react';
 import CustomSelect from '../../common/CustomSelect';
 import { toast } from 'react-toastify';
 import api from '../../../https/axios';
@@ -70,7 +70,7 @@ export default function BankInfoForm({ t, onBack, onNext, formData, updateFormDa
         {/* IFSC Code with Verify Button */}
         <div>
           <div className="flex items-center gap-2 mb-2">
-            <Hash className="w-4 h-4 text-slate-500" />
+            <QrCode className="w-4 h-4 text-slate-500" />
             <label className="text-[13px] font-bold text-[#111]">
               {t('completeProfile.ifscCode')} <span className="text-red-500">*</span>
             </label>
@@ -192,11 +192,10 @@ export default function BankInfoForm({ t, onBack, onNext, formData, updateFormDa
             required
             value={formData.confirmAccountNumber}
             onChange={(e) => updateFormData('confirmAccountNumber', e.target.value)}
-            className={`w-full px-4 py-3.5 bg-white border ${
-              isMatch ? 'border-emerald-400 ring-1 ring-emerald-400 bg-emerald-50/10' : 
-              isMismatch ? 'border-rose-400 ring-1 ring-rose-400 bg-rose-50/10' : 
-              'border-slate-200 focus:border-[#4f3bf3] focus:ring-[#4f3bf3]'
-            } rounded-xl focus:outline-none focus:ring-1 transition-all text-[14px] text-slate-900 placeholder:text-slate-400 font-medium`}
+            className={`w-full px-4 py-3.5 bg-white border ${isMatch ? 'border-emerald-400 ring-1 ring-emerald-400 bg-emerald-50/10' :
+                isMismatch ? 'border-rose-400 ring-1 ring-rose-400 bg-rose-50/10' :
+                  'border-slate-200 focus:border-[#4f3bf3] focus:ring-[#4f3bf3]'
+              } rounded-xl focus:outline-none focus:ring-1 transition-all text-[14px] text-slate-900 placeholder:text-slate-400 font-medium`}
             placeholder={t('completeProfile.confirmAccountNumberPlaceholder')}
           />
         </div>
@@ -209,15 +208,32 @@ export default function BankInfoForm({ t, onBack, onNext, formData, updateFormDa
               {t('completeProfile.accountType')} <span className="text-red-500">*</span>
             </label>
           </div>
-          <CustomSelect 
-            options={accountTypeOptions} 
-            placeholder={t('completeProfile.accountTypePlaceholder')} 
+          <CustomSelect
+            options={accountTypeOptions}
+            placeholder={t('completeProfile.accountTypePlaceholder')}
             value={formData.accountType}
             onChange={(val) => updateFormData('accountType', val)}
           />
         </div>
 
       </div>
+
+        {/* Additional Notes */}
+        <div className="md:col-span-2 pt-2">
+          <div className="flex items-center gap-2 mb-2">
+            <FileText className="w-4 h-4 text-slate-500" />
+            <label className="text-[13px] font-bold text-[#111]">
+              Additional Notes
+            </label>
+          </div>
+          <textarea
+            value={formData.additionalBankNotes}
+            onChange={(e) => updateFormData('additionalBankNotes', e.target.value)}
+            maxLength={200}
+            className="w-full px-4 py-3.5 bg-white border border-slate-200 rounded-xl focus:outline-none focus:border-[#4f3bf3] focus:ring-1 focus:ring-[#4f3bf3] transition-all text-[14px] text-slate-900 placeholder:text-slate-400 font-medium min-h-[100px] resize-y"
+            placeholder="Any additional information..."
+          />
+        </div>
 
       {/* Submit & Back Buttons */}
       <div className="pt-6 flex flex-col md:flex-row justify-between gap-4 items-center">

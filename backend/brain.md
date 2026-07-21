@@ -33,6 +33,7 @@ Stores user bank account details for transactions.
 | ModifiedBy        | varchar(100) | Yes         |             |
 | ModifiedDate      | datetime     | Yes         |             |
 | SessionId         | varchar(100) | No          |             |
+| AdditionalBankNotes | varchar(200) | Yes         |             |
 
 ### 3. `Tb_Cities`
 Master table for cities, mapped to states and countries.

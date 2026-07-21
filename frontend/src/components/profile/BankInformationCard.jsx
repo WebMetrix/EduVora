@@ -1,4 +1,4 @@
-import { Edit2, Landmark, Hash, User, Building, FileText, CheckCircle2 } from 'lucide-react';
+import { Edit2, Landmark, Hash, User, Building, FileText, CheckCircle2, QrCode } from 'lucide-react';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
@@ -37,7 +37,7 @@ export default function BankInformationCard({ t, profileData }) {
                 {/* IFSC Code */}
                 <div className="group flex flex-col gap-1.5 p-3.5 rounded-xl bg-slate-50/80 border border-slate-100 hover:bg-indigo-50/60 hover:border-indigo-200 transition-all duration-300 shadow-sm">
                     <div className="flex items-center gap-2 text-slate-500 group-hover:text-indigo-500 transition-colors">
-                        <Hash className="w-4 h-4" />
+                        <QrCode className="w-4 h-4" />
                         <label className="text-[11px] font-bold uppercase tracking-wider">{t('completeProfile.ifscCode')}</label>
                     </div>
                     <div className="pl-6 text-[14px] text-slate-900 font-bold">
@@ -99,20 +99,20 @@ export default function BankInformationCard({ t, profileData }) {
                         {profileData?.AccountType || '-'}
                     </div>
                 </div>
-            </div>
 
-            {/* Additional Bank Notes Textarea */}
-            <div className="mt-6 border-t border-slate-100 pt-6">
-                <div className="group flex flex-col gap-1.5 p-3.5 rounded-xl bg-slate-50/80 border border-slate-100 hover:bg-indigo-50/60 hover:border-indigo-200 transition-all duration-300 shadow-sm">
+                {/* Additional Notes */}
+                <div className="group flex flex-col gap-1.5 p-3.5 rounded-xl bg-slate-50/80 border border-slate-100 hover:bg-indigo-50/60 hover:border-indigo-200 transition-all duration-300 shadow-sm md:col-span-2">
                     <div className="flex items-center gap-2 text-slate-500 group-hover:text-indigo-500 transition-colors">
                         <FileText className="w-4 h-4" />
-                        <label className="text-[11px] font-bold uppercase tracking-wider">{t('completeProfile.additionalBankNotes')}</label>
+                        <label className="text-[11px] font-bold uppercase tracking-wider">Additional Notes</label>
                     </div>
-                    <div className="pl-6 text-[14px] text-slate-400 font-bold min-h-[60px] whitespace-pre-wrap">
-                        {t('completeProfile.additionalBankNotesPlaceholder')}
+                    <div className="pl-6 text-[14px] text-slate-900 font-bold whitespace-pre-wrap max-h-[100px] overflow-y-auto custom-scrollbar">
+                        {profileData?.AdditionalBankNotes ? profileData.AdditionalBankNotes : <span className="text-slate-400 font-medium italic text-[13px]">No additional notes provided</span>}
                     </div>
                 </div>
             </div>
+
+
         </div>
     );
 }

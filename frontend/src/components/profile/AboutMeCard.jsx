@@ -21,7 +21,7 @@ export default function AboutMeCard({ t }) {
 
             <div className="bg-white border border-slate-100 rounded-xl p-5 min-h-[100px] shadow-[0_2px_10px_rgb(0,0,0,0.02)] mt-2">
                 <p className="text-[13px] text-slate-600 leading-relaxed font-semibold">
-                    I am passionate about learning and sharing knowledge. I love exploring new courses and helping others grow in their journey.
+                    Hardcoded needs to be changed
                 </p>
             </div>
         </div>

@@ -88,8 +88,11 @@ export default function Sidebar({ isOpen, setIsOpen, isSuperAdmin }) {
           <nav className="space-y-2">
             {menuItems.map((item) => {
               const Icon = item.icon;
-              // Highlight dashboard only when location is '/dashboard'
-              const isActive = item.id === 'dashboard' ? location.pathname === '/dashboard' : item.active;
+              const routeMap = {
+                dashboard: '/dashboard',
+                network: '/mynetwork'
+              };
+              const isActive = routeMap[item.id] ? location.pathname === routeMap[item.id] : item.active;
 
               return (
                 <a
@@ -97,10 +100,10 @@ export default function Sidebar({ isOpen, setIsOpen, isSuperAdmin }) {
                   href="#"
                   onClick={(e) => {
                     e.preventDefault();
-                    if (item.id === 'dashboard') {
-                      navigate('/dashboard');
+                    if (routeMap[item.id]) {
+                      navigate(routeMap[item.id]);
                     }
-                    if (window.innerWidth < 1024) setIsOpen(false);
+                    if (window.innerWidth < 1024 && typeof setIsOpen === 'function') setIsOpen(false);
                   }}
                   className={`group relative flex items-center gap-3.5 px-3.5 py-2.5 rounded-xl text-[13px] font-semibold transition-all duration-300 hover:-translate-y-0.5 hover:shadow-sm ${isActive
                     ? 'text-white bg-indigo-600 shadow-md shadow-indigo-600/20'

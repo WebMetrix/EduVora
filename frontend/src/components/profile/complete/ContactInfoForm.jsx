@@ -34,14 +34,7 @@ export default function ContactInfoForm({ t, onBack, onNext, formData, updateFor
           onChange={(val) => updateFormData('mobileNumber', val)}
         />
 
-        {/* Alternate Mobile Number */}
-        <PhoneInputGroup
-          label={t('completeProfile.altMobileNumber')}
-          placeholder={t('completeProfile.altMobileNumberPlaceholder')}
-          icon={Phone}
-          value={formData.altMobileNumber}
-          onChange={(val) => updateFormData('altMobileNumber', val)}
-        />
+
 
         {/* WhatsApp Number */}
         <PhoneInputGroup
@@ -52,31 +45,7 @@ export default function ContactInfoForm({ t, onBack, onNext, formData, updateFor
           onChange={(val) => updateFormData('whatsAppNumber', val)}
         />
 
-        {/* Emergency Contact Name */}
-        <div>
-          <div className="flex items-center gap-2 mb-2">
-            <User className="w-4 h-4 text-slate-500" />
-            <label className="text-[13px] font-bold text-[#111]">
-              {t('completeProfile.emergencyContactName')}
-            </label>
-          </div>
-          <input
-            type="text"
-            value={formData.emergencyContactName}
-            onChange={(e) => updateFormData('emergencyContactName', e.target.value)}
-            className="w-full px-4 py-3.5 bg-white border border-slate-200 rounded-xl focus:outline-none focus:border-[#4f3bf3] focus:ring-1 focus:ring-[#4f3bf3] transition-all text-[14px] text-slate-900 placeholder:text-slate-400 font-medium"
-            placeholder={t('completeProfile.emergencyContactNamePlaceholder')}
-          />
-        </div>
 
-        {/* Emergency Contact Number */}
-        <PhoneInputGroup
-          label={t('completeProfile.emergencyContactNumber')}
-          placeholder={t('completeProfile.emergencyContactNumberPlaceholder')}
-          icon={Phone}
-          value={formData.emergencyContactNumber}
-          onChange={(val) => updateFormData('emergencyContactNumber', val)}
-        />
 
       </div>
 

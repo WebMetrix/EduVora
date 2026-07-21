@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { ArrowRight, MapPin, Globe, Map, Building, Hash } from 'lucide-react';
+import { ArrowRight, MapPin, Globe, Map, Building, MapPinned } from 'lucide-react';
 import CustomSelect from '../../common/CustomSelect';
 import api from '../../../https/axios';
 
@@ -161,7 +161,7 @@ export default function AddressInfoForm({ t, onBack, onNext, formData, updateFor
         {/* Pincode */}
         <div>
           <div className="flex items-center gap-2 mb-2">
-            <Hash className="w-4 h-4 text-slate-500" />
+            <MapPinned className="w-4 h-4 text-slate-500" />
             <label className="text-[13px] font-bold text-[#111]">
               {t('completeProfile.pincode')} <span className="text-red-500">*</span>
             </label>

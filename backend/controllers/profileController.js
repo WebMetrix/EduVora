@@ -37,7 +37,7 @@ export const editUser = async (req, res) => {
         // username,
         mobileNumber, whatsAppNumber, addressLine1, addressLine2,
         country, state, city, pincode,
-        accountHolderName, accountNumber, bankName, branchName, ifscCode, accountType
+        accountHolderName, accountNumber, bankName, branchName, ifscCode, accountType, additionalBankNotes
     } = req.body;
 
     try {
@@ -72,6 +72,7 @@ export const editUser = async (req, res) => {
         request.input('BranchName', sql.VarChar(100), branchName || null);
         request.input('IFSCCode', sql.VarChar(20), ifscCode || null);
         request.input('AccountType', sql.VarChar(50), accountType || null);
+        request.input('AdditionalBankNotes', sql.VarChar(200), additionalBankNotes || null);
 
         request.output('Result', sql.Int);
 

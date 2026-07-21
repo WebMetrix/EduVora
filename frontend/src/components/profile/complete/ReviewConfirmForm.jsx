@@ -17,7 +17,7 @@ export default function ReviewConfirmForm({ t, onEditStep, onSubmit, formData })
       toast.error('Account numbers do not match');
       return;
     }
-    
+
     setIsSubmitting(true);
     try {
       // Create a payload matching the backend expectations
@@ -59,10 +59,7 @@ export default function ReviewConfirmForm({ t, onEditStep, onSubmit, formData })
   const contactData = [
     { label: t('completeProfile.emailAddress') || 'Email Address', value: formData.emailAddress || '-' },
     { label: t('completeProfile.mobileNumber') || 'Mobile Number', value: formData.mobileNumber || '-' },
-    { label: t('completeProfile.altMobileNumber') || 'Alternate Mobile Number', value: formData.altMobileNumber || '-' },
     { label: t('completeProfile.whatsappNumber') || 'WhatsApp Number', value: formData.whatsAppNumber || '-' },
-    { label: t('completeProfile.emergencyContactName') || 'Emergency Contact Name', value: formData.emergencyContactName || '-' },
-    { label: t('completeProfile.emergencyContactNumber') || 'Emergency Contact Number', value: formData.emergencyContactNumber || '-' },
   ];
 
   const addressData = [
@@ -84,12 +81,12 @@ export default function ReviewConfirmForm({ t, onEditStep, onSubmit, formData })
 
   return (
     <div className="space-y-6">
-      
+
       {/* Sections Container */}
       <div className="bg-[#f8fafd] rounded-2xl p-2 space-y-2">
-        
+
         {/* Personal Information */}
-        <div 
+        <div
           className={`transition-colors rounded-xl p-5 cursor-pointer ${expandedSection === 'personal' ? 'bg-white shadow-[0_2px_10px_rgba(0,0,0,0.02)]' : 'bg-transparent hover:bg-white'}`}
           onClick={() => toggleSection('personal')}
         >
@@ -99,7 +96,7 @@ export default function ReviewConfirmForm({ t, onEditStep, onSubmit, formData })
               <h4 className="font-bold text-[14px]">{t('completeProfile.personalInfo')}</h4>
             </div>
             {expandedSection === 'personal' ? (
-              <button 
+              <button
                 onClick={(e) => { e.stopPropagation(); onEditStep(1); }}
                 className="text-[#4f3bf3] font-bold text-[13px] hover:underline"
               >
@@ -109,7 +106,7 @@ export default function ReviewConfirmForm({ t, onEditStep, onSubmit, formData })
               <ChevronDown className="w-5 h-5 text-slate-400" />
             )}
           </div>
-          
+
           {expandedSection === 'personal' && (
             <div className="space-y-4">
               {personalData.map((item, idx) => (
@@ -123,7 +120,7 @@ export default function ReviewConfirmForm({ t, onEditStep, onSubmit, formData })
         </div>
 
         {/* Contact Information */}
-        <div 
+        <div
           className={`transition-colors rounded-xl p-5 cursor-pointer ${expandedSection === 'contact' ? 'bg-white shadow-[0_2px_10px_rgba(0,0,0,0.02)]' : 'bg-transparent hover:bg-white'}`}
           onClick={() => toggleSection('contact')}
         >
@@ -133,7 +130,7 @@ export default function ReviewConfirmForm({ t, onEditStep, onSubmit, formData })
               <h4 className="font-bold text-[14px]">{t('completeProfile.contactInfoTitle')}</h4>
             </div>
             {expandedSection === 'contact' ? (
-              <button 
+              <button
                 onClick={(e) => { e.stopPropagation(); onEditStep(2); }}
                 className="text-[#4f3bf3] font-bold text-[13px] hover:underline"
               >
@@ -143,7 +140,7 @@ export default function ReviewConfirmForm({ t, onEditStep, onSubmit, formData })
               <ChevronDown className="w-5 h-5 text-slate-400" />
             )}
           </div>
-          
+
           {expandedSection === 'contact' && (
             <div className="space-y-4">
               {contactData.map((item, idx) => (
@@ -157,7 +154,7 @@ export default function ReviewConfirmForm({ t, onEditStep, onSubmit, formData })
         </div>
 
         {/* Address Information */}
-        <div 
+        <div
           className={`transition-colors rounded-xl p-5 cursor-pointer ${expandedSection === 'address' ? 'bg-white shadow-[0_2px_10px_rgba(0,0,0,0.02)]' : 'bg-transparent hover:bg-white'}`}
           onClick={() => toggleSection('address')}
         >
@@ -167,7 +164,7 @@ export default function ReviewConfirmForm({ t, onEditStep, onSubmit, formData })
               <h4 className="font-bold text-[14px]">{t('completeProfile.addressInfoTitle')}</h4>
             </div>
             {expandedSection === 'address' ? (
-              <button 
+              <button
                 onClick={(e) => { e.stopPropagation(); onEditStep(3); }}
                 className="text-[#4f3bf3] font-bold text-[13px] hover:underline"
               >
@@ -177,7 +174,7 @@ export default function ReviewConfirmForm({ t, onEditStep, onSubmit, formData })
               <ChevronDown className="w-5 h-5 text-slate-400" />
             )}
           </div>
-          
+
           {expandedSection === 'address' && (
             <div className="space-y-4">
               {addressData.map((item, idx) => (
@@ -191,7 +188,7 @@ export default function ReviewConfirmForm({ t, onEditStep, onSubmit, formData })
         </div>
 
         {/* Bank Information */}
-        <div 
+        <div
           className={`transition-colors rounded-xl p-5 cursor-pointer ${expandedSection === 'bank' ? 'bg-white shadow-[0_2px_10px_rgba(0,0,0,0.02)]' : 'bg-transparent hover:bg-white'}`}
           onClick={() => toggleSection('bank')}
         >
@@ -201,7 +198,7 @@ export default function ReviewConfirmForm({ t, onEditStep, onSubmit, formData })
               <h4 className="font-bold text-[14px]">{t('completeProfile.bankInfoTitle')}</h4>
             </div>
             {expandedSection === 'bank' ? (
-              <button 
+              <button
                 onClick={(e) => { e.stopPropagation(); onEditStep(4); }}
                 className="text-[#4f3bf3] font-bold text-[13px] hover:underline"
               >
@@ -211,7 +208,7 @@ export default function ReviewConfirmForm({ t, onEditStep, onSubmit, formData })
               <ChevronDown className="w-5 h-5 text-slate-400" />
             )}
           </div>
-          
+
           {expandedSection === 'bank' && (
             <div className="space-y-4">
               {bankData.map((item, idx) => (
@@ -227,19 +224,17 @@ export default function ReviewConfirmForm({ t, onEditStep, onSubmit, formData })
       </div>
 
       {/* Checkbox */}
-      <div 
-        className={`flex items-center gap-4 p-5 rounded-2xl cursor-pointer transition-all duration-300 border ${
-          isChecked 
-            ? 'bg-indigo-50 border-indigo-50 shadow-none' 
+      <div
+        className={`flex items-center gap-4 p-5 rounded-2xl cursor-pointer transition-all duration-300 border ${isChecked
+            ? 'bg-indigo-50 border-indigo-50 shadow-none'
             : 'bg-white shadow-[0_2px_12px_rgba(0,0,0,0.04)] border-slate-100'
-        }`}
+          }`}
         onClick={() => setIsChecked(!isChecked)}
       >
-        <div className={`shrink-0 w-6 h-6 rounded-[8px] flex items-center justify-center transition-all duration-200 ${
-          isChecked 
-            ? 'bg-[#4f3bf3]' 
+        <div className={`shrink-0 w-6 h-6 rounded-[8px] flex items-center justify-center transition-all duration-200 ${isChecked
+            ? 'bg-[#4f3bf3]'
             : 'bg-white border-2 border-slate-300'
-        }`}>
+          }`}>
           {isChecked && <Check className="w-4 h-4 text-white" strokeWidth={3} />}
         </div>
         <p className="text-[14px] text-[#1a1446] font-bold select-none">
@@ -252,11 +247,10 @@ export default function ReviewConfirmForm({ t, onEditStep, onSubmit, formData })
         <button
           onClick={handleComplete}
           disabled={!isChecked || isSubmitting}
-          className={`w-full py-4 rounded-xl text-white font-bold text-[15px] transition-all duration-300 flex items-center justify-center gap-2 ${
-            isChecked && !isSubmitting
-              ? 'bg-[#4f3bf3] hover:bg-indigo-700 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-indigo-500/30' 
+          className={`w-full py-4 rounded-xl text-white font-bold text-[15px] transition-all duration-300 flex items-center justify-center gap-2 ${isChecked && !isSubmitting
+              ? 'bg-[#4f3bf3] hover:bg-indigo-700 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-indigo-500/30'
               : 'bg-indigo-300 cursor-not-allowed'
-          }`}
+            }`}
         >
           {isSubmitting ? (
             <>
