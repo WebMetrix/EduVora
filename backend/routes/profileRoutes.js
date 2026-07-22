@@ -1,5 +1,5 @@
 import express from 'express';
-import { getUserProfile, editUser, checkUsername, getGenders, getStates, getCities, getBankAccountTypes, verifyIfsc } from '../controllers/profileController.js';
+import { getUserProfile, editUser, checkUsername, getGenders, getStates, getCities, getBankAccountTypes, verifyIfsc, updateProfilePicture } from '../controllers/profileController.js';
 import { isLoggedIn } from '../middlewares/authMiddleware.js';
 import multer from 'multer';
 import path from 'path';
@@ -24,7 +24,7 @@ router.get('/', isLoggedIn, getUserProfile);
 const storage = multer.diskStorage({
   destination: async function (req, file, cb) {
     try {
-      // 1. Get the path from your database
+      // Get the base path from your database
       const request = pool.request();
       request.input('DocumentType', sql.VarChar(100), 'Profile'); 
       const result = await request.execute('dbo.EV_GetFileRepositoryPath');
@@ -33,23 +33,39 @@ const storage = multer.diskStorage({
         return cb(new Error('Repository path not found in DB.'));
       }
 
-      const uploadPath = result.recordset[0].path; // e.g., \\Eduvora-001\ProfilePictures
+      const baseUploadPath = result.recordset[0].path; // e.g., \\Eduvora-001\ProfilePictures
 
-      // 2. Create folder if it doesn't exist
-      if (!fs.existsSync(uploadPath)) {
-        fs.mkdirSync(uploadPath, { recursive: true });
+      // Get the UUID from the authenticated user
+      const userUuid = req.user.id;
+
+      // Combine base path with the UUID to create the subfolder path
+      const finalUploadPath = path.join(baseUploadPath, userUuid);
+
+      // Create the UUID folder (and base folder) if they don't exist
+      if (!fs.existsSync(finalUploadPath)) {
+        fs.mkdirSync(finalUploadPath, { recursive: true });
       }
-
-      // 3. Tell Multer to save it here
-      cb(null, uploadPath);
+      else {
+        // If folder exists, look for any old Display_Picture files and delete them
+        const existingFiles = fs.readdirSync(finalUploadPath);
+        for (const file of existingFiles) {
+          if (file.startsWith('Display_Picture')) {
+            fs.unlinkSync(path.join(finalUploadPath, file)); // Deletes the old file
+          }
+        }
+    }
+      // Tell Multer to save it in this specific UUID folder
+      cb(null, finalUploadPath);
     } catch (error) {
       cb(error);
     }
   },
   filename: function (req, file, cb) {
-    // Make file name unique
-    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
-    cb(null, 'profile-' + uniqueSuffix + path.extname(file.originalname));
+    // Keep the original extension (.jpg, .jpeg, or .png)
+    const extension = path.extname(file.originalname);
+    
+    // The file name should be Display_Picture + extension
+    cb(null, `Display_Picture${extension}`);
   }
 });
 
@@ -66,6 +82,8 @@ const upload = multer({
 
 router.put('/edit', isLoggedIn, upload.single('profileImage'), editUser);
 // router.put('/edit', isLoggedIn, editUser);
+
+router.put('/updatepicture', isLoggedIn, upload.single('profileImage'), updateProfilePicture);
 
 
 

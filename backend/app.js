@@ -29,7 +29,8 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
-
+//Added to serve static files from the network path
+app.use('/avatars', express.static('\\\\EduVora-001\\EduVora-001\\UserData\\Profile'));
 
 // app.get("/", async (req, res) => {
 //     try {

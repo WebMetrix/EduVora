@@ -91,7 +91,31 @@ export const editUser = async (req, res) => {
     }
 };
 
+// Instant Profile Picture Update
+export const updateProfilePicture = async (req, res) => {
+    const profilePicturePath = req.file ? req.file.path : null;
 
+    if (!profilePicturePath) {
+        return res.status(400).send({ message: 'No image provided.' });
+    }
+
+    try {
+        const request = pool.request();
+        request.input('UUID', sql.VarChar(36), req.user.id);
+        request.input('ProfilePicturePath', sql.VarChar(500), profilePicturePath);
+
+        await request.execute('dbo.EV_UpdateProfilePicture');
+
+        res.status(200).send({ 
+            message: 'Profile picture updated successfully.',
+            profilePicturePath: profilePicturePath
+        });
+
+    } catch (err) {
+        logger.error(`UPDATE PICTURE ERROR: ${err.message}`, { stack: err.stack });
+        res.status(500).send({ message: 'Something went wrong while updating the picture.' });
+    }
+};
 
 // Check Username Availability
 export const checkUsername = async (req, res) => {
@@ -115,8 +139,6 @@ export const checkUsername = async (req, res) => {
     }
 };
 
-
-
 // Get Genders Dropdown
 export const getGenders = async (req, res) => {
     try {
@@ -128,8 +150,6 @@ export const getGenders = async (req, res) => {
     }
 };
 
-
-
 // Get States Dropdown
 export const getStates = async (req, res) => {
     try {
@@ -140,8 +160,6 @@ export const getStates = async (req, res) => {
         res.status(500).send({ message: 'Failed to fetch states.' });
     }
 };
-
-
 
 // Get Cities Dropdown (Filtered by State)
 export const getCities = async (req, res) => {
@@ -159,8 +177,6 @@ export const getCities = async (req, res) => {
     }
 };
 
-
-
 // Get Bank Account Types Dropdown
 export const getBankAccountTypes = async (req, res) => {
     try {
@@ -171,8 +187,6 @@ export const getBankAccountTypes = async (req, res) => {
         res.status(500).send({ message: 'Failed to fetch bank account types.' });
     }
 };
-
-
 
 // Verify IFSC Code and Fetch Bank Details
 export const verifyIfsc = async (req, res) => {

@@ -309,7 +309,8 @@
       "dateOfJoining": "Date of Joining",
       "nationality": "Nationality",
       "memberSince": "Member Since",
-      "goldRank": "★ Gold Rank"
+      "goldRank": "★ Gold Rank",
+      "ProfilePictureSuccessfullyUpdated": "Profile Picture Successfully Updated!"
     },
     "contact": {
       "title": "Contact Information",

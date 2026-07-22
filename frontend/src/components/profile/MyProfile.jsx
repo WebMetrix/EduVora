@@ -22,18 +22,19 @@ export default function MyProfile() {
   const [profileData, setProfileData] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    const fetchProfile = async () => {
-      try {
-        const response = await api.get('/profile');
-        setProfileData(response.data);
-      } catch (error) {
+  const fetchProfile = async () => {
+    try {
+          const response = await api.get('/profile');
+          setProfileData(response.data);
+        } catch (error) {
         console.error('Error fetching profile:', error);
         toast.error('Failed to load profile data');
       } finally {
         setLoading(false);
       }
-    };
+  };
+
+  useEffect(() => {
     fetchProfile();
   }, []);
 
@@ -67,7 +68,12 @@ export default function MyProfile() {
           <div className="lg:col-span-2 flex flex-col gap-6">
             {activeTab === 'personalInfo' && (
               <>
-                <PersonalInformationCard t={t} profileData={profileData} />
+                {/* <PersonalInformationCard t={t} profileData={profileData} /> */}
+                <PersonalInformationCard 
+                  t={t} 
+                  profileData={profileData} 
+                  onPictureUpdated={fetchProfile} 
+                />
                 <AboutMeCard t={t} />
               </>
             )}
