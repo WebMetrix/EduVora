@@ -228,7 +228,7 @@ export const googleAuthUser = async (req, res) => {
             createReq.input('MobileNumber', sql.VarChar(20), null);
             createReq.input('Password', sql.VarChar(255), hash);
             createReq.input('ReferralCode', sql.VarChar(50), null);
-            createReq.input('SessionId', sql.VarChar(255), dbSessionId); // Pass generated SessionId
+            createReq.input('SessionId', sql.VarChar(255), null); // Pass generated SessionId
             createReq.input('SignupMethod', sql.VarChar(50), '2'); // 2 = Google
             createReq.input('UserID', sql.VarChar(100), derivedUserID);
             createReq.input('Username', sql.VarChar(50), derivedUsername);
