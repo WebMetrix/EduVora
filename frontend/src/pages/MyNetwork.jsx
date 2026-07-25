@@ -32,8 +32,8 @@ export default function MyNetwork() {
     <div className="flex h-screen w-full bg-[#FAFAFC] overflow-hidden font-sans">
       {/* Decorative premium background blobs */}
       <div className="fixed inset-0 pointer-events-none z-0">
-        <div className="absolute top-[-10%] right-[-5%] w-[500px] h-[500px] bg-indigo-500/5 rounded-full blur-[120px]" />
-        <div className="absolute bottom-[-10%] left-[10%] w-[600px] h-[600px] bg-purple-500/5 rounded-full blur-[150px]" />
+        <div className="absolute top-[-10%] right-[-5%] w-125 h-125 bg-indigo-500/5 rounded-full blur-[120px]" />
+        <div className="absolute bottom-[-10%] left-[10%] w-150 h-150 bg-purple-500/5 rounded-full blur-[150px]" />
       </div>
 
       <AnimatePresence>
@@ -43,8 +43,8 @@ export default function MyNetwork() {
       <div className="flex-1 flex flex-col h-screen overflow-hidden relative z-10">
         <Header toggleSidebar={() => setIsSidebarOpen(!isSidebarOpen)} />
 
-        <main className="flex-1 overflow-y-auto custom-scrollbar p-4 lg:p-6 pb-[90px] lg:pb-6">
-          <div className="max-w-[1400px] mx-auto flex flex-col gap-5 lg:gap-6">
+        <main className="flex-1 overflow-y-auto custom-scrollbar p-4 lg:p-6 pb-22.5 lg:pb-6">
+          <div className="max-w-350 mx-auto flex flex-col gap-5 lg:gap-6">
             
             {/* Header & Breadcrumbs */}
             <div>

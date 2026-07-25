@@ -47,7 +47,7 @@ export default function TreeNodeCard({ user, onClick, isSelected, level = 0 }) {
   return (
     <div 
       onClick={() => onClick(user)}
-      className={`relative w-[240px] bg-white rounded-xl border p-4 flex flex-row items-center gap-3 cursor-pointer transition-all duration-300 hover:-translate-y-1 hover:shadow-lg
+      className={`relative w-60 bg-white rounded-xl border p-4 flex flex-row items-center gap-3 cursor-pointer transition-all duration-300 hover:-translate-y-1 hover:shadow-lg
         ${isSelected ? 'ring-2 ring-indigo-500 ring-offset-2 shadow-[0_0_15px_rgba(99,102,241,0.2)] z-10' : 'shadow-sm hover:shadow-md'}
         ${getLevelBorderColor()}
       `}

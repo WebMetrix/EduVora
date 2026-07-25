@@ -37,7 +37,7 @@ export default function UserDetailsSidebar({ user, onClose }) {
         animate={{ opacity: 1, scale: 1 }}
         exit={{ opacity: 0, scale: 0.95 }}
         transition={{ duration: 0.2 }}
-        className="w-full lg:w-[340px] shrink-0 bg-white rounded-2xl border border-slate-100 shadow-[0_2px_10px_rgba(0,0,0,0.02)] flex flex-col"
+        className="w-full lg:w-85 shrink-0 bg-white rounded-2xl border border-slate-100 shadow-[0_2px_10px_rgba(0,0,0,0.02)] flex flex-col"
       >
         {/* Header */}
         <div className="flex items-center justify-end p-4">
@@ -72,7 +72,7 @@ export default function UserDetailsSidebar({ user, onClose }) {
           {/* Details List */}
           <div className="flex flex-col gap-5">
             <div className="flex items-center">
-              <div className="w-[120px] flex items-center gap-2 text-[12px] font-bold text-slate-500">
+              <div className="w-30 flex items-center gap-2 text-[12px] font-bold text-slate-500">
                 <Hash className="w-4 h-4" />
                 <span>{t('network.details.userId')}</span>
               </div>
@@ -80,7 +80,7 @@ export default function UserDetailsSidebar({ user, onClose }) {
             </div>
 
             <div className="flex items-center">
-              <div className="w-[120px] flex items-center gap-2 text-[12px] font-bold text-slate-500">
+              <div className="w-30 flex items-center gap-2 text-[12px] font-bold text-slate-500">
                 <Shield className="w-4 h-4" />
                 <span>{t('network.details.sponsor')}</span>
               </div>
@@ -88,7 +88,7 @@ export default function UserDetailsSidebar({ user, onClose }) {
             </div>
 
             <div className="flex items-center">
-              <div className="w-[120px] flex items-center gap-2 text-[12px] font-bold text-slate-500">
+              <div className="w-30 flex items-center gap-2 text-[12px] font-bold text-slate-500">
                 <Calendar className="w-4 h-4" />
                 <span>{t('network.details.joiningDate')}</span>
               </div>
@@ -96,7 +96,7 @@ export default function UserDetailsSidebar({ user, onClose }) {
             </div>
 
             <div className="flex items-center">
-              <div className="w-[120px] flex items-center gap-2 text-[12px] font-bold text-slate-500">
+              <div className="w-30 flex items-center gap-2 text-[12px] font-bold text-slate-500">
                 <Package className="w-4 h-4" />
                 <span>{t('network.details.package')}</span>
               </div>
@@ -104,7 +104,7 @@ export default function UserDetailsSidebar({ user, onClose }) {
             </div>
 
             <div className="flex items-center">
-              <div className="w-[120px] flex items-center gap-2 text-[12px] font-bold text-slate-500">
+              <div className="w-30 flex items-center gap-2 text-[12px] font-bold text-slate-500">
                 <Users className="w-4 h-4" />
                 <span>{t('network.details.childrenCount')}</span>
               </div>

@@ -120,7 +120,7 @@ const TreeNode = ({ node, onNodeClick, selectedUserId, level = 0 }) => {
               <div key={child.id} className="flex flex-col items-center relative px-2 sm:px-6 xl:px-12">
                 {/* Horizontal line segment for this child */}
                 {hasSiblings && (
-                  <div className={`absolute top-0 h-[2px] bg-indigo-200
+                  <div className={`absolute top-0 h-0.5 bg-indigo-200
                     ${isFirst ? 'left-1/2 right-0' : isLast ? 'left-0 right-1/2' : 'left-0 right-0'}
                   `}></div>
                 )}
@@ -146,7 +146,7 @@ export default function GenealogyTree() {
   const [selectedUser, setSelectedUser] = useState(treeData);
 
   return (
-    <div className="flex flex-col lg:flex-row gap-5 items-start h-[600px] w-full">
+    <div className="flex flex-col lg:flex-row gap-5 items-start h-150 w-full">
       <div className="flex-1 bg-white rounded-2xl border border-slate-100 shadow-[0_2px_10px_rgba(0,0,0,0.02)] relative overflow-hidden h-full">
       
       {/* Zoom / Pan Wrapper */}
@@ -163,7 +163,7 @@ export default function GenealogyTree() {
             <div className="min-w-max min-h-max p-12 flex justify-center pt-24 pb-32 relative">
                
                {/* Level Indicators */}
-               <div className="absolute left-0 top-[110px] flex flex-col gap-[145px]">
+               <div className="absolute left-0 top-27.5 flex flex-col gap-36.25">
                  <div className="flex items-center gap-2 px-3 py-1 bg-indigo-100/50 text-indigo-700 rounded-lg text-[10px] font-extrabold shadow-sm border border-indigo-100">
                     <div className="w-2 h-2 rounded-full bg-indigo-500"></div>
                     {t('network.tree.you')}
