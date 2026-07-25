@@ -32,6 +32,7 @@ export default function ContactInfoForm({ t, onBack, onNext, formData, updateFor
           icon={Phone}
           value={formData.mobileNumber}
           onChange={(val) => updateFormData('mobileNumber', val)}
+          t={t}
         />
 
 
@@ -43,6 +44,7 @@ export default function ContactInfoForm({ t, onBack, onNext, formData, updateFor
           icon={FaWhatsapp}
           value={formData.whatsAppNumber}
           onChange={(val) => updateFormData('whatsAppNumber', val)}
+          t={t}
         />
 
 

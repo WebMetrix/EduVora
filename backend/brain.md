@@ -251,6 +251,8 @@ Fetches distinct active states from `Tb_Cities` where CountryCode = 'IN'.
 Fetches the complete profile of a user (Core + Desc + Bank) using `LEFT JOIN`s on UUID.
 - **Inputs**: `@UUID VARCHAR(36)`
 
+- **Outputs**: Result Set (UUID, EmailAddress, PrimaryMobile, CreatedDate, UserID, FullName, Username, DateOfBirth, Gender, Nationality, ProfilePicturePath, ContactMobile, WhatsAppNumber, AddressLine1, AddressLine2, Country, State, City, Pincode, AccountHolderName, AccountNumber, BankName, BranchName, IFSCCode, AccountType, AdditionalBankNotes)
+
 ### `EV_InsertLogUserSession`
 Logs user login and logout times.
 - **Inputs**: `@UUID`, `@SessionId`, `@MacID`, `@ActionType` ('1' for Login, '2' for Logout)

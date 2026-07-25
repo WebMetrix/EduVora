@@ -1,5 +1,5 @@
 import { Camera, Edit2, Calendar, ChevronDown, CheckCircle, User as UserIcon, Heart, Flag, Loader2 } from 'lucide-react';
-import { useState,  useRef} from 'react';
+import { useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import api from '../../https/axios';
 import { toast } from 'react-toastify';
@@ -35,33 +35,33 @@ export default function PersonalInformationCard({ t, profileData, onPictureUpdat
             });
 
             toast.success(t('profile.personal.ProfilePictureSuccessfullyUpdated'));
-            
+
             setImageHash(Date.now());
 
             if (onPictureUpdated) {
-                onPictureUpdated(); 
+                onPictureUpdated();
             }
         } catch (error) {
             console.error("Upload error", error);
             toast.error(error.response?.data?.message || 'Failed to update picture.');
         } finally {
             setIsUploading(false);
-            event.target.value = null; 
+            event.target.value = null;
         }
     };
 
     const getImageUrl = (dbPath) => {
         if (!dbPath) return null;
-        
+
         // Strip the exact base network path from the DB string
         let formattedPath = dbPath.replace(/^\\\\EduVora-001\\EduVora-001\\UserData\\Profile\\/i, '');
-        
+
         // Convert remaining Windows backslashes (\) to web forward slashes (/)
         formattedPath = formattedPath.replace(/\\/g, '/');
-        
+
         // Construct the final URL using import.meta.env for Vite
         const baseUrl = import.meta.env.VITE_API_URL;
-        
+
         return `${baseUrl}/avatars/${formattedPath}?t=${imageHash}`;
     }
 
@@ -69,7 +69,7 @@ export default function PersonalInformationCard({ t, profileData, onPictureUpdat
         <div className="bg-white/60 backdrop-blur-xl border border-white/60 rounded-2xl p-5 sm:p-6 shadow-[0_4px_24px_rgba(0,0,0,0.02)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_8px_30px_rgba(79,70,229,0.15)] hover:border-indigo-200/50 flex flex-col overflow-hidden group">
             <div className="flex flex-row items-start justify-between gap-3 mb-6 sm:mb-8">
                 <h2 className="text-[16px] sm:text-[18px] font-bold text-slate-900 min-w-0 truncate pr-2 mt-1">{t('profile.personal.title')}</h2>
-                <button 
+                <button
                     onClick={() => {
                         setIsNavigating(true);
                         setTimeout(() => navigate('/completeprofile'), 400);
@@ -116,19 +116,19 @@ export default function PersonalInformationCard({ t, profileData, onPictureUpdat
 
                 {/* Avatar */}
                 <div className="flex flex-col items-center min-w-[140px]">
-                    
+
                     {/* Avatar Wrapper (Locks everything to 100x100) */}
                     <div className="relative mb-4 w-[100px] h-[100px]">
-                        
+
                         {/* The Circle Container (Cuts off corners) */}
                         <div className="w-full h-full rounded-full bg-slate-200 overflow-hidden shadow-md flex items-center justify-center">
-                            
+
                             {/* Real Image */}
                             {profileData?.ProfilePicturePath && (
-                                <img 
+                                <img
                                     key={imageHash}
-                                    src={getImageUrl(profileData.ProfilePicturePath)} 
-                                    alt="Profile" 
+                                    src={getImageUrl(profileData.ProfilePicturePath)}
+                                    alt="Profile"
                                     // w-full h-full forces it to fit the 100px div, object-cover prevents stretching
                                     className="w-full h-full object-cover"
                                     onError={(e) => {
@@ -142,7 +142,7 @@ export default function PersonalInformationCard({ t, profileData, onPictureUpdat
                             )}
 
                             {/* Fallback Initials */}
-                            <div 
+                            <div
                                 className="w-full h-full bg-gradient-to-br from-indigo-100 to-purple-100 items-center justify-center text-indigo-500 font-bold text-3xl"
                                 // Hide this by default if we have an image path
                                 style={{ display: profileData?.ProfilePicturePath ? 'none' : 'flex' }}
@@ -159,12 +159,12 @@ export default function PersonalInformationCard({ t, profileData, onPictureUpdat
                             accept=".jpg, .jpeg, .png"
                             onChange={handleFileChange}
                         />
-                        
+
                         {/* Camera Button */}
                         {/* <button className="absolute bottom-0 right-0 w-8 h-8 bg-white rounded-full flex items-center justify-center shadow-md border border-slate-100 text-indigo-600 hover:bg-indigo-50 hover:scale-105 transition-all z-20">
                             <Camera className="w-4 h-4" />
                         </button> */}
-                        <button 
+                        <button
                             onClick={handleCameraClick}
                             disabled={isUploading}
                             className="absolute bottom-0 right-0 w-8 h-8 bg-white rounded-full flex items-center justify-center shadow-md border border-slate-100 text-indigo-600 hover:bg-indigo-50 hover:scale-105 transition-all z-20 disabled:opacity-70 disabled:hover:scale-100"
@@ -242,7 +242,7 @@ export default function PersonalInformationCard({ t, profileData, onPictureUpdat
                             <label className="text-[11px] font-bold uppercase tracking-wider">{t('completeProfile.nationality')}</label>
                         </div>
                         <div className="pl-6 text-[14px] text-slate-900 font-bold">
-                            {profileData?.Nationality || '-'}
+                            {profileData?.Nationality || t('completeProfile.options.in') || 'Indian'}
                         </div>
                     </div>
 

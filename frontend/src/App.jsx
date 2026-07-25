@@ -6,6 +6,7 @@ import Dashboard from './pages/Dashboard';
 import Profile from './pages/Profile';
 import MyNetwork from './pages/MyNetwork';
 import CompleteProfile from './pages/CompleteProfile';
+import MyReferrals from './pages/MyReferrals';
 import SuperAdmin from './pages/SuperAdmin';
 
 import ProtectedRoute from './components/common/ProtectedRoute';
@@ -24,6 +25,7 @@ function App() {
         <Route path="/profile" element={<Profile />} />
         <Route path="/mynetwork" element={<MyNetwork />} />
         <Route path="/completeprofile" element={<CompleteProfile />} />
+        <Route path="/myreferrals" element={<MyReferrals />} />
       </Route>
 
       <Route path="/superadmin/*" element={<SuperAdmin />} />

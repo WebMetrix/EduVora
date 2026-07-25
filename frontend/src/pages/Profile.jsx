@@ -36,8 +36,8 @@ export default function Profile() {
       <div className="flex-1 flex flex-col h-screen overflow-hidden relative z-10">
         <Header toggleSidebar={() => setIsSidebarOpen(!isSidebarOpen)} />
 
-        <main className="flex-1 overflow-y-auto custom-scrollbar p-4 lg:p-6 pb-[90px] lg:pb-6">
-          <div className="max-w-[1400px] mx-auto flex flex-col gap-4 lg:gap-5">
+        <main className="flex-1 overflow-y-auto overflow-x-hidden custom-scrollbar p-4 lg:p-6 pb-[90px] lg:pb-6">
+          <div className="max-w-[1400px] w-full min-w-0 mx-auto flex flex-col gap-4 lg:gap-5">
             <MyProfile />
             <Footer />
           </div>

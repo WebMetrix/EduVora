@@ -1,6 +1,12 @@
 import { User as UserIcon } from 'lucide-react';
 
-export default function AccountOverviewCard({ t }) {
+export default function AccountOverviewCard({ t, profileData }) {
+    // Add logic to format numbers safely
+    const formatCurrency = (value) => {
+        if (!value || isNaN(value)) return '₹ 0.00';
+        return `₹ ${Number(value).toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+    };
+
     return (
         <div className="bg-white/60 backdrop-blur-xl border border-white/60 rounded-2xl p-6 shadow-[0_4px_24px_rgba(0,0,0,0.02)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_8px_30px_rgba(79,70,229,0.15)] hover:border-indigo-200/50">
             <div className="flex items-center gap-3 mb-6">
@@ -13,28 +19,28 @@ export default function AccountOverviewCard({ t }) {
             <div className="flex flex-col gap-4">
                 <div className="flex items-center justify-between">
                     <span className="text-[13px] font-semibold text-slate-500">{t('profile.overview.userId')}</span>
-                    <span className="text-[13px] font-extrabold text-slate-900">LN125487</span>
+                    <span className="text-[13px] font-extrabold text-slate-900">{profileData?.UserID || '-'}</span>
                 </div>
                 <div className="flex items-center justify-between">
                     <span className="text-[13px] font-semibold text-slate-500">{t('profile.overview.sponsor')}</span>
-                    <span className="text-[13px] font-extrabold text-slate-900">Rahul Verma</span>
+                    <span className="text-[13px] font-extrabold text-slate-900">{profileData?.SponsorName || profileData?.SponsorID || '-'}</span>
                 </div>
                 <div className="flex items-center justify-between">
                     <span className="text-[13px] font-semibold text-slate-500">{t('profile.overview.rank')}</span>
-                    <span className="text-[13px] font-extrabold text-amber-500">Gold</span>
+                    <span className="text-[13px] font-extrabold text-amber-500">{profileData?.RankName || profileData?.Rank || 'Member'}</span>
                 </div>
                 <div className="h-px bg-slate-200/60 my-1" />
                 <div className="flex items-center justify-between">
                     <span className="text-[13px] font-semibold text-slate-500">{t('profile.overview.totalReferrals')}</span>
-                    <span className="text-[13px] font-extrabold text-slate-900">128</span>
+                    <span className="text-[13px] font-extrabold text-slate-900">{profileData?.TotalReferrals || 0}</span>
                 </div>
                 <div className="flex items-center justify-between">
                     <span className="text-[13px] font-semibold text-slate-500">{t('profile.overview.totalEarnings')}</span>
-                    <span className="text-[13px] font-extrabold text-slate-900">₹ 1,45,680.00</span>
+                    <span className="text-[13px] font-extrabold text-slate-900">{formatCurrency(profileData?.TotalEarnings)}</span>
                 </div>
                 <div className="flex items-center justify-between">
                     <span className="text-[13px] font-semibold text-slate-500">{t('profile.overview.walletBalance')}</span>
-                    <span className="text-[13px] font-extrabold text-slate-900">₹ 12,450.00</span>
+                    <span className="text-[13px] font-extrabold text-slate-900">{formatCurrency(profileData?.WalletBalance)}</span>
                 </div>
             </div>
         </div>

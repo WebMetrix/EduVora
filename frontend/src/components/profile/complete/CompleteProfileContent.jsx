@@ -74,7 +74,7 @@ export default function CompleteProfileContent() {
           dateOfBirth: dob,
           gender: data.Gender || '',
           maritalStatus: data.MaritalStatus || '',
-          nationality: data.Nationality || '',
+          nationality: data.Nationality || t('completeProfile.options.in') || 'Indian',
           emailAddress: data.EmailAddress || '',
           mobileNumber: data.MobileNumber || data.PrimaryMobile || data.ContactMobile || '',
           altMobileNumber: data.AltMobileNumber || '',
@@ -124,7 +124,7 @@ export default function CompleteProfileContent() {
   ];
 
   return (
-    <div ref={topRef} className="w-full max-w-[600px] lg:max-w-[1024px] mx-auto mt-4 mb-8 pt-4">
+    <div ref={topRef} className="w-full min-w-0 max-w-[600px] lg:max-w-[1024px] mx-auto mt-4 mb-8 pt-4">
 
       {/* Header */}
       <div className="mb-6 px-2 text-center md:text-left">

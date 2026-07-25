@@ -1,7 +1,7 @@
 import React from 'react';
 import CustomSelect from '../../common/CustomSelect';
 
-export default function PhoneInputGroup({ label, placeholder, required = false, icon: Icon, value, onChange }) {
+export default function PhoneInputGroup({ label, placeholder, required = false, icon: Icon, value, onChange, t }) {
   return (
     <div>
       <div className="flex items-center gap-2 mb-2">
@@ -12,7 +12,7 @@ export default function PhoneInputGroup({ label, placeholder, required = false, 
       </div>
       <div className="flex gap-2">
         <div className="w-[100px] shrink-0">
-          <CustomSelect options={[{ value: '+91', label: '+91' }]} placeholder="+91" value="+91" />
+          <CustomSelect options={[{ value: t('completeProfile.countryCode') || '+91', label: t('completeProfile.countryCode') || '+91' }]} placeholder={t('completeProfile.countryCode') || '+91'} value={t('completeProfile.countryCode') || '+91'} />
         </div>
         <input
           type="tel"

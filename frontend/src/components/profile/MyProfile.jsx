@@ -55,17 +55,19 @@ export default function MyProfile() {
   }
 
   return (
-    <div className="flex flex-col gap-6 animate-fade-in pb-4">
+    <div className="w-full min-w-0 flex flex-col gap-6 animate-fade-in pb-4">
       <ProfileHeader t={t} />
 
-      <ProfileTabs tabs={tabs} activeTab={activeTab} setActiveTab={setActiveTab} />
+      <div className="w-full min-w-0">
+        <ProfileTabs tabs={tabs} activeTab={activeTab} setActiveTab={setActiveTab} />
+      </div>
 
       {activeTab === 'changePassword' ? (
         <ChangePasswordCard setActiveTab={setActiveTab} />
       ) : (
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
           {/* Left Column */}
-          <div className="lg:col-span-2 flex flex-col gap-6">
+          <div className="xl:col-span-2 flex flex-col gap-6 min-w-0">
             {activeTab === 'personalInfo' && (
               <>
                 {/* <PersonalInformationCard t={t} profileData={profileData} /> */}
@@ -86,14 +88,14 @@ export default function MyProfile() {
             {activeTab === 'bankInfo' && (
               <BankInformationCard t={t} profileData={profileData} />
             )}
-            <SafeInfoCard t={t} className="hidden lg:flex" />
+            <SafeInfoCard t={t} className="hidden xl:flex" />
           </div>
 
           {/* Right Column */}
-          <div className="flex flex-col gap-6">
-            <AccountOverviewCard t={t} />
+          <div className="flex flex-col gap-6 min-w-0">
+            <AccountOverviewCard t={t} profileData={profileData} />
             <AccountSecurityCard t={t} />
-            <SafeInfoCard t={t} className="flex lg:hidden" />
+            <SafeInfoCard t={t} className="flex xl:hidden" />
           </div>
         </div>
       )}

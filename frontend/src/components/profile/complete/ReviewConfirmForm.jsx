@@ -115,8 +115,8 @@ export default function ReviewConfirmForm({ t, onEditStep, onSubmit, formData })
 
   const contactData = [
     { label: t('completeProfile.emailAddress') || 'Email Address', value: formData.emailAddress || '-' },
-    { label: t('completeProfile.mobileNumber') || 'Mobile Number', value: formData.mobileNumber || '-' },
-    { label: t('completeProfile.whatsappNumber') || 'WhatsApp Number', value: formData.whatsAppNumber || '-' },
+    { label: t('completeProfile.mobileNumber') || 'Mobile Number', value: formData.mobileNumber ? `${t('completeProfile.countryCode')} ${formData.mobileNumber}` : '-' },
+    { label: t('completeProfile.whatsappNumber') || 'WhatsApp Number', value: formData.whatsAppNumber ? `${t('completeProfile.countryCode')} ${formData.whatsAppNumber}` : '-' },
   ];
 
   const addressData = [

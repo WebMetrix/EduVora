@@ -17,7 +17,7 @@ export default function AddressInfoForm({ t, onBack, onNext, formData, updateFor
         if (res.data && Array.isArray(res.data)) {
           const formattedStates = res.data
             .map(s => ({
-              value: s.StateName,
+              value: s.StateID || s.StateId || s.stateid || s.StateName,
               label: s.StateName
             }));
           setStateOptions(formattedStates);
@@ -37,10 +37,12 @@ export default function AddressInfoForm({ t, onBack, onNext, formData, updateFor
         return;
       }
       try {
-        const res = await api.get(`/profile/dropdowns/cities?stateName=${formData.state}`);
+        const selectedState = stateOptions.find(opt => opt.value === formData.state);
+        const stateNameParam = selectedState ? selectedState.label : formData.state;
+        const res = await api.get(`/profile/dropdowns/cities?stateName=${stateNameParam}`);
         if (res.data && Array.isArray(res.data)) {
           const formattedCities = res.data.map(c => ({
-            value: c.CityName,
+            value: c.CityID || c.CityId || c.cityid || c.CityName,
             label: c.CityName
           }));
           setCityOptions(formattedCities);
@@ -63,10 +65,11 @@ export default function AddressInfoForm({ t, onBack, onNext, formData, updateFor
 
   // Ensure India is set for the database
   useEffect(() => {
-    if (!formData.country || formData.country !== 'India') {
-      updateFormData('country', 'India');
+    const defaultCountry = t('completeProfile.options.india');
+    if (!formData.country || formData.country !== defaultCountry) {
+      updateFormData('country', defaultCountry);
     }
-  }, [formData.country, updateFormData]);
+  }, [formData.country, updateFormData, t]);
 
   return (
     <form className="space-y-6" onSubmit={(e) => {
@@ -119,7 +122,7 @@ export default function AddressInfoForm({ t, onBack, onNext, formData, updateFor
             </div>
             <div className="pl-6 pr-2">
               <span className="text-[#1a1446] font-bold text-[14px] block truncate">
-                India
+                {formData.country || t('completeProfile.options.india')}
               </span>
             </div>
           </div>
@@ -133,9 +136,9 @@ export default function AddressInfoForm({ t, onBack, onNext, formData, updateFor
               {t('completeProfile.state')} <span className="text-red-500">*</span>
             </label>
           </div>
-          <CustomSelect 
-            options={stateOptions} 
-            placeholder={t('completeProfile.statePlaceholder')} 
+          <CustomSelect
+            options={stateOptions}
+            placeholder={t('completeProfile.statePlaceholder')}
             value={formData.state}
             onChange={handleStateChange}
           />
@@ -149,9 +152,9 @@ export default function AddressInfoForm({ t, onBack, onNext, formData, updateFor
               {t('completeProfile.city')} <span className="text-red-500">*</span>
             </label>
           </div>
-          <CustomSelect 
-            options={cityOptions} 
-            placeholder={t('completeProfile.cityPlaceholder')} 
+          <CustomSelect
+            options={cityOptions}
+            placeholder={t('completeProfile.cityPlaceholder')}
             value={formData.city}
             onChange={(val) => updateFormData('city', val)}
             disabled={!formData.state}

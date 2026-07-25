@@ -41,13 +41,7 @@ export default function PersonalInfoForm({ t, onNext, formData, updateFormData }
     fetchGenders();
   }, []);
 
-  const nationalityOptions = [
-    { value: 'us', label: t('completeProfile.options.us') || 'American' },
-    { value: 'uk', label: t('completeProfile.options.uk') || 'British' },
-    { value: 'in', label: t('completeProfile.options.in') || 'Indian' },
-    { value: 'ca', label: t('completeProfile.options.ca') || 'Canadian' },
-    { value: 'au', label: t('completeProfile.options.au') || 'Australian' },
-  ];
+
 
   return (
     <form className="space-y-6" onSubmit={(e) => {
@@ -95,8 +89,8 @@ export default function PersonalInfoForm({ t, onNext, formData, updateFormData }
               {t('completeProfile.dob')} <span className="text-red-500">*</span>
             </label>
           </div>
-          <CustomDatePicker 
-            placeholder={t('completeProfile.dobPlaceholder')} 
+          <CustomDatePicker
+            placeholder={t('completeProfile.dobPlaceholder')}
             value={formData.dateOfBirth}
             onChange={(val) => updateFormData('dateOfBirth', val)}
           />
@@ -110,9 +104,9 @@ export default function PersonalInfoForm({ t, onNext, formData, updateFormData }
               {t('completeProfile.gender')} <span className="text-red-500">*</span>
             </label>
           </div>
-          <CustomSelect 
-            options={genderOptions} 
-            placeholder={t('completeProfile.genderPlaceholder')} 
+          <CustomSelect
+            options={genderOptions}
+            placeholder={t('completeProfile.genderPlaceholder')}
             value={formData.gender}
             onChange={(val) => updateFormData('gender', val)}
           />
@@ -120,18 +114,15 @@ export default function PersonalInfoForm({ t, onNext, formData, updateFormData }
 
         {/* Nationality */}
         <div>
-          <div className="flex items-center gap-2 mb-2">
-            <Flag className="w-4 h-4 text-slate-500" />
-            <label className="text-[13px] font-bold text-[#111]">
-              {t('completeProfile.nationality')}
-            </label>
+          <div className="group flex flex-col gap-1 p-3.5 rounded-xl bg-slate-50/80 border border-slate-100 hover:bg-indigo-50/60 hover:border-indigo-200 shadow-sm transition-all duration-300 h-[74px] justify-center mt-[4px]">
+            <div className="flex items-center gap-2 text-slate-500 group-hover:text-indigo-500 transition-colors">
+              <Flag className="w-4 h-4" />
+              <label className="text-[11px] font-bold uppercase tracking-wider">{t('completeProfile.nationality')}</label>
+            </div>
+            <div className="pl-6 pr-2">
+              <span className="text-[#1a1446] font-bold text-[14px] block truncate">{formData.nationality || t('completeProfile.options.in')}</span>
+            </div>
           </div>
-          <CustomSelect 
-            options={nationalityOptions} 
-            placeholder={t('completeProfile.nationalityPlaceholder')} 
-            value={formData.nationality}
-            onChange={(val) => updateFormData('nationality', val)}
-          />
         </div>
       </div>
 
@@ -153,12 +144,12 @@ export default function PersonalInfoForm({ t, onNext, formData, updateFormData }
             </div>
           </div>
           <input
-              type="file"
-              ref={fileInputRef}
-              className="hidden"
-              accept=".jpg, .jpeg, .png" // Restricts picker to JPG and PNG
-              onChange={handleFileChange}
-            />
+            type="file"
+            ref={fileInputRef}
+            className="hidden"
+            accept=".jpg, .jpeg, .png" // Restricts picker to JPG and PNG
+            onChange={handleFileChange}
+          />
           <button type="button" onClick={handleUploadClick} className="text-[#4f3bf3] border-2 border-[#4f3bf3]/20 bg-white hover:border-[#4f3bf3] hover:bg-indigo-50 shadow-sm px-6 py-2.5 rounded-xl text-[13px] font-bold transition-all ml-auto md:ml-4">
             {t('completeProfile.uploadBtn')}
           </button>

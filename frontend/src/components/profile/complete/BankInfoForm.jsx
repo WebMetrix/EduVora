@@ -13,9 +13,10 @@ export default function BankInfoForm({ t, onBack, onNext, formData, updateFormDa
         const res = await api.get('/profile/dropdowns/banktypes');
         if (res.data && Array.isArray(res.data)) {
           const types = res.data.map(item => {
-            // Check possible keys the backend might return, or just grab the first string value
-            const val = item.BankAccountTypeDesc || item.AccountType || item.AccountTypeName || item.BankAccountType || Object.values(item).find(v => typeof v === 'string') || Object.values(item)[0];
-            return { value: val, label: val };
+            // Grab the ID and Name explicitly or fallback
+            const idVal = item.BankAccountTypeID || item.AccountTypeID || item.AccountTypeId || item.Id || item.ID || item.id;
+            const textVal = item.BankAccountTypeDesc || item.AccountType || item.AccountTypeName || item.BankAccountType || Object.values(item).find(v => typeof v === 'string') || Object.values(item)[0];
+            return { value: idVal || textVal, label: textVal };
           });
           setAccountTypeOptions(types);
         }
@@ -193,8 +194,8 @@ export default function BankInfoForm({ t, onBack, onNext, formData, updateFormDa
             value={formData.confirmAccountNumber}
             onChange={(e) => updateFormData('confirmAccountNumber', e.target.value)}
             className={`w-full px-4 py-3.5 bg-white border ${isMatch ? 'border-emerald-400 ring-1 ring-emerald-400 bg-emerald-50/10' :
-                isMismatch ? 'border-rose-400 ring-1 ring-rose-400 bg-rose-50/10' :
-                  'border-slate-200 focus:border-[#4f3bf3] focus:ring-[#4f3bf3]'
+              isMismatch ? 'border-rose-400 ring-1 ring-rose-400 bg-rose-50/10' :
+                'border-slate-200 focus:border-[#4f3bf3] focus:ring-[#4f3bf3]'
               } rounded-xl focus:outline-none focus:ring-1 transition-all text-[14px] text-slate-900 placeholder:text-slate-400 font-medium`}
             placeholder={t('completeProfile.confirmAccountNumberPlaceholder')}
           />
@@ -218,22 +219,22 @@ export default function BankInfoForm({ t, onBack, onNext, formData, updateFormDa
 
       </div>
 
-        {/* Additional Notes */}
-        <div className="md:col-span-2 pt-2">
-          <div className="flex items-center gap-2 mb-2">
-            <FileText className="w-4 h-4 text-slate-500" />
-            <label className="text-[13px] font-bold text-[#111]">
-              Additional Notes
-            </label>
-          </div>
-          <textarea
-            value={formData.additionalBankNotes}
-            onChange={(e) => updateFormData('additionalBankNotes', e.target.value)}
-            maxLength={200}
-            className="w-full px-4 py-3.5 bg-white border border-slate-200 rounded-xl focus:outline-none focus:border-[#4f3bf3] focus:ring-1 focus:ring-[#4f3bf3] transition-all text-[14px] text-slate-900 placeholder:text-slate-400 font-medium min-h-[100px] resize-y"
-            placeholder="Any additional information..."
-          />
+      {/* Additional Notes */}
+      <div className="md:col-span-2 pt-2">
+        <div className="flex items-center gap-2 mb-2">
+          <FileText className="w-4 h-4 text-slate-500" />
+          <label className="text-[13px] font-bold text-[#111]">
+            {t('completeProfile.additionalBankNotes')}
+          </label>
         </div>
+        <textarea
+          value={formData.additionalBankNotes}
+          onChange={(e) => updateFormData('additionalBankNotes', e.target.value)}
+          maxLength={200}
+          className="w-full px-4 py-3.5 bg-white border border-slate-200 rounded-xl focus:outline-none focus:border-[#4f3bf3] focus:ring-1 focus:ring-[#4f3bf3] transition-all text-[14px] text-slate-900 placeholder:text-slate-400 font-medium min-h-[100px] resize-y"
+          placeholder={t('completeProfile.additionalBankNotesPlaceholder')}
+        />
+      </div>
 
       {/* Submit & Back Buttons */}
       <div className="pt-6 flex flex-col md:flex-row justify-between gap-4 items-center">

@@ -56,7 +56,7 @@ export default function ContactInformationCard({ t, profileData }) {
                         <label className="text-[11px] font-bold uppercase tracking-wider">{t('completeProfile.mobileNumber')}</label>
                     </div>
                     <div className="pl-6 text-[14px] text-slate-900 font-bold">
-                        {profileData?.PrimaryMobile || profileData?.ContactMobile || '-'}
+                        {profileData?.PrimaryMobile || profileData?.ContactMobile ? `${t('completeProfile.countryCode')} ${profileData?.PrimaryMobile || profileData?.ContactMobile}` : '-'}
                     </div>
                 </div>
 
@@ -69,7 +69,7 @@ export default function ContactInformationCard({ t, profileData }) {
                         <label className="text-[11px] font-bold uppercase tracking-wider">{t('completeProfile.whatsappNumber')}</label>
                     </div>
                     <div className="pl-6 text-[14px] text-slate-900 font-bold flex items-center justify-between">
-                        <span className="truncate">{profileData?.WhatsAppNumber || '-'}</span>
+                        <span className="truncate">{profileData?.WhatsAppNumber ? `${t('completeProfile.countryCode')} ${profileData?.WhatsAppNumber}` : '-'}</span>
                         {profileData?.WhatsAppNumber && <FaWhatsapp className="w-4 h-4 text-emerald-500 shrink-0" />}
                     </div>
                 </div>
