@@ -96,7 +96,7 @@ export default function BankInformationCard({ t, profileData }) {
                         <label className="text-[11px] font-bold uppercase tracking-wider">{t('completeProfile.accountType')}</label>
                     </div>
                     <div className="pl-6 text-[14px] text-slate-900 font-bold">
-                        {profileData?.AccountType || '-'}
+                        {profileData?.AccountTypeName || profileData?.AccountType || '-'}
                     </div>
                 </div>
 
@@ -106,7 +106,7 @@ export default function BankInformationCard({ t, profileData }) {
                         <FileText className="w-4 h-4" />
                         <label className="text-[11px] font-bold uppercase tracking-wider">Additional Notes</label>
                     </div>
-                    <div className="pl-6 text-[14px] text-slate-900 font-bold whitespace-pre-wrap max-h-[100px] overflow-y-auto custom-scrollbar">
+                    <div className="pl-6 text-[14px] text-slate-900 font-bold whitespace-pre-wrap max-h-25 overflow-y-auto custom-scrollbar">
                         {profileData?.AdditionalBankNotes ? profileData.AdditionalBankNotes : <span className="text-slate-400 font-medium italic text-[13px]">No additional notes provided</span>}
                     </div>
                 </div>

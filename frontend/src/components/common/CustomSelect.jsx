@@ -35,14 +35,14 @@ const CustomSelect = ({ options, placeholder, value, onChange, disabled }) => {
       </div>
       
       {isOpen && (
-        <div className="absolute top-full left-0 right-0 mt-1.5 bg-white/60 backdrop-blur-3xl border border-white/70 shadow-[0_12px_40px_rgba(79,59,243,0.15)] rounded-2xl overflow-y-auto max-h-[250px] z-50 py-1 [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-indigo-200/80 [&::-webkit-scrollbar-thumb]:rounded-full hover:[&::-webkit-scrollbar-thumb]:bg-indigo-300">
+        <div className="absolute top-full left-0 right-0 mt-1.5 bg-white/60 backdrop-blur-3xl border border-white/70 shadow-[0_12px_40px_rgba(79,59,243,0.15)] rounded-2xl overflow-y-auto max-h-62.5 z-50 py-1 [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-indigo-200/80 [&::-webkit-scrollbar-thumb]:rounded-full hover:[&::-webkit-scrollbar-thumb]:bg-indigo-300">
           {options.map((opt) => (
             <div 
               key={opt.value}
               onClick={() => { 
                 setSelected(opt.value); 
                 setIsOpen(false); 
-                if (onChange) onChange(opt.value);
+                if (onChange) onChange(opt.value, opt);
               }}
               className={`px-4 py-3 text-[14px] font-medium cursor-pointer transition-colors flex items-center justify-between ${selected === opt.value ? 'bg-indigo-50/50 text-[#4f3bf3]' : 'text-slate-700 hover:bg-white/50'}`}
             >

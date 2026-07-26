@@ -17,7 +17,7 @@ export default function AddressInfoForm({ t, onBack, onNext, formData, updateFor
         if (res.data && Array.isArray(res.data)) {
           const formattedStates = res.data
             .map(s => ({
-              value: s.StateID || s.StateId || s.stateid || s.StateName,
+              value: String(s.StateID || s.StateId || s.stateid || s.StateName),
               label: s.StateName
             }));
           setStateOptions(formattedStates);
@@ -42,7 +42,7 @@ export default function AddressInfoForm({ t, onBack, onNext, formData, updateFor
         const res = await api.get(`/profile/dropdowns/cities?stateName=${stateNameParam}`);
         if (res.data && Array.isArray(res.data)) {
           const formattedCities = res.data.map(c => ({
-            value: c.CityID || c.CityId || c.cityid || c.CityName,
+            value: String(c.CityID || c.CityId || c.cityid || c.CityName),
             label: c.CityName
           }));
           setCityOptions(formattedCities);
@@ -54,11 +54,14 @@ export default function AddressInfoForm({ t, onBack, onNext, formData, updateFor
     fetchCities();
   }, [formData.state]);
 
-  const handleStateChange = (val) => {
+  const handleStateChange = (val, opt) => {
     updateFormData('state', val);
+    if (opt) updateFormData('stateName', opt.label);
+    
     // Only clear city if the state actually changed to a different one
     if (formData.state && formData.state !== val) {
       updateFormData('city', '');
+      updateFormData('cityName', '');
     }
   };
 
@@ -156,7 +159,10 @@ export default function AddressInfoForm({ t, onBack, onNext, formData, updateFor
             options={cityOptions}
             placeholder={t('completeProfile.cityPlaceholder')}
             value={formData.city}
-            onChange={(val) => updateFormData('city', val)}
+            onChange={(val, opt) => {
+              updateFormData('city', val);
+              if (opt) updateFormData('cityName', opt.label);
+            }}
             disabled={!formData.state}
           />
         </div>

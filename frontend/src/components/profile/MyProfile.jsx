@@ -76,7 +76,7 @@ export default function MyProfile() {
                   profileData={profileData} 
                   onPictureUpdated={fetchProfile} 
                 />
-                <AboutMeCard t={t} />
+                <AboutMeCard t={t} profileData={profileData} onUpdate={fetchProfile} />
               </>
             )}
             {activeTab === 'contactInfo' && (

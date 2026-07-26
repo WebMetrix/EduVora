@@ -115,9 +115,9 @@ const CustomDatePicker = ({ placeholder, value, onChange }) => {
       </div>
       
       {isOpen && (
-        <div className="absolute top-full left-0 right-0 mt-2 bg-white/60 backdrop-blur-3xl border border-white/80 shadow-[0_12px_40px_rgba(0,0,0,0.08)] rounded-[20px] overflow-hidden z-50 p-5">
+        <div className="absolute top-full left-0 mt-2 w-[280px] bg-white/60 backdrop-blur-3xl border border-white/80 shadow-[0_12px_40px_rgba(0,0,0,0.08)] rounded-[16px] overflow-hidden z-50 p-3.5">
           
-          <div className="flex items-center justify-between mb-5 px-1">
+          <div className="flex items-center justify-between mb-3 px-1">
             <button type="button" onClick={prevAction} className="p-1 hover:bg-black/5 rounded-lg transition-colors"><ChevronLeft className="w-5 h-5 text-slate-700" /></button>
             
             <button 
@@ -141,16 +141,16 @@ const CustomDatePicker = ({ placeholder, value, onChange }) => {
           
           {viewMode === 'days' && (
             <>
-              <div className="grid mb-3 gap-x-1" style={{ gridTemplateColumns: 'repeat(7, minmax(0, 1fr))' }}>
+              <div className="grid mb-2 gap-x-1" style={{ gridTemplateColumns: 'repeat(7, minmax(0, 1fr))' }}>
                 {daysOfWeek.map(day => (
-                  <div key={day} className="text-center text-[13px] font-bold text-slate-800">{day}</div>
+                  <div key={day} className="text-center text-[12px] font-bold text-slate-800">{day}</div>
                 ))}
               </div>
               
-              <div className="grid gap-y-2 gap-x-1" style={{ gridTemplateColumns: 'repeat(7, minmax(0, 1fr))' }}>
+              <div className="grid gap-y-1 gap-x-1" style={{ gridTemplateColumns: 'repeat(7, minmax(0, 1fr))' }}>
                 {calendarDays.map((item, i) => {
                   if (!item.isCurrentMonth) {
-                    return <div key={i} className="w-9 h-9 mx-auto"></div>;
+                    return <div key={i} className="w-8 h-8 mx-auto"></div>;
                   }
 
                   const isSelected = selectedDate === `${item.fullDate.getDate().toString().padStart(2, '0')}-${(item.fullDate.getMonth() + 1).toString().padStart(2, '0')}-${item.fullDate.getFullYear()}`;
@@ -160,7 +160,7 @@ const CustomDatePicker = ({ placeholder, value, onChange }) => {
                     <div 
                       key={i} 
                       onClick={() => handleSelectDate(item.fullDate, item.isCurrentMonth)}
-                      className={`relative w-9 h-9 mx-auto flex flex-col items-center justify-center rounded-[8px] text-[14px] font-medium cursor-pointer transition-all ${
+                      className={`relative w-8 h-8 mx-auto flex flex-col items-center justify-center rounded-[8px] text-[13px] font-medium cursor-pointer transition-all ${
                         isSelected ? 'bg-[#2563eb] text-white shadow-sm' : 
                         'text-slate-700 hover:bg-black/5'
                       }`}
@@ -185,7 +185,7 @@ const CustomDatePicker = ({ placeholder, value, onChange }) => {
                     setCurrentMonth(new Date(currentMonth.getFullYear(), i, 1));
                     setViewMode('days');
                   }}
-                  className={`py-3 text-center rounded-xl text-[13px] font-bold cursor-pointer transition-all ${
+                  className={`py-2 text-center rounded-xl text-[13px] font-bold cursor-pointer transition-all ${
                     currentMonth.getMonth() === i ? 'bg-[#4f3bf3] text-white shadow-md shadow-indigo-500/30' : 'text-[#1a1446] hover:bg-indigo-50'
                   }`}
                 >
@@ -206,7 +206,7 @@ const CustomDatePicker = ({ placeholder, value, onChange }) => {
                       setCurrentMonth(new Date(year, currentMonth.getMonth(), 1));
                       setViewMode('months');
                     }}
-                    className={`py-3 text-center rounded-xl text-[13px] font-bold cursor-pointer transition-all ${
+                    className={`py-2 text-center rounded-xl text-[13px] font-bold cursor-pointer transition-all ${
                       currentMonth.getFullYear() === year ? 'bg-[#4f3bf3] text-white shadow-md shadow-indigo-500/30' : 'text-[#1a1446] hover:bg-indigo-50'
                     }`}
                   >

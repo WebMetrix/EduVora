@@ -3,17 +3,47 @@ import { Menu, ChevronDown, Bell, User, Settings, Wallet, BarChart2, HelpCircle,
 import { motion, AnimatePresence } from 'framer-motion';
 import { useTranslation } from '../../hooks/useTranslation';
 import { useNavigate } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { logoutUser } from '../../redux/slices/authSlice';
 import { toast } from 'react-toastify';
+import api from '../../https/axios';
 import logoImg from '../../assets/images/Eduvora.png';
 
 export default function Header({ toggleSidebar, isSuperAdmin }) {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const { user } = useSelector((state) => state.auth);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const profileRef = useRef(null);
+
+  const [profileName, setProfileName] = useState(localStorage.getItem('cachedProfileName') || '');
+  
+  useEffect(() => {
+    const fetchProfile = async () => {
+      try {
+        const response = await api.get('/profile');
+        if (response.data && response.data.FullName) {
+          setProfileName(response.data.FullName);
+          localStorage.setItem('cachedProfileName', response.data.FullName);
+        }
+      } catch (error) {
+        console.error('Error fetching profile for header:', error);
+      }
+    };
+    if (!isSuperAdmin) {
+      fetchProfile();
+    }
+  }, [isSuperAdmin]);
+
+  const rawName = profileName || user?.name || user?.fullName || t('dashboard.mock.userName');
+  const firstName = rawName.split(' ')[0];
+  const nameParts = rawName.split(' ');
+  const initials = nameParts
+    .slice(0, 2)
+    .map((n) => n[0])
+    .join('')
+    .toUpperCase();
 
   // Close dropdown when clicking outside
   useEffect(() => {
@@ -94,7 +124,7 @@ export default function Header({ toggleSidebar, isSuperAdmin }) {
                 </div>
               ) : (
                 <div className="w-8 h-8 lg:w-9 lg:h-9 rounded-full bg-indigo-50 flex items-center justify-center text-indigo-700 font-bold text-[13px] shadow-sm">
-                  PS
+                  {initials}
                 </div>
               )}
             </div>
@@ -108,7 +138,7 @@ export default function Header({ toggleSidebar, isSuperAdmin }) {
                 </>
               ) : (
                 <>
-                  <h4 className="text-[13px] font-extrabold text-slate-900 leading-tight group-hover:text-indigo-700 transition-colors">{t('dashboard.mock.userName')}</h4>
+                  <h4 className="text-[13px] font-extrabold text-slate-900 leading-tight group-hover:text-indigo-700 transition-colors">{firstName}</h4>
                   <p className="text-[11px] font-medium text-slate-500 mt-0.5 tracking-wide">{t('dashboard.mock.userRank')}</p>
                 </>
               )}
@@ -151,7 +181,7 @@ export default function Header({ toggleSidebar, isSuperAdmin }) {
 
                   <div className="h-px bg-slate-100 my-1 mx-3" />
 
-                  <button 
+                  <button
                     onClick={handleLogout}
                     className="flex items-center gap-2.5 px-4 py-2 hover:bg-red-50 transition-colors w-full text-left group/logout"
                   >

@@ -74,7 +74,7 @@ export default function AddressInformationCard({ t, profileData }) {
                         <label className="text-[11px] font-bold uppercase tracking-wider">{t('completeProfile.state')}</label>
                     </div>
                     <div className="pl-6 text-[14px] text-slate-900 font-bold">
-                        {profileData?.State || '-'}
+                        {profileData?.StateName || profileData?.State || '-'}
                     </div>
                 </div>
 
@@ -85,7 +85,7 @@ export default function AddressInformationCard({ t, profileData }) {
                         <label className="text-[11px] font-bold uppercase tracking-wider">{t('completeProfile.city')}</label>
                     </div>
                     <div className="pl-6 text-[14px] text-slate-900 font-bold">
-                        {profileData?.City || '-'}
+                        {profileData?.CityName || profileData?.City || '-'}
                     </div>
                 </div>
 

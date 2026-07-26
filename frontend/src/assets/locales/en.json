@@ -150,7 +150,7 @@
       "accessDesc": "You have full access to manage all users and system settings."
     },
     "mock": {
-      "userName": "Priya Sharma",
+      "userName": "User",
       "userRank": "Gold Rank",
       "gold": "Gold"
     },

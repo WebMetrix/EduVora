@@ -16,7 +16,7 @@ export default function BankInfoForm({ t, onBack, onNext, formData, updateFormDa
             // Grab the ID and Name explicitly or fallback
             const idVal = item.BankAccountTypeID || item.AccountTypeID || item.AccountTypeId || item.Id || item.ID || item.id;
             const textVal = item.BankAccountTypeDesc || item.AccountType || item.AccountTypeName || item.BankAccountType || Object.values(item).find(v => typeof v === 'string') || Object.values(item)[0];
-            return { value: idVal || textVal, label: textVal };
+            return { value: String(idVal || textVal), label: textVal };
           });
           setAccountTypeOptions(types);
         }
@@ -133,19 +133,18 @@ export default function BankInfoForm({ t, onBack, onNext, formData, updateFormDa
               {t('completeProfile.accountHolderName')} <span className="text-red-500">*</span>
             </label>
           </div>
-          <input
-            type="text"
-            required
-            value={formData.accountHolderName}
-            onChange={(e) => updateFormData('accountHolderName', e.target.value)}
-            className="w-full px-4 py-3.5 bg-white border border-slate-200 rounded-xl focus:outline-none focus:border-[#4f3bf3] focus:ring-1 focus:ring-[#4f3bf3] transition-all text-[14px] text-slate-900 placeholder:text-slate-400 font-medium"
-            placeholder={t('completeProfile.accountHolderNamePlaceholder')}
-          />
+            <input
+              type="text"
+              placeholder={t('completeProfile.accountHolderNamePlaceholder')}
+              value={formData.accountHolderName}
+              onChange={(e) => updateFormData('accountHolderName', e.target.value.replace(/[^A-Za-z\s]/g, ''))}
+              className="w-full h-[48px] pl-4 pr-4 bg-white/50 backdrop-blur-sm border border-indigo-100 rounded-2xl text-[14px] text-slate-700 font-medium placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 focus:bg-white transition-all shadow-[0_2px_10px_rgba(79,70,229,0.02)]"
+            />
         </div>
 
         {/* Bank Name (Read Only) */}
         <div>
-          <div className="group flex flex-col gap-1 p-3.5 rounded-xl bg-slate-50/80 border border-slate-100 hover:bg-indigo-50/60 hover:border-indigo-200 shadow-sm transition-all duration-300 h-[74px] justify-center mt-[4px]">
+          <div className="group flex flex-col gap-1 p-3.5 rounded-xl bg-slate-50/80 border border-slate-100 hover:bg-indigo-50/60 hover:border-indigo-200 shadow-sm transition-all duration-300 h-18.5 justify-center mt-1">
             <div className="flex items-center gap-2 text-slate-500 group-hover:text-indigo-500 transition-colors">
               <Landmark className="w-4 h-4" />
               <label className="text-[11px] font-bold uppercase tracking-wider">{t('completeProfile.bankName')}</label>
@@ -166,14 +165,13 @@ export default function BankInfoForm({ t, onBack, onNext, formData, updateFormDa
               {t('completeProfile.accountNumber')} <span className="text-red-500">*</span>
             </label>
           </div>
-          <input
-            type="text"
-            required
-            value={formData.accountNumber}
-            onChange={(e) => updateFormData('accountNumber', e.target.value)}
-            className="w-full px-4 py-3.5 bg-white border border-slate-200 rounded-xl focus:outline-none focus:border-[#4f3bf3] focus:ring-1 focus:ring-[#4f3bf3] transition-all text-[14px] text-slate-900 placeholder:text-slate-400 font-medium"
-            placeholder={t('completeProfile.accountNumberPlaceholder')}
-          />
+            <input
+              type="text"
+              placeholder={t('completeProfile.accountNumberPlaceholder')}
+              value={formData.accountNumber}
+              onChange={(e) => updateFormData('accountNumber', e.target.value)}
+              className="w-full px-4 py-3.5 bg-white border border-slate-200 rounded-xl focus:outline-none focus:border-[#4f3bf3] focus:ring-1 focus:ring-[#4f3bf3] transition-all text-[14px] text-slate-900 placeholder:text-slate-400 font-medium"
+            />
         </div>
 
         {/* Confirm Account Number */}
@@ -213,7 +211,10 @@ export default function BankInfoForm({ t, onBack, onNext, formData, updateFormDa
             options={accountTypeOptions}
             placeholder={t('completeProfile.accountTypePlaceholder')}
             value={formData.accountType}
-            onChange={(val) => updateFormData('accountType', val)}
+            onChange={(val, opt) => {
+              updateFormData('accountType', val);
+              if (opt) updateFormData('accountTypeName', opt.label);
+            }}
           />
         </div>
 

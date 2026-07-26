@@ -221,3 +221,25 @@ export const verifyIfsc = async (req, res) => {
         res.status(500).send({ message: 'Failed to verify IFSC code due to a server error.' });
     }
 };
+
+// Update About Me Notes
+export const updateAbout = async (req, res) => {
+    const { aboutNotes } = req.body;
+
+    try {
+        const request = pool.request();
+        request.input('UUID', sql.VarChar(36), req.user.id);
+        request.input('AboutNotes', sql.VarChar(200), aboutNotes || null);
+
+        const result = await request.execute('dbo.EV_UpdateAboutMe');
+
+        if (result.recordset && result.recordset[0].Success === 1) {
+            res.status(200).send({ message: result.recordset[0].Message });
+        } else {
+            res.status(400).send({ message: result.recordset[0].Message || 'Failed to update About Me' });
+        }
+    } catch (err) {
+        logger.error(`UPDATE ABOUT ERROR: ${err.message}`, { stack: err.stack });
+        res.status(500).send({ message: 'Server error while updating About Me.' });
+    }
+};

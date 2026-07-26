@@ -185,6 +185,7 @@ Detailed profile information for users.
 | ModifiedDate       | datetime     | Yes         |             |
 | SessionId          | varchar(100) | Yes         |             |
 | isActive           | bit          | Yes         |             |
+| AboutNotes         | varchar(200) | Yes         |             |
 
 ### 16. `Tb_UserPackage`
 Maps users to the packages they have purchased.
@@ -251,7 +252,12 @@ Fetches distinct active states from `Tb_Cities` where CountryCode = 'IN'.
 Fetches the complete profile of a user (Core + Desc + Bank) using `LEFT JOIN`s on UUID.
 - **Inputs**: `@UUID VARCHAR(36)`
 
-- **Outputs**: Result Set (UUID, EmailAddress, PrimaryMobile, CreatedDate, UserID, FullName, Username, DateOfBirth, Gender, Nationality, ProfilePicturePath, ContactMobile, WhatsAppNumber, AddressLine1, AddressLine2, Country, State, City, Pincode, AccountHolderName, AccountNumber, BankName, BranchName, IFSCCode, AccountType, AdditionalBankNotes)
+- **Outputs**: Result Set (UUID, EmailAddress, PrimaryMobile, CreatedDate, UserID, FullName, Username, DateOfBirth, Gender, Nationality, ProfilePicturePath, ContactMobile, WhatsAppNumber, AddressLine1, AddressLine2, Country, State, City, Pincode, AccountHolderName, AccountNumber, BankName, BranchName, IFSCCode, AccountType, AdditionalBankNotes, AboutNotes)
+
+### `EV_UpdateAboutMe`
+Updates the `AboutNotes` column in `Tb_UserDesc` for a specific user.
+- **Inputs**: `@UUID VARCHAR(36)`, `@AboutNotes VARCHAR(200)`
+- **Outputs**: Result Set (`Success INT`, `Message VARCHAR`)
 
 ### `EV_InsertLogUserSession`
 Logs user login and logout times.

@@ -1,5 +1,5 @@
 import express from 'express';
-import { getUserProfile, editUser, checkUsername, getGenders, getStates, getCities, getBankAccountTypes, verifyIfsc, updateProfilePicture } from '../controllers/profileController.js';
+import { getUserProfile, editUser, checkUsername, getGenders, getStates, getCities, getBankAccountTypes, verifyIfsc, updateProfilePicture, updateAbout } from '../controllers/profileController.js';
 import { isLoggedIn } from '../middlewares/authMiddleware.js';
 import multer from 'multer';
 import path from 'path';
@@ -84,6 +84,8 @@ router.put('/edit', isLoggedIn, upload.single('profileImage'), editUser);
 // router.put('/edit', isLoggedIn, editUser);
 
 router.put('/updatepicture', isLoggedIn, upload.single('profileImage'), updateProfilePicture);
+
+router.put('/updateAbout', isLoggedIn, updateAbout);
 
 
 

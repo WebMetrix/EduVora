@@ -106,34 +106,34 @@ export default function ReviewConfirmForm({ t, onEditStep, onSubmit, formData })
   };
   
   const personalData = [
-    { label: t('completeProfile.fullName') || 'Full Name', value: formData.fullName || '-' },
-    { label: t('completeProfile.username') || 'Username', value: formData.username || '-' },
-    { label: t('completeProfile.dob') || 'Date of Birth', value: formData.dateOfBirth || '-' },
-    { label: t('completeProfile.gender') || 'Gender', value: formData.gender || '-' },
-    { label: t('completeProfile.nationality') || 'Nationality', value: formData.nationality || '-' },
+    { label: t('completeProfile.fullName'), value: formData.fullName || '-' },
+    { label: t('completeProfile.username'), value: formData.username || '-' },
+    { label: t('completeProfile.dob'), value: formData.dateOfBirth || '-' },
+    { label: t('completeProfile.gender'), value: formData.gender || '-' },
+    { label: t('completeProfile.nationality'), value: formData.nationality || '-' },
   ];
 
   const contactData = [
-    { label: t('completeProfile.emailAddress') || 'Email Address', value: formData.emailAddress || '-' },
-    { label: t('completeProfile.mobileNumber') || 'Mobile Number', value: formData.mobileNumber ? `${t('completeProfile.countryCode')} ${formData.mobileNumber}` : '-' },
-    { label: t('completeProfile.whatsappNumber') || 'WhatsApp Number', value: formData.whatsAppNumber ? `${t('completeProfile.countryCode')} ${formData.whatsAppNumber}` : '-' },
+    { label: t('completeProfile.emailAddress'), value: formData.emailAddress || '-' },
+    { label: t('completeProfile.mobileNumber'), value: formData.mobileNumber ? `${t('completeProfile.countryCode')} ${formData.mobileNumber}` : '-' },
+    { label: t('completeProfile.whatsappNumber'), value: formData.whatsAppNumber ? `${t('completeProfile.countryCode')} ${formData.whatsAppNumber}` : '-' },
   ];
 
   const addressData = [
-    { label: t('completeProfile.addressLine1') || 'Address Line 1', value: formData.addressLine1 || '-' },
-    { label: t('completeProfile.addressLine2') || 'Address Line 2', value: formData.addressLine2 || '-' },
-    { label: t('completeProfile.country') || 'Country', value: formData.country || '-' },
-    { label: t('completeProfile.state') || 'State', value: formData.state || '-' },
-    { label: t('completeProfile.city') || 'City', value: formData.city || '-' },
-    { label: t('completeProfile.pincode') || 'Pincode', value: formData.pincode || '-' },
+    { label: t('completeProfile.addressLine1'), value: formData.addressLine1 || '-' },
+    { label: t('completeProfile.addressLine2'), value: formData.addressLine2 || '-' },
+    { label: t('completeProfile.country'), value: formData.country || '-' },
+    { label: t('completeProfile.state'), value: formData.stateName || formData.state || '-' },
+    { label: t('completeProfile.city'), value: formData.cityName || formData.city || '-' },
+    { label: t('completeProfile.pincode'), value: formData.pincode || '-' },
   ];
 
   const bankData = [
-    { label: t('completeProfile.accountHolderName') || 'Account Holder Name', value: formData.accountHolderName || '-' },
-    { label: t('completeProfile.bankName') || 'Bank Name', value: formData.bankName || '-' },
-    { label: t('completeProfile.accountNumber') || 'Account Number', value: formData.accountNumber || '-' },
-    { label: t('completeProfile.ifscCode') || 'IFSC Code', value: formData.ifscCode || '-' },
-    { label: t('completeProfile.accountType') || 'Account Type', value: formData.accountType || '-' },
+    { label: t('completeProfile.accountHolderName'), value: formData.accountHolderName || '-' },
+    { label: t('completeProfile.bankName'), value: formData.bankName || '-' },
+    { label: t('completeProfile.accountNumber'), value: formData.accountNumber || '-' },
+    { label: t('completeProfile.ifscCode'), value: formData.ifscCode || '-' },
+    { label: t('completeProfile.accountType'), value: formData.accountTypeName || formData.accountType || '-' },
   ];
 
   return (

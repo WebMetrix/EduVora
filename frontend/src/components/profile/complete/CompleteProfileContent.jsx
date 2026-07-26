@@ -40,7 +40,9 @@ export default function CompleteProfileContent() {
     addressLine2: '',
     country: '',
     state: '',
+    stateName: '',
     city: '',
+    cityName: '',
     pincode: '',
 
     // Bank Info
@@ -51,6 +53,7 @@ export default function CompleteProfileContent() {
     branchName: '',
     ifscCode: '',
     accountType: '',
+    accountTypeName: '',
     additionalBankNotes: ''
   });
 
@@ -85,7 +88,9 @@ export default function CompleteProfileContent() {
           addressLine2: data.AddressLine2 || '',
           country: data.Country || '',
           state: data.State || '',
+          stateName: data.StateName || data.State || '',
           city: data.City || '',
+          cityName: data.CityName || data.City || '',
           pincode: data.Pincode || '',
           accountHolderName: data.AccountHolderName || '',
           accountNumber: data.AccountNumber || '',
@@ -94,6 +99,7 @@ export default function CompleteProfileContent() {
           branchName: data.BranchName || '',
           ifscCode: data.IFSCCode || '',
           accountType: data.AccountType || '',
+          accountTypeName: data.AccountTypeName || data.AccountType || '',
           additionalBankNotes: data.AdditionalBankNotes || ''
         });
       } catch (error) {
@@ -134,7 +140,7 @@ export default function CompleteProfileContent() {
 
       {/* Stepper with precise in-between SVG Lines */}
       <div className="flex w-full justify-center mt-6 px-2 lg:px-0">
-        <div className="flex w-full max-w-[480px] lg:max-w-full items-center justify-between">
+        <div className="w-full mx-auto relative z-10 flex items-center justify-between">
           {stepsList.map((stepItem, index) => {
             const isCompleted = step > stepItem.num;
             const isActive = step === stepItem.num;
@@ -151,7 +157,7 @@ export default function CompleteProfileContent() {
                   </div>
 
                   {/* Desktop Text */}
-                  <div className="hidden lg:flex flex-col">
+                  <div className="hidden xl:flex flex-col">
                     <span className={`text-[13px] xl:text-[14px] font-bold ${isCompleted ? 'text-[#4f3bf3]' : isActive ? 'text-slate-900' : 'text-slate-400'}`}>
                       {stepItem.title}
                     </span>
