@@ -1,6 +1,7 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import api from '../../https/axios';
 import { toast } from 'react-toastify';
+import { t } from '../../hooks/useTranslation';
 
 // Auth Thunks
 export const loginUser = createAsyncThunk(
@@ -10,7 +11,7 @@ export const loginUser = createAsyncThunk(
             const response = await api.post('/auth/login', credentials);
             return response.data;
         } catch (error) {
-            return rejectWithValue(error.response?.data?.message || 'Login failed');
+            return rejectWithValue(error.response?.data?.message || t('toast.auth.loginFailedBackup'));
         }
     }
 );
@@ -23,7 +24,7 @@ export const registerUser = createAsyncThunk(
             const response = await api.post('/auth/register', credentials);
             return response.data;
         } catch (error) {
-            return rejectWithValue(error.response?.data?.message || 'Registration failed');
+            return rejectWithValue(error.response?.data?.message || t('toast.auth.registrationFailedBackup'));
         }
     }
 );
@@ -38,7 +39,7 @@ export const googleAuthUser = createAsyncThunk(
             const response = await api.post('/auth/google', { credential });
             return response.data;
         } catch (error) {
-            return rejectWithValue(error.response?.data?.message || 'Google Authentication failed');
+            return rejectWithValue(error.response?.data?.message || t('toast.auth.googleAuthFailedBackup'));
         }
     }
 );
@@ -54,7 +55,7 @@ export const logoutUser = createAsyncThunk(
             sessionStorage.removeItem('sessionid'); // Clear session storage on logout
             return response.data;
         } catch (error) {
-            return rejectWithValue(error.response?.data?.message || 'Logout failed');
+            return rejectWithValue(error.response?.data?.message || t('toast.auth.logoutFailedBackup'));
         }
     }
 );
@@ -68,7 +69,7 @@ export const sendOtp = createAsyncThunk(
             const response = await api.post('/otp/send', emailData);
             return response.data;
         } catch (error) {
-            return rejectWithValue(error.response?.data?.message || 'Failed to send OTP');
+            return rejectWithValue(error.response?.data?.message || t('toast.auth.sendOtpFailedBackup'));
         }
     }
 );
@@ -80,7 +81,7 @@ export const verifyOtp = createAsyncThunk(
             const response = await api.post('/otp/verify', verificationData);
             return response.data;
         } catch (error) {
-            return rejectWithValue(error.response?.data?.message || 'Invalid OTP');
+            return rejectWithValue(error.response?.data?.message || t('toast.auth.invalidOtpBackup'));
         }
     }
 );
@@ -92,7 +93,7 @@ export const resendOtp = createAsyncThunk(
             const response = await api.post('/otp/resend', emailData);
             return response.data;
         } catch (error) {
-            return rejectWithValue(error.response?.data?.message || 'Failed to resend OTP');
+            return rejectWithValue(error.response?.data?.message || t('toast.auth.resendOtpFailedBackup'));
         }
     }
 );
@@ -105,7 +106,7 @@ export const resetPassword = createAsyncThunk(
             const response = await api.post('/password/reset', resetData);
             return response.data;
         } catch (error) {
-            return rejectWithValue(error.response?.data?.message || 'Password reset failed');
+            return rejectWithValue(error.response?.data?.message || t('toast.auth.passwordResetFailedBackup'));
         }
     }
 );
@@ -143,8 +144,8 @@ const authSlice = createSlice({
                 if (action.payload.token) {
                     sessionStorage.setItem('sessionid', action.payload.sessionId);
                 }
-
-                toast.success('Login successful');
+                state.error = null;
+                toast.success(t('toast.auth.loginSuccess'));
             })
             .addCase(loginUser.rejected, (state, action) => {
                 state.loading = false;
@@ -164,8 +165,8 @@ const authSlice = createSlice({
                 if (action.payload.token) {
                     sessionStorage.setItem('sessionid', action.payload.sessionId);
                 }
-
-                toast.success('Registration successful! Please log in.');
+                state.user = action.payload.user;
+                toast.success(t('toast.auth.registerSuccess'));
             })
             .addCase(registerUser.rejected, (state, action) => {
                 state.loading = false;
@@ -187,7 +188,8 @@ const authSlice = createSlice({
                 if (action.payload.token) {
                     sessionStorage.setItem('sessionid', action.payload.sessionId);
                 }
-                toast.success('Google Authentication successful!');
+                state.error = null;
+                toast.success(t('toast.auth.googleSuccess'));
             })
             .addCase(googleAuthUser.rejected, (state, action) => {
                 state.loading = false;
@@ -203,7 +205,7 @@ const authSlice = createSlice({
                 //REMOVE TOKEN FROM SESSION STORAGE ON LOGOUT
                 // sessionStorage.removeItem('sessionid');
 
-                toast.success('Logged out successfully');
+                toast.success(t('toast.auth.logoutSuccess'));
             })
             .addCase(logoutUser.rejected, (state, action) => {
                 toast.error(action.payload);

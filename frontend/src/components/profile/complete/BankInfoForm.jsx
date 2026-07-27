@@ -32,7 +32,7 @@ export default function BankInfoForm({ t, onBack, onNext, formData, updateFormDa
 
   const handleVerify = async () => {
     if (!formData.ifscCode?.trim()) {
-      toast.error('Please enter an IFSC code first');
+      toast.error(t('toast.bank.enterIfscFirst'));
       return;
     }
 
@@ -44,11 +44,11 @@ export default function BankInfoForm({ t, onBack, onNext, formData, updateFormDa
         setVerifiedDetails(response.data.bankDetails);
         updateFormData('bankName', response.data.bankDetails.bankName);
         updateFormData('branchName', response.data.bankDetails.branchName);
-        toast.success(response.data.message || 'IFSC verified successfully');
+        toast.success(response.data.message || t('toast.bank.ifscVerifySuccess'));
       }
     } catch (error) {
       console.error('IFSC verification error:', error);
-      toast.error(error.response?.data?.message || 'Failed to verify IFSC code');
+      toast.error(error.response?.data?.message || t('toast.bank.ifscVerifyFailed'));
     } finally {
       setIsVerifying(false);
     }
@@ -61,7 +61,7 @@ export default function BankInfoForm({ t, onBack, onNext, formData, updateFormDa
     <form className="space-y-6" onSubmit={(e) => {
       e.preventDefault();
       if (formData.accountNumber !== formData.confirmAccountNumber) {
-        toast.error('Account numbers do not match!');
+        toast.error(t('toast.bank.accountNumbersMismatch'));
         return;
       }
       onNext();

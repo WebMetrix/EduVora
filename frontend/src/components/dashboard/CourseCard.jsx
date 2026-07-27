@@ -16,10 +16,13 @@ export default function CourseCard() {
       </div>
 
       <div
-        className="flex-1 bg-linear-to-br from-white/90 to-indigo-50/40 backdrop-blur-xl border border-indigo-100/50 rounded-2xl p-3 sm:p-4 lg:p-5 shadow-sm hover:shadow-[0_8px_30px_rgb(99,102,241,0.15)] hover:border-indigo-300 transition-all duration-300 flex flex-row gap-3 sm:gap-5 group hover:-translate-y-1"
+        className="relative overflow-hidden flex-1 bg-linear-to-br from-white/90 to-indigo-50/40 backdrop-blur-xl border border-indigo-100/50 rounded-2xl p-3 sm:p-4 lg:p-5 shadow-[0_8px_30px_rgb(0,0,0,0.04)] hover:shadow-[0_8px_30px_rgb(99,102,241,0.15)] hover:border-indigo-300 transition-all duration-300 flex flex-row gap-3 sm:gap-5 group hover:-translate-y-1"
       >
+        {/* Decorative background flare */}
+        <div className="absolute top-0 right-0 w-64 h-64 bg-indigo-400/10 rounded-full blur-[80px] -translate-y-1/2 translate-x-1/3 pointer-events-none group-hover:bg-indigo-400/20 transition-colors duration-700" />
+        
         {/* Course Thumbnail */}
-        <div className="relative w-[100px] sm:w-[140px] md:w-[160px] h-auto md:h-full rounded-xl bg-linear-to-br from-[#1E1B4B] via-[#312E81] to-[#1E1B4B] overflow-hidden shrink-0 shadow-inner group-hover:shadow-indigo-900/30 transition-shadow">
+        <div className="relative z-10 w-[100px] sm:w-[140px] md:w-[160px] h-auto md:h-full rounded-xl bg-linear-to-br from-[#1E1B4B] via-[#312E81] to-[#1E1B4B] overflow-hidden shrink-0 shadow-inner group-hover:shadow-indigo-900/30 transition-shadow">
           {/* Decorative shapes */}
           <div className="absolute -top-10 -right-10 w-24 h-24 bg-blue-500/20 rounded-full blur-xl group-hover:bg-blue-500/40 transition-colors duration-500" />
           <div className="absolute -bottom-10 -left-10 w-24 h-24 bg-purple-500/20 rounded-full blur-xl" />
@@ -38,7 +41,7 @@ export default function CourseCard() {
         </div>
 
         {/* Course Info */}
-        <div className="flex-1 flex flex-col justify-between py-2">
+        <div className="relative z-10 flex-1 flex flex-col justify-between py-2">
           <div>
             <h3 className="text-[14px] sm:text-[16px] font-bold text-slate-900 tracking-tight mb-2 sm:mb-3 group-hover:text-indigo-700 transition-colors">
               Digital Marketing Mastery

@@ -252,7 +252,7 @@ Fetches distinct active states from `Tb_Cities` where CountryCode = 'IN'.
 Fetches the complete profile of a user (Core + Desc + Bank) using `LEFT JOIN`s on UUID.
 - **Inputs**: `@UUID VARCHAR(36)`
 
-- **Outputs**: Result Set (UUID, EmailAddress, PrimaryMobile, CreatedDate, UserID, FullName, Username, DateOfBirth, Gender, Nationality, ProfilePicturePath, ContactMobile, WhatsAppNumber, AddressLine1, AddressLine2, Country, State, City, Pincode, AccountHolderName, AccountNumber, BankName, BranchName, IFSCCode, AccountType, AdditionalBankNotes, AboutNotes)
+- **Outputs**: Result Set (UUID, EmailAddress, PrimaryMobile, CreatedDate, IsEmailVerified, UserID, FullName, Username, DateOfBirth, Gender, Nationality, ProfilePicturePath, ContactMobile, WhatsAppNumber, AddressLine1, AddressLine2, Country, State, City, Pincode, AccountHolderName, AccountNumber, BankName, BranchName, IFSCCode, AccountType, AdditionalBankNotes, AboutNotes)
 
 ### `EV_UpdateAboutMe`
 Updates the `AboutNotes` column in `Tb_UserDesc` for a specific user.

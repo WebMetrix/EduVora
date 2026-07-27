@@ -5,6 +5,7 @@ import "dotenv/config"
 import { OAuth2Client } from 'google-auth-library';
 import crypto from 'crypto';
 import logger from '../utils/logger.js';
+import { t } from '../utils/translation.js';
 
 // Initialize the Google Client
 const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
@@ -77,16 +78,16 @@ export const registerUser = async (req, res) => {
         const procResult = result.output.Result;
 
         // 5. Handle SP Outputs
-        if (procResult === -1) return res.status(400).send({ message: 'User already exists with this email or mobile' });
-        if (procResult === -2) return res.status(400).send({ message: 'Username or UserID already taken' });
-        if (procResult === 0) return res.status(500).send({ message: 'System error during registration' });
+        if (procResult === -1) return res.status(400).send({ message: t('api.auth.userExists') });
+        if (procResult === -2) return res.status(400).send({ message: t('api.auth.usernameTaken') });
+        if (procResult === 0) return res.status(500).send({ message: t('api.auth.systemError') });
 
         // 6. Respond on Success (Result === 1)
-        res.status(200).send({ message: 'User registered successfully' });
+        res.status(200).send({ message: t('api.auth.registerSuccess') });
 
     } catch (err) {
         logger.error(`REGISTER ERROR: ${err.message}`, { stack: err.stack });
-        res.status(400).send({ message: 'Something went wrong' });
+        res.status(400).send({ message: t('api.auth.generalError') });
     }
 };
 
@@ -112,10 +113,10 @@ export const logoutUser = async (req, res) => {
         // res.clearCookie('token', { sameSite: 'lax', secure: process.env.NODE_ENV === 'production' });
         res.clearCookie('token', { sameSite: 'none', secure: true });
         // res.redirect('/login');
-        res.status(200).send({ message: 'Logged out successfully' });
+        res.status(200).send({ message: t('api.auth.logoutSuccess') });
     } catch (err) {
         logger.error(`LOGOUT ERROR: ${err.message}`, { stack: err.stack });
-        res.status(500).send({ message: 'Something went wrong during logout' });
+        res.status(500).send({ message: t('api.auth.logoutError') });
     }
 };
 
@@ -133,15 +134,15 @@ export const loginUser = async (req, res) => {
         const procResult = result.output.Result;
 
         // 2. Handle SP Outputs
-        if (procResult === -1) return res.status(400).send({ message: 'User not found' });
-        if (procResult === -2) return res.status(403).send({ message: 'Account is inactive. Please contact support.' });
+        if (procResult === -1) return res.status(400).send({ message: t('api.auth.userNotFound') });
+        if (procResult === -2) return res.status(403).send({ message: t('api.auth.inactiveAccount') });
 
         // 3. User found, validate password
         const user = result.recordset[0];
         const isMatch = await bcrypt.compare(password, user.Password);
 
         if (!isMatch) {
-            return res.status(400).send({ message: 'Invalid credentials' });
+            return res.status(400).send({ message: t('api.auth.invalidCredentials') });
         }
 
         // 4. Sign JWT 
@@ -169,14 +170,14 @@ export const loginUser = async (req, res) => {
         });
 
         res.send({
-            message: 'Login successful', token, sessionId, user: {
+            message: t('api.auth.loginSuccess'), token, sessionId, user: {
                 id: user.UUID, name: user.FullName, email: user.EmailAddress, username: user.Username, role: user.RoleID
             }
         });
 
     } catch (err) {
         logger.error(`LOGIN ERROR: ${err.message}`, { stack: err.stack });
-        res.status(500).send({ message: 'Something went wrong' });
+        res.status(500).send({ message: t('api.auth.loginError') });
     }
 };
 
@@ -238,7 +239,7 @@ export const googleAuthUser = async (req, res) => {
             const createResult = await createReq.execute('dbo.EV_CreateUser');
 
             if (createResult.output.Result !== 1) {
-                return res.status(500).send({ message: 'Failed to create Google user' });
+                return res.status(500).send({ message: t('api.auth.googleError') });
             }
 
             // Set user object structure to match what login requires downstream

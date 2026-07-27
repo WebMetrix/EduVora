@@ -28,7 +28,7 @@ export default function MyProfile() {
           setProfileData(response.data);
         } catch (error) {
         console.error('Error fetching profile:', error);
-        toast.error('Failed to load profile data');
+        toast.error(t('toast.profile.loadFailed'));
       } finally {
         setLoading(false);
       }
@@ -94,7 +94,7 @@ export default function MyProfile() {
           {/* Right Column */}
           <div className="flex flex-col gap-6 min-w-0">
             <AccountOverviewCard t={t} profileData={profileData} />
-            <AccountSecurityCard t={t} />
+            <AccountSecurityCard t={t} profileData={profileData} />
             <SafeInfoCard t={t} className="flex xl:hidden" />
           </div>
         </div>

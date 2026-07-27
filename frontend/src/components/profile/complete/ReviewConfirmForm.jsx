@@ -14,7 +14,7 @@ export default function ReviewConfirmForm({ t, onEditStep, onSubmit, formData })
 
   // const handleComplete = async () => {
   //   if (formData.accountNumber !== formData.confirmAccountNumber) {
-  //     toast.error('Account numbers do not match');
+  //     toast.error(t('toast.bank.accountNumbersMismatch'));
   //     return;
   //   }
 
@@ -37,11 +37,11 @@ export default function ReviewConfirmForm({ t, onEditStep, onSubmit, formData })
   //     };
 
   //     const response = await api.put('/profile/edit', payload);
-  //     toast.success(response.data.message || 'Profile updated successfully!');
+  //     toast.success(response.data.message || t('toast.profile.updateSuccess'));
   //     if (onSubmit) onSubmit();
   //   } catch (error) {
   //     console.error('Update profile error:', error);
-  //     toast.error(error.response?.data?.message || 'Failed to update profile. Please try again.');
+  //     toast.error(error.response?.data?.message || t('toast.profile.updateFailed'));
   //   } finally {
   //     setIsSubmitting(false);
   //   }
@@ -51,7 +51,7 @@ export default function ReviewConfirmForm({ t, onEditStep, onSubmit, formData })
   
   const handleComplete = async () => {
     if (formData.accountNumber !== formData.confirmAccountNumber) {
-      toast.error('Account numbers do not match');
+      toast.error(t('toast.bank.accountNumbersMismatch'));
       return;
     }
 
@@ -95,11 +95,11 @@ export default function ReviewConfirmForm({ t, onEditStep, onSubmit, formData })
         }
       });
       
-      toast.success(response.data.message || 'Profile updated successfully!');
+      toast.success(response.data.message || t('toast.profile.updateSuccess'));
       if (onSubmit) onSubmit();
     } catch (error) {
       console.error('Update profile error:', error);
-      toast.error(error.response?.data?.message || 'Failed to update profile. Please try again.');
+      toast.error(error.response?.data?.message || t('toast.profile.updateFailed'));
     } finally {
       setIsSubmitting(false);
     }

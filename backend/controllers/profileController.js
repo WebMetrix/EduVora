@@ -1,5 +1,6 @@
 import pool, { sql } from "../config/db.js";
 import logger from '../utils/logger.js';
+import { t } from '../utils/translation.js';
 
 // Get Complete User Profile
 export const getUserProfile = async (req, res) => {
@@ -12,7 +13,7 @@ export const getUserProfile = async (req, res) => {
         const result = await request.execute('dbo.EV_GetUserProfile');
 
         if (result.recordset.length === 0) {
-            return res.status(404).send({ message: 'User profile not found.' });
+            return res.status(404).send({ message: t('api.profile.notFound') });
         }
 
         let userProfile = result.recordset[0];
@@ -21,7 +22,7 @@ export const getUserProfile = async (req, res) => {
         res.status(200).send(userProfile);
     } catch (err) {
         logger.error(`GET PROFILE ERROR: ${err.message}`, { stack: err.stack });
-        res.status(500).send({ message: 'Failed to fetch user profile.' });
+        res.status(500).send({ message: t('api.profile.fetchError') });
     }
 };
 
@@ -78,16 +79,16 @@ export const editUser = async (req, res) => {
         const result = await request.execute('dbo.EV_EditUser');
         const procResult = result.output.Result;
 
-        if (procResult === -1) return res.status(404).send({ message: 'User not found.' });
-        if (procResult === -2) return res.status(400).send({ message: 'Username is already taken.' });
-        if (procResult === -3) return res.status(400).send({ message: 'Mobile number is already registered to another account.' });
-        if (procResult === 0) return res.status(500).send({ message: 'System error during profile update.' });
+        if (procResult === -1) return res.status(404).send({ message: t('api.profile.userNotFound') });
+        if (procResult === -2) return res.status(400).send({ message: t('api.profile.usernameTaken') });
+        if (procResult === -3) return res.status(400).send({ message: t('api.profile.mobileTaken') });
+        if (procResult === 0) return res.status(500).send({ message: t('api.profile.systemError') });
 
-        res.status(200).send({ message: 'Profile updated successfully.' });
+        res.status(200).send({ message: t('api.profile.updateSuccess') });
 
     } catch (err) {
         logger.error(`EDIT PROFILE ERROR: ${err.message}`, { stack: err.stack });
-        res.status(500).send({ message: 'Something went wrong while updating the profile.' });
+        res.status(500).send({ message: t('api.profile.updateError') });
     }
 };
 
@@ -96,7 +97,7 @@ export const updateProfilePicture = async (req, res) => {
     const profilePicturePath = req.file ? req.file.path : null;
 
     if (!profilePicturePath) {
-        return res.status(400).send({ message: 'No image provided.' });
+        return res.status(400).send({ message: t('api.profile.noImage') });
     }
 
     try {
@@ -107,13 +108,13 @@ export const updateProfilePicture = async (req, res) => {
         await request.execute('dbo.EV_UpdateProfilePicture');
 
         res.status(200).send({ 
-            message: 'Profile picture updated successfully.',
+            message: t('api.profile.pictureUpdateSuccess'),
             profilePicturePath: profilePicturePath
         });
 
     } catch (err) {
         logger.error(`UPDATE PICTURE ERROR: ${err.message}`, { stack: err.stack });
-        res.status(500).send({ message: 'Something went wrong while updating the picture.' });
+        res.status(500).send({ message: t('api.profile.pictureUpdateError') });
     }
 };
 
@@ -121,7 +122,7 @@ export const updateProfilePicture = async (req, res) => {
 export const checkUsername = async (req, res) => {
     const { username } = req.body;
 
-    if (!username) return res.status(400).send({ message: 'Username is required.' });
+    if (!username) return res.status(400).send({ message: t('api.profile.usernameRequired') });
 
     try {
         const request = pool.request();
@@ -135,7 +136,7 @@ export const checkUsername = async (req, res) => {
         res.status(200).send({ isAvailable: isAvailable === true || isAvailable === 1 });
     } catch (err) {
         logger.error(`CHECK USERNAME ERROR: ${err.message}`, { stack: err.stack });
-        res.status(500).send({ message: 'Error checking username availability.' });
+        res.status(500).send({ message: t('api.profile.usernameCheckError') });
     }
 };
 
@@ -146,7 +147,7 @@ export const getGenders = async (req, res) => {
         res.status(200).send(result.recordset);
     } catch (err) {
         logger.error(`GET GENDERS ERROR: ${err.message}`, { stack: err.stack });
-        res.status(500).send({ message: 'Failed to fetch genders.' });
+        res.status(500).send({ message: t('api.profile.fetchGendersError') });
     }
 };
 
@@ -157,7 +158,7 @@ export const getStates = async (req, res) => {
         res.status(200).send(result.recordset);
     } catch (err) {
         logger.error(`GET STATES ERROR: ${err.message}`, { stack: err.stack });
-        res.status(500).send({ message: 'Failed to fetch states.' });
+        res.status(500).send({ message: t('api.profile.fetchStatesError') });
     }
 };
 
@@ -173,7 +174,7 @@ export const getCities = async (req, res) => {
         res.status(200).send(result.recordset);
     } catch (err) {
         logger.error(`GET CITIES ERROR: ${err.message}`, { stack: err.stack });
-        res.status(500).send({ message: 'Failed to fetch cities.' });
+        res.status(500).send({ message: t('api.profile.fetchCitiesError') });
     }
 };
 
@@ -184,7 +185,7 @@ export const getBankAccountTypes = async (req, res) => {
         res.status(200).send(result.recordset);
     } catch (err) {
         logger.error(`GET BANK TYPES ERROR: ${err.message}`, { stack: err.stack });
-        res.status(500).send({ message: 'Failed to fetch bank account types.' });
+        res.status(500).send({ message: t('api.profile.fetchBankTypesError') });
     }
 };
 
@@ -193,21 +194,21 @@ export const verifyIfsc = async (req, res) => {
     const { ifscCode } = req.params;
 
     if (!ifscCode) {
-        return res.status(400).send({ message: 'IFSC code is required.' });
+        return res.status(400).send({ message: t('api.profile.ifscRequired') });
     }
 
     try {
         const response = await fetch(`${process.env.IFSC_API_URL}/${ifscCode}`);
 
         if (!response.ok) {
-            return res.status(404).send({ message: 'Invalid IFSC code. Please check and try again.' });
+            return res.status(404).send({ message: t('api.profile.invalidIfsc') });
         }
 
         const data = await response.json();
 
         // Send back the specific fields your UI needs to auto-fill
         res.status(200).send({
-            message: 'IFSC verified successfully',
+            message: t('api.profile.ifscVerifySuccess'),
             bankDetails: {
                 bankName: data.BANK,
                 branchName: data.BRANCH,
@@ -218,7 +219,7 @@ export const verifyIfsc = async (req, res) => {
 
     } catch (err) {
         logger.error(`IFSC VERIFICATION ERROR: ${err.message}`, { stack: err.stack });
-        res.status(500).send({ message: 'Failed to verify IFSC code due to a server error.' });
+        res.status(500).send({ message: t('api.profile.ifscVerifyError') });
     }
 };
 
@@ -236,10 +237,10 @@ export const updateAbout = async (req, res) => {
         if (result.recordset && result.recordset[0].Success === 1) {
             res.status(200).send({ message: result.recordset[0].Message });
         } else {
-            res.status(400).send({ message: result.recordset[0].Message || 'Failed to update About Me' });
+            res.status(400).send({ message: result.recordset[0].Message || t('api.profile.aboutUpdateFailed') });
         }
     } catch (err) {
         logger.error(`UPDATE ABOUT ERROR: ${err.message}`, { stack: err.stack });
-        res.status(500).send({ message: 'Server error while updating About Me.' });
+        res.status(500).send({ message: t('api.profile.aboutUpdateError') });
     }
 };

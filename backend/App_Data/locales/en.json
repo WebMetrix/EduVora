@@ -1,0 +1,70 @@
+{
+  "api": {
+    "auth": {
+      "missingToken": "You are not logged in - token missing",
+      "generalError": "Something went wrong",
+      "userExists": "User already exists with this email or mobile",
+      "usernameTaken": "Username or UserID already taken",
+      "systemError": "System error during registration",
+      "registerSuccess": "User registered successfully",
+      "userNotFound": "User not found",
+      "invalidCredentials": "Password is incorrect",
+      "inactiveAccount": "Account is inactive. Please contact support.",
+      "loginSuccess": "Login successful",
+      "loginSystemError": "System error during login",
+      "loginError": "Something went wrong during login",
+      "googleNoEmail": "Google token does not contain an email",
+      "googleError": "Something went wrong during Google Login",
+      "logoutSuccess": "Logged out successfully",
+      "logoutError": "Something went wrong during logout"
+    },
+    "profile": {
+      "notFound": "User profile not found.",
+      "fetchError": "Failed to fetch user profile.",
+      "userNotFound": "User not found.",
+      "usernameTaken": "Username is already taken.",
+      "mobileTaken": "Mobile number is already registered to another account.",
+      "systemError": "System error during profile update.",
+      "updateSuccess": "Profile updated successfully.",
+      "updateError": "Something went wrong while updating the profile.",
+      "noImage": "No image provided.",
+      "pictureUpdateSuccess": "Profile picture updated successfully.",
+      "pictureUpdateError": "Something went wrong while updating the picture.",
+      "usernameRequired": "Username is required.",
+      "usernameCheckError": "Error checking username availability.",
+      "fetchGendersError": "Failed to fetch genders.",
+      "fetchStatesError": "Failed to fetch states.",
+      "fetchCitiesError": "Failed to fetch cities.",
+      "fetchBankTypesError": "Failed to fetch bank account types.",
+      "ifscRequired": "IFSC code is required.",
+      "invalidIfsc": "Invalid IFSC code. Please check and try again.",
+      "ifscVerifySuccess": "IFSC verified successfully",
+      "ifscVerifyError": "Failed to verify IFSC code due to a server error.",
+      "aboutUpdateError": "Server error while updating About Me.",
+      "aboutUpdateFailed": "Failed to update About Me"
+    },
+    "password": {
+      "missingFields": "Missing required fields",
+      "invalidOtp": "Invalid or expired OTP. Please restart the process.",
+      "samePassword": "New password cannot be the same as your current password.",
+      "userNotFound": "User not found",
+      "systemError": "System error during password reset",
+      "resetSuccess": "Password has been reset successfully.",
+      "resetError": "Something went wrong while resetting the password."
+    },
+    "otp": {
+      "emailRequired": "Email address is required",
+      "userNotFound": "User not found or account is inactive.",
+      "templateNotFound": "Email template not found.",
+      "sendSuccess": "OTP sent successfully to your email.",
+      "sendError": "Failed to send OTP email.",
+      "noOtpFound": "No OTP found for this email, or it has expired.",
+      "otpExpired": "OTP has expired. Please request a new one.",
+      "invalidOtp": "Invalid OTP. Please try again.",
+      "verifySuccess": "Email verified successfully.",
+      "verifyError": "Something went wrong during verification.",
+      "resendSuccess": "A new OTP has been sent to your email.",
+      "resendError": "Failed to resend OTP email."
+    }
+  }
+}

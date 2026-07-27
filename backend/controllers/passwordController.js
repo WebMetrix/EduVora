@@ -2,6 +2,7 @@ import bcrypt from 'bcrypt';
 import pool, { sql } from "../config/db.js";
 import logger from '../utils/logger.js';
 import { otpCache } from '../controllers/otpController.js';
+import { t } from '../utils/translation.js';
 
 
 
@@ -9,13 +10,13 @@ export const resetPassword = async (req, res) => {
     const { emailAddress, otp, newPassword } = req.body;
 
     if (!emailAddress || !otp || !newPassword) {
-        return res.status(400).send({ message: 'Missing required fields' });
+        return res.status(400).send({ message: t('api.password.missingFields') });
     }
 
     try {
         const cachedData = otpCache.get(emailAddress);
         if (!cachedData || cachedData.otp !== otp || Date.now() > cachedData.expiresAt) {
-            return res.status(400).send({ message: 'Invalid or expired OTP. Please restart the process.' });
+            return res.status(400).send({ message: t('api.password.invalidOtp') });
         }
 
         // Fetch user to check current password
@@ -29,7 +30,7 @@ export const resetPassword = async (req, res) => {
             const isSameAsOld = await bcrypt.compare(newPassword, currentHash);
             
             if (isSameAsOld) {
-                return res.status(400).send({ message: 'New password cannot be the same as your current password.' });
+                return res.status(400).send({ message: t('api.password.samePassword') });
             }
         }
 
@@ -44,16 +45,16 @@ export const resetPassword = async (req, res) => {
         const result = await request.execute('dbo.EV_ResetPassword');
         const procResult = result.output.Result;
 
-        if (procResult === -1) return res.status(404).send({ message: 'User not found' });
-        if (procResult === 0) return res.status(500).send({ message: 'System error during password reset' });
+        if (procResult === -1) return res.status(404).send({ message: t('api.password.userNotFound') });
+        if (procResult === 0) return res.status(500).send({ message: t('api.password.systemError') });
 
         otpCache.delete(emailAddress);
         logger.info(`Password successfully reset for ${emailAddress}`);
 
-        res.status(200).send({ message: 'Password has been reset successfully.' });
+        res.status(200).send({ message: t('api.password.resetSuccess') });
 
     } catch (err) {
         logger.error(`RESET PASSWORD ERROR: ${err.message}`, { stack: err.stack });
-        res.status(500).send({ message: 'Something went wrong while resetting the password.' });
+        res.status(500).send({ message: t('api.password.resetError') });
     }
 };

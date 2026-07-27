@@ -72,7 +72,7 @@ export default function ForgotRight() {
     e.preventDefault();
     if (!email) {
       setFormErrors({ email: true });
-      return toast.error('Please enter your email');
+      return toast.error(t('toast.auth.enterEmail'));
     }
     setFormErrors({});
     const result = await dispatch(sendOtp({ emailAddress: email, type: 'forgot_password' }));
@@ -85,7 +85,7 @@ export default function ForgotRight() {
 
   const handleVerifyOtp = async () => {
     const otpString = otp.join('');
-    if (otpString.length !== 6) return toast.error('Please enter the complete 6-digit OTP');
+    if (otpString.length !== 6) return toast.error(t('toast.auth.enterCompleteOtp'));
     const result = await dispatch(verifyOtp({ emailAddress: email, otp: otpString }));
     if (verifyOtp.fulfilled.match(result)) {
       setStep(3);
@@ -126,13 +126,10 @@ export default function ForgotRight() {
 
     if (Object.keys(newErrors).length > 0) {
       setFormErrors(newErrors);
-      return toast.error('Please fill in all required fields');
+      return toast.error(t('toast.auth.fillRequiredFields'));
     }
     
-    if (newPassword !== confirmPassword) {
-      setFormErrors({ confirmPassword: true });
-      return toast.error('Passwords do not match');
-    }
+    if (newPassword !== confirmPassword) return toast.error(t('toast.auth.passwordsDoNotMatch'));
     setFormErrors({});
     const otpString = otp.join('');
 
@@ -144,7 +141,7 @@ export default function ForgotRight() {
 
     if (resetPassword.fulfilled.match(result)) {
       setStep(4);
-      toast.success('Password successfully reset');
+      toast.success(t('toast.auth.passwordResetSuccess'));
     }
   };
 

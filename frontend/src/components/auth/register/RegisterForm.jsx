@@ -76,7 +76,7 @@ export default function RegisterForm() {
 
   // Handlers
   const handleVerifyEmailClick = async () => {
-    if (!emailAddress) return toast.error("Please enter an email address first.");
+    if (!emailAddress) return toast.error(t('toast.auth.enterEmailFirst'));
 
     const resultAction = await dispatch(sendOtp({ emailAddress, type: 'register', fullName }));
 
@@ -89,7 +89,7 @@ export default function RegisterForm() {
   };
 
   const handleVerifyOtpSubmit = async () => {
-    if (!otpValue) return toast.error("Please enter the OTP.");
+    if (!otpValue) return toast.error(t('toast.auth.enterOtp'));
 
     const resultAction = await dispatch(verifyOtp({ emailAddress, otp: otpValue }));
 
@@ -129,20 +129,20 @@ export default function RegisterForm() {
 
     if (Object.keys(newErrors).length > 0) {
       setFormErrors(newErrors);
-      return toast.error("Please fill in all required fields.");
+      return toast.error(t('toast.auth.fillRequiredFields'));
     }
     
     setFormErrors({}); // Clear errors if all fields are filled
 
     // Strict form validation
     if (!isEmailVerified) {
-      return toast.error("Please verify your email address first.");
+      return toast.error(t('toast.auth.verifyEmailFirst'));
     }
     if (!passwordsMatch) {
-      return toast.error("Passwords do not match.");
+      return toast.error(t('toast.auth.passwordsDoNotMatch'));
     }
     if (!termsAccepted) {
-      return toast.error("Please accept the terms and conditions.");
+      return toast.error(t('toast.auth.acceptTerms'));
     }
 
     const payload = {

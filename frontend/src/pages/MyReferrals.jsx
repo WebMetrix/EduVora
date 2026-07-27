@@ -58,18 +58,18 @@ export default function MyReferrals() {
               </div>
             </div>
 
-            <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-[1.1fr_1.3fr_1fr] gap-4 lg:gap-6">
-              <div className="w-full min-w-0 h-full"><ReferralProfileCard t={t} /></div>
-              <div className="w-full min-w-0 h-full"><ReferralLinkCard t={t} /></div>
-              <div className="w-full min-w-0 h-full lg:col-span-2 xl:col-span-1"><ReferralQRCodeCard t={t} /></div>
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 lg:gap-6">
+              <div className="w-full min-w-0 h-full lg:col-span-6 xl:col-span-4"><ReferralProfileCard t={t} /></div>
+              <div className="w-full min-w-0 h-full lg:col-span-6 xl:col-span-5"><ReferralLinkCard t={t} /></div>
+              <div className="w-full min-w-0 h-full lg:col-span-12 xl:col-span-3"><ReferralQRCodeCard t={t} /></div>
             </div>
 
             <ReferralStats t={t} />
 
-            <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-[2fr_1.3fr_1.2fr] gap-4 lg:gap-6">
-              <div className="w-full min-w-0 h-full lg:col-span-2 xl:col-span-1"><ReferralFunnel t={t} /></div>
-              <div className="w-full min-w-0 h-full"><ReferralRewards t={t} /></div>
-              <div className="w-full min-w-0 h-full"><ReferralSharingTips t={t} /></div>
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 lg:gap-6">
+              <div className="w-full min-w-0 h-full lg:col-span-12 xl:col-span-5"><ReferralFunnel t={t} /></div>
+              <div className="w-full min-w-0 h-full lg:col-span-6 xl:col-span-4"><ReferralRewards t={t} /></div>
+              <div className="w-full min-w-0 h-full lg:col-span-6 xl:col-span-3"><ReferralSharingTips t={t} /></div>
             </div>
 
             <ReferralsDataTable t={t} />

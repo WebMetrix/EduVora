@@ -21,7 +21,7 @@ export default function LoginForm() {
     e.preventDefault();
 
     if (!emailAddress || !password) {
-      return toast.error("Please enter both email and password.");
+      return toast.error(t('toast.auth.enterEmailPassword'));
     }
 
     const payload = {

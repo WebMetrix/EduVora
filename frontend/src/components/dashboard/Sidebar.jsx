@@ -61,7 +61,7 @@ export default function Sidebar({ isOpen, setIsOpen, isSuperAdmin }) {
 
       {/* Sidebar Container */}
       <aside
-        className={`fixed lg:static inset-y-0 left-0 z-50 w-[260px] h-full flex flex-col bg-white/70 backdrop-blur-xl border-r border-slate-200/60 shadow-[4px_0_24px_rgba(0,0,0,0.02)] transition-transform duration-300 lg:translate-x-0 ${isOpen ? 'translate-x-0' : '-translate-x-full'}`}
+        className={`fixed lg:static inset-y-0 left-0 z-50 w-[240px] h-full flex flex-col bg-white/70 backdrop-blur-xl border-r border-slate-200/60 shadow-[4px_0_24px_rgba(0,0,0,0.02)] transition-transform duration-300 lg:translate-x-0 ${isOpen ? 'translate-x-0' : '-translate-x-full'}`}
       >
         {/* Logo Area */}
         <div className="h-14 flex items-center justify-between px-6 border-b border-slate-100 shrink-0">

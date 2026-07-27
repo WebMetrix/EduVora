@@ -69,7 +69,7 @@ export default function MobileForgot() {
 
   const handleSendOtp = async (e) => {
     e.preventDefault();
-    if (!email) return toast.error('Please enter your email');
+    if (!email) return toast.error(t('toast.auth.enterEmail'));
     const result = await dispatch(sendOtp({ emailAddress: email, type: 'forgot_password' }));
     if (sendOtp.fulfilled.match(result)) {
       setStep(2);
@@ -80,7 +80,7 @@ export default function MobileForgot() {
 
   const handleVerifyOtp = async () => {
     const otpString = otp.join('');
-    if (otpString.length !== 6) return toast.error('Please enter the complete 6-digit OTP');
+    if (otpString.length !== 6) return toast.error(t('toast.auth.enterCompleteOtp'));
     const result = await dispatch(verifyOtp({ emailAddress: email, otp: otpString }));
     if (verifyOtp.fulfilled.match(result)) {
       setStep(3);
@@ -114,7 +114,7 @@ export default function MobileForgot() {
 
   const handleResetPassword = async (e) => {
     e.preventDefault();
-    if (newPassword !== confirmPassword) return toast.error('Passwords do not match');
+    if (newPassword !== confirmPassword) return toast.error(t('toast.auth.passwordsDoNotMatch'));
     const otpString = otp.join('');
 
     const result = await dispatch(resetPassword({
@@ -125,7 +125,7 @@ export default function MobileForgot() {
 
     if (resetPassword.fulfilled.match(result)) {
       setStep(4);
-      toast.success('Password successfully reset');
+      toast.success(t('toast.auth.passwordResetSuccess'));
     }
   };
 

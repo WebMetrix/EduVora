@@ -43,7 +43,7 @@ export default function PersonalInformationCard({ t, profileData, onPictureUpdat
             }
         } catch (error) {
             console.error("Upload error", error);
-            toast.error(error.response?.data?.message || 'Failed to update picture.');
+            toast.error(error.response?.data?.message || t('toast.profile.pictureUpdateFailed'));
         } finally {
             setIsUploading(false);
             event.target.value = null;

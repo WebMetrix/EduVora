@@ -6,6 +6,51 @@
     "editing": "Validating Credentials",
     "processing":"Saving"
   },
+  "toast": {
+    "auth": {
+      "loginSuccess": "Login successful",
+      "registerSuccess": "Registration successful! Please log in.",
+      "googleSuccess": "Google Authentication successful!",
+      "logoutSuccess": "Logged out successfully",
+      "logoutFailed": "Failed to logout",
+      "enterEmailFirst": "Please enter an email address first.",
+      "enterOtp": "Please enter the OTP.",
+      "fillRequiredFields": "Please fill in all required fields.",
+      "verifyEmailFirst": "Please verify your email address first.",
+      "passwordsDoNotMatch": "Passwords do not match.",
+      "acceptTerms": "Please accept the terms and conditions.",
+      "enterEmailPassword": "Please enter both email and password.",
+      "enterEmail": "Please enter your email",
+      "enterCompleteOtp": "Please enter the complete 6-digit OTP",
+      "passwordResetSuccess": "Password successfully reset",
+      "loginFailedBackup": "Login failed",
+      "registrationFailedBackup": "Registration failed",
+      "googleAuthFailedBackup": "Google Authentication failed",
+      "logoutFailedBackup": "Logout failed",
+      "sendOtpFailedBackup": "Failed to send OTP",
+      "invalidOtpBackup": "Invalid OTP",
+      "resendOtpFailedBackup": "Failed to resend OTP",
+      "passwordResetFailedBackup": "Password reset failed"
+    },
+    "profile": {
+      "loadFailed": "Failed to load profile data",
+      "updateSuccess": "Profile updated successfully!",
+      "updateFailed": "Failed to update profile. Please try again.",
+      "pictureUpdateFailed": "Failed to update picture.",
+      "aboutUpdateSuccess": "About Me updated successfully!",
+      "aboutUpdateFailed": "Failed to update About Me"
+    },
+    "bank": {
+      "enterIfscFirst": "Please enter an IFSC code first",
+      "ifscVerifySuccess": "IFSC verified successfully",
+      "ifscVerifyFailed": "Failed to verify IFSC code",
+      "accountNumbersMismatch": "Account numbers do not match!"
+    },
+    "referral": {
+      "codeCopied": "Referral code copied!",
+      "linkCopied": "Referral link copied!"
+    }
+  },
   "login": {
     "title": "Welcome Back!",
     "subtitle": "Login to continue your learning journey",
@@ -364,6 +409,8 @@
       "kycStatus": "KYC Status",
       "kycStatusDesc": "Complete your KYC to increase transaction limits",
       "verified": "Verified",
+      "notVerified": "Not Verified",
+      "emailNotVerifiedDesc": "Please verify your email address to secure your account",
       "pending": "Pending",
       "verifyNow": "Verify Now"
     },

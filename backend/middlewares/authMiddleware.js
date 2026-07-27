@@ -1,4 +1,6 @@
 import jwt from 'jsonwebtoken';
+import logger from '../utils/logger.js';
+import { t } from '../utils/translation.js';
 import "dotenv/config";
 
 export const isLoggedIn = (req, res, next) => {
@@ -8,7 +10,7 @@ export const isLoggedIn = (req, res, next) => {
     let token = req.cookies?.token;
 
     if (!token) {
-        return res.status(401).send({ message: 'You are not logged in - token missing' });
+        return res.status(401).send({ message: t('api.auth.missingToken') });
     }
 
     try {
@@ -16,6 +18,6 @@ export const isLoggedIn = (req, res, next) => {
         req.user = data;
         next();
     } catch (err) {
-        return res.status(401).send({ message: 'Something went wrong' });
+        return res.status(401).send({ message: t('api.auth.generalError') });
     }
 };

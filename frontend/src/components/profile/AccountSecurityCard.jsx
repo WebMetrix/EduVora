@@ -1,6 +1,8 @@
 import { Shield } from 'lucide-react';
 
-export default function AccountSecurityCard({ t }) {
+export default function AccountSecurityCard({ t, profileData }) {
+    const isEmailVerified = profileData?.IsEmailVerified;
+
     return (
         <div className="bg-white/60 backdrop-blur-xl border border-white/60 rounded-2xl p-6 shadow-[0_4px_24px_rgba(0,0,0,0.02)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_8px_30px_rgba(79,70,229,0.15)] hover:border-indigo-200/50">
             <div className="flex items-center gap-3 mb-6">
@@ -14,9 +16,15 @@ export default function AccountSecurityCard({ t }) {
                 <div className="flex flex-col gap-1.5">
                     <div className="flex items-center justify-between">
                         <span className="text-[13px] font-bold text-slate-900">{t('profile.security.emailVerified')}</span>
-                        <span className="px-3 py-1 bg-emerald-100 text-emerald-700 text-[10px] font-bold uppercase tracking-wider rounded-md">{t('profile.security.verified')}</span>
+                        {isEmailVerified ? (
+                            <span className="px-3 py-1 bg-emerald-100 text-emerald-700 text-[10px] font-bold uppercase tracking-wider rounded-md">{t('profile.security.verified')}</span>
+                        ) : (
+                            <span className="px-3 py-1 bg-red-100 text-red-700 text-[10px] font-bold uppercase tracking-wider rounded-md">{t('profile.security.notVerified')}</span>
+                        )}
                     </div>
-                    <p className="text-[12px] text-slate-500 font-medium leading-relaxed">{t('profile.security.emailVerifiedDesc')}</p>
+                    <p className="text-[12px] text-slate-500 font-medium leading-relaxed">
+                        {isEmailVerified ? t('profile.security.emailVerifiedDesc') : t('profile.security.emailNotVerifiedDesc')}
+                    </p>
                 </div>
 
                 <div className="h-px bg-slate-200/60" />

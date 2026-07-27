@@ -28,12 +28,12 @@ export default function AboutMeCard({ t, profileData, onUpdate }) {
         setIsSaving(true);
         try {
             const response = await api.put('/profile/updateAbout', { aboutNotes: aboutText });
-            toast.success(response.data.message || 'About Me updated successfully!');
+            toast.success(response.data.message || t('toast.profile.aboutUpdateSuccess'));
             setIsEditing(false);
             if (onUpdate) onUpdate();
         } catch (error) {
             console.error('Failed to update About Me:', error);
-            toast.error(error.response?.data?.message || 'Failed to update About Me');
+            toast.error(error.response?.data?.message || t('toast.profile.aboutUpdateFailed'));
         } finally {
             setIsSaving(false);
         }

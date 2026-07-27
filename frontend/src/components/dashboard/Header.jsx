@@ -72,7 +72,7 @@ export default function Header({ toggleSidebar, isSuperAdmin }) {
         navigate('/login'); // Redirect to login page after logout
       }
     } catch (error) {
-      toast.error('Failed to logout');
+      toast.error(t('toast.auth.logoutFailed'));
     }
   };
 
