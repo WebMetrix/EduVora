@@ -2,9 +2,9 @@ import React from 'react';
 import { Copy, Crown } from 'lucide-react';
 import { toast } from 'react-toastify';
 
-export default function ReferralProfileCard({ t }) {
+export default function ReferralProfileCard({ t, profile }) {
   const handleCopy = () => {
-    navigator.clipboard.writeText("PRY12345");
+    navigator.clipboard.writeText(profile?.ReferralLink || t('common.loading'));
     toast.success(t('toast.referral.codeCopied'));
   };
 
@@ -39,9 +39,9 @@ export default function ReferralProfileCard({ t }) {
 
       <div className="relative z-10 mt-4 lg:mt-5">
         <div className="text-[12px] text-indigo-200 mb-1.5">{t('myReferrals.referralCode')}</div>
-        <div className="flex items-center gap-0 w-fit group cursor-pointer" onClick={handleCopy}>
-          <div className="border border-indigo-400/30 bg-[#1a1446]/60 backdrop-blur-md px-4 py-2 lg:py-2.5 rounded-l-xl text-[16px] lg:text-[18px] font-bold tracking-wider group-hover:bg-[#1a1446]/80 transition-all duration-300">
-            PRY12345
+        <div className="flex items-center gap-0 w-fit group cursor-pointer max-w-full" onClick={handleCopy}>
+          <div className="border border-indigo-400/30 bg-[#1a1446]/60 backdrop-blur-md px-4 py-2 lg:py-2.5 rounded-l-xl text-[14px] lg:text-[15px] font-bold tracking-wider group-hover:bg-[#1a1446]/80 transition-all duration-300 truncate max-w-50">
+            {profile?.ReferralLink || t('common.loading')}
           </div>
           <button className="border border-l-0 border-indigo-400/30 bg-[#1a1446]/60 group-hover:bg-[#4f3bf3] transition-all duration-300 px-3 lg:px-4 py-2 lg:py-2.5 rounded-r-xl flex items-center justify-center">
             <Copy className="w-4 h-4 lg:w-5 lg:h-5 text-indigo-200 group-hover:text-white group-hover:scale-110 transition-transform duration-300" />

@@ -6,6 +6,7 @@ import Sidebar from '../components/dashboard/Sidebar';
 import Header from '../components/dashboard/Header';
 import Footer from '../components/dashboard/Footer';
 import BottomNav from '../components/dashboard/BottomNav';
+import api from '../https/axios';
 
 import ReferralProfileCard from '../components/referrals/ReferralProfileCard';
 import ReferralLinkCard from '../components/referrals/ReferralLinkCard';
@@ -19,6 +20,19 @@ import ReferralsDataTable from '../components/referrals/ReferralsDataTable';
 export default function MyReferrals() {
   const { t } = useTranslation();
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [profile, setProfile] = useState(null);
+
+  useEffect(() => {
+    const fetchProfile = async () => {
+      try {
+        const response = await api.get('/profile');
+        setProfile(response.data);
+      } catch (error) {
+        console.error("Failed to fetch profile", error);
+      }
+    };
+    fetchProfile();
+  }, []);
 
   useEffect(() => {
     const handleResize = () => {
@@ -59,7 +73,7 @@ export default function MyReferrals() {
             </div>
 
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 lg:gap-6">
-              <div className="w-full min-w-0 h-full lg:col-span-6 xl:col-span-4"><ReferralProfileCard t={t} /></div>
+              <div className="w-full min-w-0 h-full lg:col-span-6 xl:col-span-4"><ReferralProfileCard t={t} profile={profile} /></div>
               <div className="w-full min-w-0 h-full lg:col-span-6 xl:col-span-5"><ReferralLinkCard t={t} /></div>
               <div className="w-full min-w-0 h-full lg:col-span-12 xl:col-span-3"><ReferralQRCodeCard t={t} /></div>
             </div>

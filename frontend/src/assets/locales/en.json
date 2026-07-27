@@ -3,6 +3,7 @@
     "sending": "Sending...",
     "verifying": "Verifying...",
     "loadingDots": "...",
+    "loading": "Loading...",
     "editing": "Validating Credentials",
     "processing":"Saving"
   },
