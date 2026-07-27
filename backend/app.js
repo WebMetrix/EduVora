@@ -11,6 +11,7 @@ import authRoutes from "./routes/authRoutes.js";
 import otpRoutes from "./routes/otpRoutes.js";
 import profileRoutes from "./routes/profileRoutes.js";
 import passwordRoutes from './routes/passwordRoutes.js';
+import referralRoutes from './routes/referralRoutes.js';
 
 
 // Cors configuration
@@ -47,6 +48,7 @@ app.use("/auth", authRoutes);
 app.use('/otp', otpRoutes);
 app.use('/profile', profileRoutes);
 app.use('/password', passwordRoutes);
+app.use('/referral', referralRoutes);
 
 
 

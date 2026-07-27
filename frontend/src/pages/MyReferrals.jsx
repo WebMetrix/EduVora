@@ -46,7 +46,7 @@ export default function MyReferrals() {
 
         <main className="flex-1 min-w-0 overflow-y-auto custom-scrollbar p-4 lg:p-6 pb-[90px] lg:pb-6">
           <div className="max-w-[1400px] mx-auto min-w-0 flex flex-col gap-5 lg:gap-6">
-            
+
             <div>
               <h1 className="text-[24px] lg:text-[28px] font-bold text-slate-900 mb-1">
                 {t('myReferrals.title')}

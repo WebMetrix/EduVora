@@ -1,6 +1,7 @@
 import pool, { sql } from "../config/db.js";
 import logger from '../utils/logger.js';
 import { t } from '../utils/translation.js';
+import { encryptUserId } from '../utils/encryption.js';
 
 // Get Complete User Profile
 export const getUserProfile = async (req, res) => {
@@ -17,6 +18,11 @@ export const getUserProfile = async (req, res) => {
         }
 
         let userProfile = result.recordset[0];
+
+        // Encrypt their UserID to generate the ReferralLink securely
+        if (userProfile && userProfile.UserID) {
+            userProfile.ReferralLink = encryptUserId(userProfile.UserID);
+        }
 
         // Return the first record (since UUID is unique)
         res.status(200).send(userProfile);
@@ -107,7 +113,7 @@ export const updateProfilePicture = async (req, res) => {
 
         await request.execute('dbo.EV_UpdateProfilePicture');
 
-        res.status(200).send({ 
+        res.status(200).send({
             message: t('api.profile.pictureUpdateSuccess'),
             profilePicturePath: profilePicturePath
         });

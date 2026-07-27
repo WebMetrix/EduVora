@@ -20,7 +20,7 @@ export default function CourseCard() {
       >
         {/* Decorative background flare */}
         <div className="absolute top-0 right-0 w-64 h-64 bg-indigo-400/10 rounded-full blur-[80px] -translate-y-1/2 translate-x-1/3 pointer-events-none group-hover:bg-indigo-400/20 transition-colors duration-700" />
-        
+
         {/* Course Thumbnail */}
         <div className="relative z-10 w-[100px] sm:w-[140px] md:w-[160px] h-auto md:h-full rounded-xl bg-linear-to-br from-[#1E1B4B] via-[#312E81] to-[#1E1B4B] overflow-hidden shrink-0 shadow-inner group-hover:shadow-indigo-900/30 transition-shadow">
           {/* Decorative shapes */}
@@ -71,7 +71,7 @@ export default function CourseCard() {
             </div>
 
             <p className="hidden sm:block text-[12px] text-slate-600 leading-relaxed mb-2">
-              Learn the essential strategies of digital marketing and grow your online business.
+              Learn the essential strategies of digital marketing and grow your online business. HARDCODED
             </p>
           </div>
 

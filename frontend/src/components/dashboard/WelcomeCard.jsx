@@ -1,9 +1,30 @@
+import { useState, useEffect } from 'react';
 import { useTranslation } from '../../hooks/useTranslation';
 import { ArrowRight, Award } from 'lucide-react';
 import { motion } from 'framer-motion';
+import api from '../../https/axios';
 
 export default function WelcomeCard() {
   const { t } = useTranslation();
+  const [profileName, setProfileName] = useState(localStorage.getItem('cachedProfileName') || '');
+
+  useEffect(() => {
+    const fetchProfile = async () => {
+      try {
+        const response = await api.get('/profile');
+        if (response.data && response.data.FullName) {
+          setProfileName(response.data.FullName);
+          localStorage.setItem('cachedProfileName', response.data.FullName);
+        }
+      } catch (error) {
+        console.error('Error fetching profile for welcome card:', error);
+      }
+    };
+    fetchProfile();
+  }, []);
+
+  const rawName = profileName || t('dashboard.mock.userName');
+  const firstName = rawName.split(' ')[0];
 
   return (
     <div 
@@ -18,7 +39,7 @@ export default function WelcomeCard() {
           {t('dashboard.welcome.greeting')}
         </p>
         <h2 className="text-[26px] lg:text-[28px] leading-[1.1] font-extrabold text-slate-900 mb-2 tracking-tight flex flex-wrap items-center gap-x-2">
-          {t('dashboard.mock.userName')}
+          {firstName}
           <motion.span 
             animate={{ rotate: [0, 14, -8, 14, -4, 10, 0] }}
             transition={{ duration: 2.5, repeat: Infinity, repeatDelay: 5 }}

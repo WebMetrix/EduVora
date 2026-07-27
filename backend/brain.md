@@ -291,3 +291,9 @@ Updates the SessionId for a user across `Tb_User` and `Tb_UserDesc` tables.
 Fetches the file repository path based on the document type.
 - **Inputs**: `@DocumentType VARCHAR(100)`
 - **Outputs**: Result Set (`path`)
+
+### `EV_AssignReferral`
+Assigns a referral by establishing a relationship between a Sponsor and a new User, decoupled from the core signup flow.
+- **Inputs**: `@NewUserUUID VARCHAR(36)`, `@SponsorUserID VARCHAR(100)`
+- **Outputs**: `@Result INT` (1 = Success, -1 = Sponsor/User not found, 0 = System Error)
+- **Updates**: Inserts into `Tb_Referral` (Status = 2) and `Tb_UserRelationship`.
