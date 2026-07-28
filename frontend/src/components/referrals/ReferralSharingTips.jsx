@@ -1,14 +1,60 @@
 import React from 'react';
 import { Lightbulb, ChevronRight } from 'lucide-react';
 import { FaWhatsapp, FaFacebook, FaTelegram, FaInstagram, FaLinkedin } from 'react-icons/fa';
+import { toast } from 'react-toastify';
 
-export default function ReferralSharingTips({ t }) {
+export default function ReferralSharingTips({ t, profile }) {
+  const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+  
+  const referralCode = profile?.ReferralCode || '';
+  const baseUrl = import.meta.env.VITE_REFERRAL_URL;
+  const url = referralCode ? `${baseUrl}?ref=${referralCode}` : baseUrl;
+  const text = "Join EduVora using my referral!";
+
+  const handleShare = async (platform) => {
+    switch (platform) {
+      case 'whatsapp': {
+        const whatsappMsg = `${text} ${url}`;
+        window.open(
+          isMobile
+            ? `https://wa.me/?text=${encodeURIComponent(whatsappMsg)}`
+            : `https://web.whatsapp.com/send?text=${encodeURIComponent(whatsappMsg)}`,
+          '_blank'
+        );
+        break;
+      }
+      case 'facebook':
+        window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`, '_blank');
+        break;
+      case 'telegram':
+        window.open(`https://t.me/share/url?url=${encodeURIComponent(url)}&text=${encodeURIComponent(text)}`, '_blank');
+        break;
+      case 'instagram':
+        if (isMobile && navigator.share) {
+          try {
+            await navigator.share({ title: "EduVora", text, url });
+          } catch (err) {
+            console.error(err);
+          }
+        } else {
+          navigator.clipboard.writeText(url);
+          toast.success("Copied! Paste into Instagram Story or DM");
+        }
+        break;
+      case 'linkedin':
+        window.open(`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(url)}`, '_blank');
+        break;
+      default:
+        break;
+    }
+  };
+
   const tips = [
-    { label: t('myReferrals.shareOnWhatsApp'), icon: FaWhatsapp, color: "text-[#25D366]", bg: "bg-[#25D366]/10", borderColor: "border-[#25D366]/30", hoverShadow: "hover:shadow-lg hover:border-[#25D366]/50" },
-    { label: t('myReferrals.shareOnFacebook'), icon: FaFacebook, color: "text-[#1877F2]", bg: "bg-[#1877F2]/10", borderColor: "border-[#1877F2]/30", hoverShadow: "hover:shadow-lg hover:border-[#1877F2]/50" },
-    { label: t('myReferrals.shareOnTelegram'), icon: FaTelegram, color: "text-[#0088cc]", bg: "bg-[#0088cc]/10", borderColor: "border-[#0088cc]/30", hoverShadow: "hover:shadow-lg hover:border-[#0088cc]/50" },
-    { label: t('myReferrals.shareOnInstagram'), icon: FaInstagram, color: "text-[#E4405F]", bg: "bg-[#E4405F]/10", borderColor: "border-[#E4405F]/30", hoverShadow: "hover:shadow-lg hover:border-[#E4405F]/50" },
-    { label: t('myReferrals.shareOnLinkedIn'), icon: FaLinkedin, color: "text-[#0A66C2]", bg: "bg-[#0A66C2]/10", borderColor: "border-[#0A66C2]/30", hoverShadow: "hover:shadow-lg hover:border-[#0A66C2]/50" }
+    { id: 'whatsapp', label: t('myReferrals.shareOnWhatsApp'), icon: FaWhatsapp, color: "text-[#25D366]", bg: "bg-[#25D366]/10", borderColor: "border-[#25D366]/30", hoverShadow: "hover:shadow-lg hover:border-[#25D366]/50" },
+    { id: 'facebook', label: t('myReferrals.shareOnFacebook'), icon: FaFacebook, color: "text-[#1877F2]", bg: "bg-[#1877F2]/10", borderColor: "border-[#1877F2]/30", hoverShadow: "hover:shadow-lg hover:border-[#1877F2]/50" },
+    { id: 'telegram', label: t('myReferrals.shareOnTelegram'), icon: FaTelegram, color: "text-[#0088cc]", bg: "bg-[#0088cc]/10", borderColor: "border-[#0088cc]/30", hoverShadow: "hover:shadow-lg hover:border-[#0088cc]/50" },
+    { id: 'instagram', label: t('myReferrals.shareOnInstagram'), icon: FaInstagram, color: "text-[#E4405F]", bg: "bg-[#E4405F]/10", borderColor: "border-[#E4405F]/30", hoverShadow: "hover:shadow-lg hover:border-[#E4405F]/50" },
+    { id: 'linkedin', label: t('myReferrals.shareOnLinkedIn'), icon: FaLinkedin, color: "text-[#0A66C2]", bg: "bg-[#0A66C2]/10", borderColor: "border-[#0A66C2]/30", hoverShadow: "hover:shadow-lg hover:border-[#0A66C2]/50" }
   ];
 
   return (
@@ -25,7 +71,7 @@ export default function ReferralSharingTips({ t }) {
 
       <div className="relative z-10 flex flex-col justify-between flex-1 gap-1">
         {tips.map((tip, idx) => (
-          <button key={idx} className={`flex items-center justify-between py-1 px-1.5 lg:py-1.5 lg:px-2 rounded-xl border bg-white hover:-translate-y-1 transition-all duration-300 group shadow-sm ${tip.borderColor} ${tip.hoverShadow}`}>
+          <button onClick={() => handleShare(tip.id)} key={idx} className={`flex items-center justify-between py-1 px-1.5 lg:py-1.5 lg:px-2 rounded-xl border bg-white hover:-translate-y-1 transition-all duration-300 group shadow-sm ${tip.borderColor} ${tip.hoverShadow}`}>
             <div className="flex items-center gap-2">
               <div className={`w-5 h-5 lg:w-6 lg:h-6 rounded-full flex items-center justify-center shrink-0 transition-transform duration-300 group-hover:scale-110 ${tip.bg}`}>
                 <tip.icon className={`w-3 h-3 lg:w-3.5 lg:h-3.5 ${tip.color}`} />

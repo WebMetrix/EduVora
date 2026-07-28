@@ -6,6 +6,7 @@ import { OAuth2Client } from 'google-auth-library';
 import crypto from 'crypto';
 import logger from '../utils/logger.js';
 import { t } from '../utils/translation.js';
+import { decryptUserId } from '../utils/encryption.js';
 
 // Initialize the Google Client
 const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
@@ -48,6 +49,11 @@ export const registerUser = async (req, res) => {
         const random = Math.floor(1000 + Math.random() * 9000); // Random 4-digit number
         const derivedUserID = `EV-${year}-${random}`;
 
+        // NEW: decode the referal code 
+        let sponsorUserId = null;
+        if (referralCode) {
+            sponsorUserId = decryptUserId(referralCode);
+        }
 
         // 2. Hash Password
         const salt = await bcrypt.genSalt(10);
@@ -65,7 +71,7 @@ export const registerUser = async (req, res) => {
         request.input('EmailAddress', sql.VarChar(150), emailAddress);
         request.input('MobileNumber', sql.VarChar(20), mobileNumber || null);
         request.input('Password', sql.VarChar(255), hash);
-        request.input('ReferralCode', sql.VarChar(50), referralCode || null);
+        request.input('ReferralCode', sql.VarChar(50), sponsorUserId);
         request.input('SessionId', sql.VarChar(255), sessionId);
         request.input('SignupMethod', sql.VarChar(50), '1');    // 1 = Standard
         request.input('UserID', sql.VarChar(100), derivedUserID);
@@ -80,6 +86,7 @@ export const registerUser = async (req, res) => {
         // 5. Handle SP Outputs
         if (procResult === -1) return res.status(400).send({ message: t('api.auth.userExists') });
         if (procResult === -2) return res.status(400).send({ message: t('api.auth.usernameTaken') });
+        if (procResult === -3) return res.status(400).send({ message: t('api.auth.invalidReferral') });
         if (procResult === 0) return res.status(500).send({ message: t('api.auth.systemError') });
 
         // 6. Respond on Success (Result === 1)

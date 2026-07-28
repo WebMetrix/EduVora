@@ -17,7 +17,7 @@ import referralRoutes from './routes/referralRoutes.js';
 // Cors configuration
 app.use(cors({
     origin: [
-        "http://localhost:5173"       
+        "http://localhost:5173"
     ],
     credentials: true, // This allows the cookies to be sent back and forth
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],

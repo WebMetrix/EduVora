@@ -4,11 +4,16 @@ import { toast } from 'react-toastify';
 
 export default function ReferralLinkCard({ t, profile }) {
   const referralCode = profile?.ReferralCode || '';
-  const link = referralCode ? `${window.location.origin}/register?ref=${referralCode}` : `${window.location.origin}/register`;
+  const baseUrl = import.meta.env.VITE_REFERRAL_URL;
+  const link = referralCode ? `${baseUrl}?ref=${referralCode}` : baseUrl;
 
   const handleCopy = () => {
     navigator.clipboard.writeText(link);
     toast.success(t('toast.referral.linkCopied'));
+  };
+
+  const handleOpenLink = () => {
+    window.open(link, '_blank', 'noopener,noreferrer');
   };
 
   return (
@@ -44,7 +49,7 @@ export default function ReferralLinkCard({ t, profile }) {
             {t('myReferrals.share')}
           </button>
         </div>
-        <button className="w-full bg-white border border-slate-200 text-slate-700 hover:bg-slate-50 py-2 rounded-xl text-[12px] lg:text-[13px] font-bold flex items-center justify-center gap-1.5 lg:gap-2 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-md active:scale-95 group">
+        <button onClick={handleOpenLink} className="w-full bg-white border border-slate-200 text-slate-700 hover:bg-slate-50 py-2 rounded-xl text-[12px] lg:text-[13px] font-bold flex items-center justify-center gap-1.5 lg:gap-2 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-md active:scale-95 group">
           <ExternalLink className="w-4 h-4 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform duration-300" />
           {t('myReferrals.openLink')}
         </button>

@@ -40,7 +40,7 @@ export default function MyReferrals() {
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 lg:gap-6">
         <div className="w-full min-w-0 h-full lg:col-span-12 2xl:col-span-5"><ReferralFunnel t={t} /></div>
         <div className="w-full min-w-0 h-full lg:col-span-6 2xl:col-span-4"><ReferralRewards t={t} /></div>
-        <div className="w-full min-w-0 h-full lg:col-span-6 2xl:col-span-3"><ReferralSharingTips t={t} /></div>
+        <div className="w-full min-w-0 h-full lg:col-span-6 2xl:col-span-3"><ReferralSharingTips t={t} profile={profile} /></div>
       </div>
 
       <ReferralsDataTable t={t} />

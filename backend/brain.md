@@ -227,9 +227,9 @@ Checks if a given username is available.
 - **Outputs**: `@IsAvailable BIT`
 
 ### `EV_CreateUser`
-Creates a new user record in `Tb_User` and `Tb_UserDesc`. Handles default roles and duplicate checks (email/mobile/username).
+Creates a new user record in `Tb_User` and `Tb_UserDesc`. Handles default roles, duplicate checks (email/mobile/username), and strictly enforces referral assignments.
 - **Inputs**: `@UUID`, `@FullName`, `@EmailAddress`, `@MobileNumber`, `@Password`, `@ReferralCode`, `@SessionId`, `@SignupMethod`, `@UserID`, `@Username`, `@RoleID`
-- **Outputs**: `@Result INT` (1 = Success, -1 = Email/Mobile exists, -2 = UserID/Username taken, 0 = Error)
+- **Outputs**: `@Result INT` (1 = Success, -1 = Email/Mobile exists, -2 = UserID/Username taken, -3 = Missing or Invalid Referral Code, 0 = Error)
 
 ### `EV_EditUser`
 Updates a user's core, personal, contact, address, and bank information based on UUID. Does NOT allow updating the Username.
@@ -293,7 +293,7 @@ Fetches the file repository path based on the document type.
 - **Outputs**: Result Set (`path`)
 
 ### `EV_AssignReferral`
-Assigns a referral by establishing a relationship between a Sponsor and a new User, decoupled from the core signup flow.
+Assigns a referral by establishing a relationship between a Sponsor and a new User. It is now strictly coupled and verified within the `EV_CreateUser` transaction.
 - **Inputs**: `@NewUserUUID VARCHAR(36)`, `@SponsorUserID VARCHAR(100)`
-- **Outputs**: `@Result INT` (1 = Success, -1 = Sponsor/User not found, 0 = System Error)
+- **Outputs**: `@Result INT` (1 = Success, -1 = Sponsor/User not found or ID is NULL, 0 = System Error)
 - **Updates**: Inserts into `Tb_Referral` (Status = 2) and `Tb_UserRelationship`.

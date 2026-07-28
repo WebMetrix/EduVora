@@ -49,7 +49,9 @@
     },
     "referral": {
       "codeCopied": "Referral code copied!",
-      "linkCopied": "Referral link copied!"
+      "linkCopied": "Referral link copied!",
+      "pngDownloaded": "QR Code downloaded as PNG!",
+      "pdfDownloaded": "QR Code downloaded as PDF!"
     }
   },
   "login": {
@@ -541,7 +543,7 @@
     "inProgress": "In Progress",
     "locked": "Locked",
     "sharingTips": "Sharing Tips",
-    "shareOnWhatsApp": "Share on WhatsApp Status",
+    "shareOnWhatsApp": "Share on WhatsApp",
     "shareOnFacebook": "Share on Facebook",
     "shareOnTelegram": "Share on Telegram",
     "shareOnInstagram": "Share on Instagram",

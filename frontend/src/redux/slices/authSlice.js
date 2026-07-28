@@ -166,7 +166,7 @@ const authSlice = createSlice({
                     sessionStorage.setItem('sessionid', action.payload.sessionId);
                 }
                 state.user = action.payload.user;
-                toast.success(t('toast.auth.registerSuccess'));
+                toast.success(action.payload.message || t('toast.auth.registerSuccess'));
             })
             .addCase(registerUser.rejected, (state, action) => {
                 state.loading = false;

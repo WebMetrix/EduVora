@@ -6,7 +6,7 @@
       "userExists": "User already exists with this email or mobile",
       "usernameTaken": "Username or UserID already taken",
       "systemError": "System error during registration",
-      "registerSuccess": "User registered successfully",
+      "registerSuccess": "User registered successfully | Referal applied",
       "userNotFound": "User not found",
       "invalidCredentials": "Password is incorrect",
       "inactiveAccount": "Account is inactive. Please contact support.",
@@ -16,7 +16,8 @@
       "googleNoEmail": "Google token does not contain an email",
       "googleError": "Something went wrong during Google Login",
       "logoutSuccess": "Logged out successfully",
-      "logoutError": "Something went wrong during logout"
+      "logoutError": "Something went wrong during logout",
+      "invalidReferral": "A valid referral code is required to register."
     },
     "profile": {
       "notFound": "User profile not found.",

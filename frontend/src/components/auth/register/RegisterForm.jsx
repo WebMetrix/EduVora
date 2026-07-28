@@ -31,12 +31,12 @@ export default function RegisterForm() {
       setReferralCode(refCode);
     }
   }, [location]);
-  
-  
+
+
   // Password Visibility
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  
+
   // Validation State
   const [formErrors, setFormErrors] = useState({});
 
@@ -129,7 +129,7 @@ export default function RegisterForm() {
 
   const handleRegister = async (e) => {
     e.preventDefault();
-    
+
     // Check for empty required fields
     const newErrors = {};
     if (!fullName) newErrors.fullName = true;
@@ -143,7 +143,7 @@ export default function RegisterForm() {
       setFormErrors(newErrors);
       return toast.error(t('toast.auth.fillRequiredFields'));
     }
-    
+
     setFormErrors({}); // Clear errors if all fields are filled
 
     // Strict form validation
@@ -387,10 +387,9 @@ export default function RegisterForm() {
               if (formErrors.confirmPassword) setFormErrors({ ...formErrors, confirmPassword: false });
             }}
             placeholder={t('register.confirmPasswordPlaceholder')}
-            className={`w-full pl-11 pr-11 py-3 md:py-2.5 bg-white border rounded-lg focus:outline-none transition-all text-sm text-slate-900 placeholder:text-slate-400 ${
-              formErrors.confirmPassword 
-                ? 'border-red-500 shadow-[0_0_0_4px_rgba(239,68,68,0.1)] focus:ring-2 focus:ring-red-500/20'
-                : confirmPassword
+            className={`w-full pl-11 pr-11 py-3 md:py-2.5 bg-white border rounded-lg focus:outline-none transition-all text-sm text-slate-900 placeholder:text-slate-400 ${formErrors.confirmPassword
+              ? 'border-red-500 shadow-[0_0_0_4px_rgba(239,68,68,0.1)] focus:ring-2 focus:ring-red-500/20'
+              : confirmPassword
                 ? (passwordsMatch
                   ? 'border-emerald-500 focus:border-emerald-500 shadow-[0_0_0_4px_rgba(16,185,129,0.1)]'
                   : 'border-red-500 focus:border-red-500 shadow-[0_0_0_4px_rgba(239,68,68,0.1)]')
