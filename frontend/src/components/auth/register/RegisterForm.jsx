@@ -3,13 +3,14 @@ import { User, Mail, Shield, Phone, Lock, Eye, EyeOff, Users, UserPlus, Check } 
 import { useTranslation } from '../../../hooks/useTranslation';
 import { useDispatch, useSelector } from 'react-redux';
 import { sendOtp, verifyOtp, resendOtp, registerUser } from '../../../redux/slices/authSlice';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
 export default function RegisterForm() {
   const { t } = useTranslation();
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const location = useLocation();
   const { loading } = useSelector((state) => state.auth);
 
   // Form States
@@ -21,6 +22,17 @@ export default function RegisterForm() {
   const [referralCode, setReferralCode] = useState('');
   const [termsAccepted, setTermsAccepted] = useState(false);
 
+
+  // Auto-populate referral code from URL if present
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    const refCode = params.get('ref');
+    if (refCode) {
+      setReferralCode(refCode);
+    }
+  }, [location]);
+  
+  
   // Password Visibility
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);

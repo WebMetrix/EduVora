@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Edit2, User as UserIcon, Check, X, Loader2 } from 'lucide-react';
+import { useDispatch } from 'react-redux';
+import { fetchUserProfile } from '../../redux/slices/profileSlice';
 import api from '../../https/axios';
 import { toast } from 'react-toastify';
 
@@ -7,6 +9,7 @@ export default function AboutMeCard({ t, profileData, onUpdate }) {
     const [isEditing, setIsEditing] = useState(false);
     const [aboutText, setAboutText] = useState('');
     const [isSaving, setIsSaving] = useState(false);
+    const dispatch = useDispatch();
 
     // Initialize text from profileData
     useEffect(() => {
@@ -29,6 +32,7 @@ export default function AboutMeCard({ t, profileData, onUpdate }) {
         try {
             const response = await api.put('/profile/updateAbout', { aboutNotes: aboutText });
             toast.success(response.data.message || t('toast.profile.aboutUpdateSuccess'));
+            dispatch(fetchUserProfile());
             setIsEditing(false);
             if (onUpdate) onUpdate();
         } catch (error) {

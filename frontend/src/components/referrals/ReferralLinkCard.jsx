@@ -2,8 +2,9 @@ import React from 'react';
 import { Link2, Copy, Share2, ExternalLink, Lock } from 'lucide-react';
 import { toast } from 'react-toastify';
 
-export default function ReferralLinkCard({ t }) {
-  const link = "https://learnnet.com/register?ref=U2FsdGVkX1+7q9JkLmN8pQ==";
+export default function ReferralLinkCard({ t, profile }) {
+  const referralCode = profile?.ReferralCode || '';
+  const link = referralCode ? `${window.location.origin}/register?ref=${referralCode}` : `${window.location.origin}/register`;
 
   const handleCopy = () => {
     navigator.clipboard.writeText(link);
@@ -21,12 +22,9 @@ export default function ReferralLinkCard({ t }) {
         </div>
 
         <div className="flex items-center justify-between border border-slate-200 rounded-xl bg-slate-50 overflow-hidden mb-2.5">
-          <div className="px-3 py-2 lg:px-4 lg:py-2.5 text-[13px] text-slate-600 font-medium truncate flex-1 select-all">
+          <div className="px-3 py-2 lg:px-4 lg:py-2.5 text-[13px] text-slate-600 font-medium truncate flex-1 select-none pointer-events-none">
             {link}
           </div>
-          <button onClick={handleCopy} className="p-2 lg:p-2.5 text-[#4f3bf3] hover:bg-indigo-100 transition-all duration-300 border-l border-slate-200 shrink-0 group">
-            <Copy className="w-4 h-4 group-hover:scale-110 active:scale-95 transition-transform duration-300" />
-          </button>
         </div>
 
         <div className="flex items-center gap-1.5 text-[11px] font-medium text-emerald-600 mb-4">

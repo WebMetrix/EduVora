@@ -1,11 +1,14 @@
 import { Camera, Edit2, Calendar, ChevronDown, CheckCircle, User as UserIcon, Heart, Flag, Loader2 } from 'lucide-react';
 import { useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { fetchUserProfile } from '../../redux/slices/profileSlice';
 import api from '../../https/axios';
 import { toast } from 'react-toastify';
 
 export default function PersonalInformationCard({ t, profileData, onPictureUpdated }) {
     const navigate = useNavigate();
+    const dispatch = useDispatch();
     const [isNavigating, setIsNavigating] = useState(false);
     const [imageHash, setImageHash] = useState(Date.now());
 
@@ -37,6 +40,7 @@ export default function PersonalInformationCard({ t, profileData, onPictureUpdat
             toast.success(t('profile.personal.ProfilePictureSuccessfullyUpdated'));
 
             setImageHash(Date.now());
+            dispatch(fetchUserProfile());
 
             if (onPictureUpdated) {
                 onPictureUpdated();

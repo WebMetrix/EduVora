@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Check, Phone, User, MapPin, Landmark, ClipboardCheck } from 'lucide-react';
+import { useSelector } from 'react-redux';
 import SafeInfoCard from '../SafeInfoCard';
 import { useTranslation } from '../../../hooks/useTranslation';
 import { useNavigate } from 'react-router-dom';
@@ -57,57 +58,51 @@ export default function CompleteProfileContent() {
     additionalBankNotes: ''
   });
 
+  const { data: profileData } = useSelector((state) => state.profile || {});
+
   useEffect(() => {
-    const fetchProfile = async () => {
-      try {
-        const response = await api.get('/profile');
-        const data = response.data;
-
-        let dob = '';
-        if (data.DateOfBirth) {
-          const d = new Date(data.DateOfBirth);
-          if (!isNaN(d.getTime())) {
-            dob = `${d.getDate().toString().padStart(2, '0')}-${(d.getMonth() + 1).toString().padStart(2, '0')}-${d.getFullYear()}`;
-          }
+    if (profileData) {
+      let dob = '';
+      if (profileData.DateOfBirth) {
+        const d = new Date(profileData.DateOfBirth);
+        if (!isNaN(d.getTime())) {
+          dob = `${d.getDate().toString().padStart(2, '0')}-${(d.getMonth() + 1).toString().padStart(2, '0')}-${d.getFullYear()}`;
         }
-
-        setFormData({
-          fullName: data.FullName || '',
-          username: data.Username || '',
-          dateOfBirth: dob,
-          gender: data.Gender || '',
-          maritalStatus: data.MaritalStatus || '',
-          nationality: data.Nationality || t('completeProfile.options.in') || 'Indian',
-          emailAddress: data.EmailAddress || '',
-          mobileNumber: data.MobileNumber || data.PrimaryMobile || data.ContactMobile || '',
-          altMobileNumber: data.AltMobileNumber || '',
-          whatsAppNumber: data.WhatsAppNumber || '',
-          emergencyContactName: data.EmergencyContactName || '',
-          emergencyContactNumber: data.EmergencyContactNumber || '',
-          addressLine1: data.AddressLine1 || '',
-          addressLine2: data.AddressLine2 || '',
-          country: data.Country || '',
-          state: data.State || '',
-          stateName: data.StateName || data.State || '',
-          city: data.City || '',
-          cityName: data.CityName || data.City || '',
-          pincode: data.Pincode || '',
-          accountHolderName: data.AccountHolderName || '',
-          accountNumber: data.AccountNumber || '',
-          confirmAccountNumber: data.AccountNumber || '',
-          bankName: data.BankName || '',
-          branchName: data.BranchName || '',
-          ifscCode: data.IFSCCode || '',
-          accountType: data.AccountType || '',
-          accountTypeName: data.AccountTypeName || data.AccountType || '',
-          additionalBankNotes: data.AdditionalBankNotes || ''
-        });
-      } catch (error) {
-        console.error('Error fetching profile:', error);
       }
-    };
-    fetchProfile();
-  }, []);
+
+      setFormData({
+        fullName: profileData.FullName || '',
+        username: profileData.Username || '',
+        dateOfBirth: dob,
+        gender: profileData.Gender || '',
+        maritalStatus: profileData.MaritalStatus || '',
+        nationality: profileData.Nationality || t('completeProfile.options.in') || 'Indian',
+        emailAddress: profileData.EmailAddress || '',
+        mobileNumber: profileData.MobileNumber || profileData.PrimaryMobile || profileData.ContactMobile || '',
+        altMobileNumber: profileData.AltMobileNumber || '',
+        whatsAppNumber: profileData.WhatsAppNumber || '',
+        emergencyContactName: profileData.EmergencyContactName || '',
+        emergencyContactNumber: profileData.EmergencyContactNumber || '',
+        addressLine1: profileData.AddressLine1 || '',
+        addressLine2: profileData.AddressLine2 || '',
+        country: profileData.Country || '',
+        state: profileData.State || '',
+        stateName: profileData.StateName || profileData.State || '',
+        city: profileData.City || '',
+        cityName: profileData.CityName || profileData.City || '',
+        pincode: profileData.Pincode || '',
+        accountHolderName: profileData.AccountHolderName || '',
+        accountNumber: profileData.AccountNumber || '',
+        confirmAccountNumber: profileData.AccountNumber || '',
+        bankName: profileData.BankName || '',
+        branchName: profileData.BranchName || '',
+        ifscCode: profileData.IFSCCode || '',
+        accountType: profileData.AccountType || '',
+        accountTypeName: profileData.AccountTypeName || profileData.AccountType || '',
+        additionalBankNotes: profileData.AdditionalBankNotes || ''
+      });
+    }
+  }, [profileData, t]);
 
   const updateFormData = (key, value) => {
     setFormData(prev => ({ ...prev, [key]: value }));
@@ -157,8 +152,8 @@ export default function CompleteProfileContent() {
                   </div>
 
                   {/* Desktop Text */}
-                  <div className="hidden xl:flex flex-col">
-                    <span className={`text-[13px] xl:text-[14px] font-bold ${isCompleted ? 'text-[#4f3bf3]' : isActive ? 'text-slate-900' : 'text-slate-400'}`}>
+                  <div className="hidden 2xl:flex flex-col">
+                    <span className={`text-[13px] 2xl:text-[14px] font-bold ${isCompleted ? 'text-[#4f3bf3]' : isActive ? 'text-slate-900' : 'text-slate-400'}`}>
                       {stepItem.title}
                     </span>
                     <span className="text-[12px] text-slate-500 font-medium">

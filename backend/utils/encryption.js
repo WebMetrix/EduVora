@@ -1,8 +1,9 @@
 import crypto from 'crypto';
 import "dotenv/config";
+import { t } from './translation.js';
 
-const ENCRYPTION_KEY = process.env.ENCRYPTION_KEY || '531add3155a7f298cfe89c75e0a71a15'; 
-const FIXED_IV = process.env.FIXED_IV || 'a017c7892740e661'; 
+const ENCRYPTION_KEY = process.env.ENCRYPTION_KEY; 
+const FIXED_IV = process.env.FIXED_IV; 
 
 /**
  * Encrypts the UserID (e.g., 'EV-2026-6305') into a URL-safe hex string
@@ -11,7 +12,7 @@ export const encryptUserId = (userId) => {
     if (!userId) return null;
     try {
         const cipher = crypto.createCipheriv(
-            'aes-256-cbc', 
+            t('api.encryption.algorithm'), 
             Buffer.from(ENCRYPTION_KEY), 
             Buffer.from(FIXED_IV)
         );
@@ -20,7 +21,7 @@ export const encryptUserId = (userId) => {
         
         return encrypted; 
     } catch (err) {
-        console.error("Encryption Error:", err);
+        console.error(`${t('api.encryption.error')}`, err);
         return null;
     }
 };
@@ -32,7 +33,7 @@ export const decryptUserId = (encryptedString) => {
     if (!encryptedString) return null;
     try {
         const decipher = crypto.createDecipheriv(
-            'aes-256-cbc', 
+            t('api.encryption.algorithm'), 
             Buffer.from(ENCRYPTION_KEY), 
             Buffer.from(FIXED_IV)
         );
@@ -41,7 +42,7 @@ export const decryptUserId = (encryptedString) => {
         
         return decrypted; 
     } catch (err) {
-        console.error("Decryption Error (Invalid Link):", err);
+        console.error(`${t('api.encryption.decryptError')}`, err);
         return null;
     }
 };

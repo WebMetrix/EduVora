@@ -1,7 +1,32 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { QrCode, Download, Share2 } from 'lucide-react';
+import QRCode from 'qrcode';
 
-export default function ReferralQRCodeCard({ t }) {
+export default function ReferralQRCodeCard({ t, profile }) {
+  const [qrDataUrl, setQrDataUrl] = useState('');
+
+  useEffect(() => {
+    const generateQR = async () => {
+      const referralCode = profile?.ReferralCode || '';
+      if (!referralCode) return;
+      
+      const link = `${window.location.origin}/register?ref=${referralCode}`;
+      try {
+        const url = await QRCode.toDataURL(link, {
+          width: 200,
+          margin: 1,
+          color: {
+            dark: '#000000', // Black
+            light: '#ffffff' // White
+          }
+        });
+        setQrDataUrl(url);
+      } catch (err) {
+        console.error("Error generating QR code:", err);
+      }
+    };
+    generateQR();
+  }, [profile?.ReferralCode]);
   return (
     <div className="bg-white rounded-2xl p-4 lg:p-5 border border-slate-100 shadow-sm flex flex-col justify-between h-full">
       <div className="flex items-center justify-between mb-3">
@@ -15,9 +40,11 @@ export default function ReferralQRCodeCard({ t }) {
 
       <div className="flex justify-center mb-4 mt-auto">
         <div className="p-2 lg:p-3 border border-slate-100 rounded-xl shadow-sm bg-white inline-block hover:shadow-md transition-shadow">
-          {/* Static Placeholder for QR Code */}
-          {/* We will make this dynamic later */}
-          <div className="w-[100px] h-[100px] bg-[url('https://upload.wikimedia.org/wikipedia/commons/d/d0/QR_code_for_mobile_English_Wikipedia.svg')] bg-cover bg-center opacity-90" />
+          {qrDataUrl ? (
+            <img src={qrDataUrl} alt="Referral QR Code" className="w-[100px] h-[100px] object-contain" />
+          ) : (
+            <div className="w-[100px] h-[100px] bg-slate-100 animate-pulse rounded-lg" />
+          )}
         </div>
       </div>
 

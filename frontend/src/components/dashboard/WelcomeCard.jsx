@@ -1,29 +1,13 @@
-import { useState, useEffect } from 'react';
 import { useTranslation } from '../../hooks/useTranslation';
 import { ArrowRight, Award } from 'lucide-react';
 import { motion } from 'framer-motion';
-import api from '../../https/axios';
+import { useSelector } from 'react-redux';
 
 export default function WelcomeCard() {
   const { t } = useTranslation();
-  const [profileName, setProfileName] = useState(localStorage.getItem('cachedProfileName') || '');
+  const { data: profileData } = useSelector((state) => state.profile || {});
 
-  useEffect(() => {
-    const fetchProfile = async () => {
-      try {
-        const response = await api.get('/profile');
-        if (response.data && response.data.FullName) {
-          setProfileName(response.data.FullName);
-          localStorage.setItem('cachedProfileName', response.data.FullName);
-        }
-      } catch (error) {
-        console.error('Error fetching profile for welcome card:', error);
-      }
-    };
-    fetchProfile();
-  }, []);
-
-  const rawName = profileName || t('dashboard.mock.userName');
+  const rawName = profileData?.FullName || t('dashboard.mock.userName');
   const firstName = rawName.split(' ')[0];
 
   return (

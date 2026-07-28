@@ -19,9 +19,9 @@ export const getUserProfile = async (req, res) => {
 
         let userProfile = result.recordset[0];
 
-        // Encrypt their UserID to generate the ReferralLink securely
-        if (userProfile && userProfile.UserID) {
-            userProfile.ReferralLink = encryptUserId(userProfile.UserID);
+        // Encrypt their UserID to generate the ReferralCode securely
+        if (userProfile.UserID) {
+            userProfile.ReferralCode = encryptUserId(userProfile.UserID);
         }
 
         // Return the first record (since UUID is unique)

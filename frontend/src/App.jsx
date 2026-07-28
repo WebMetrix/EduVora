@@ -10,6 +10,7 @@ import MyReferrals from './pages/MyReferrals';
 import SuperAdmin from './pages/SuperAdmin';
 
 import ProtectedRoute from './components/common/ProtectedRoute';
+import GlobalLayout from './components/layout/GlobalLayout';
 
 function App() {
   return (
@@ -21,14 +22,20 @@ function App() {
       
       {/* Protected Routes */}
       <Route element={<ProtectedRoute />}>
-        <Route path="/dashboard" element={<Dashboard />} />
-        <Route path="/profile" element={<Profile />} />
-        <Route path="/mynetwork" element={<MyNetwork />} />
-        <Route path="/completeprofile" element={<CompleteProfile />} />
-        <Route path="/myreferrals" element={<MyReferrals />} />
+        <Route element={<GlobalLayout />}>
+          <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/profile" element={<Profile />} />
+          <Route path="/mynetwork" element={<MyNetwork />} />
+          <Route path="/completeprofile" element={<CompleteProfile />} />
+          <Route path="/myreferrals" element={<MyReferrals />} />
+        </Route>
       </Route>
 
-      <Route path="/superadmin/*" element={<SuperAdmin />} />
+      <Route path="/superadmin/*" element={
+        <GlobalLayout isSuperAdmin={true}>
+          <SuperAdmin />
+        </GlobalLayout>
+      } />
     </Routes>
   );
 }

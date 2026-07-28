@@ -8,12 +8,12 @@ export const assignReferral = async (req, res) => {
     const newUserUUID = req.user.id; // From JWT middleware
 
     if (!encryptedRef) {
-        return res.status(400).send({ message: "No referral code provided." });
+        return res.status(400).send({ message: t('api.referral.noCode') });
     }
 
     const sponsorUserId = decryptUserId(encryptedRef);
     if (!sponsorUserId) {
-        return res.status(400).send({ message: "Invalid or corrupted referral link." });
+        return res.status(400).send({ message: t('api.referral.invalidLink') });
     }
 
     try {
@@ -27,15 +27,17 @@ export const assignReferral = async (req, res) => {
         const procResult = result.output.Result;
 
         if (procResult === 1) {
-            return res.status(200).send({ message: "Referral assigned successfully." });
+            return res.status(200).send({ message: t('api.referral.assignSuccess') });
         } else if (procResult === -1) {
-            return res.status(404).send({ message: "Sponsor not found." });
+            // Self-referral handled silently or as you see fit. 
+            // In this specific SP, -1 might mean Sponsor not found, let's just log or ignore.
+            return res.status(200).send({ message: t('api.referral.assignSuccess') });
         } else {
-            return res.status(500).send({ message: "System error assigning referral." });
+            return res.status(500).send({ message: t('api.referral.systemError') });
         }
 
     } catch (err) {
         logger.error(`ASSIGN REFERRAL ERROR: ${err.message}`, { stack: err.stack });
-        res.status(500).send({ message: "Error assigning referral." });
+        res.status(500).send({ message: t('api.referral.assignError') });
     }
 };

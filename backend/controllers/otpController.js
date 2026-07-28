@@ -16,8 +16,7 @@ const getLocation = (req) => {
         req.ip;
 
     // Handle localhost
-    if (ip === "::1" || ip === "127.0.0.1" || ip?.includes("127.0.0.1")) 
-    {
+    if (ip === "::1" || ip === "127.0.0.1" || ip?.includes("127.0.0.1")) {
         return "Local Development";
     }
 

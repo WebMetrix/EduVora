@@ -1,5 +1,5 @@
-import { useState, useEffect } from 'react';
-import api from '../../https/axios';
+import { useState } from 'react';
+import { useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 import { useTranslation } from '../../hooks/useTranslation';
 import ProfileHeader from './ProfileHeader';
@@ -19,24 +19,8 @@ import { User as UserIcon, MapPin, Building, CreditCard, Key } from 'lucide-reac
 export default function MyProfile() {
   const { t } = useTranslation();
   const [activeTab, setActiveTab] = useState('personalInfo');
-  const [profileData, setProfileData] = useState(null);
-  const [loading, setLoading] = useState(true);
-
-  const fetchProfile = async () => {
-    try {
-          const response = await api.get('/profile');
-          setProfileData(response.data);
-        } catch (error) {
-        console.error('Error fetching profile:', error);
-        toast.error(t('toast.profile.loadFailed'));
-      } finally {
-        setLoading(false);
-      }
-  };
-
-  useEffect(() => {
-    fetchProfile();
-  }, []);
+  
+  const { data: profileData, loading } = useSelector((state) => state.profile || {});
 
   const tabs = [
     { id: 'personalInfo', icon: UserIcon, label: t('profile.tabs.personalInfo') },
@@ -70,13 +54,11 @@ export default function MyProfile() {
           <div className="xl:col-span-2 flex flex-col gap-6 min-w-0">
             {activeTab === 'personalInfo' && (
               <>
-                {/* <PersonalInformationCard t={t} profileData={profileData} /> */}
                 <PersonalInformationCard 
                   t={t} 
                   profileData={profileData} 
-                  onPictureUpdated={fetchProfile} 
                 />
-                <AboutMeCard t={t} profileData={profileData} onUpdate={fetchProfile} />
+                <AboutMeCard t={t} profileData={profileData} />
               </>
             )}
             {activeTab === 'contactInfo' && (

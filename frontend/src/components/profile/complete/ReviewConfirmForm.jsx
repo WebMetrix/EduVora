@@ -1,54 +1,20 @@
 import React, { useState } from 'react';
 import { User, Phone, MapPin, Landmark, Check, ChevronDown, Loader2 } from 'lucide-react';
 import { toast } from 'react-toastify';
+import { useDispatch } from 'react-redux';
+import { fetchUserProfile } from '../../../redux/slices/profileSlice';
 import api from '../../../https/axios';
 
 export default function ReviewConfirmForm({ t, onEditStep, onSubmit, formData }) {
   const [isChecked, setIsChecked] = useState(false);
   const [expandedSection, setExpandedSection] = useState('personal'); // 'personal', 'contact', 'address', 'bank'
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const dispatch = useDispatch();
 
   const toggleSection = (section) => {
     setExpandedSection(expandedSection === section ? null : section);
   };
 
-  // const handleComplete = async () => {
-  //   if (formData.accountNumber !== formData.confirmAccountNumber) {
-  //     toast.error(t('toast.bank.accountNumbersMismatch'));
-  //     return;
-  //   }
-
-  //   setIsSubmitting(true);
-  //   try {
-  //     // Create a payload matching the backend expectations
-  //     // Format the date for SQL Date if it exists
-  //     let dateOfBirth = null;
-  //     if (formData.dateOfBirth) {
-  //       // Assume format is DD-MM-YYYY based on CustomDatePicker
-  //       const parts = formData.dateOfBirth.split('-');
-  //       if (parts.length === 3) {
-  //         dateOfBirth = `${parts[2]}-${parts[1]}-${parts[0]}`; // YYYY-MM-DD
-  //       }
-  //     }
-
-  //     const payload = {
-  //       ...formData,
-  //       dateOfBirth
-  //     };
-
-  //     const response = await api.put('/profile/edit', payload);
-  //     toast.success(response.data.message || t('toast.profile.updateSuccess'));
-  //     if (onSubmit) onSubmit();
-  //   } catch (error) {
-  //     console.error('Update profile error:', error);
-  //     toast.error(error.response?.data?.message || t('toast.profile.updateFailed'));
-  //   } finally {
-  //     setIsSubmitting(false);
-  //   }
-  // };
-
-  // Map formData to display objects
-  
   const handleComplete = async () => {
     if (formData.accountNumber !== formData.confirmAccountNumber) {
       toast.error(t('toast.bank.accountNumbersMismatch'));
@@ -96,6 +62,7 @@ export default function ReviewConfirmForm({ t, onEditStep, onSubmit, formData })
       });
       
       toast.success(response.data.message || t('toast.profile.updateSuccess'));
+      dispatch(fetchUserProfile());
       if (onSubmit) onSubmit();
     } catch (error) {
       console.error('Update profile error:', error);

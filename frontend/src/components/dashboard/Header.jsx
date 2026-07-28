@@ -16,27 +16,10 @@ export default function Header({ toggleSidebar, isSuperAdmin }) {
   const { user } = useSelector((state) => state.auth);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const profileRef = useRef(null);
-
-  const [profileName, setProfileName] = useState(localStorage.getItem('cachedProfileName') || '');
   
-  useEffect(() => {
-    const fetchProfile = async () => {
-      try {
-        const response = await api.get('/profile');
-        if (response.data && response.data.FullName) {
-          setProfileName(response.data.FullName);
-          localStorage.setItem('cachedProfileName', response.data.FullName);
-        }
-      } catch (error) {
-        console.error('Error fetching profile for header:', error);
-      }
-    };
-    if (!isSuperAdmin) {
-      fetchProfile();
-    }
-  }, [isSuperAdmin]);
+  const { data: profileData } = useSelector((state) => state.profile || {});
 
-  const rawName = profileName || user?.name || user?.fullName || t('dashboard.mock.userName');
+  const rawName = profileData?.FullName || user?.name || user?.fullName || t('dashboard.mock.userName');
   const firstName = rawName.split(' ')[0];
   const nameParts = rawName.split(' ');
   const initials = nameParts

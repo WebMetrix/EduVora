@@ -65,6 +65,18 @@
       "verifyError": "Something went wrong during verification.",
       "resendSuccess": "A new OTP has been sent to your email.",
       "resendError": "Failed to resend OTP email."
+    },
+    "referral": {
+      "noCode": "No referral code provided.",
+      "invalidLink": "Invalid or corrupted referral link.",
+      "assignSuccess": "Referral assigned successfully.",
+      "systemError": "System error assigning referral.",
+      "assignError": "Error assigning referral."
+    },
+    "encryption": {
+      "error": "Encryption Error:",
+      "decryptError": "Decryption Error (Invalid Link):",
+      "algorithm": "aes-256-cbc"
     }
   }
 }
