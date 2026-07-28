@@ -2,16 +2,44 @@ import React from 'react';
 import { Copy, Crown } from 'lucide-react';
 import { toast } from 'react-toastify';
 
-export default function ReferralProfileCard({ t, profile }) {
+export default function ReferralProfileCard({ t }) {
+  // 1. Fetch and parse the JSON string from sessionStorage
+  const cachedData = sessionStorage.getItem('cachedProfile');
+  const profile = cachedData ? JSON.parse(cachedData) : null;
+
   const handleCopy = () => {
     navigator.clipboard.writeText(profile?.ReferralCode || t('common.loading'));
     toast.success(t('toast.referral.codeCopied'));
   };
 
   const fullName = profile?.FullName || t('common.loading');
-  const avatarUrl = profile?.ProfilePicturePath 
-    ? `${import.meta.env.VITE_API_URL}/${profile.ProfilePicturePath.replace(/\\/g, '/')}`
-    : `https://ui-avatars.com/api/?name=${encodeURIComponent(fullName)}&background=random`;
+  
+  // 2. Define the fallback avatar
+  const fallbackAvatar = import.meta.env.VITE_FALLBACK_PROF_PICTURE + `${encodeURIComponent(fullName)}&background=random`;
+
+  // 3. Construct the valid HTTP image URL
+  let avatarUrl = fallbackAvatar;
+  
+  // Added optional chaining here to prevent crashes if 'profile' is null
+  if (profile.ProfilePicturePath != null && profile.ProfilePicturePath.trim() !== '') { 
+    const baseUrl = (import.meta.env.VITE_API_URL || '').replace(/\/+$/, '');
+    
+    // Normalize slashes to forward slashes
+    const normalizedPath = profile.ProfilePicturePath.replace(/\\/g, '/');
+    
+    // Find where the actual public folder starts to drop the network server prefix (//EduVora-001/)
+    // NOTE: Change 'UserData' to 'Profile' if your backend serves directly from the Profile folder.
+    const folderStartIndex = normalizedPath.indexOf('UserData'); 
+    
+    if (folderStartIndex !== -1) {
+      // Extracts "UserData/Profile/17b4.../Display_Picture.JPG"
+      const relativePath = normalizedPath.substring(folderStartIndex);
+      avatarUrl = `${baseUrl}/${relativePath}`;
+    } else {
+      // Fallback behavior just in case "UserData" is missing from the string
+      avatarUrl = `${baseUrl}/${normalizedPath.replace(/^\/+/, '')}`;
+    }
+  }
 
   const memberSince = profile?.CreatedDate 
     ? new Date(profile.CreatedDate).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })
@@ -29,7 +57,16 @@ export default function ReferralProfileCard({ t, profile }) {
       <div className="relative z-10 flex justify-between items-start">
         <div className="flex gap-4 items-center">
           <div className="w-14 h-14 rounded-full border-2 border-indigo-400 overflow-hidden shrink-0 bg-indigo-900">
-            <img src={avatarUrl} alt={fullName} className="w-full h-full object-cover" />
+            {/* Fallback triggered if the backend fails to serve the image */}
+            <img 
+              src={avatarUrl} 
+              alt={fullName} 
+              className="w-full h-full object-cover" 
+              onError={(e) => {
+                e.currentTarget.onerror = null;
+                e.currentTarget.src = fallbackAvatar;
+              }}
+            />
           </div>
           <div>
             <h2 className="text-[18px] font-bold">{fullName}</h2>

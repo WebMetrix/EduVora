@@ -50,7 +50,7 @@ app.use('/profile', profileRoutes);
 app.use('/password', passwordRoutes);
 app.use('/referral', referralRoutes);
 
-
+app.use('/UserData', express.static('\\\\EduVora-001\\EduVora-001\\UserData'));
 
 const PORT = process.env.PORT;
 app.listen(PORT, () => {
