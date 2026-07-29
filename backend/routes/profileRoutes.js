@@ -26,7 +26,7 @@ const storage = multer.diskStorage({
     try {
       // Get the base path from your database
       const request = pool.request();
-      request.input('DocumentType', sql.VarChar(100), 'Profile'); 
+      request.input('DocumentType', sql.VarChar(100), 'Profile');
       const result = await request.execute('dbo.EV_GetFileRepositoryPath');
 
       if (!result.recordset || result.recordset.length === 0) {
@@ -53,7 +53,7 @@ const storage = multer.diskStorage({
             fs.unlinkSync(path.join(finalUploadPath, file)); // Deletes the old file
           }
         }
-    }
+      }
       // Tell Multer to save it in this specific UUID folder
       cb(null, finalUploadPath);
     } catch (error) {
@@ -63,21 +63,21 @@ const storage = multer.diskStorage({
   filename: function (req, file, cb) {
     // Keep the original extension (.jpg, .jpeg, or .png)
     const extension = path.extname(file.originalname);
-    
+
     // The file name should be Display_Picture + extension
     cb(null, `Display_Picture${extension}`);
   }
 });
 
-const upload = multer({ 
-    storage: storage,
-    fileFilter: (req, file, cb) => {
-        if (file.mimetype === 'image/jpeg' || file.mimetype === 'image/png') {
-            cb(null, true);
-        } else {
-            cb(new Error('Only PNG and JPG are allowed!'), false);
-        }
+const upload = multer({
+  storage: storage,
+  fileFilter: (req, file, cb) => {
+    if (file.mimetype === 'image/jpeg' || file.mimetype === 'image/png') {
+      cb(null, true);
+    } else {
+      cb(new Error('Only PNG and JPG are allowed!'), false);
     }
+  }
 });
 
 router.put('/edit', isLoggedIn, upload.single('profileImage'), editUser);

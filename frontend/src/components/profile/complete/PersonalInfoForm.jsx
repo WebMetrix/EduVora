@@ -7,21 +7,6 @@ import api from '../../../https/axios';
 export default function PersonalInfoForm({ t, onNext, formData, updateFormData }) {
   const [genderOptions, setGenderOptions] = useState([]);
 
-  const fileInputRef = useRef(null);
-
-  const handleUploadClick = () => {
-    if (fileInputRef.current) {
-      fileInputRef.current.click();
-    }
-  };
-
-  const handleFileChange = (event) => {
-    const file = event.target.files[0];
-    if (file) {
-      // Optional: Save the file to your form data
-      updateFormData('profileImage', file);
-    }
-  }
 
   useEffect(() => {
     const fetchGenders = async () => {
@@ -126,35 +111,6 @@ export default function PersonalInfoForm({ t, onNext, formData, updateFormData }
         </div>
       </div>
 
-      <div className="border-t border-slate-100 my-8"></div>
-
-      {/* Profile Picture Upload Section */}
-      <div className="mb-2">
-        <label className="block text-[13px] font-bold text-[#111] mb-4">
-          {t('completeProfile.profilePicture')}
-        </label>
-        <div className="flex items-center gap-4 md:gap-6 w-full justify-between md:justify-start">
-          <div className="flex items-center gap-4 md:gap-6">
-            <div className="w-[60px] h-[60px] md:w-[70px] md:h-[70px] rounded-full bg-[#f8f9fc] flex items-center justify-center shrink-0 border border-slate-200">
-              <User className="w-7 h-7 md:w-8 md:h-8 text-slate-300" />
-            </div>
-            <div className="flex flex-col gap-1">
-              <p className="text-[13px] md:text-[14px] font-bold text-[#1a1446]">{t('completeProfile.uploadPicture')}</p>
-              <p className="text-[10px] md:text-[12px] font-bold text-slate-400 uppercase tracking-wide">{t('completeProfile.uploadFormats')}</p>
-            </div>
-          </div>
-          <input
-            type="file"
-            ref={fileInputRef}
-            className="hidden"
-            accept=".jpg, .jpeg, .png" // Restricts picker to JPG and PNG
-            onChange={handleFileChange}
-          />
-          <button type="button" onClick={handleUploadClick} className="text-[#4f3bf3] border-2 border-[#4f3bf3]/20 bg-white hover:border-[#4f3bf3] hover:bg-indigo-50 shadow-sm px-6 py-2.5 rounded-xl text-[13px] font-bold transition-all ml-auto md:ml-4">
-            {t('completeProfile.uploadBtn')}
-          </button>
-        </div>
-      </div>
 
       {/* Submit Button */}
       <div className="pt-2 flex justify-end">

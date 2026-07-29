@@ -5,7 +5,7 @@ import { toast } from 'react-toastify';
 
 export default function ReferralSharingTips({ t, profile }) {
   const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
-  
+
   const referralCode = profile?.ReferralCode || '';
   const baseUrl = import.meta.env.VITE_REFERRAL_URL;
   const url = referralCode ? `${baseUrl}?ref=${referralCode}` : baseUrl;
@@ -34,11 +34,12 @@ export default function ReferralSharingTips({ t, profile }) {
           try {
             await navigator.share({ title: "EduVora", text, url });
           } catch (err) {
-            console.error(err);
+            if (err.name !== 'AbortError') console.error('Share failed', err);
           }
         } else {
           navigator.clipboard.writeText(url);
-          toast.success("Copied! Paste into Instagram Story or DM");
+          toast.info("Link copied! Paste it in your Instagram messages.");
+          window.open('https://www.instagram.com/direct/inbox/', '_blank');
         }
         break;
       case 'linkedin':

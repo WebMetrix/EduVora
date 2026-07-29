@@ -31,7 +31,9 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
 //Added to serve static files from the network path
-app.use('/avatars', express.static('\\\\EduVora-001\\EduVora-001\\UserData\\Profile'));
+const avatarPath = process.env.PROFILE_AVATAR_PATH;
+app.use('/avatars', express.static(avatarPath));
+
 
 // app.get("/", async (req, res) => {
 //     try {
@@ -50,7 +52,8 @@ app.use('/profile', profileRoutes);
 app.use('/password', passwordRoutes);
 app.use('/referral', referralRoutes);
 
-app.use('/UserData', express.static('\\\\EduVora-001\\EduVora-001\\UserData'));
+const userDataPath = process.env.USER_DATA_PATH;
+app.use('/UserData', express.static(userDataPath));
 
 const PORT = process.env.PORT;
 app.listen(PORT, () => {
