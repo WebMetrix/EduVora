@@ -6,7 +6,7 @@ export default function TreeNodeCard({ user, onClick, isSelected, level = 0 }) {
 
   // Package colors mapping based on the image
   const getPackageColor = (pkg) => {
-    switch(pkg) {
+    switch (pkg) {
       case 'Gold Package': return 'text-yellow-500';
       case 'Silver Package': return 'text-slate-400'; // Or a gray/blue color
       case 'Diamond Package': return 'text-purple-500';
@@ -16,7 +16,7 @@ export default function TreeNodeCard({ user, onClick, isSelected, level = 0 }) {
   };
 
   const getStatusBadge = (status) => {
-    switch(status) {
+    switch (status) {
       case 'Active':
         return <span className="px-2 py-0.5 rounded bg-emerald-50 text-emerald-600 text-[10px] font-bold border border-emerald-100">{t('network.tree.active')}</span>;
       case 'Inactive':
@@ -45,7 +45,7 @@ export default function TreeNodeCard({ user, onClick, isSelected, level = 0 }) {
   };
 
   return (
-    <div 
+    <div
       onClick={() => onClick(user)}
       className={`relative w-60 bg-white rounded-xl border p-4 flex flex-row items-center gap-3 cursor-pointer transition-all duration-300 hover:-translate-y-1 hover:shadow-lg
         ${isSelected ? 'ring-2 ring-indigo-500 ring-offset-2 shadow-[0_0_15px_rgba(99,102,241,0.2)] z-10' : 'shadow-sm hover:shadow-md'}
@@ -53,8 +53,8 @@ export default function TreeNodeCard({ user, onClick, isSelected, level = 0 }) {
       `}
     >
       {/* Node ID Badge */}
-      <div className={`absolute -top-3 left-1/2 -translate-x-1/2 text-white w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-bold shadow-sm ${getLevelBgColor()}`}>
-        {user.id}
+      <div className={`absolute -top-3 left-1/2 -translate-x-1/2 text-white w-6 h-6 rounded-full flex items-center justify-center text-[11px] font-extrabold shadow-sm ${getLevelBgColor()}`}>
+        {level}
       </div>
 
       {/* Avatar */}

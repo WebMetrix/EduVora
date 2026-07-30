@@ -20,6 +20,7 @@ export default function RegisterForm() {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [referralCode, setReferralCode] = useState('');
+  const [isReferralReadOnly, setIsReferralReadOnly] = useState(false);
   const [termsAccepted, setTermsAccepted] = useState(false);
 
 
@@ -29,6 +30,7 @@ export default function RegisterForm() {
     const refCode = params.get('ref');
     if (refCode) {
       setReferralCode(refCode);
+      setIsReferralReadOnly(true);
     }
   }, [location]);
 
@@ -419,12 +421,15 @@ export default function RegisterForm() {
           <input
             type="text"
             value={referralCode}
+            readOnly={isReferralReadOnly}
             onChange={(e) => {
-              setReferralCode(e.target.value);
-              if (formErrors.referralCode) setFormErrors({ ...formErrors, referralCode: false });
+              if (!isReferralReadOnly) {
+                setReferralCode(e.target.value);
+                if (formErrors.referralCode) setFormErrors({ ...formErrors, referralCode: false });
+              }
             }}
             placeholder={t('register.referralPlaceholder')}
-            className={`w-full pl-11 pr-4 py-3 md:py-2.5 bg-white border rounded-lg focus:outline-none focus:ring-2 transition-all text-sm text-slate-900 placeholder:text-slate-400 ${formErrors.referralCode ? 'border-red-500 focus:ring-red-500/20 shadow-[0_0_0_4px_rgba(239,68,68,0.1)]' : 'border-slate-200 focus:ring-indigo-500/20 focus:border-indigo-500'}`}
+            className={`w-full pl-11 pr-4 py-3 md:py-2.5 border rounded-lg focus:outline-none focus:ring-2 transition-all text-sm text-slate-900 placeholder:text-slate-400 ${formErrors.referralCode ? 'bg-white border-red-500 focus:ring-red-500/20 shadow-[0_0_0_4px_rgba(239,68,68,0.1)]' : 'border-slate-200 focus:ring-indigo-500/20 focus:border-indigo-500'} ${isReferralReadOnly ? 'bg-slate-100 cursor-not-allowed' : 'bg-white'}`}
           />
         </div>
       </div>

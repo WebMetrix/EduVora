@@ -297,3 +297,8 @@ Assigns a referral by establishing a relationship between a Sponsor and a new Us
 - **Inputs**: `@NewUserUUID VARCHAR(36)`, `@SponsorUserID VARCHAR(100)`
 - **Outputs**: `@Result INT` (1 = Success, -1 = Sponsor/User not found or ID is NULL, 0 = System Error)
 - **Updates**: Inserts into `Tb_Referral` (Status = 2) and `Tb_UserRelationship`.
+
+### `EV_GetMyNetwork`
+Fetches a flattened hierarchy of the user's downline (up to Level 2) for rendering the Genealogy Tree, including package, status, and sponsor details.
+- **Inputs**: `@RootUserID NVARCHAR(100)`
+- **Outputs**: Result Set (`RelativeLevel`, `UserID`, `SponsorID`, `SponsorName`, `FullName`, `ProfilePicturePath`, `JoiningDate`, `AccountStatus`, `PackageName`, `ChildrenCount`)

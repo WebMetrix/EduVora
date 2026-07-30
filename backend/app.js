@@ -4,6 +4,7 @@ import cookieParser from 'cookie-parser';
 import cors from 'cors';
 import path from 'path';
 import pool from "./config/db.js";
+import { setupSwagger } from './swagger.js';
 const app = express();
 
 // import routes
@@ -12,6 +13,7 @@ import otpRoutes from "./routes/otpRoutes.js";
 import profileRoutes from "./routes/profileRoutes.js";
 import passwordRoutes from './routes/passwordRoutes.js';
 import referralRoutes from './routes/referralRoutes.js';
+import networkRoutes from './routes/networkRoutes.js';
 
 
 // Cors configuration
@@ -51,9 +53,13 @@ app.use('/otp', otpRoutes);
 app.use('/profile', profileRoutes);
 app.use('/password', passwordRoutes);
 app.use('/referral', referralRoutes);
+app.use('/network', networkRoutes);
 
 const userDataPath = process.env.USER_DATA_PATH;
 app.use('/UserData', express.static(userDataPath));
+
+// Setup Swagger UI Documentation
+setupSwagger(app);
 
 const PORT = process.env.PORT;
 app.listen(PORT, () => {

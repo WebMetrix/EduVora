@@ -1,3 +1,4 @@
+import React, { useRef, useState } from 'react';
 import { useTranslation } from '../hooks/useTranslation';
 import { ChevronRight } from 'lucide-react';
 
@@ -9,6 +10,12 @@ import GenealogyTree from '../components/network/GenealogyTree';
 
 export default function MyNetwork() {
   const { t } = useTranslation();
+  
+  // Lifted state for Tree Controls
+  const transformComponentRef = useRef(null);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [isAllExpanded, setIsAllExpanded] = useState(true);
+  const [zoomScale, setZoomScale] = useState(0.65);
 
   return (
     <>
@@ -34,8 +41,20 @@ export default function MyNetwork() {
 
       {/* Genealogy Tree Section */}
       <div className="flex flex-col gap-4">
-        <TreeControls />
-        <GenealogyTree />
+        <TreeControls 
+          transformComponentRef={transformComponentRef}
+          searchQuery={searchQuery}
+          setSearchQuery={setSearchQuery}
+          isAllExpanded={isAllExpanded}
+          setIsAllExpanded={setIsAllExpanded}
+          zoomScale={zoomScale}
+        />
+        <GenealogyTree 
+          transformComponentRef={transformComponentRef}
+          searchQuery={searchQuery}
+          isAllExpanded={isAllExpanded}
+          onZoomChange={setZoomScale}
+        />
       </div>
     </>
   );

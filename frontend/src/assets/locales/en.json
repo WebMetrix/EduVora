@@ -322,7 +322,8 @@
       "level2": "Level 2",
       "active": "Active",
       "inactive": "Inactive",
-      "pending": "Pending"
+      "pending": "Pending",
+      "mobileHint": "Tap on any node to view details"
     },
     "details": {
       "userId": "User ID",
@@ -332,6 +333,10 @@
       "childrenCount": "Children Count",
       "viewFullProfile": "View Full Profile",
       "system": "System"
+    },
+    "errors": {
+      "fetchFailed": "Failed to fetch network data",
+      "noData": "No network data available."
     }
   },
   "profile": {

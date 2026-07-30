@@ -17,8 +17,11 @@ export default function ReferralLinkCard({ t, profile }) {
   };
 
   return (
-    <div className="bg-white rounded-2xl p-4 lg:p-5 border border-slate-100 shadow-sm hover:shadow-[0_8px_30px_rgba(99,102,241,0.15)] hover:border-indigo-300 transition-all duration-300 flex flex-col justify-between h-full hover:-translate-y-1 group/card">
-      <div>
+    <div className="relative overflow-hidden rounded-3xl bg-linear-to-br from-white/90 to-indigo-50/40 backdrop-blur-xl p-5 lg:p-6 border border-indigo-100/60 shadow-sm group/card transition-all duration-300 hover:shadow-none hover:border-indigo-200 flex flex-col justify-between h-full hover:-translate-y-1">
+      {/* Decorative background flare */}
+      <div className="absolute top-0 right-0 w-64 h-64 bg-indigo-400/10 rounded-full blur-[80px] -translate-y-1/2 translate-x-1/3 pointer-events-none group-hover/card:bg-indigo-400/20 transition-colors duration-700" />
+      
+      <div className="relative z-10">
         <div className="flex items-center gap-2 mb-3">
           <div className="w-8 h-8 rounded-lg bg-indigo-50 flex items-center justify-center shrink-0">
             <Link2 className="w-4 h-4 text-[#4f3bf3]" />
@@ -38,7 +41,7 @@ export default function ReferralLinkCard({ t, profile }) {
         </div>
       </div>
 
-      <div className="flex flex-col gap-2 lg:gap-3 mt-auto">
+      <div className="relative z-10 flex flex-col gap-2 lg:gap-3 mt-auto">
         <div className="flex justify-center gap-2 lg:gap-3 w-full">
           <button onClick={handleCopy} className="flex-1 bg-[#4f3bf3] hover:bg-indigo-700 text-white py-2 rounded-xl text-[12px] lg:text-[13px] font-bold flex items-center justify-center gap-1.5 lg:gap-2 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-md hover:shadow-indigo-500/30 active:scale-95 group">
             <Copy className="w-4 h-4 group-hover:scale-110 transition-transform duration-300" />

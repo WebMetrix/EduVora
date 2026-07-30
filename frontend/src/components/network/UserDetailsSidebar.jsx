@@ -1,14 +1,14 @@
 import { useTranslation } from '../../hooks/useTranslation';
-import { User, X, Calendar, Hash, Users, Shield, Package } from 'lucide-react';
+import { User, Calendar, Hash, Users, Shield, Package } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
-export default function UserDetailsSidebar({ user, onClose }) {
+export default function UserDetailsSidebar({ user }) {
   const { t } = useTranslation();
 
   if (!user) return null;
 
   const getPackageColor = (pkg) => {
-    switch(pkg) {
+    switch (pkg) {
       case 'Gold Package': return 'text-yellow-500';
       case 'Silver Package': return 'text-slate-500';
       case 'Diamond Package': return 'text-purple-500';
@@ -18,7 +18,7 @@ export default function UserDetailsSidebar({ user, onClose }) {
   };
 
   const getStatusBadge = (status) => {
-    switch(status) {
+    switch (status) {
       case 'Active':
         return <span className="px-2 py-0.5 rounded bg-emerald-50 text-emerald-600 text-[10px] font-bold border border-emerald-100">{t('network.tree.active')}</span>;
       case 'Inactive':
@@ -32,25 +32,18 @@ export default function UserDetailsSidebar({ user, onClose }) {
 
   return (
     <AnimatePresence>
-      <motion.div 
+      <motion.div
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
         exit={{ opacity: 0, scale: 0.95 }}
         transition={{ duration: 0.2 }}
-        className="w-full lg:w-85 shrink-0 bg-white rounded-2xl border border-slate-100 shadow-[0_2px_10px_rgba(0,0,0,0.02)] flex flex-col"
+        className="w-full lg:w-85 shrink-0 min-h-[460px] bg-linear-to-br from-white/90 to-indigo-50/40 backdrop-blur-xl rounded-2xl border border-indigo-100/60 shadow-sm flex flex-col relative group/card transition-all duration-300 hover:shadow-lg hover:border-indigo-200 hover:-translate-y-1 overflow-hidden"
       >
-        {/* Header */}
-        <div className="flex items-center justify-end p-4">
-          <button 
-            onClick={onClose}
-            className="p-1.5 rounded-lg hover:bg-slate-100 text-slate-400 hover:text-slate-600 transition-colors"
-          >
-            <X className="w-5 h-5" />
-          </button>
-        </div>
+        {/* Decorative background flare */}
+        <div className="absolute top-0 right-0 w-64 h-64 bg-indigo-400/10 rounded-full blur-[80px] -translate-y-1/2 translate-x-1/3 pointer-events-none group-hover/card:bg-indigo-400/20 transition-colors duration-700" />
 
-        <div className="px-6 flex flex-col pb-6">
-          
+        <div className="relative z-10 px-6 flex flex-col h-full py-6 justify-center">
+
           {/* Profile Basic Info */}
           <div className="flex items-center gap-4 mb-8">
             <div className="w-16 h-16 rounded-full bg-slate-100 overflow-hidden shrink-0 border border-slate-200">
@@ -70,52 +63,52 @@ export default function UserDetailsSidebar({ user, onClose }) {
           </div>
 
           {/* Details List */}
-          <div className="flex flex-col gap-5">
-            <div className="flex items-center">
-              <div className="w-30 flex items-center gap-2 text-[12px] font-bold text-slate-500">
+          <div className="flex flex-col gap-5 w-full">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2 text-[12px] font-bold text-slate-500">
                 <Hash className="w-4 h-4" />
                 <span>{t('network.details.userId')}</span>
               </div>
-              <span className="text-[13px] font-bold text-slate-900">{user.userId}</span>
+              <span className="text-[13px] font-bold text-slate-900 text-right">{user.userId}</span>
             </div>
 
-            <div className="flex items-center">
-              <div className="w-30 flex items-center gap-2 text-[12px] font-bold text-slate-500">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2 text-[12px] font-bold text-slate-500">
                 <Shield className="w-4 h-4" />
                 <span>{t('network.details.sponsor')}</span>
               </div>
-              <span className="text-[13px] font-bold text-slate-900">{user.sponsor}</span>
+              <span className="text-[13px] font-bold text-slate-900 text-right">{user.sponsor}</span>
             </div>
 
-            <div className="flex items-center">
-              <div className="w-30 flex items-center gap-2 text-[12px] font-bold text-slate-500">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2 text-[12px] font-bold text-slate-500">
                 <Calendar className="w-4 h-4" />
                 <span>{t('network.details.joiningDate')}</span>
               </div>
-              <span className="text-[13px] font-bold text-slate-900">{user.joiningDate}</span>
+              <span className="text-[13px] font-bold text-slate-900 text-right">{user.joiningDate}</span>
             </div>
 
-            <div className="flex items-center">
-              <div className="w-30 flex items-center gap-2 text-[12px] font-bold text-slate-500">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2 text-[12px] font-bold text-slate-500">
                 <Package className="w-4 h-4" />
                 <span>{t('network.details.package')}</span>
               </div>
-              <span className="text-[13px] font-bold text-slate-900">{user.package}</span>
+              <span className="text-[13px] font-bold text-slate-900 text-right">{user.package}</span>
             </div>
 
-            <div className="flex items-center">
-              <div className="w-30 flex items-center gap-2 text-[12px] font-bold text-slate-500">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2 text-[12px] font-bold text-slate-500">
                 <Users className="w-4 h-4" />
                 <span>{t('network.details.childrenCount')}</span>
               </div>
-              <span className="text-[13px] font-bold text-slate-900">{user.childrenCount}</span>
+              <span className="text-[13px] font-bold text-slate-900 text-right">{user.childrenCount}</span>
             </div>
           </div>
 
           {/* Action Button */}
           <div className="mt-8">
-            <button className="w-full flex items-center justify-center gap-2 py-3 rounded-xl bg-indigo-600 text-white text-[14px] font-bold hover:bg-indigo-700 transition-colors shadow-md shadow-indigo-600/20">
-              <User className="w-4 h-4" />
+            <button className="w-full flex items-center justify-center gap-2 py-3 rounded-xl bg-indigo-600 text-white text-[14px] font-bold hover:bg-indigo-700 transition-all duration-300 shadow-md shadow-indigo-600/20 hover:shadow-lg hover:shadow-indigo-600/40 hover:-translate-y-1 active:scale-95 group">
+              <User className="w-4 h-4 group-hover:scale-110 transition-transform duration-300" />
               <span>{t('network.details.viewFullProfile')}</span>
             </button>
           </div>

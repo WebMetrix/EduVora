@@ -34,9 +34,9 @@ export default function ReferralRewards({ t }) {
   ];
 
   return (
-    <div className="relative overflow-hidden rounded-3xl bg-white/50 backdrop-blur-xl p-4 lg:p-5 border border-slate-100 shadow-[0_2px_8px_rgba(0,0,0,0.04)] group/card h-full flex flex-col transition-all duration-300">
+    <div className="relative overflow-hidden rounded-3xl bg-linear-to-br from-white/90 to-indigo-50/40 backdrop-blur-xl p-4 lg:p-5 border border-indigo-100/60 shadow-sm group/card h-full flex flex-col transition-all duration-300 hover:shadow-lg hover:border-indigo-200">
       {/* Decorative background flare */}
-      <div className="absolute top-0 right-0 w-64 h-64 bg-indigo-100/30 rounded-full blur-[80px] -translate-y-1/2 translate-x-1/3 pointer-events-none" />
+      <div className="absolute top-0 right-0 w-64 h-64 bg-indigo-400/10 rounded-full blur-[80px] -translate-y-1/2 translate-x-1/3 pointer-events-none transition-colors duration-700" />
 
       <div className="relative z-10 flex items-center justify-between mb-3 lg:mb-4">
         <h3 className="font-bold text-[#1a1446] text-[14px] lg:text-[15px]">{t('myReferrals.referralRewards')}</h3>
