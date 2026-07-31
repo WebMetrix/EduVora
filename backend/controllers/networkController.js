@@ -26,9 +26,17 @@ export const getNetworkTree = async (req, res) => {
 
         const flatData = networkRes.recordsets[0];
         logger.info(`DB Recordsets length: ${networkRes.recordsets.length}`);
-        logger.info(`Stats: ${JSON.stringify(networkRes.recordsets[1])}`);
-        const dashboardStats = networkRes.recordsets[1] && networkRes.recordsets[1].length > 0 ? networkRes.recordsets[1][0] : null;
+        // 2. Team Dashboard Stats (Monthly, Quarterly, Yearly)
+        const rawDashboardStats = networkRes.recordsets[1] || [];
+        const dashboardStats = {
+            monthly: rawDashboardStats.find(t => t.Timeframe === 'monthly') || null,
+            quarterly: rawDashboardStats.find(t => t.Timeframe === 'quarterly') || null,
+            yearly: rawDashboardStats.find(t => t.Timeframe === 'yearly') || null
+        };
+        
         const packageDistribution = networkRes.recordsets[2] || [];
+        
+        // 4. Registration Trend (All Downline)
         const rawTrend = networkRes.recordsets[3] || [];
         const registrationTrend = {
             monthly: rawTrend.filter(t => t.Timeframe === 'Monthly'),

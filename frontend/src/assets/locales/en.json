@@ -296,7 +296,9 @@
       "totalTeam": "Total Team",
       "monthlyGrowth": "Monthly Growth",
       "thisMonth": "This Month",
-      "vsLastMonth": "vs last month"
+      "vsLastMonth": "vs last month",
+      "vsLastQuarter": "vs last quarter",
+      "vsLastYear": "vs last year"
     },
     "charts": {
       "referralGrowth": "Referral Growth",

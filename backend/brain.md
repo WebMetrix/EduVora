@@ -303,6 +303,6 @@ Fetches a flattened hierarchy of the user's downline (up to Level 2) and all Das
 - **Inputs**: `@RootUserID NVARCHAR(100)`
 - **Outputs**: 
   1. **Result Set (Genealogy Tree)**: `RelativeLevel`, `UserID`, `SponsorID`, `SponsorName`, `FullName`, `ProfilePicturePath`, `JoiningDate`, `AccountStatus`, `PackageName`, `ChildrenCount`
-  2. **Result Set (Dashboard Stats)**: `directTeam`, `level1`, `level2`, `totalTeam`, `monthlyGrowth`
+  2. **Result Set (Dashboard Stats)**: Returns 3 rows (`Timeframe`: 'monthly', 'quarterly', 'yearly') containing: `directTeam`, `level1`, `level2`, `totalTeam`, `periodGrowth`, `periodGrowthPercentage`, `directTeamGrowth`, `level1Growth`, `level2Growth`, `totalTeamGrowth`
   3. **Result Set (Package Distribution)**: `name`, `value`
   4. **Result Set (Registration Trend)**: `Timeframe` (Monthly = Current Month daily, Quarterly = Last 3 Months, Yearly = Current Year monthly), `date`, `value`

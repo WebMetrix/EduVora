@@ -115,7 +115,7 @@ export default function NetworkCharts() {
     <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4 lg:gap-5">
 
       {/* 1. Referral Growth */}
-      <div className="bg-white rounded-2xl border border-slate-100 shadow-[0_2px_10px_rgba(0,0,0,0.02)] p-5 relative overflow-hidden transition-all duration-300 hover:shadow-lg hover:border-indigo-200 hover:-translate-y-1">
+      <div className="bg-white rounded-2xl border border-slate-100 shadow-[0_2px_10px_rgba(0,0,0,0.02)] p-5 relative overflow-hidden transition-all duration-300 hover:border-indigo-300 hover:shadow-md cursor-pointer group/card">
         <div className="flex justify-between items-start mb-6 relative z-10">
           <div className="flex items-center gap-1.5 cursor-pointer">
             <h3 className="text-[15px] font-bold text-slate-900">{t('network.charts.referralGrowth')}</h3>
@@ -154,7 +154,7 @@ export default function NetworkCharts() {
       </div>
 
       {/* 2. Registration Trend */}
-      <div className="bg-white rounded-2xl border border-slate-100 shadow-[0_2px_10px_rgba(0,0,0,0.02)] p-5 relative overflow-hidden transition-all duration-300 hover:shadow-lg hover:border-indigo-200 hover:-translate-y-1">
+      <div className="bg-white rounded-2xl border border-slate-100 shadow-[0_2px_10px_rgba(0,0,0,0.02)] p-5 relative overflow-hidden transition-all duration-300 hover:border-indigo-300 hover:shadow-md cursor-pointer group/card">
         <div className="flex justify-between items-start mb-6 relative z-10">
           <div className="flex items-center gap-1.5 cursor-pointer">
             <h3 className="text-[15px] font-bold text-slate-900">{t('network.charts.registrationTrend')}</h3>
@@ -176,8 +176,8 @@ export default function NetworkCharts() {
 
         <div className="absolute top-16 right-5 text-right z-10">
           <div className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-md text-[12px] font-bold border ${registrationGrowth >= 0
-              ? 'bg-emerald-50 text-emerald-600 border-emerald-100/50'
-              : 'bg-rose-50 text-rose-600 border-rose-100/50'
+            ? 'bg-emerald-50 text-emerald-600 border-emerald-100/50'
+            : 'bg-rose-50 text-rose-600 border-rose-100/50'
             }`}>
             {registrationGrowth >= 0 ? '↑' : '↓'} {Math.abs(registrationGrowth)}%
           </div>
@@ -212,7 +212,7 @@ export default function NetworkCharts() {
       </div>
 
       {/* 3. Package Distribution */}
-      <div className="relative overflow-hidden rounded-3xl bg-linear-to-br from-white/90 to-indigo-50/40 backdrop-blur-xl p-5 border border-indigo-100/60 shadow-sm group/card transition-all duration-300 hover:shadow-lg hover:border-indigo-200 lg:col-span-2 xl:col-span-1">
+      <div className="relative overflow-hidden rounded-3xl bg-linear-to-br from-white/90 to-indigo-50/40 backdrop-blur-xl p-5 border border-indigo-100/60 shadow-sm group/card transition-all duration-300 hover:shadow-md hover:border-indigo-300 hover:-translate-y-[2px] cursor-pointer lg:col-span-2 xl:col-span-1">
         <div className="absolute top-0 right-0 w-64 h-64 bg-indigo-400/10 rounded-full blur-[80px] -translate-y-1/2 translate-x-1/3 pointer-events-none group-hover/card:bg-indigo-400/20 transition-colors duration-700" />
 
         <div className="relative z-10 flex items-center gap-1.5 mb-2 cursor-pointer">
