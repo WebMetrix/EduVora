@@ -5,10 +5,16 @@ import {
   PieChart, Pie, Cell
 } from 'recharts';
 
+import { useState } from 'react';
+import { useSelector } from 'react-redux';
+
 export default function NetworkCharts() {
   const { t } = useTranslation();
+  const { charts, dashboardStats } = useSelector((state) => state.network);
+  const [trendFilter, setTrendFilter] = useState('monthly');
+  const registrationGrowth = dashboardStats?.monthlyGrowth || 0;
 
-  // Mock data for Referral Growth
+  // Mock data for Referral Growth (left hardcoded as requested)
   const referralData = [
     { name: '01 May', value: 10 },
     { name: '', value: 16 },
@@ -21,34 +27,83 @@ export default function NetworkCharts() {
     { name: '29 May', value: 15 },
   ];
 
-  // Mock data for Package Distribution
-  const packageData = [
-    { name: 'Gold Package', value: 20, percentage: '40.8%', color: '#eab308' },
-    { name: 'Silver Package', value: 18, percentage: '36.7%', color: '#3b82f6' },
-    { name: 'Diamond Package', value: 8, percentage: '16.3%', color: '#8b5cf6' },
-    { name: 'Premium Package', value: 3, percentage: '6.1%', color: '#22c55e' },
-  ];
+  // Dynamic data for Package Distribution
+  const packageColors = {
+    'Gold Package': '#eab308',
+    'Silver Package': '#3b82f6',
+    'Diamond Package': '#8b5cf6',
+    'Premium Package': '#22c55e',
+    'Free/None': '#94a3b8'
+  };
 
-  // Mock data for Registration Trend
-  const registrationData = [
-    { name: '01 May', value: 10 },
-    { name: '', value: 15 },
-    { name: '08 May', value: 16 },
-    { name: '', value: 25 },
-    { name: '15 May', value: 20 },
-    { name: '', value: 31 },
-    { name: '22 May', value: 28 },
-    { name: '', value: 30 },
-    { name: '29 May', value: 15 },
-  ];
+  const dbPackageList = charts?.packageDistribution || [];
+  const totalPackages = dbPackageList.reduce((acc, curr) => acc + curr.value, 0);
 
-  const totalPackages = packageData.reduce((acc, curr) => acc + curr.value, 0);
+  // Get all unique package names (predefined colors + anything returned by DB)
+  const allPackageNames = [...new Set([...Object.keys(packageColors), ...dbPackageList.map(p => p.name)])];
+
+  const packageData = allPackageNames.map(pkgName => {
+    const dbPkg = dbPackageList.find(p => p.name === pkgName);
+    const value = dbPkg ? dbPkg.value : 0;
+    return {
+      name: pkgName,
+      value: value,
+      color: packageColors[pkgName] || '#64748b',
+      percentage: totalPackages > 0 ? ((value / totalPackages) * 100).toFixed(1) + '%' : '0.0%'
+    };
+  });
+
+  // Dynamic data for Registration Trend based on Filter
+  let rawRegistrationData = charts?.registrationTrend?.[trendFilter] || [];
+
+  const generateTimeline = () => {
+    const timeline = [];
+    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+
+    if (trendFilter === 'monthly') {
+      // Current Calendar Month (e.g. 1 to 31)
+      const now = new Date();
+      const year = now.getFullYear();
+      const month = now.getMonth();
+      const daysInMonth = new Date(year, month + 1, 0).getDate();
+
+      for (let i = 1; i <= daysInMonth; i++) {
+        const d = new Date(year, month, i);
+        // Manually format to match SQL "dd MMM" (e.g. "01 Aug")
+        const dateStr = `${String(d.getDate()).padStart(2, '0')} ${months[d.getMonth()]}`;
+        const existing = rawRegistrationData.find(item => item.date === dateStr);
+        timeline.push(existing ? { ...existing, date: dateStr } : { date: dateStr, value: 0 });
+      }
+    } else if (trendFilter === 'quarterly') {
+      // Last 3 Months including current (e.g. Jun, Jul, Aug)
+      const now = new Date();
+      for (let i = 2; i >= 0; i--) {
+        const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
+        const dateStr = months[d.getMonth()]; // 'Jun'
+        const existing = rawRegistrationData.find(item => item.date === dateStr);
+        timeline.push(existing ? { ...existing, date: dateStr } : { date: dateStr, value: 0 });
+      }
+    } else if (trendFilter === 'yearly') {
+      // Current Year (Jan to Dec)
+      const now = new Date();
+      const year = now.getFullYear();
+      for (let i = 0; i < 12; i++) {
+        const d = new Date(year, i, 1);
+        const dateStr = months[d.getMonth()]; // 'Jan'
+        const existing = rawRegistrationData.find(item => item.date === dateStr);
+        timeline.push(existing ? { ...existing, date: dateStr } : { date: dateStr, value: 0 });
+      }
+    }
+    return timeline;
+  };
+
+  const registrationData = generateTimeline();
 
   const CustomTooltip = ({ active, payload }) => {
     if (active && payload && payload.length) {
       return (
         <div className="bg-white p-3 rounded-lg shadow-lg border border-slate-100">
-          <p className="text-[12px] font-bold text-slate-600 mb-1">{payload[0].payload.name || 'Value'}</p>
+          <p className="text-[12px] font-bold text-slate-600 mb-1">{payload[0].payload.name || payload[0].payload.date || 'Value'}</p>
           <p className="text-[14px] font-extrabold text-slate-900">{payload[0].value}</p>
         </div>
       );
@@ -98,8 +153,66 @@ export default function NetworkCharts() {
         </div>
       </div>
 
-      {/* 2. Package Distribution */}
-      <div className="relative overflow-hidden rounded-3xl bg-linear-to-br from-white/90 to-indigo-50/40 backdrop-blur-xl p-5 border border-indigo-100/60 shadow-sm group/card transition-all duration-300 hover:shadow-lg hover:border-indigo-200">
+      {/* 2. Registration Trend */}
+      <div className="bg-white rounded-2xl border border-slate-100 shadow-[0_2px_10px_rgba(0,0,0,0.02)] p-5 relative overflow-hidden transition-all duration-300 hover:shadow-lg hover:border-indigo-200 hover:-translate-y-1">
+        <div className="flex justify-between items-start mb-6 relative z-10">
+          <div className="flex items-center gap-1.5 cursor-pointer">
+            <h3 className="text-[15px] font-bold text-slate-900">{t('network.charts.registrationTrend')}</h3>
+            <Info className="w-4 h-4 text-slate-400 hover:text-indigo-500 transition-colors" />
+          </div>
+          <div className="relative">
+            <select
+              value={trendFilter}
+              onChange={(e) => setTrendFilter(e.target.value)}
+              className="appearance-none flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-50 border border-slate-100 text-[12px] font-bold text-slate-600 hover:bg-slate-100 transition-colors pr-8 focus:outline-none cursor-pointer"
+            >
+              <option value="monthly">{t('network.charts.thisMonth') || 'This Month'}</option>
+              <option value="quarterly">Quarterly</option>
+              <option value="yearly">Yearly</option>
+            </select>
+            <ChevronDown className="w-3.5 h-3.5 absolute right-2.5 top-1/2 -translate-y-1/2 pointer-events-none text-slate-500" />
+          </div>
+        </div>
+
+        <div className="absolute top-16 right-5 text-right z-10">
+          <div className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-md text-[12px] font-bold border ${registrationGrowth >= 0
+              ? 'bg-emerald-50 text-emerald-600 border-emerald-100/50'
+              : 'bg-rose-50 text-rose-600 border-rose-100/50'
+            }`}>
+            {registrationGrowth >= 0 ? '↑' : '↓'} {Math.abs(registrationGrowth)}%
+          </div>
+          <div className="text-[11px] font-medium text-slate-400 mt-1">{t('network.dashboard.vsLastMonth')}</div>
+        </div>
+
+        <div className="h-[180px] w-full mt-4 -ml-4">
+          <ResponsiveContainer width="100%" height="100%">
+            <AreaChart data={registrationData} margin={{ top: 10, right: 0, left: -20, bottom: 0 }}>
+              <defs>
+                <linearGradient id="colorBlue" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="5%" stopColor="#3b82f6" stopOpacity={0.3} />
+                  <stop offset="95%" stopColor="#3b82f6" stopOpacity={0} />
+                </linearGradient>
+              </defs>
+              <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
+              <XAxis
+                dataKey="date"
+                axisLine={false}
+                tickLine={false}
+                tick={{ fill: '#94a3b8', fontSize: 10, fontWeight: 600 }}
+                dy={5}
+                minTickGap={trendFilter === 'yearly' ? 0 : 25}
+                ticks={trendFilter === 'yearly' ? ['Mar', 'Jun', 'Sep', 'Dec'] : undefined}
+              />
+              <YAxis axisLine={false} tickLine={false} tick={{ fill: '#94a3b8', fontSize: 11, fontWeight: 600 }} dx={-5} allowDecimals={false} />
+              <RechartsTooltip content={<CustomTooltip />} />
+              <Area type="monotone" dataKey="value" stroke="#3b82f6" strokeWidth={3} fillOpacity={1} fill="url(#colorBlue)" activeDot={{ r: 6, fill: "#3b82f6", stroke: "#fff", strokeWidth: 2 }} />
+            </AreaChart>
+          </ResponsiveContainer>
+        </div>
+      </div>
+
+      {/* 3. Package Distribution */}
+      <div className="relative overflow-hidden rounded-3xl bg-linear-to-br from-white/90 to-indigo-50/40 backdrop-blur-xl p-5 border border-indigo-100/60 shadow-sm group/card transition-all duration-300 hover:shadow-lg hover:border-indigo-200 lg:col-span-2 xl:col-span-1">
         <div className="absolute top-0 right-0 w-64 h-64 bg-indigo-400/10 rounded-full blur-[80px] -translate-y-1/2 translate-x-1/3 pointer-events-none group-hover/card:bg-indigo-400/20 transition-colors duration-700" />
 
         <div className="relative z-10 flex items-center gap-1.5 mb-2 cursor-pointer">
@@ -150,45 +263,6 @@ export default function NetworkCharts() {
               </div>
             ))}
           </div>
-        </div>
-      </div>
-
-      {/* 3. Registration Trend */}
-      <div className="bg-white rounded-2xl border border-slate-100 shadow-[0_2px_10px_rgba(0,0,0,0.02)] p-5 relative overflow-hidden transition-all duration-300 hover:shadow-lg hover:border-indigo-200 hover:-translate-y-1 lg:col-span-2 xl:col-span-1">
-        <div className="flex justify-between items-start mb-6 relative z-10">
-          <div className="flex items-center gap-1.5 cursor-pointer">
-            <h3 className="text-[15px] font-bold text-slate-900">{t('network.charts.registrationTrend')}</h3>
-            <Info className="w-4 h-4 text-slate-400 hover:text-indigo-500 transition-colors" />
-          </div>
-          <button className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-50 border border-slate-100 text-[12px] font-bold text-slate-600 hover:bg-slate-100 transition-colors">
-            <span>{t('network.charts.thisMonth')}</span>
-            <ChevronDown className="w-3.5 h-3.5" />
-          </button>
-        </div>
-
-        <div className="absolute top-16 right-5 text-right z-10">
-          <div className="inline-flex items-center gap-1 px-2.5 py-1 rounded-md bg-emerald-50 text-emerald-600 text-[12px] font-bold border border-emerald-100/50">
-            ↑ 16%
-          </div>
-          <div className="text-[11px] font-medium text-slate-400 mt-1">{t('network.dashboard.vsLastMonth')}</div>
-        </div>
-
-        <div className="h-[180px] w-full mt-4 -ml-4">
-          <ResponsiveContainer width="100%" height="100%">
-            <AreaChart data={registrationData} margin={{ top: 10, right: 0, left: -20, bottom: 0 }}>
-              <defs>
-                <linearGradient id="colorBlue" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%" stopColor="#3b82f6" stopOpacity={0.3} />
-                  <stop offset="95%" stopColor="#3b82f6" stopOpacity={0} />
-                </linearGradient>
-              </defs>
-              <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
-              <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fill: '#94a3b8', fontSize: 11, fontWeight: 600 }} dy={5} />
-              <YAxis axisLine={false} tickLine={false} tick={{ fill: '#94a3b8', fontSize: 11, fontWeight: 600 }} dx={-5} domain={[0, 40]} ticks={[0, 10, 20, 30, 40]} />
-              <RechartsTooltip content={<CustomTooltip />} />
-              <Area type="monotone" dataKey="value" stroke="#3b82f6" strokeWidth={3} fillOpacity={1} fill="url(#colorBlue)" activeDot={{ r: 6, fill: "#3b82f6", stroke: "#fff", strokeWidth: 2 }} />
-            </AreaChart>
-          </ResponsiveContainer>
         </div>
       </div>
 

@@ -38,6 +38,7 @@ const generateUniqueUsername = async (emailAddress) => {
 
 // Register User
 export const registerUser = async (req, res) => {
+    // #swagger.tags = ['Auth']
     let { fullName, emailAddress, mobileNumber, password, referralCode } = req.body;
 
     try {
@@ -100,6 +101,7 @@ export const registerUser = async (req, res) => {
 
 // Logout User
 export const logoutUser = async (req, res) => {
+    // #swagger.tags = ['Auth']
     try {
         if (req.user && req.user.id) {
 
@@ -129,6 +131,7 @@ export const logoutUser = async (req, res) => {
 
 // Login User
 export const loginUser = async (req, res) => {
+    // #swagger.tags = ['Auth']
     let { emailAddress, password } = req.body;
 
     try {
@@ -190,6 +193,7 @@ export const loginUser = async (req, res) => {
 
 // Google Auth (Handles both Login & Register via Stored Procedures)
 export const googleAuthUser = async (req, res) => {
+    // #swagger.tags = ['Auth']
     const { credential } = req.body; // The token string from Google
 
     try {

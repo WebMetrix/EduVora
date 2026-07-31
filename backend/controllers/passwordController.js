@@ -7,6 +7,7 @@ import { t } from '../utils/translation.js';
 
 
 export const resetPassword = async (req, res) => {
+    // #swagger.tags = ['Password']
     const { emailAddress, otp, newPassword } = req.body;
 
     if (!emailAddress || !otp || !newPassword) {

@@ -2,14 +2,17 @@ import { useTranslation } from '../../hooks/useTranslation';
 import { Users, User, UserPlus, UsersRound, TrendingUp, Calendar, ChevronDown } from 'lucide-react';
 import AnimatedCounter from '../dashboard/AnimatedCounter';
 
+import { useSelector } from 'react-redux';
+
 export default function TeamDashboard() {
   const { t } = useTranslation();
+  const { dashboardStats } = useSelector((state) => state.network);
 
   const stats = [
     {
       id: 'direct',
       label: t('network.dashboard.directTeam'),
-      value: 6,
+      value: dashboardStats?.directTeam ?? 0,
       growth: "+20%",
       isPositive: true,
       icon: <UserPlus className="w-5 h-5 text-indigo-600" />,
@@ -20,7 +23,7 @@ export default function TeamDashboard() {
     {
       id: 'level1',
       label: t('network.dashboard.level1'),
-      value: 15,
+      value: dashboardStats?.level1 ?? 0,
       growth: "+25%",
       isPositive: true,
       icon: <User className="w-5 h-5 text-blue-600" />,
@@ -31,7 +34,7 @@ export default function TeamDashboard() {
     {
       id: 'level2',
       label: t('network.dashboard.level2'),
-      value: 28,
+      value: dashboardStats?.level2 ?? 0,
       growth: "+15%",
       isPositive: true,
       icon: <Users className="w-5 h-5 text-emerald-600" />,
@@ -42,7 +45,7 @@ export default function TeamDashboard() {
     {
       id: 'total',
       label: t('network.dashboard.totalTeam'),
-      value: 49,
+      value: dashboardStats?.totalTeam ?? 0,
       growth: "+20%",
       isPositive: true,
       icon: <UsersRound className="w-5 h-5 text-amber-500" />,
@@ -53,10 +56,10 @@ export default function TeamDashboard() {
     {
       id: 'growth',
       label: t('network.dashboard.monthlyGrowth'),
-      value: 8,
-      prefix: "+",
-      growth: "+14%",
-      isPositive: true,
+      value: dashboardStats?.monthlyGrowth ?? 0,
+      prefix: dashboardStats?.monthlyGrowth >= 0 ? "+" : "",
+      growth: `${dashboardStats?.monthlyGrowth >= 0 ? '+' : ''}${dashboardStats?.monthlyGrowth ?? 0}%`,
+      isPositive: (dashboardStats?.monthlyGrowth ?? 0) >= 0,
       icon: <TrendingUp className="w-5 h-5 text-rose-500" />,
       bg: "bg-rose-100",
       borderColor: "border-rose-200",
@@ -107,11 +110,11 @@ export default function TeamDashboard() {
                 </span>
               </div>
 
-              <div className="flex items-center gap-1.5 mt-1.5">
-                <span className={`text-[11px] font-bold flex items-center ${stat.isPositive ? 'text-emerald-500' : 'text-rose-500'}`}>
-                  ↑ {stat.growth}
+              <div className="flex items-center gap-1 mt-1.5 flex-wrap">
+                <span className={`text-[10px] sm:text-[11px] font-bold flex items-center whitespace-nowrap ${stat.isPositive ? 'text-emerald-500' : 'text-rose-500'}`}>
+                  {stat.isPositive ? '↑' : '↓'} {stat.growth.replace('+', '').replace('-', '')}
                 </span>
-                <span className="text-[11px] font-medium text-slate-400">
+                <span className="text-[10px] sm:text-[11px] font-medium text-slate-400 whitespace-nowrap">
                   {t('network.dashboard.vsLastMonth')}
                 </span>
               </div>

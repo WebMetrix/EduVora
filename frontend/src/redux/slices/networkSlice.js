@@ -16,6 +16,8 @@ export const fetchNetworkTree = createAsyncThunk(
 
 const initialState = {
     treeData: null,
+    dashboardStats: null,
+    charts: null,
     totalMembers: 0,
     maxLevel: 0,
     isLoading: false,
@@ -29,6 +31,8 @@ const networkSlice = createSlice({
         // Reducer to manually clear network data (e.g., on logout)
         clearNetworkData: (state) => {
             state.treeData = null;
+            state.dashboardStats = null;
+            state.charts = null;
             state.totalMembers = 0;
             state.maxLevel = 0;
             state.error = null;
@@ -42,10 +46,12 @@ const networkSlice = createSlice({
             })
             .addCase(fetchNetworkTree.fulfilled, (state, action) => {
                 state.isLoading = false;
-                state.treeData = action.payload;
+                state.treeData = action.payload?.treeData || null;
+                state.dashboardStats = action.payload?.dashboardStats || null;
+                state.charts = action.payload?.charts || null;
 
-                // Calculate stats if data exists
-                if (action.payload) {
+                // Calculate stats if treeData exists
+                if (state.treeData) {
                     let totalMembers = 0;
                     let maxLevel = 0;
 
@@ -57,7 +63,7 @@ const networkSlice = createSlice({
                         }
                     };
 
-                    traverse(action.payload, 0);
+                    traverse(state.treeData, 0);
                     
                     // Total members excludes the root user
                     state.totalMembers = totalMembers > 0 ? totalMembers - 1 : 0;

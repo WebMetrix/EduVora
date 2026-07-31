@@ -5,7 +5,8 @@
   "main": "app.js",
   "scripts": {
     "start": "node app.js",
-    "dev": "nodemon app.js"
+    "swagger": "node swagger.autogen.js",
+    "dev": "nodemon --ignore swagger-output.json --exec \"npm run swagger && node app.js\""
   },
   "keywords": [],
   "author": "",
@@ -23,6 +24,7 @@
     "mssql": "^12.7.0",
     "multer": "^2.2.0",
     "nodemailer": "^9.0.3",
+    "swagger-autogen": "^2.23.7",
     "swagger-jsdoc": "^6.3.0",
     "swagger-ui-express": "^5.0.1",
     "winston": "^3.19.0",

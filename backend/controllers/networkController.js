@@ -4,6 +4,7 @@ import { t } from '../utils/translation.js';
 
 // Get Dynamic Network Tree
 export const getNetworkTree = async (req, res) => {
+    // #swagger.tags = ['Network']
     try {
         const uuid = req.user.id;
 
@@ -11,11 +12,11 @@ export const getNetworkTree = async (req, res) => {
         const userReq = pool.request();
         userReq.input('UUID', sql.VarChar(36), uuid);
         const userRes = await userReq.execute('dbo.EV_GetUserProfile');
-        
+
         if (userRes.recordset.length === 0) {
             return res.status(404).json({ message: t('api.profile.notFound') });
         }
-        
+
         const rootUserId = userRes.recordset[0].UserID;
 
         // 2. Fetch the flat network hierarchy
@@ -23,17 +24,34 @@ export const getNetworkTree = async (req, res) => {
         networkReq.input('RootUserID', sql.NVarChar(100), rootUserId);
         const networkRes = await networkReq.execute('dbo.EV_GetMyNetwork');
 
-        const flatData = networkRes.recordset;
+        const flatData = networkRes.recordsets[0];
+        logger.info(`DB Recordsets length: ${networkRes.recordsets.length}`);
+        logger.info(`Stats: ${JSON.stringify(networkRes.recordsets[1])}`);
+        const dashboardStats = networkRes.recordsets[1] && networkRes.recordsets[1].length > 0 ? networkRes.recordsets[1][0] : null;
+        const packageDistribution = networkRes.recordsets[2] || [];
+        const rawTrend = networkRes.recordsets[3] || [];
+        const registrationTrend = {
+            monthly: rawTrend.filter(t => t.Timeframe === 'Monthly'),
+            quarterly: rawTrend.filter(t => t.Timeframe === 'Quarterly'),
+            yearly: rawTrend.filter(t => t.Timeframe === 'Yearly')
+        };
 
         if (!flatData || flatData.length === 0) {
-            return res.status(200).json(null); // Return null if no network found
+            return res.status(200).json({
+                treeData: null,
+                dashboardStats: dashboardStats,
+                charts: {
+                    packageDistribution: packageDistribution,
+                    registrationTrend: registrationTrend
+                }
+            }); // Return empty network but preserve stats/charts
         }
 
         // 3. Helper to format a DB row into the exact JSON format expected by React UI
         const mapToNode = (row) => {
             // Reconstruct full avatar path if it exists
             const avatarUrl = row.ProfilePicturePath ? `${process.env.APP_URL}/avatars/${row.ProfilePicturePath}` : null;
-            
+
             // Format Joining Date (e.g., "20 May 2025")
             let joiningDateStr = '';
             if (row.JoiningDate) {
@@ -81,13 +99,20 @@ export const getNetworkTree = async (req, res) => {
                     parentNode.children.push(currentNode);
                 }
             }
-            
+
             // Clean up temporary fields before sending to UI
             delete currentNode._sponsorId;
             delete currentNode._level;
         });
 
-        res.status(200).json(rootNode);
+        res.status(200).json({
+            treeData: rootNode,
+            dashboardStats: dashboardStats,
+            charts: {
+                packageDistribution: packageDistribution,
+                registrationTrend: registrationTrend
+            }
+        });
 
     } catch (err) {
         logger.error(`GET NETWORK ERROR: ${err.message}`, { stack: err.stack });

@@ -299,6 +299,10 @@ Assigns a referral by establishing a relationship between a Sponsor and a new Us
 - **Updates**: Inserts into `Tb_Referral` (Status = 2) and `Tb_UserRelationship`.
 
 ### `EV_GetMyNetwork`
-Fetches a flattened hierarchy of the user's downline (up to Level 2) for rendering the Genealogy Tree, including package, status, and sponsor details.
+Fetches a flattened hierarchy of the user's downline (up to Level 2) and all Dashboard/Chart analytics for the React UI.
 - **Inputs**: `@RootUserID NVARCHAR(100)`
-- **Outputs**: Result Set (`RelativeLevel`, `UserID`, `SponsorID`, `SponsorName`, `FullName`, `ProfilePicturePath`, `JoiningDate`, `AccountStatus`, `PackageName`, `ChildrenCount`)
+- **Outputs**: 
+  1. **Result Set (Genealogy Tree)**: `RelativeLevel`, `UserID`, `SponsorID`, `SponsorName`, `FullName`, `ProfilePicturePath`, `JoiningDate`, `AccountStatus`, `PackageName`, `ChildrenCount`
+  2. **Result Set (Dashboard Stats)**: `directTeam`, `level1`, `level2`, `totalTeam`, `monthlyGrowth`
+  3. **Result Set (Package Distribution)**: `name`, `value`
+  4. **Result Set (Registration Trend)**: `Timeframe` (Monthly = Current Month daily, Quarterly = Last 3 Months, Yearly = Current Year monthly), `date`, `value`

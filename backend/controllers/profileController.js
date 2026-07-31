@@ -5,6 +5,7 @@ import { encryptUserId } from '../utils/encryption.js';
 
 // Get Complete User Profile
 export const getUserProfile = async (req, res) => {
+    // #swagger.tags = ['Profile']
     try {
         const request = pool.request();
 
@@ -34,6 +35,7 @@ export const getUserProfile = async (req, res) => {
 
 // Edit User Profile
 export const editUser = async (req, res) => {
+    // #swagger.tags = ['Profile']
     // Extracting all fields from the frontend request body, including Bank details
     const {
         fullName, dateOfBirth, gender, nationality,
@@ -100,6 +102,7 @@ export const editUser = async (req, res) => {
 
 // Instant Profile Picture Update
 export const updateProfilePicture = async (req, res) => {
+    // #swagger.tags = ['Profile']
     const profilePicturePath = req.file ? req.file.path : null;
 
     if (!profilePicturePath) {
@@ -126,6 +129,7 @@ export const updateProfilePicture = async (req, res) => {
 
 // Check Username Availability
 export const checkUsername = async (req, res) => {
+    // #swagger.tags = ['Profile']
     const { username } = req.body;
 
     if (!username) return res.status(400).send({ message: t('api.profile.usernameRequired') });
@@ -148,6 +152,7 @@ export const checkUsername = async (req, res) => {
 
 // Get Genders Dropdown
 export const getGenders = async (req, res) => {
+    // #swagger.tags = ['Profile']
     try {
         const result = await pool.request().execute('dbo.EV_GetGenders');
         res.status(200).send(result.recordset);
@@ -159,6 +164,7 @@ export const getGenders = async (req, res) => {
 
 // Get States Dropdown
 export const getStates = async (req, res) => {
+    // #swagger.tags = ['Profile']
     try {
         const result = await pool.request().execute('dbo.EV_GetStates');
         res.status(200).send(result.recordset);
@@ -170,6 +176,7 @@ export const getStates = async (req, res) => {
 
 // Get Cities Dropdown (Filtered by State)
 export const getCities = async (req, res) => {
+    // #swagger.tags = ['Profile']
     const { stateName } = req.query;
     try {
         const request = pool.request();
@@ -186,6 +193,7 @@ export const getCities = async (req, res) => {
 
 // Get Bank Account Types Dropdown
 export const getBankAccountTypes = async (req, res) => {
+    // #swagger.tags = ['Profile']
     try {
         const result = await pool.request().execute('dbo.EV_GetBankAccountTypes');
         res.status(200).send(result.recordset);
@@ -197,6 +205,7 @@ export const getBankAccountTypes = async (req, res) => {
 
 // Verify IFSC Code and Fetch Bank Details
 export const verifyIfsc = async (req, res) => {
+    // #swagger.tags = ['Profile']
     const { ifscCode } = req.params;
 
     if (!ifscCode) {
@@ -231,6 +240,7 @@ export const verifyIfsc = async (req, res) => {
 
 // Update About Me Notes
 export const updateAbout = async (req, res) => {
+    // #swagger.tags = ['Profile']
     const { aboutNotes } = req.body;
 
     try {

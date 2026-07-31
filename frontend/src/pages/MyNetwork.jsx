@@ -10,7 +10,7 @@ import GenealogyTree from '../components/network/GenealogyTree';
 
 export default function MyNetwork() {
   const { t } = useTranslation();
-  
+
   // Lifted state for Tree Controls
   const transformComponentRef = useRef(null);
   const [searchQuery, setSearchQuery] = useState('');
@@ -41,7 +41,7 @@ export default function MyNetwork() {
 
       {/* Genealogy Tree Section */}
       <div className="flex flex-col gap-4">
-        <TreeControls 
+        <TreeControls
           transformComponentRef={transformComponentRef}
           searchQuery={searchQuery}
           setSearchQuery={setSearchQuery}
@@ -49,7 +49,7 @@ export default function MyNetwork() {
           setIsAllExpanded={setIsAllExpanded}
           zoomScale={zoomScale}
         />
-        <GenealogyTree 
+        <GenealogyTree
           transformComponentRef={transformComponentRef}
           searchQuery={searchQuery}
           isAllExpanded={isAllExpanded}

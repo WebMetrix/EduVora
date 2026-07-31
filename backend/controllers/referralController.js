@@ -4,6 +4,7 @@ import { t } from '../utils/translation.js';
 import { decryptUserId } from '../utils/encryption.js';
 
 export const assignReferral = async (req, res) => {
+    // #swagger.tags = ['Referral']
     const { encryptedRef } = req.body;
     const newUserUUID = req.user.id; // From JWT middleware
 

@@ -41,6 +41,7 @@ const getLocation = (req) => {
 };
 
 export const sendOtp = async (req, res) => {
+    // #swagger.tags = ['OTP']
     const { emailAddress, type, fullName } = req.body;
 
     if (!emailAddress) {
@@ -123,7 +124,7 @@ export const sendOtp = async (req, res) => {
 };
 
 export const verifyOtp = async (req, res) => {
-
+    // #swagger.tags = ['OTP']
     const { emailAddress, otp } = req.body;
 
     try {
@@ -174,7 +175,7 @@ export const verifyOtp = async (req, res) => {
 };
 
 export const resendOtp = async (req, res) => {
-
+    // #swagger.tags = ['OTP']
     const { emailAddress, fullName } = req.body;
 
     if (!emailAddress) {
