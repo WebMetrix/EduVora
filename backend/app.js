@@ -19,7 +19,8 @@ import networkRoutes from './routes/networkRoutes.js';
 // Cors configuration
 app.use(cors({
     origin: [
-        "http://localhost:5173"
+        "http://localhost:5173",
+        "http://15.252.27.77:2000/"
     ],
     credentials: true, // This allows the cookies to be sent back and forth
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
@@ -62,6 +63,6 @@ app.use('/UserData', express.static(userDataPath));
 setupSwagger(app);
 
 const PORT = process.env.PORT;
-app.listen(PORT, () => {
+app.listen(PORT, '0.0.0.0', () => {
     console.log(`Server is running on port ${PORT}`);
 });

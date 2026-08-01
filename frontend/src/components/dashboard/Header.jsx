@@ -28,6 +28,27 @@ export default function Header({ toggleSidebar, isSuperAdmin }) {
     .join('')
     .toUpperCase();
 
+  // --- AVATAR URL LOGIC START ---
+  const defaultUiAvatarUrl = import.meta.env.VITE_FALLBACK_PROF_PICTURE;
+  const baseFallbackUrl = import.meta.env.VITE_FALLBACK_PROF_PICTURE || defaultUiAvatarUrl;
+  const fallbackAvatar = `${baseFallbackUrl}${encodeURIComponent(rawName)}&background=random`;
+
+  let avatarUrl = fallbackAvatar;
+  
+  if (profileData?.ProfilePicturePath) {
+    const baseUrl = (import.meta.env.VITE_API_URL || '').replace(/\/+$/, '');
+    const normalizedPath = profileData.ProfilePicturePath.replace(/\\/g, '/');
+    const folderStartIndex = normalizedPath.indexOf('UserData'); 
+    
+    if (folderStartIndex !== -1) {
+      const relativePath = normalizedPath.substring(folderStartIndex);
+      avatarUrl = `${baseUrl}/${relativePath}`;
+    } else {
+      avatarUrl = `${baseUrl}/${normalizedPath.replace(/^\/+/, '')}`;
+    }
+  }
+  // --- AVATAR URL LOGIC END ---
+
   // Close dropdown when clicking outside
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -100,14 +121,22 @@ export default function Header({ toggleSidebar, isSuperAdmin }) {
             className="flex items-center gap-2 lg:gap-3 focus:outline-none group hover:bg-slate-100/50 p-1.5 lg:p-2 rounded-2xl transition-all"
           >
             {/* Avatar */}
-            <div className="relative">
+            <div className="relative shrink-0 flex">
               {isSuperAdmin ? (
                 <div className="w-8 h-8 lg:w-9 lg:h-9 rounded-full bg-[#f3edff] flex items-center justify-center text-[#4f3bf3] font-bold text-[13px] shadow-sm">
                   SA
                 </div>
               ) : (
-                <div className="w-8 h-8 lg:w-9 lg:h-9 rounded-full bg-indigo-50 flex items-center justify-center text-indigo-700 font-bold text-[13px] shadow-sm">
-                  {initials}
+                <div className="w-8 h-8 lg:w-9 lg:h-9 rounded-full bg-slate-100 overflow-hidden shrink-0 border border-slate-200">
+                  <img 
+                    src={avatarUrl} 
+                    alt={rawName} 
+                    className="w-full h-full object-cover" 
+                    onError={(e) => {
+                      e.currentTarget.onerror = null;
+                      e.currentTarget.src = fallbackAvatar;
+                    }}
+                  />
                 </div>
               )}
             </div>

@@ -4,11 +4,36 @@ import { User } from 'lucide-react';
 export default function TreeNodeCard({ user, onClick, isSelected, level = 0 }) {
   const { t } = useTranslation();
 
+  // 1. Setup the Fallback Avatar (with safety net)
+  const defaultUiAvatarUrl = import.meta.env.VITE_FALLBACK_PROF_PICTURE;
+  const baseFallbackUrl = import.meta.env.VITE_FALLBACK_PROF_PICTURE || defaultUiAvatarUrl;
+  const fallbackAvatar = `${baseFallbackUrl}${encodeURIComponent(user?.name || 'User')}&background=random`;
+
+  // 2. Parse and construct the valid Avatar URL
+  let avatarUrl = fallbackAvatar;
+  
+  if (user?.avatar) {
+    if (user.avatar.startsWith('http')) {
+      avatarUrl = user.avatar;
+    } else {
+      const baseUrl = (import.meta.env.VITE_API_URL || '').replace(/\/+$/, '');
+      const normalizedPath = user.avatar.replace(/\\/g, '/');
+      const folderStartIndex = normalizedPath.indexOf('UserData'); 
+      
+      if (folderStartIndex !== -1) {
+        const relativePath = normalizedPath.substring(folderStartIndex);
+        avatarUrl = `${baseUrl}/${relativePath}`;
+      } else {
+        avatarUrl = `${baseUrl}/${normalizedPath.replace(/^\/+/, '')}`;
+      }
+    }
+  }
+
   // Package colors mapping based on the image
   const getPackageColor = (pkg) => {
     switch (pkg) {
       case 'Gold Package': return 'text-yellow-500';
-      case 'Silver Package': return 'text-slate-400'; // Or a gray/blue color
+      case 'Silver Package': return 'text-slate-400';
       case 'Diamond Package': return 'text-purple-500';
       case 'Premium Package': return 'text-emerald-500';
       default: return 'text-slate-500';
@@ -29,7 +54,7 @@ export default function TreeNodeCard({ user, onClick, isSelected, level = 0 }) {
   };
 
   const getLevelBorderColor = () => {
-    if (user.status === 'Inactive') return 'border-slate-300 border-dashed';
+    if (user?.status === 'Inactive') return 'border-slate-300 border-dashed';
     if (level === 0) return 'border-indigo-500';
     if (level === 1) return 'border-blue-500';
     if (level === 2) return 'border-emerald-500';
@@ -37,7 +62,7 @@ export default function TreeNodeCard({ user, onClick, isSelected, level = 0 }) {
   };
 
   const getLevelBgColor = () => {
-    if (user.status === 'Inactive') return 'bg-slate-400';
+    if (user?.status === 'Inactive') return 'bg-slate-400';
     if (level === 0) return 'bg-indigo-600';
     if (level === 1) return 'bg-blue-600';
     if (level === 2) return 'bg-emerald-600';
@@ -59,21 +84,26 @@ export default function TreeNodeCard({ user, onClick, isSelected, level = 0 }) {
 
       {/* Avatar */}
       <div className={`w-12 h-12 rounded-full bg-slate-100 overflow-hidden flex items-center justify-center border-2 border-white shadow-sm shrink-0`}>
-        {user.avatar ? (
-          <img src={user.avatar} alt={user.name} className="w-full h-full object-cover" />
-        ) : (
-          <User className="w-6 h-6 text-slate-400" />
-        )}
+        {/* 3. Render the parsed URL with the onError fallback */}
+        <img 
+          src={avatarUrl} 
+          alt={user?.name || 'User'} 
+          className="w-full h-full object-cover" 
+          onError={(e) => {
+            e.currentTarget.onerror = null;
+            e.currentTarget.src = fallbackAvatar;
+          }}
+        />
       </div>
 
       {/* Info */}
       <div className="flex flex-col flex-1 items-start text-left min-w-0">
-        <h4 className="text-[14px] font-bold text-slate-900 truncate w-full">{user.name}</h4>
-        <span className={`text-[11px] font-extrabold mt-0.5 ${getPackageColor(user.package)}`}>
-          {user.package}
+        <h4 className="text-[14px] font-bold text-slate-900 truncate w-full">{user?.name}</h4>
+        <span className={`text-[11px] font-extrabold mt-0.5 ${getPackageColor(user?.package)}`}>
+          {user?.package}
         </span>
         <div className="mt-1.5">
-          {getStatusBadge(user.status)}
+          {getStatusBadge(user?.status)}
         </div>
       </div>
     </div>

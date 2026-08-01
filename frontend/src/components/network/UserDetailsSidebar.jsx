@@ -7,6 +7,32 @@ export default function UserDetailsSidebar({ user }) {
 
   if (!user) return null;
 
+  // 1. Setup the Fallback Avatar (with safety net)
+  const defaultUiAvatarUrl = import.meta.env.VITE_FALLBACK_PROF_PICTURE;
+  const baseFallbackUrl = import.meta.env.VITE_FALLBACK_PROF_PICTURE || defaultUiAvatarUrl;
+  const fallbackAvatar = `${baseFallbackUrl}${encodeURIComponent(user.name || 'User')}&background=random`;
+
+  // 2. Parse and construct the valid Avatar URL
+  let avatarUrl = fallbackAvatar;
+  
+  if (user?.avatar) {
+    // If it's somehow already a full HTTP url, use it, otherwise parse it
+    if (user.avatar.startsWith('http')) {
+      avatarUrl = user.avatar;
+    } else {
+      const baseUrl = (import.meta.env.VITE_API_URL || '').replace(/\/+$/, '');
+      const normalizedPath = user.avatar.replace(/\\/g, '/');
+      const folderStartIndex = normalizedPath.indexOf('UserData'); 
+      
+      if (folderStartIndex !== -1) {
+        const relativePath = normalizedPath.substring(folderStartIndex);
+        avatarUrl = `${baseUrl}/${relativePath}`;
+      } else {
+        avatarUrl = `${baseUrl}/${normalizedPath.replace(/^\/+/, '')}`;
+      }
+    }
+  }
+
   const getPackageColor = (pkg) => {
     switch (pkg) {
       case 'Gold Package': return 'text-yellow-500';
@@ -47,11 +73,16 @@ export default function UserDetailsSidebar({ user }) {
           {/* Profile Basic Info */}
           <div className="flex items-center gap-4 mb-8">
             <div className="w-16 h-16 rounded-full bg-slate-100 overflow-hidden shrink-0 border border-slate-200">
-              {user.avatar ? (
-                <img src={user.avatar} alt={user.name} className="w-full h-full object-cover" />
-              ) : (
-                <User className="w-8 h-8 text-slate-400 m-auto mt-4" />
-              )}
+              {/* 3. Implemented the parsed URL and an onError fallback */}
+              <img 
+                src={avatarUrl} 
+                alt={user.name} 
+                className="w-full h-full object-cover" 
+                onError={(e) => {
+                  e.currentTarget.onerror = null; // Prevent infinite fallback loops
+                  e.currentTarget.src = fallbackAvatar;
+                }}
+              />
             </div>
             <div className="flex flex-col items-start gap-1">
               <h3 className="text-[16px] font-bold text-slate-900 leading-tight">{user.name}</h3>
