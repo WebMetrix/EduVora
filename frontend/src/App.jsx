@@ -21,7 +21,7 @@ function App() {
       <Route path="/forgotpassword" element={<Forgot />} />
       
       {/* Protected Routes */}
-      <Route element={<ProtectedRoute />}>
+      {/* <Route element={<ProtectedRoute />}> */}
         <Route element={<GlobalLayout />}>
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/profile" element={<Profile />} />
@@ -29,7 +29,7 @@ function App() {
           <Route path="/completeprofile" element={<CompleteProfile />} />
           <Route path="/myreferrals" element={<MyReferrals />} />
         </Route>
-      </Route>
+      {/* </Route> */}
 
       <Route path="/superadmin/*" element={
         <GlobalLayout isSuperAdmin={true}>

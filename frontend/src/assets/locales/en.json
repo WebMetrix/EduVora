@@ -222,14 +222,46 @@
       "totalCommission": "Total Commission",
       "vsLastMonth": "vs last month"
     },
-    "courses": {
-      "title": "Available Courses",
-      "viewAll": "View All",
-      "view": "View",
-      "beginner": "Beginner Level",
-      "modules": "Modules",
-      "complete": "Complete",
-      "continue": "Continue Learning"
+    "packages": {
+      "title": "Available Packages",
+      "subtitle": "Choose the perfect package to start your learning journey and maximize your earnings.",
+      "viewAll": "View All Packages",
+      "oneTimePayment": "One Time Payment",
+      "viewDetails": "View Details",
+      "bestSeller": "Best Seller",
+      "mostPopular": "Most Popular",
+      "gold": {
+        "name": "Gold Package",
+        "price": "₹4,999",
+        "features": [
+          "Access to all Silver Package features",
+          "Advanced level courses",
+          "Practical assignments & case studies",
+          "Certificate of Completion",
+          "Priority Member Support"
+        ]
+      },
+      "silver": {
+        "name": "Silver Package",
+        "price": "₹2,499",
+        "features": [
+          "Access to all Bronze Package features",
+          "Intermediate level courses",
+          "Downloadable resources",
+          "Community access",
+          "Email support"
+        ]
+      },
+      "bronze": {
+        "name": "Bronze Package",
+        "price": "₹999",
+        "features": [
+          "Basic level courses",
+          "Study materials",
+          "Access on mobile & desktop",
+          "Community access"
+        ]
+      }
     },
     "activities": {
       "title": "Recent Activities",

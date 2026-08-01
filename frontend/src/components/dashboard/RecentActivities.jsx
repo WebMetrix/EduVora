@@ -56,23 +56,25 @@ export default function RecentActivities() {
 
   return (
     <div className="flex flex-col h-full">
-      <div className="flex items-center justify-between mb-2">
-        <h3 className="text-[14px] lg:text-[16px] font-bold text-slate-900">{t('dashboard.activities.title')}</h3>
-        <a href="#" className="text-[13px] lg:text-[14px] font-bold text-indigo-600 hover:text-indigo-700 hover:underline underline-offset-4 transition-all">
-          {t('dashboard.activities.viewAll')}
-        </a>
-      </div>
+      <div className="relative overflow-hidden flex-1 rounded-3xl bg-linear-to-br from-white/90 to-indigo-50/40 backdrop-blur-xl p-5 lg:p-6 border border-indigo-100/60 shadow-sm group/card transition-all duration-300 hover:shadow-none hover:border-indigo-200 flex flex-col justify-between">
+        {/* Decorative background flare */}
+        <div className="absolute top-0 right-0 w-64 h-64 bg-indigo-400/10 rounded-full blur-[80px] -translate-y-1/2 translate-x-1/3 pointer-events-none group-hover/card:bg-indigo-400/20 transition-colors duration-700" />
+        
+        <div className="relative z-10 flex items-center justify-between mb-4">
+          <h3 className="text-[14px] lg:text-[16px] font-bold text-slate-900">{t('dashboard.activities.title')}</h3>
+          <a href="#" className="text-[13px] lg:text-[14px] font-bold text-indigo-600 hover:text-indigo-700 hover:underline underline-offset-4 transition-all">
+            {t('dashboard.activities.viewAll')}
+          </a>
+        </div>
 
-      <div className="flex-1 bg-linear-to-br from-white/90 to-indigo-50/40 backdrop-blur-xl border border-indigo-100/50 rounded-2xl p-4 lg:p-5 shadow-sm hover:shadow-[0_8px_30px_rgb(99,102,241,0.15)] hover:border-indigo-300 transition-all duration-300 flex flex-col justify-between group hover:-translate-y-1">
-
-        <div className="mb-2">
+        <div className="relative z-10 mb-2">
           {activities.map(activity => (
             <ActivityItem key={activity.id} {...activity} />
           ))}
         </div>
 
         {/* Pagination */}
-        <div className="flex items-center justify-center gap-1.5 mt-auto">
+        <div className="relative z-10 flex items-center justify-center gap-1.5 mt-auto">
           <button className="w-8 h-8 rounded-full flex items-center justify-center text-slate-400 hover:bg-slate-100 transition-colors">
             <ChevronLeft className="w-4 h-4" />
           </button>

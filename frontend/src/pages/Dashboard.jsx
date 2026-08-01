@@ -1,7 +1,7 @@
 import WelcomeCard from '../components/dashboard/WelcomeCard';
 import WalletCard from '../components/dashboard/WalletCard';
 import StatsGrid from '../components/dashboard/StatsGrid';
-import CourseCard from '../components/dashboard/CourseCard';
+import PackageCards from '../components/dashboard/PackageCards';
 import RecentActivities from '../components/dashboard/RecentActivities';
 
 export default function Dashboard() {
@@ -13,13 +13,15 @@ export default function Dashboard() {
         <WalletCard />
       </div>
 
-      {/* Middle Row: Stats Grid */}
-      <StatsGrid />
+      {/* Middle Row: Stats Grid - Temporarily Commented Out */}
+      {/* <StatsGrid /> */}
 
-      {/* Bottom Row: Courses & Activities */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 lg:gap-5 mt-2 lg:mt-3">
-        <CourseCard />
-        <RecentActivities />
+      {/* Bottom Row: Packages & Activities */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 lg:gap-5 mt-2 lg:mt-3">
+        <PackageCards />
+        <div className="col-span-1">
+          <RecentActivities />
+        </div>
       </div>
     </>
   );
