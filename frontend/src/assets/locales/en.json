@@ -549,7 +549,7 @@
     "completed": "Completed",
     "inProgress": "In Progress",
     "locked": "Locked",
-    "sharingTips": "Sharing Tips",
+    "sharingTips": "Share",
     "shareOnWhatsApp": "Share on WhatsApp",
     "shareOnFacebook": "Share on Facebook",
     "shareOnTelegram": "Share on Telegram",
@@ -569,7 +569,11 @@
       "registrationDate": "Registration Date",
       "status": "Status",
       "referralLevel": "Referral Level",
-      "showingEntries": "Showing {start} to {end} of {total} entries"
+      "showingEntries": "Showing {start} to {end} of {total} entries",
+      "statusActive": "Active",
+      "statusPending": "Pending",
+      "levelPrefix": "Level ",
+      "rowsPerPage": "Rows per page:"
     }
   }
 }

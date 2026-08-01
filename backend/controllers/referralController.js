@@ -42,3 +42,44 @@ export const assignReferral = async (req, res) => {
         res.status(500).send({ message: t('api.referral.assignError') });
     }
 };
+
+export const getReferralsList = async (req, res) => {
+    // #swagger.tags = ['Referral']
+    const uuid = req.user.id;
+    const { filter, search } = req.query;
+
+    try {
+        // 1. Get the UserID from the UUID via profile SP
+        const userReq = pool.request();
+        console.log("Fetching profile for UUID:", uuid);
+        userReq.input('UUID', sql.VarChar(36), uuid);
+        const userRes = await userReq.execute('dbo.EV_GetUserProfile');
+        
+        console.log("Profile SP Recordset Length:", userRes.recordset.length);
+
+        if (!userRes.recordset || userRes.recordset.length === 0) {
+            console.log("404 Triggered: User profile not found for UUID:", uuid);
+            return res.status(404).json({ message: t('api.profile.notFound') });
+        }
+
+        const userId = userRes.recordset[0].UserID;
+        console.log("Found UserID:", userId);
+
+        // 2. Fetch the referrals using the UserID
+        const request = pool.request();
+        request.input('UserID', sql.VarChar(100), userId);
+        request.input('DateFilter', sql.VarChar(20), filter || null);
+        request.input('SearchQuery', sql.VarChar(100), search || null);
+
+        const result = await request.execute('dbo.EV_GetMyReferralsList');
+        
+        return res.status(200).send({
+            message: t('api.referral.listSuccess'),
+            data: result.recordset || []
+        });
+
+    } catch (err) {
+        logger.error(`GET REFERRALS LIST ERROR: ${err.message}`, { stack: err.stack });
+        res.status(500).send({ message: t('api.referral.listError') });
+    }
+};

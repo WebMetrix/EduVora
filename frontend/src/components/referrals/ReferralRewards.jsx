@@ -43,7 +43,7 @@ export default function ReferralRewards({ t }) {
         <button className="text-[12px] font-bold text-[#4f3bf3] hover:underline">{t('myReferrals.viewAll')}</button>
       </div>
 
-      <div className="relative z-10 flex flex-col justify-between flex-1 gap-2">
+      <div className="relative z-10 flex flex-col justify-center flex-1 gap-3 lg:gap-4">
         {rewards.map((reward, idx) => (
           <div key={idx} className={`group flex items-center justify-between p-2 lg:p-2.5 rounded-xl transition-all duration-300 hover:-translate-y-1 cursor-pointer ${reward.bg} ${reward.hoverShadow}`}>
             <div className="flex items-center gap-2">

@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node app.js",
     "swagger": "node swagger.autogen.js",
-    "dev": "nodemon --ignore swagger-output.json --exec \"npm run swagger && node app.js\""
+    "dev": "nodemon app.js"
   },
   "keywords": [],
   "author": "",

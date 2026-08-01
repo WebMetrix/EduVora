@@ -114,29 +114,29 @@ export default function TeamDashboard() {
         {stats.map((stat) => (
           <div
             key={stat.id}
-            className={`flex items-center gap-4 group bg-white p-4 lg:p-5 rounded-2xl border shadow-sm transition-all duration-300 hover:-translate-y-1 cursor-pointer ${stat.borderColor} ${stat.hoverShadow}`}
+            className={`flex items-center gap-3 lg:gap-4 xl:gap-2 2xl:gap-4 group bg-white p-3 sm:p-4 lg:p-5 xl:p-3 2xl:p-5 rounded-2xl border shadow-sm transition-all duration-300 hover:-translate-y-1 cursor-pointer ${stat.borderColor} ${stat.hoverShadow}`}
           >
             {/* Icon */}
-            <div className={`w-12 h-12 rounded-full flex items-center justify-center shrink-0 transition-transform group-hover:scale-110 duration-300 ${stat.bg}`}>
+            <div className={`w-10 h-10 sm:w-12 sm:h-12 xl:w-10 xl:h-10 2xl:w-12 2xl:h-12 rounded-full flex items-center justify-center shrink-0 transition-transform group-hover:scale-110 duration-300 ${stat.bg}`}>
               {stat.icon}
             </div>
 
             {/* Content */}
             <div className="flex flex-col gap-0.5 w-full items-start">
               <div className="min-h-[34px] flex items-center">
-                <span className="text-[11px] lg:text-[12px] font-bold text-slate-500 uppercase tracking-wide leading-tight">
+                <span className="text-[11px] lg:text-[12px] xl:text-[10px] 2xl:text-[12px] font-bold text-slate-500 uppercase tracking-wide leading-tight">
                   {stat.label}
                 </span>
               </div>
               <div className="flex items-baseline gap-1 mt-0.5">
-                {stat.prefix && <span className="text-[16px] font-extrabold text-slate-900">{stat.prefix}</span>}
-                <span className="text-[24px] font-extrabold text-slate-900 leading-none">
+                {stat.prefix && <span className="text-[14px] sm:text-[16px] font-extrabold text-slate-900">{stat.prefix}</span>}
+                <span className="text-[20px] sm:text-[24px] xl:text-[20px] 2xl:text-[24px] font-extrabold text-slate-900 leading-none">
                   <AnimatedCounter end={stat.value} duration={2} separator="," />
                 </span>
               </div>
 
-              <div className="flex items-center gap-1 mt-1.5 flex-wrap">
-                <span className={`text-[10px] sm:text-[11px] font-bold flex items-center whitespace-nowrap ${stat.isPositive ? 'text-emerald-500' : 'text-rose-500'}`}>
+              <div className="flex items-start mt-1 sm:mt-1.5 min-h-[32px] w-full">
+                <span className={`text-[10px] sm:text-[11px] xl:text-[9.5px] 2xl:text-[11px] font-bold leading-tight tracking-tight ${stat.isPositive ? 'text-emerald-500' : 'text-rose-500'}`}>
                   {stat.isPositive ? '↑' : '↓'} {stat.growth.replace('+', '').replace('-', '')}
                 </span>
               </div>

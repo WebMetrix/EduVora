@@ -7,7 +7,6 @@ import ReferralProfileCard from '../components/referrals/ReferralProfileCard';
 import ReferralLinkCard from '../components/referrals/ReferralLinkCard';
 import ReferralQRCodeCard from '../components/referrals/ReferralQRCodeCard';
 import ReferralStats from '../components/referrals/ReferralStats';
-import ReferralFunnel from '../components/referrals/ReferralFunnel';
 import ReferralRewards from '../components/referrals/ReferralRewards';
 import ReferralSharingTips from '../components/referrals/ReferralSharingTips';
 import ReferralsDataTable from '../components/referrals/ReferralsDataTable';
@@ -37,10 +36,9 @@ export default function MyReferrals() {
 
       <ReferralStats t={t} />
 
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 lg:gap-6">
-        <div className="w-full min-w-0 h-full lg:col-span-12 2xl:col-span-5"><ReferralFunnel t={t} /></div>
-        <div className="w-full min-w-0 h-full lg:col-span-6 2xl:col-span-4"><ReferralRewards t={t} /></div>
-        <div className="w-full min-w-0 h-full lg:col-span-6 2xl:col-span-3"><ReferralSharingTips t={t} profile={profile} /></div>
+      <div className="flex flex-col lg:flex-row justify-center items-stretch gap-4 lg:gap-6">
+        <div className="w-full lg:w-[50%] xl:w-[45%]"><ReferralRewards t={t} /></div>
+        <div className="w-full lg:w-[40%] xl:w-[35%]"><ReferralSharingTips t={t} profile={profile} /></div>
       </div>
 
       <ReferralsDataTable t={t} />

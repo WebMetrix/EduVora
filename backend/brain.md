@@ -306,3 +306,8 @@ Fetches a flattened hierarchy of the user's downline (up to Level 2) and all Das
   2. **Result Set (Dashboard Stats)**: Returns 3 rows (`Timeframe`: 'monthly', 'quarterly', 'yearly') containing: `directTeam`, `level1`, `level2`, `totalTeam`, `periodGrowth`, `periodGrowthPercentage`, `directTeamGrowth`, `level1Growth`, `level2Growth`, `totalTeamGrowth`
   3. **Result Set (Package Distribution)**: `name`, `value`
   4. **Result Set (Registration Trend)**: `Timeframe` (Monthly = Current Month daily, Quarterly = Last 3 Months, Yearly = Current Year monthly), `date`, `value`
+
+### `EV_GetMyReferralsList`
+Fetches a searchable and filterable list of the user's direct and indirect referrals for the Referrals Table UI.
+- **Inputs**: `@UserID VARCHAR(100)`, `@DateFilter VARCHAR(20) = NULL`, `@SearchQuery VARCHAR(100) = NULL`
+- **Outputs**: Result Set containing `ProfilePicturePath`, `UserID`, `Name`, `PackageName`, `RegistrationDate`, `Status`, `ReferralLevel`

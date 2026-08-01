@@ -1,5 +1,5 @@
 import React from 'react';
-import { Users, UserCheck, Clock, TrendingUp } from 'lucide-react';
+import { Users, UserCheck, Package, TrendingUp } from 'lucide-react';
 
 export default function ReferralStats({ t }) {
   const stats = [
@@ -24,10 +24,10 @@ export default function ReferralStats({ t }) {
       hoverShadow: "hover:shadow-lg hover:border-emerald-300"
     },
     {
-      title: t('myReferrals.pendingRegistrations'),
+      title: t('myReferrals.purchasedPackage'),
       value: "32",
       trend: "+ 8.2%",
-      icon: <Clock className="w-5 h-5 text-amber-500" />,
+      icon: <Package className="w-5 h-5 text-amber-500" />,
       bg: "bg-amber-100",
       borderColor: "border-amber-200",
       trendColor: "text-emerald-500",

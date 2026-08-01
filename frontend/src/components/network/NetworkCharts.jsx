@@ -12,7 +12,13 @@ export default function NetworkCharts() {
   const { t } = useTranslation();
   const { charts, dashboardStats } = useSelector((state) => state.network);
   const [trendFilter, setTrendFilter] = useState('monthly');
-  const registrationGrowth = dashboardStats?.monthlyGrowth || 0;
+  const registrationGrowth = dashboardStats?.[trendFilter]?.periodGrowthPercentage || 0;
+
+  const getVsText = () => {
+    if (trendFilter === 'quarterly') return t('network.dashboard.vsLastQuarter') || 'vs last quarter';
+    if (trendFilter === 'yearly') return t('network.dashboard.vsLastYear') || 'vs last year';
+    return t('network.dashboard.vsLastMonth') || 'vs last month';
+  };
 
   // Mock data for Referral Growth (left hardcoded as requested)
   const referralData = [
@@ -29,8 +35,9 @@ export default function NetworkCharts() {
 
   // Dynamic data for Package Distribution
   const packageColors = {
-    'Gold Package': '#eab308',
+    'Bronze Package': '#d97706',
     'Silver Package': '#3b82f6',
+    'Gold Package': '#eab308',
     'Diamond Package': '#8b5cf6',
     'Premium Package': '#22c55e',
     'Free/None': '#94a3b8'
@@ -39,8 +46,8 @@ export default function NetworkCharts() {
   const dbPackageList = charts?.packageDistribution || [];
   const totalPackages = dbPackageList.reduce((acc, curr) => acc + curr.value, 0);
 
-  // Get all unique package names (predefined colors + anything returned by DB)
-  const allPackageNames = [...new Set([...Object.keys(packageColors), ...dbPackageList.map(p => p.name)])];
+  // Use exactly what the database returns. No hardcoded forcing!
+  const allPackageNames = [...new Set([...dbPackageList.map(p => p.name)])];
 
   const packageData = allPackageNames.map(pkgName => {
     const dbPkg = dbPackageList.find(p => p.name === pkgName);
@@ -112,10 +119,10 @@ export default function NetworkCharts() {
   };
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4 lg:gap-5">
+    <div className="flex flex-col lg:flex-row lg:flex-wrap gap-4 lg:gap-5 w-full">
 
-      {/* 1. Referral Growth */}
-      <div className="bg-white rounded-2xl border border-slate-100 shadow-[0_2px_10px_rgba(0,0,0,0.02)] p-5 relative overflow-hidden transition-all duration-300 hover:border-indigo-300 hover:shadow-md cursor-pointer group/card">
+      {/* 1. Referral Growth (Commented out as requested)
+      <div className="flex-1 min-w-full lg:min-w-[calc(50%-10px)] xl:min-w-[30%] bg-white rounded-2xl border border-slate-100 shadow-[0_2px_10px_rgba(0,0,0,0.02)] p-5 relative overflow-hidden transition-all duration-300 hover:border-indigo-300 hover:shadow-md cursor-pointer group/card">
         <div className="flex justify-between items-start mb-6 relative z-10">
           <div className="flex items-center gap-1.5 cursor-pointer">
             <h3 className="text-[15px] font-bold text-slate-900">{t('network.charts.referralGrowth')}</h3>
@@ -152,9 +159,10 @@ export default function NetworkCharts() {
           </ResponsiveContainer>
         </div>
       </div>
+      */}
 
       {/* 2. Registration Trend */}
-      <div className="bg-white rounded-2xl border border-slate-100 shadow-[0_2px_10px_rgba(0,0,0,0.02)] p-5 relative overflow-hidden transition-all duration-300 hover:border-indigo-300 hover:shadow-md cursor-pointer group/card">
+      <div className="flex-1 min-w-full lg:min-w-[calc(50%-10px)] xl:min-w-[30%] bg-white rounded-2xl border border-slate-100 shadow-[0_2px_10px_rgba(0,0,0,0.02)] p-5 relative overflow-hidden transition-all duration-300 hover:border-indigo-300 hover:shadow-md cursor-pointer group/card">
         <div className="flex justify-between items-start mb-6 relative z-10">
           <div className="flex items-center gap-1.5 cursor-pointer">
             <h3 className="text-[15px] font-bold text-slate-900">{t('network.charts.registrationTrend')}</h3>
@@ -181,7 +189,7 @@ export default function NetworkCharts() {
             }`}>
             {registrationGrowth >= 0 ? '↑' : '↓'} {Math.abs(registrationGrowth)}%
           </div>
-          <div className="text-[11px] font-medium text-slate-400 mt-1">{t('network.dashboard.vsLastMonth')}</div>
+          <div className="text-[11px] font-medium text-slate-400 mt-1">{getVsText()}</div>
         </div>
 
         <div className="h-[180px] w-full mt-4 -ml-4">
@@ -212,7 +220,7 @@ export default function NetworkCharts() {
       </div>
 
       {/* 3. Package Distribution */}
-      <div className="relative overflow-hidden rounded-3xl bg-linear-to-br from-white/90 to-indigo-50/40 backdrop-blur-xl p-5 border border-indigo-100/60 shadow-sm group/card transition-all duration-300 hover:shadow-md hover:border-indigo-300 hover:-translate-y-[2px] cursor-pointer lg:col-span-2 xl:col-span-1">
+      <div className="flex-1 min-w-full xl:min-w-[30%] relative overflow-hidden rounded-3xl bg-linear-to-br from-white/90 to-indigo-50/40 backdrop-blur-xl p-5 border border-indigo-100/60 shadow-sm group/card transition-all duration-300 hover:shadow-md hover:border-indigo-300 hover:-translate-y-[2px] cursor-pointer">
         <div className="absolute top-0 right-0 w-64 h-64 bg-indigo-400/10 rounded-full blur-[80px] -translate-y-1/2 translate-x-1/3 pointer-events-none group-hover/card:bg-indigo-400/20 transition-colors duration-700" />
 
         <div className="relative z-10 flex items-center gap-1.5 mb-2 cursor-pointer">
@@ -220,17 +228,17 @@ export default function NetworkCharts() {
           <Info className="w-4 h-4 text-slate-400 hover:text-indigo-500 transition-colors" />
         </div>
 
-        <div className="relative z-10 flex flex-col sm:flex-row items-center justify-between h-auto sm:h-[180px] mt-4 gap-4 sm:gap-0">
+        <div className="relative z-10 flex flex-col sm:flex-row items-center justify-between h-auto sm:h-[180px] mt-4 gap-4 sm:gap-0 xl:gap-2 2xl:gap-0">
           {/* Donut Chart */}
-          <div className="w-[170px] h-[170px] relative flex-shrink-0">
+          <div className="w-[150px] h-[150px] sm:w-[170px] sm:h-[170px] xl:w-[135px] xl:h-[135px] 2xl:w-[170px] 2xl:h-[170px] relative flex-shrink-0">
             <ResponsiveContainer width="100%" height="100%">
               <PieChart style={{ outline: 'none' }}>
                 <Pie
                   data={packageData}
                   cx="50%"
                   cy="50%"
-                  innerRadius={65}
-                  outerRadius={85}
+                  innerRadius="65%"
+                  outerRadius="85%"
                   paddingAngle={2}
                   dataKey="value"
                   stroke="none"
@@ -243,13 +251,13 @@ export default function NetworkCharts() {
             </ResponsiveContainer>
             {/* Center Text */}
             <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none drop-shadow-sm">
-              <span className="text-[26px] font-black text-slate-800 leading-none tracking-tight">{totalPackages}</span>
-              <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider mt-0.5">{t('network.charts.total')}</span>
+              <span className="text-[24px] sm:text-[26px] xl:text-[20px] 2xl:text-[26px] font-black text-slate-800 leading-none tracking-tight">{totalPackages}</span>
+              <span className="text-[10px] sm:text-[11px] xl:text-[9px] 2xl:text-[11px] font-bold text-slate-400 uppercase tracking-wider mt-0.5">{t('network.charts.total')}</span>
             </div>
           </div>
 
           {/* Legend */}
-          <div className="flex flex-col gap-3.5 w-full sm:w-[50%] mt-4 sm:mt-0">
+          <div className="flex flex-col gap-2.5 sm:gap-3.5 xl:gap-2 2xl:gap-3.5 w-full sm:w-[50%] xl:w-[55%] 2xl:w-[50%] mt-2 sm:mt-0">
             {packageData.map((pkg, i) => (
               <div key={i} className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
