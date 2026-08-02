@@ -20,9 +20,10 @@ import networkRoutes from './routes/networkRoutes.js';
 app.use(cors({
     origin: [
         "http://localhost:5173",
-        "http://15.252.27.77:2000/"
+        "http://15.252.27.77:2000"
     ],
     credentials: true, // This allows the cookies to be sent back and forth
+    origin: true, // Automatically reflects the requesting origin
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept', 'Cookie']
 }))
