@@ -142,7 +142,7 @@ const authSlice = createSlice({
 
                 // STORE TOKEN IN SESSION STORAGE
                 if (action.payload.token) {
-                    sessionStorage.setItem('sessionid', action.payload.sessionId);
+                    sessionStorage.setItem('sessionid', action.payload.token);
                 }
                 state.error = null;
                 toast.success(t('toast.auth.loginSuccess'));
@@ -163,7 +163,7 @@ const authSlice = createSlice({
 
                 //STORE TOKEN IN SESSION STORAGE (Since backend sends token on register)
                 if (action.payload.token) {
-                    sessionStorage.setItem('sessionid', action.payload.sessionId);
+                    sessionStorage.setItem('sessionid', action.payload.token);
                 }
                 state.user = action.payload.user;
                 toast.success(action.payload.message || t('toast.auth.registerSuccess'));
@@ -186,7 +186,7 @@ const authSlice = createSlice({
 
                 //STORE TOKEN IN SESSION STORAGE
                 if (action.payload.token) {
-                    sessionStorage.setItem('sessionid', action.payload.sessionId);
+                    sessionStorage.setItem('sessionid', action.payload.token);
                 }
                 state.error = null;
                 toast.success(t('toast.auth.googleSuccess'));
