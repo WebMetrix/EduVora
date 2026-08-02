@@ -13,9 +13,9 @@ export default function Login() {
   }, []);
 
   return (
-    <div className="w-full relative bg-white flex flex-col md:flex-row min-h-screen md:h-screen md:overflow-hidden">
+    <div className="w-full h-[100dvh] md:h-screen relative bg-white flex flex-col md:flex-row overflow-hidden">
       {isMobile ? (
-        <div className="md:hidden w-full">
+        <div className="md:hidden w-full h-full">
           <MobileLogin />
         </div>
       ) : (

@@ -17,9 +17,9 @@ export default function Dashboard() {
       {/* <StatsGrid /> */}
 
       {/* Bottom Row: Packages & Activities */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 lg:gap-5 mt-2 lg:mt-3">
+      <div className="grid grid-cols-1 xl:grid-cols-3 gap-4 lg:gap-5 mt-2 lg:mt-3">
         <PackageCards />
-        <div className="col-span-1">
+        <div className="xl:col-span-1">
           <RecentActivities />
         </div>
       </div>

@@ -10,7 +10,7 @@ export default function MobileLogin() {
   const { t } = useTranslation();
 
   return (
-    <div className="w-full h-dvh flex flex-col relative pb-safe pt-safe bg-white px-5 py-4 md:hidden overflow-hidden">
+    <div className="w-full h-full flex flex-col relative bg-white px-5 py-4 overflow-hidden">
       {/* Header with Language Dropdown and Logo */}
       <div className="flex justify-between items-start w-full mb-3 relative z-10">
         <div className="flex flex-col items-center flex-1 mt-2">
@@ -49,8 +49,8 @@ export default function MobileLogin() {
       </div>
 
       {/* Beautiful Bottom Wave Illustration */}
-      <div className="absolute bottom-0 left-0 right-0 pointer-events-none overflow-hidden z-0 flex items-end justify-center">
-        <img src={authMobileBg} alt="Background Pattern" className="w-full h-auto object-cover object-bottom opacity-80" />
+      <div className="absolute bottom-0 left-0 w-full pointer-events-none z-0">
+        <img src={authMobileBg} alt="Background Pattern" className="w-full h-auto object-cover object-bottom opacity-80 translate-y-[1px]" />
       </div>
     </div>
   );

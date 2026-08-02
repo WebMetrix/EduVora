@@ -47,7 +47,7 @@ export default function PackageCards() {
   ];
 
   return (
-    <div className="flex flex-col h-full lg:col-span-2">
+    <div className="flex flex-col h-full xl:col-span-2">
       <div className="relative overflow-hidden flex-1 rounded-3xl bg-linear-to-br from-white/90 to-indigo-50/40 backdrop-blur-xl p-5 lg:p-6 border border-indigo-100/60 shadow-sm group/card transition-all duration-300 hover:shadow-none hover:border-indigo-200 flex flex-col">
         {/* Decorative background flare */}
         <div className="absolute top-0 right-0 w-64 h-64 bg-indigo-400/10 rounded-full blur-[80px] -translate-y-1/2 translate-x-1/3 pointer-events-none group-hover/card:bg-indigo-400/20 transition-colors duration-700" />
@@ -62,9 +62,9 @@ export default function PackageCards() {
           <p className="text-[12px] text-slate-500">{t('dashboard.packages.subtitle')}</p>
         </div>
 
-        <div className="relative z-10 grid grid-cols-1 sm:grid-cols-3 gap-3 lg:gap-4 flex-1">
+        <div className="relative z-10 flex sm:grid sm:grid-cols-3 overflow-x-auto sm:overflow-x-visible snap-x snap-mandatory gap-4 pb-2 sm:pb-0 custom-scrollbar">
           {packages.map((pkg) => (
-            <div key={pkg.id} className="group/pkg flex flex-col bg-white rounded-[20px] border border-slate-200 overflow-hidden shadow-sm hover:-translate-y-1 hover:shadow-[0_8px_30px_rgb(79,59,243,0.12)] hover:border-indigo-300 transition-all duration-300">
+            <div key={pkg.id} className="min-w-[85vw] sm:min-w-0 snap-center group/pkg flex flex-col bg-white rounded-[20px] border border-slate-200 overflow-hidden shadow-sm hover:-translate-y-1 hover:shadow-[0_8px_30px_rgb(79,59,243,0.12)] hover:border-indigo-300 transition-all duration-300">
               {/* Header */}
               <div 
                 className={`relative p-3 sm:p-4 ${pkg.headerBg} flex flex-col items-center justify-center min-h-[90px]`}
