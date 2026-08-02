@@ -29,16 +29,55 @@ export default function Header({ toggleSidebar, isSuperAdmin }) {
     .toUpperCase();
 
   // --- AVATAR URL LOGIC START ---
+  // const defaultUiAvatarUrl = import.meta.env.VITE_FALLBACK_PROF_PICTURE;
+  // const baseFallbackUrl = import.meta.env.VITE_FALLBACK_PROF_PICTURE || defaultUiAvatarUrl;
+  // const fallbackAvatar = `${baseFallbackUrl}${encodeURIComponent(rawName)}&background=random`;
+
+  // let avatarUrl = fallbackAvatar;
+  
+  // if (profileData?.ProfilePicturePath) {
+  //   const baseUrl = (import.meta.env.VITE_API_URL || '').replace(/\/+$/, '');
+  //   const normalizedPath = profileData.ProfilePicturePath.replace(/\\/g, '/');
+  //   const folderStartIndex = normalizedPath.indexOf('UserData'); 
+    
+  //   if (folderStartIndex !== -1) {
+  //     const relativePath = normalizedPath.substring(folderStartIndex);
+  //     avatarUrl = `${baseUrl}/${relativePath}`;
+  //   } else {
+  //     avatarUrl = `${baseUrl}/${normalizedPath.replace(/^\/+/, '')}`;
+  //   }
+  // }
+  // --- AVATAR URL LOGIC END ---
+
+  // --- AVATAR URL LOGIC START ---
   const defaultUiAvatarUrl = import.meta.env.VITE_FALLBACK_PROF_PICTURE;
-  const baseFallbackUrl = import.meta.env.VITE_FALLBACK_PROF_PICTURE || defaultUiAvatarUrl;
-  const fallbackAvatar = `${baseFallbackUrl}${encodeURIComponent(rawName)}&background=random`;
+  const fallbackAvatar = `${defaultUiAvatarUrl}${encodeURIComponent(rawName)}&background=random`;
 
   let avatarUrl = fallbackAvatar;
   
-  if (profileData?.ProfilePicturePath) {
-    const baseUrl = (import.meta.env.VITE_API_URL || '').replace(/\/+$/, '');
-    const normalizedPath = profileData.ProfilePicturePath.replace(/\\/g, '/');
-    const folderStartIndex = normalizedPath.indexOf('UserData'); 
+  // 1. Safely parse the session storage backup so the image survives a page refresh
+  let sessionProfile = {};
+  try {
+    const cached = sessionStorage.getItem('cachedProfile');
+    if (cached) sessionProfile = JSON.parse(cached);
+  } catch (e) {
+    console.error("Failed to parse cached profile", e);
+  }
+
+  // 2. Check Profile Redux, then Auth Redux, then Session Storage
+  const actualPicturePath = 
+    profileData?.ProfilePicturePath || 
+    user?.ProfilePicturePath || 
+    sessionProfile?.ProfilePicturePath;
+  
+  if (actualPicturePath) {
+    // 3. Force your Elastic IP if Vite tries to use localhost on the deployed server
+    let baseUrl = import.meta.env.VITE_API_URL;
+    baseUrl = baseUrl.replace(/\/+$/, ''); // Remove trailing slashes
+
+    // 4. Format the Windows path into a valid web URL
+    const normalizedPath = actualPicturePath.replace(/\\/g, '/');
+    const folderStartIndex = normalizedPath.toLowerCase().indexOf('userdata'); 
     
     if (folderStartIndex !== -1) {
       const relativePath = normalizedPath.substring(folderStartIndex);
