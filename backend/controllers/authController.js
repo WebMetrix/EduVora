@@ -172,7 +172,8 @@ export const loginUser = async (req, res) => {
         // 7. Set Cookie & Respond
         res.cookie('token', token, {
             httpOnly: true,
-            secure: true,
+            secure: false,
+            // secure: true,
             sameSite: 'none',
             // secure: process.env.NODE_ENV === 'production',
             // sameSite: 'lax',
