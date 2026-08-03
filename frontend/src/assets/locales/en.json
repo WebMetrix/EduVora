@@ -319,7 +319,6 @@
     "title": "My Network",
     "breadcrumb1": "Home",
     "breadcrumb2": "My Network",
-    "breadcrumb3": "Genealogy Tree",
     "dashboard": {
       "title": "Team Dashboard",
       "directTeam": "Direct Team",
@@ -355,8 +354,9 @@
       "level1": "Level 1",
       "level2": "Level 2",
       "active": "Active",
-      "inactive": "Inactive",
       "pending": "Pending",
+      "registered": "Registered",
+      "cancelled": "Cancelled",
       "mobileHint": "Tap on any node to view details"
     },
     "details": {
@@ -604,6 +604,8 @@
       "showingEntries": "Showing {start} to {end} of {total} entries",
       "statusActive": "Active",
       "statusPending": "Pending",
+      "statusRegistered": "Registered",
+      "statusCancelled": "Cancelled",
       "levelPrefix": "Level ",
       "rowsPerPage": "Rows per page:"
     }

@@ -71,7 +71,9 @@ export const getNetworkTree = async (req, res) => {
                 id: row.UserID,               // Used for UI key and selection
                 name: row.FullName,
                 package: row.PackageName,
+                packageId: row.PackageId,     // For switch statements
                 status: row.AccountStatus,
+                statusId: row.StatusId,       // For switch statements
                 userId: row.UserID,
                 sponsor: row.SponsorName,
                 joiningDate: joiningDateStr,

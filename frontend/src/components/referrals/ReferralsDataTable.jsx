@@ -28,8 +28,11 @@ export default function ReferralsDataTable({ t }) {
     setPage(1); // Reset to first page
   }, [filter, debouncedSearch, dispatch]);
 
-  const getStatusStyle = (status) => {
-    return status === 'Active' ? 'bg-emerald-100 text-emerald-600' : 'bg-amber-100 text-amber-600';
+  const getStatusStyle = (statusId) => {
+    if (statusId === 3) return 'bg-emerald-100 text-emerald-600'; // Active
+    if (statusId === 4) return 'bg-rose-100 text-rose-600';       // Cancelled
+    if (statusId === 2) return 'bg-blue-100 text-blue-600';       // Registered
+    return 'bg-amber-100 text-amber-600';                         // Pending or default
   };
 
   const getLevelStyle = (level) => {
@@ -134,8 +137,11 @@ export default function ReferralsDataTable({ t }) {
                   <td className="px-6 py-3 text-[12px] font-semibold text-slate-600">{row.PackageName}</td>
                   <td className="px-6 py-3 text-[12px] font-semibold text-slate-600 whitespace-nowrap">{formatDate(row.RegistrationDate)}</td>
                   <td className="px-6 py-3">
-                    <span className={`px-2.5 py-1 rounded-full text-[11px] font-bold border border-white/40 shadow-sm ${getStatusStyle(row.Status)}`}>
-                      {row.Status === 'Active' ? t('myReferrals.table.statusActive') : t('myReferrals.table.statusPending')}
+                    <span className={`px-2.5 py-1 rounded-full text-[11px] font-bold border border-white/40 shadow-sm ${getStatusStyle(row.StatusId)}`}>
+                      {row.StatusId === 3 ? t('myReferrals.table.statusActive')
+                        : row.StatusId === 2 ? t('myReferrals.table.statusRegistered')
+                          : row.StatusId === 4 ? t('myReferrals.table.statusCancelled')
+                            : t('myReferrals.table.statusPending')}
                     </span>
                   </td>
                   <td className="px-6 py-3 rounded-r-xl">
@@ -162,8 +168,11 @@ export default function ReferralsDataTable({ t }) {
                   <div className="text-[12px] font-extrabold text-indigo-900/60">{row.UserID}</div>
                 </div>
               </div>
-              <span className={`px-2.5 py-1 rounded-full text-[11px] font-bold shadow-sm shrink-0 border border-white/40 ${getStatusStyle(row.Status)}`}>
-                {row.Status === 'Active' ? t('myReferrals.table.statusActive') : t('myReferrals.table.statusPending')}
+              <span className={`px-2.5 py-1 rounded-full text-[11px] font-bold shadow-sm shrink-0 border border-white/40 ${getStatusStyle(row.StatusId)}`}>
+                {row.StatusId === 3 ? t('myReferrals.table.statusActive')
+                  : row.StatusId === 2 ? t('myReferrals.table.statusRegistered')
+                    : row.StatusId === 4 ? t('myReferrals.table.statusCancelled')
+                      : t('myReferrals.table.statusPending')}
               </span>
             </div>
 

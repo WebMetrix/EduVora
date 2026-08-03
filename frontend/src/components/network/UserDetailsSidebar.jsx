@@ -1,6 +1,7 @@
 import { useTranslation } from '../../hooks/useTranslation';
 import { User, Calendar, Hash, Users, Shield, Package } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { Link } from 'react-router-dom';
 
 export default function UserDetailsSidebar({ user }) {
   const { t } = useTranslation();
@@ -14,7 +15,7 @@ export default function UserDetailsSidebar({ user }) {
 
   // 2. Parse and construct the valid Avatar URL
   let avatarUrl = fallbackAvatar;
-  
+
   if (user?.avatar) {
     // If it's somehow already a full HTTP url, use it, otherwise parse it
     if (user.avatar.startsWith('http')) {
@@ -22,8 +23,8 @@ export default function UserDetailsSidebar({ user }) {
     } else {
       const baseUrl = (import.meta.env.VITE_API_URL || '').replace(/\/+$/, '');
       const normalizedPath = user.avatar.replace(/\\/g, '/');
-      const folderStartIndex = normalizedPath.indexOf('UserData'); 
-      
+      const folderStartIndex = normalizedPath.indexOf('UserData');
+
       if (folderStartIndex !== -1) {
         const relativePath = normalizedPath.substring(folderStartIndex);
         avatarUrl = `${baseUrl}/${relativePath}`;
@@ -33,23 +34,25 @@ export default function UserDetailsSidebar({ user }) {
     }
   }
 
-  const getPackageColor = (pkg) => {
-    switch (pkg) {
-      case 'Gold Package': return 'text-yellow-500';
-      case 'Silver Package': return 'text-slate-500';
-      case 'Diamond Package': return 'text-purple-500';
-      case 'Premium Package': return 'text-emerald-500';
-      default: return 'text-slate-500';
+  const getPackageColor = (pkgId) => {
+    switch (pkgId) {
+      case 3: return 'text-yellow-500'; // Gold
+      case 2: return 'text-slate-500';  // Silver
+      case 4: return 'text-purple-500'; // Diamond
+      case 1: return 'text-amber-600';  // Bronze
+      default: return 'text-slate-500'; // Unknown or None
     }
   };
 
-  const getStatusBadge = (status) => {
-    switch (status) {
-      case 'Active':
+  const getStatusBadge = (statusId) => {
+    switch (statusId) {
+      case 3:
         return <span className="px-2 py-0.5 rounded bg-emerald-50 text-emerald-600 text-[10px] font-bold border border-emerald-100">{t('network.tree.active')}</span>;
-      case 'Inactive':
-        return <span className="px-2 py-0.5 rounded bg-rose-50 text-rose-600 text-[10px] font-bold border border-rose-100">{t('network.tree.inactive')}</span>;
-      case 'Pending':
+      case 4:
+        return <span className="px-2 py-0.5 rounded bg-rose-50 text-rose-600 text-[10px] font-bold border border-rose-100">{t('network.tree.cancelled')}</span>;
+      case 2:
+        return <span className="px-2 py-0.5 rounded bg-blue-50 text-blue-600 text-[10px] font-bold border border-blue-100">{t('network.tree.registered')}</span>;
+      case 1:
         return <span className="px-2 py-0.5 rounded bg-amber-50 text-amber-600 text-[10px] font-bold border border-amber-100">{t('network.tree.pending')}</span>;
       default:
         return null;
@@ -71,30 +74,32 @@ export default function UserDetailsSidebar({ user }) {
         <div className="relative z-10 px-6 flex flex-col h-full py-6 justify-center">
 
           {/* Profile Basic Info */}
-          <div className="flex items-center gap-4 mb-8">
-            <div className="w-16 h-16 rounded-full bg-slate-100 overflow-hidden shrink-0 border border-slate-200">
+          <div className="flex flex-col items-center justify-center text-center gap-3 mb-8">
+            <div className="w-20 h-20 rounded-full bg-slate-100 overflow-hidden shrink-0 border-2 border-white shadow-sm">
               {/* 3. Implemented the parsed URL and an onError fallback */}
-              <img 
-                src={avatarUrl} 
-                alt={user.name} 
-                className="w-full h-full object-cover" 
+              <img
+                src={avatarUrl}
+                alt={user.name}
+                className="w-full h-full object-cover"
                 onError={(e) => {
                   e.currentTarget.onerror = null; // Prevent infinite fallback loops
                   e.currentTarget.src = fallbackAvatar;
                 }}
               />
             </div>
-            <div className="flex flex-col items-start gap-1">
-              <h3 className="text-[16px] font-bold text-slate-900 leading-tight">{user.name}</h3>
-              <span className={`text-[12px] font-extrabold ${getPackageColor(user.package)}`}>
+            <div className="flex flex-col items-center gap-1">
+              <h3 className="text-[18px] font-bold text-slate-900 leading-tight">{user.name}</h3>
+              <span className={`text-[13px] font-extrabold ${getPackageColor(user.packageId)}`}>
                 {user.package}
               </span>
-              {getStatusBadge(user.status)}
+              <div className="mt-1">
+                {getStatusBadge(user.statusId)}
+              </div>
             </div>
           </div>
 
           {/* Details List */}
-          <div className="flex flex-col gap-5 w-full">
+          <div className="flex flex-col gap-4 w-full">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2 text-[12px] font-bold text-slate-500">
                 <Hash className="w-4 h-4" />
@@ -136,12 +141,12 @@ export default function UserDetailsSidebar({ user }) {
             </div>
           </div>
 
-          {/* Action Button */}
-          <div className="mt-8">
-            <button className="w-full flex items-center justify-center gap-2 py-3 rounded-xl bg-indigo-600 text-white text-[14px] font-bold hover:bg-indigo-700 transition-all duration-300 shadow-md shadow-indigo-600/20 hover:shadow-lg hover:shadow-indigo-600/40 hover:-translate-y-1 active:scale-95 group">
+          {/* Action Button Container (Always present to maintain fixed height) */}
+          <div className={`mt-8 ${user.treeLevel === 0 ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}>
+            <Link to="/profile" className="w-full flex items-center justify-center gap-2 py-3 rounded-xl bg-indigo-600 text-white text-[14px] font-bold hover:bg-indigo-700 transition-all duration-300 shadow-md shadow-indigo-600/20 hover:shadow-lg hover:shadow-indigo-600/40 hover:-translate-y-1 active:scale-95 group">
               <User className="w-4 h-4 group-hover:scale-110 transition-transform duration-300" />
               <span>{t('network.details.viewFullProfile')}</span>
-            </button>
+            </Link>
           </div>
         </div>
       </motion.div>

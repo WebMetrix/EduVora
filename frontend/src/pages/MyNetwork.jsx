@@ -27,9 +27,7 @@ export default function MyNetwork() {
         <div className="flex items-center text-[13px] font-medium text-slate-500 gap-1.5">
           <span>{t('network.breadcrumb1')}</span>
           <ChevronRight className="w-3.5 h-3.5" />
-          <span>{t('network.breadcrumb2')}</span>
-          <ChevronRight className="w-3.5 h-3.5" />
-          <span className="text-slate-900">{t('network.breadcrumb3')}</span>
+          <span className="text-slate-900">{t('network.breadcrumb2')}</span>
         </div>
       </div>
 

@@ -90,7 +90,7 @@ export default function GenealogyTree({ transformComponentRef, searchQuery, isAl
   // Once treeData is available and selectedUser is null, auto-select the root node
   useEffect(() => {
     if (treeData && !selectedUser) {
-      setSelectedUser(treeData);
+      setSelectedUser({ ...treeData, treeLevel: 0 });
     }
   }, [treeData, selectedUser]);
 
@@ -156,8 +156,8 @@ export default function GenealogyTree({ transformComponentRef, searchQuery, isAl
                     {/* The Tree */}
                     <TreeNode
                       node={treeData}
-                      onNodeClick={(user) => {
-                        setSelectedUser(user);
+                      onNodeClick={(user, level) => {
+                        setSelectedUser({ ...user, treeLevel: level });
                         setHasInteractedMobile(true);
                         // Optional slight delay to ensure UI renders before scroll
                         setTimeout(() => {
@@ -194,7 +194,7 @@ export default function GenealogyTree({ transformComponentRef, searchQuery, isAl
             </div>
             <div className="flex items-center gap-1.5 lg:gap-2">
               <div className="w-5 lg:w-6 h-1 rounded-full border-b-2 border-dashed border-slate-300"></div>
-              <span className="text-[11px] lg:text-[12px] font-bold text-slate-700">{t('network.tree.inactive')}</span>
+              <span className="text-[11px] lg:text-[12px] font-bold text-slate-700">{t('network.tree.cancelled')}</span>
             </div>
           </div>
 

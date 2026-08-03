@@ -302,12 +302,12 @@ Assigns a referral by establishing a relationship between a Sponsor and a new Us
 Fetches a flattened hierarchy of the user's downline (up to Level 2) and all Dashboard/Chart analytics for the React UI.
 - **Inputs**: `@RootUserID NVARCHAR(100)`
 - **Outputs**: 
-  1. **Result Set (Genealogy Tree)**: `RelativeLevel`, `UserID`, `SponsorID`, `SponsorName`, `FullName`, `ProfilePicturePath`, `JoiningDate`, `AccountStatus`, `PackageName`, `ChildrenCount`
+  1. **Result Set (Genealogy Tree)**: `RelativeLevel`, `UserID`, `SponsorID`, `SponsorName`, `FullName`, `ProfilePicturePath`, `JoiningDate`, `PackageId`, `PackageName`, `StatusId`, `AccountStatus`, `ChildrenCount`
   2. **Result Set (Dashboard Stats)**: Returns 3 rows (`Timeframe`: 'monthly', 'quarterly', 'yearly') containing: `directTeam`, `level1`, `level2`, `totalTeam`, `periodGrowth`, `periodGrowthPercentage`, `directTeamGrowth`, `level1Growth`, `level2Growth`, `totalTeamGrowth`
   3. **Result Set (Package Distribution)**: `name`, `value`
   4. **Result Set (Registration Trend)**: `Timeframe` (Monthly = Current Month daily, Quarterly = Last 3 Months, Yearly = Current Year monthly), `date`, `value`
 
 ### `EV_GetMyReferralsList`
-Fetches a searchable and filterable list of the user's direct and indirect referrals for the Referrals Table UI.
+Fetches a searchable and filterable list of the user's direct (Level 1) and indirect (Level 2) referrals for the Referrals Table UI.
 - **Inputs**: `@UserID VARCHAR(100)`, `@DateFilter VARCHAR(20) = NULL`, `@SearchQuery VARCHAR(100) = NULL`
-- **Outputs**: Result Set containing `ProfilePicturePath`, `UserID`, `Name`, `PackageName`, `RegistrationDate`, `Status`, `ReferralLevel`
+- **Outputs**: Result Set containing `ProfilePicturePath`, `UserID`, `Name`, `PackageId`, `PackageName`, `RegistrationDate`, `StatusId`, `Status`, `ReferralLevel`

@@ -47,12 +47,12 @@ export default function PackageCards() {
   ];
 
   return (
-    <div className="flex flex-col h-full xl:col-span-2">
-      <div className="relative overflow-hidden flex-1 rounded-3xl bg-linear-to-br from-white/90 to-indigo-50/40 backdrop-blur-xl p-5 lg:p-6 border border-indigo-100/60 shadow-sm group/card transition-all duration-300 hover:shadow-none hover:border-indigo-200 flex flex-col">
+    <div className="flex flex-col h-full xl:col-span-7">
+      <div className="relative overflow-hidden flex-1 rounded-3xl bg-linear-to-br from-white/90 to-indigo-50/40 backdrop-blur-xl p-4 lg:p-5 border border-indigo-100/60 shadow-sm group/card transition-all duration-300 hover:shadow-none hover:border-indigo-200 flex flex-col">
         {/* Decorative background flare */}
         <div className="absolute top-0 right-0 w-64 h-64 bg-indigo-400/10 rounded-full blur-[80px] -translate-y-1/2 translate-x-1/3 pointer-events-none group-hover/card:bg-indigo-400/20 transition-colors duration-700" />
 
-        <div className="relative z-10 flex flex-col mb-3 lg:mb-4">
+        <div className="relative z-10 flex flex-col mb-2 lg:mb-3">
           <div className="flex items-center justify-between mb-0.5">
             <h3 className="text-[14px] lg:text-[16px] font-bold text-slate-900">{t('dashboard.packages.title')}</h3>
             <a href="#" className="text-[13px] lg:text-[14px] font-bold text-indigo-600 hover:text-indigo-700 hover:underline underline-offset-4 transition-all">
@@ -67,7 +67,7 @@ export default function PackageCards() {
             <div key={pkg.id} className="min-w-[85vw] sm:min-w-0 snap-center group/pkg flex flex-col bg-white rounded-[20px] border border-slate-200 overflow-hidden shadow-sm hover:-translate-y-1 hover:shadow-[0_8px_30px_rgb(79,59,243,0.12)] hover:border-indigo-300 transition-all duration-300">
               {/* Header */}
               <div 
-                className={`relative p-3 sm:p-4 ${pkg.headerBg} flex flex-col items-center justify-center min-h-[90px]`}
+                className={`relative p-2.5 sm:p-3 ${pkg.headerBg} flex flex-col items-center justify-center min-h-[75px]`}
                 style={{ backgroundImage: `url(${pkg.bgImage})`, backgroundSize: 'cover', backgroundPosition: 'center' }}
               >
                 {pkg.badge && (
@@ -75,7 +75,7 @@ export default function PackageCards() {
                     {pkg.badge}
                   </div>
                 )}
-                <img src={pkg.icon} alt={pkg.name} className="w-10 h-10 mb-1 drop-shadow-md" />
+                <img src={pkg.icon} alt={pkg.name} className="w-8 h-8 mb-0.5 drop-shadow-md" />
                 <h4 className="text-white font-bold text-[13px]">{pkg.name}</h4>
               </div>
 
@@ -86,7 +86,7 @@ export default function PackageCards() {
               </div>
 
               {/* Features */}
-              <div className="flex-1 p-3 lg:p-4 flex flex-col gap-2">
+              <div className="flex-1 p-2.5 lg:p-3 flex flex-col gap-1.5">
                 {Array.isArray(pkg.features) && pkg.features.map((feature, idx) => (
                   <div key={idx} className="flex items-start gap-2">
                     <CheckCircle2 className="w-3.5 h-3.5 text-[#4f3bf3] shrink-0 mt-0.5" />
@@ -96,8 +96,8 @@ export default function PackageCards() {
               </div>
 
               {/* Action */}
-              <div className="p-3 lg:p-4 pt-0 mt-auto">
-                <button className="w-full py-1.5 bg-white border border-[#4f3bf3]/30 rounded-lg text-[12px] font-bold text-[#4f3bf3] hover:bg-[#4f3bf3] hover:text-white transition-all duration-300 shadow-sm">
+              <div className="p-2.5 lg:p-3 pt-0 mt-auto">
+                <button className="w-full py-1.5 bg-white border border-[#4f3bf3]/30 rounded-lg text-[12px] font-bold text-[#4f3bf3] hover:bg-[#4f3bf3] hover:text-white group-hover/pkg:bg-[#4f3bf3] group-hover/pkg:text-white transition-all duration-300 shadow-sm">
                   {t('dashboard.packages.viewDetails')}
                 </button>
               </div>
