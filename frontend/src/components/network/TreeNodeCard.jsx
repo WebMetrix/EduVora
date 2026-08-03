@@ -29,24 +29,26 @@ export default function TreeNodeCard({ user, onClick, isSelected, level = 0 }) {
     }
   }
 
-  // Package colors mapping based on the image
-  const getPackageColor = (pkg) => {
-    switch (pkg) {
-      case 'Gold Package': return 'text-yellow-500';
-      case 'Silver Package': return 'text-slate-400';
-      case 'Diamond Package': return 'text-purple-500';
-      case 'Premium Package': return 'text-emerald-500';
+  // Package colors mapping using PackageId
+  const getPackageColor = (pkgId) => {
+    switch (pkgId) {
+      case 3: return 'text-yellow-500';
+      case 2: return 'text-slate-400';
+      case 4: return 'text-purple-500';
+      case 1: return 'text-amber-600';
       default: return 'text-slate-500';
     }
   };
 
-  const getStatusBadge = (status) => {
-    switch (status) {
-      case 'Active':
+  const getStatusBadge = (statusId) => {
+    switch (statusId) {
+      case 3:
         return <span className="px-2 py-0.5 rounded bg-emerald-50 text-emerald-600 text-[10px] font-bold border border-emerald-100">{t('network.tree.active')}</span>;
-      case 'Inactive':
-        return <span className="px-2 py-0.5 rounded bg-rose-50 text-rose-600 text-[10px] font-bold border border-rose-100">{t('network.tree.inactive')}</span>;
-      case 'Pending':
+      case 4:
+        return <span className="px-2 py-0.5 rounded bg-rose-50 text-rose-600 text-[10px] font-bold border border-rose-100">{t('network.tree.cancelled')}</span>;
+      case 2:
+        return <span className="px-2 py-0.5 rounded bg-blue-50 text-blue-600 text-[10px] font-bold border border-blue-100">{t('network.tree.registered')}</span>;
+      case 1:
         return <span className="px-2 py-0.5 rounded bg-amber-50 text-amber-600 text-[10px] font-bold border border-amber-100">{t('network.tree.pending')}</span>;
       default:
         return null;
@@ -54,7 +56,7 @@ export default function TreeNodeCard({ user, onClick, isSelected, level = 0 }) {
   };
 
   const getLevelBorderColor = () => {
-    if (user?.status === 'Inactive') return 'border-slate-300 border-dashed';
+    if (user?.statusId === 4) return 'border-slate-300 border-dashed';
     if (level === 0) return 'border-indigo-500';
     if (level === 1) return 'border-blue-500';
     if (level === 2) return 'border-emerald-500';
@@ -62,7 +64,7 @@ export default function TreeNodeCard({ user, onClick, isSelected, level = 0 }) {
   };
 
   const getLevelBgColor = () => {
-    if (user?.status === 'Inactive') return 'bg-slate-400';
+    if (user?.statusId === 4) return 'bg-slate-400';
     if (level === 0) return 'bg-indigo-600';
     if (level === 1) return 'bg-blue-600';
     if (level === 2) return 'bg-emerald-600';
@@ -71,7 +73,7 @@ export default function TreeNodeCard({ user, onClick, isSelected, level = 0 }) {
 
   return (
     <div
-      onClick={() => onClick(user)}
+      onClick={() => onClick(user, level)}
       className={`relative w-60 bg-white rounded-xl border p-4 flex flex-row items-center gap-3 cursor-pointer transition-all duration-300 hover:-translate-y-1 hover:shadow-lg
         ${isSelected ? 'ring-2 ring-indigo-500 ring-offset-2 shadow-[0_0_15px_rgba(99,102,241,0.2)] z-10' : 'shadow-sm hover:shadow-md'}
         ${getLevelBorderColor()}
@@ -99,11 +101,11 @@ export default function TreeNodeCard({ user, onClick, isSelected, level = 0 }) {
       {/* Info */}
       <div className="flex flex-col flex-1 items-start text-left min-w-0">
         <h4 className="text-[14px] font-bold text-slate-900 truncate w-full">{user?.name}</h4>
-        <span className={`text-[11px] font-extrabold mt-0.5 ${getPackageColor(user?.package)}`}>
+        <span className={`text-[11px] font-extrabold mt-0.5 ${getPackageColor(user?.packageId)}`}>
           {user?.package}
         </span>
         <div className="mt-1.5">
-          {getStatusBadge(user?.status)}
+          {getStatusBadge(user?.statusId)}
         </div>
       </div>
     </div>

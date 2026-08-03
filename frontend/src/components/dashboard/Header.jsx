@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
-import { Menu, ChevronDown, Bell, User, Settings, Wallet, BarChart2, HelpCircle, LogOut } from 'lucide-react';
+import { Menu, ChevronDown, User, Settings, Wallet, BarChart2, HelpCircle, LogOut } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useTranslation } from '../../hooks/useTranslation';
 import { useNavigate } from 'react-router-dom';
@@ -146,11 +146,6 @@ export default function Header({ toggleSidebar, isSuperAdmin }) {
 
       <div className="flex items-center gap-3 sm:gap-4 lg:gap-6">
 
-        {/* Notification Bell */}
-        <button className="relative p-2 rounded-xl text-slate-500 hover:bg-slate-100/80 transition-colors focus:outline-none focus:ring-2 focus:ring-indigo-500/20 group">
-          <Bell className="w-5 h-5 group-hover:rotate-12 transition-transform" />
-          <span className="absolute top-2 right-2 w-2 h-2 bg-red-500 rounded-full border-2 border-white"></span>
-        </button>
 
         {/* User Profile */}
         <div className="relative" ref={profileRef}>
