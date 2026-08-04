@@ -655,5 +655,50 @@
       "levelPrefix": "Level ",
       "rowsPerPage": "Rows per page:"
     }
+  },
+  "myCourses": {
+    "title": "My Courses",
+    "subtitle": "All the courses you have purchased. Learn at your own pace and grow your skills.",
+    "breadcrumb1": "Home",
+    "breadcrumb2": "My Courses",
+    "searchPlaceholder": "Search courses...",
+    "allStatus": "All Status",
+    "stats": {
+      "totalCourses": "Total Courses",
+      "purchased": "Purchased",
+      "inProgress": "In Progress",
+      "keepLearning": "Keep learning!",
+      "completed": "Completed",
+      "greatJob": "Great job!",
+      "totalTime": "Total Learning Time",
+      "acrossAll": "Across all courses"
+    },
+    "purchasedTitle": "Purchased Courses",
+    "detailsTitle": "Course Details",
+    "table": {
+      "courseName": "Course Name",
+      "level": "Level",
+      "modules": "Modules",
+      "duration": "Duration",
+      "purchasedOn": "Purchased On",
+      "status": "Status",
+      "action": "Action",
+      "showing": "Showing {{start}} to {{end}} of {{total}} courses"
+    },
+    "status": {
+      "inProgress": "In Progress",
+      "completed": "Completed",
+      "notStarted": "Not Started"
+    },
+    "levels": {
+      "beginner": "Beginner",
+      "intermediate": "Intermediate",
+      "advanced": "Advanced"
+    },
+    "actions": {
+      "continue": "Continue",
+      "viewDetails": "View Details",
+      "startNow": "Start Now"
+    }
   }
 }

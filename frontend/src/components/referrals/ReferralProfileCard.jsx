@@ -8,8 +8,29 @@ export default function ReferralProfileCard({ t }) {
   const profile = cachedData ? JSON.parse(cachedData) : null;
 
   const handleCopy = () => {
-    navigator.clipboard.writeText(profile?.ReferralCode || t('common.loading'));
-    toast.success(t('toast.referral.codeCopied'));
+    // navigator.clipboard.writeText(profile?.ReferralCode || t('common.loading'));
+    // toast.success(t('toast.referral.codeCopied'));
+    const textToCopy = profile?.ReferralCode || t('common.loading');
+    if (navigator.clipboard && window.isSecureContext) {
+      navigator.clipboard.writeText(textToCopy);
+      toast.success(t('toast.referral.codeCopied'));
+    } else {
+      const textArea = document.createElement("textarea");
+      textArea.value = textToCopy;
+      textArea.style.position = "fixed";
+      textArea.style.left = "-999999px";
+      textArea.style.top = "-999999px";
+      document.body.appendChild(textArea);
+      textArea.focus();
+      textArea.select();
+      try {
+        document.execCommand('copy');
+        toast.success(t('toast.referral.codeCopied'));
+      } catch (error) {
+        toast.error('Failed to copy code');
+      }
+      textArea.remove();
+    }
   };
 
   const fullName = profile?.FullName || t('common.loading');

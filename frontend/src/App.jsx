@@ -8,6 +8,7 @@ import MyNetwork from './pages/MyNetwork';
 import CompleteProfile from './pages/CompleteProfile';
 import MyReferrals from './pages/MyReferrals';
 import SuperAdmin from './pages/SuperAdmin';
+import MyCourses from './pages/MyCourses';
 
 import ProtectedRoute from './components/common/ProtectedRoute';
 import GlobalLayout from './components/layout/GlobalLayout';
@@ -28,6 +29,7 @@ function App() {
           <Route path="/mynetwork" element={<MyNetwork />} />
           <Route path="/completeprofile" element={<CompleteProfile />} />
           <Route path="/myreferrals" element={<MyReferrals />} />
+          <Route path="/courses" element={<MyCourses />} />
         </Route>
       </Route>
 

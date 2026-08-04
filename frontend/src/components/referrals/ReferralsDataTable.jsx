@@ -108,13 +108,13 @@ export default function ReferralsDataTable({ t }) {
         <table className="w-full text-left border-collapse">
           <thead className="sticky top-0 z-20 bg-slate-50/90 backdrop-blur-md shadow-sm">
             <tr>
-              <th className="px-6 py-4 text-[12px] font-extrabold text-indigo-900/50 uppercase tracking-wider whitespace-nowrap">{t('myReferrals.table.profile')}</th>
-              <th className="px-6 py-4 text-[12px] font-extrabold text-indigo-900/50 uppercase tracking-wider whitespace-nowrap">{t('myReferrals.table.userId')}</th>
-              <th className="px-6 py-4 text-[12px] font-extrabold text-indigo-900/50 uppercase tracking-wider whitespace-nowrap">{t('myReferrals.table.name')}</th>
-              <th className="px-6 py-4 text-[12px] font-extrabold text-indigo-900/50 uppercase tracking-wider whitespace-nowrap">{t('myReferrals.table.package')}</th>
-              <th className="px-6 py-4 text-[12px] font-extrabold text-indigo-900/50 uppercase tracking-wider whitespace-nowrap">{t('myReferrals.table.registrationDate')}</th>
-              <th className="px-6 py-4 text-[12px] font-extrabold text-indigo-900/50 uppercase tracking-wider whitespace-nowrap">{t('myReferrals.table.status')}</th>
-              <th className="px-6 py-4 text-[12px] font-extrabold text-indigo-900/50 uppercase tracking-wider whitespace-nowrap">{t('myReferrals.table.referralLevel')}</th>
+              <th className="px-6 py-4 text-[13px] font-extrabold text-slate-600 uppercase tracking-wider whitespace-nowrap">{t('myReferrals.table.profile')}</th>
+              <th className="px-6 py-4 text-[13px] font-extrabold text-slate-600 uppercase tracking-wider whitespace-nowrap">{t('myReferrals.table.userId')}</th>
+              <th className="px-6 py-4 text-[13px] font-extrabold text-slate-600 uppercase tracking-wider whitespace-nowrap">{t('myReferrals.table.name')}</th>
+              <th className="px-6 py-4 text-[13px] font-extrabold text-slate-600 uppercase tracking-wider whitespace-nowrap">{t('myReferrals.table.package')}</th>
+              <th className="px-6 py-4 text-[13px] font-extrabold text-slate-600 uppercase tracking-wider whitespace-nowrap">{t('myReferrals.table.registrationDate')}</th>
+              <th className="px-6 py-4 text-[13px] font-extrabold text-slate-600 uppercase tracking-wider whitespace-nowrap">{t('myReferrals.table.status')}</th>
+              <th className="px-6 py-4 text-[13px] font-extrabold text-slate-600 uppercase tracking-wider whitespace-nowrap">{t('myReferrals.table.referralLevel')}</th>
             </tr>
           </thead>
           <tbody>

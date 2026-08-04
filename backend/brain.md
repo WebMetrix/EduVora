@@ -312,3 +312,7 @@ Fetches a flattened hierarchy of the user's downline (up to Level 2) and all Das
 Fetches a searchable and filterable list of the user's direct (Level 1) and indirect (Level 2) referrals for the Referrals Table UI.
 - **Inputs**: `@UserID VARCHAR(100)`, `@DateFilter VARCHAR(20) = NULL`, `@SearchQuery VARCHAR(100) = NULL`
 - **Outputs**: Result Set containing `ProfilePicturePath`, `UserID`, `Name`, `PackageId`, `PackageName`, `RegistrationDate`, `StatusId`, `Status`, `ReferralLevel`
+
+### `EV_GetPackages`
+Fetches all active packages from `Tb_Package`.
+- **Outputs**: Result Set containing `PackageId`, `PackageName`, `Price`, `Description`, `IsActive`, `DescriptionDialog`

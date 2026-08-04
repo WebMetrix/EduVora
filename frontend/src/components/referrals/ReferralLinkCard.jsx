@@ -8,16 +8,32 @@ export default function ReferralLinkCard({ t, profile }) {
   const link = referralCode ? `${baseUrl}?ref=${referralCode}` : baseUrl;
 
   const handleCopy = () => {
-    navigator.clipboard.writeText(link);
-    toast.success(t('toast.referral.linkCopied'));
+    const textToCopy = link;
+    if (navigator.clipboard && window.isSecureContext) {
+      navigator.clipboard.writeText(textToCopy);
+      toast.success(t('toast.referral.linkCopied'));
+    } else {
+      const textArea = document.createElement("textarea");
+      textArea.value = textToCopy;
+      textArea.style.position = "fixed";
+      textArea.style.left = "-999999px";
+      textArea.style.top = "-999999px";
+      document.body.appendChild(textArea);
+      textArea.focus();
+      textArea.select();
+      try {
+        document.execCommand('copy');
+        toast.success(t('toast.referral.linkCopied'));
+      } catch (error) {
+        toast.error('Failed to copy link');
+      }
+      textArea.remove();
+    }
   };
 
-  const handleOpenLink = () => {
-    window.open(link, '_blank', 'noopener,noreferrer');
-  };
 
   return (
-    <div className="relative overflow-hidden rounded-3xl bg-linear-to-br from-white/90 to-indigo-50/40 backdrop-blur-xl p-5 lg:p-6 border border-indigo-100/60 shadow-sm group/card transition-all duration-300 hover:shadow-none hover:border-indigo-200 flex flex-col justify-between h-full hover:-translate-y-1">
+    <div className="relative overflow-hidden rounded-3xl bg-linear-to-br from-white/90 to-indigo-50/40 backdrop-blur-xl p-5 lg:p-6 border border-indigo-100/60 shadow-sm group/card transition-all duration-300 hover:shadow-none hover:border-indigo-200 flex flex-col justify-center gap-6 h-full hover:-translate-y-1">
       {/* Decorative background flare */}
       <div className="absolute top-0 right-0 w-64 h-64 bg-indigo-400/10 rounded-full blur-[80px] -translate-y-1/2 translate-x-1/3 pointer-events-none group-hover/card:bg-indigo-400/20 transition-colors duration-700" />
       
@@ -52,10 +68,6 @@ export default function ReferralLinkCard({ t, profile }) {
             {t('myReferrals.share')}
           </button>
         </div>
-        <button onClick={handleOpenLink} className="w-full bg-white border border-slate-200 text-slate-700 hover:bg-slate-50 py-2 rounded-xl text-[12px] lg:text-[13px] font-bold flex items-center justify-center gap-1.5 lg:gap-2 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-md active:scale-95 group">
-          <ExternalLink className="w-4 h-4 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform duration-300" />
-          {t('myReferrals.openLink')}
-        </button>
       </div>
     </div>
   );

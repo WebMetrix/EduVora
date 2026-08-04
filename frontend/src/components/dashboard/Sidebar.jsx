@@ -91,7 +91,8 @@ export default function Sidebar({ isOpen, setIsOpen, isSuperAdmin }) {
               const routeMap = {
                 dashboard: '/dashboard',
                 network: '/mynetwork',
-                referrals: '/myreferrals'
+                referrals: '/myreferrals',
+                courses: '/courses'
               };
               const isActive = routeMap[item.id] ? location.pathname === routeMap[item.id] : item.active;
 
