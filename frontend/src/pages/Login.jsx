@@ -13,7 +13,7 @@ export default function Login() {
   }, []);
 
   return (
-    <div className="w-full h-[100dvh] md:h-screen relative bg-white flex flex-col md:flex-row overflow-hidden">
+    <div className="w-full h-dvh md:h-screen relative bg-white flex flex-col md:flex-row overflow-hidden">
       {isMobile ? (
         <div className="md:hidden w-full h-full">
           <MobileLogin />

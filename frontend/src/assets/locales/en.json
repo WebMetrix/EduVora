@@ -230,6 +230,7 @@
       "viewDetails": "View Details",
       "bestSeller": "Best Seller",
       "mostPopular": "Most Popular",
+      "premium": "Premium",
       "gold": {
         "name": "Gold Package",
         "price": "₹4,999",
@@ -239,6 +240,11 @@
           "Practical assignments & case studies",
           "Certificate of Completion",
           "Priority Member Support"
+        ],
+        "leftFeatures": [
+          "120+ Premium Videos",
+          "Completion Certificate",
+          "Member Support"
         ]
       },
       "silver": {
@@ -250,6 +256,11 @@
           "Downloadable resources",
           "Community access",
           "Email support"
+        ],
+        "leftFeatures": [
+          "70+ Premium Videos",
+          "Intermediate Access",
+          "Email Support"
         ]
       },
       "bronze": {
@@ -260,7 +271,42 @@
           "Study materials",
           "Access on mobile & desktop",
           "Community access"
+        ],
+        "leftFeatures": [
+          "30+ Premium Videos",
+          "Study Materials",
+          "Basic Level Access"
         ]
+      },
+      "diamond": {
+        "name": "Diamond Package",
+        "price": "₹9,999",
+        "features": [
+          "Access to all Gold Package features",
+          "Expert level courses & coaching",
+          "One-on-one mentorship sessions",
+          "Premium Community access",
+          "Priority 24/7 support"
+        ],
+        "leftFeatures": [
+          "200+ Premium Videos",
+          "Completion Certificate",
+          "24/7 VIP Support"
+        ]
+      },
+      "modal": {
+        "title": "Package Details",
+        "about": "About this Package",
+        "description": "The {{name}} is designed to help you master in-demand skills with high-quality content, practical projects, and expert guidance.",
+        "price": "Package Price",
+        "gst": "GST (18%)",
+        "total": "Total Amount",
+        "cancel": "Cancel",
+        "purchase": "Purchase Package",
+        "securePayment": "Secure Payment",
+        "secureDesc": "Your payment information is safe and encrypted with 256-bit SSL security.",
+        "secureBadge": "100% Secure",
+        "whatYouWillGet": "What you will get:"
       }
     },
     "activities": {

@@ -24,7 +24,7 @@ export default function MyNetwork() {
         <h1 className="text-[24px] lg:text-[28px] font-bold text-slate-900 mb-1">
           {t('network.title')}
         </h1>
-        <div className="flex items-center text-[13px] font-medium text-slate-500 gap-1.5">
+        <div className="hidden md:flex items-center text-[13px] font-medium text-slate-500 gap-1.5">
           <span>{t('network.breadcrumb1')}</span>
           <ChevronRight className="w-3.5 h-3.5" />
           <span className="text-slate-900">{t('network.breadcrumb2')}</span>

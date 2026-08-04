@@ -92,6 +92,7 @@ Stores the course packages and their prices.
 | Price       | decimal(18,2)  | No          |             |
 | Description | nvarchar(MAX)  | Yes         |             |
 | IsActive    | bit            | No          |             |
+| DescriptionDialog | nvarchar(MAX)  | Yes         |             |
 
 ### 9. `Tb_RankMaster`
 Defines ranks and the required minimum business logic.

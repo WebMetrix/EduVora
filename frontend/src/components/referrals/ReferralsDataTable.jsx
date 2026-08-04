@@ -63,7 +63,7 @@ export default function ReferralsDataTable({ t }) {
 
         <div className="flex flex-col lg:flex-row items-start lg:items-center gap-4 w-full xl:w-auto">
           {/* Time Filters */}
-          <div className="flex items-center p-1.5 bg-white/60 backdrop-blur-md border border-indigo-100/50 rounded-xl w-full lg:w-auto overflow-x-auto shrink-0 shadow-sm [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
+          <div className="flex items-center p-1.5 bg-white/60 backdrop-blur-md border border-indigo-100/50 rounded-xl w-full lg:w-auto overflow-x-auto shrink-0 shadow-sm [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] scrollbar-none">
             <button
               onClick={() => setFilter('')}
               className={`px-4 py-1.5 rounded-lg text-[13px] font-bold whitespace-nowrap transition-all duration-300 ${filter === '' ? 'bg-[#4f3bf3] text-white shadow-md' : 'text-indigo-900/60 hover:text-[#4f3bf3] hover:bg-white'}`}
@@ -83,7 +83,7 @@ export default function ReferralsDataTable({ t }) {
 
           <div className="flex items-center gap-3 w-full lg:w-auto group/controls">
             {/* Search */}
-            <div className="relative flex-1 lg:w-[250px] lg:focus-within:w-[300px] transition-all duration-300">
+            <div className="relative flex-1 lg:w-62.5 lg:focus-within:w-75 transition-all duration-300">
               <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-indigo-400 group-focus-within/controls:text-[#4f3bf3] transition-colors" />
               <input
                 type="text"
@@ -104,7 +104,7 @@ export default function ReferralsDataTable({ t }) {
       </div>
 
       {/* Desktop Table (Hidden on mobile) */}
-      <div className="relative z-10 hidden lg:block w-full overflow-x-hidden overflow-y-auto max-h-[380px] custom-scrollbar">
+      <div className="relative z-10 hidden lg:block w-full overflow-x-hidden overflow-y-auto max-h-95 custom-scrollbar">
         <table className="w-full text-left border-collapse">
           <thead className="sticky top-0 z-20 bg-slate-50/90 backdrop-blur-md shadow-sm">
             <tr>

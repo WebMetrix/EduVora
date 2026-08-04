@@ -206,7 +206,7 @@ export default function Header({ toggleSidebar, isSuperAdmin }) {
                 animate={{ opacity: 1, y: 0, scale: 1 }}
                 exit={{ opacity: 0, y: 10, scale: 0.95 }}
                 transition={{ duration: 0.15, ease: "easeOut" }}
-                className="absolute right-0 top-full mt-2 w-[160px] lg:w-[170px] bg-white rounded-xl shadow-[0_10px_40px_rgb(0,0,0,0.12)] border border-slate-100 overflow-hidden z-100 origin-top-right"
+                className="absolute right-0 top-full mt-2 w-40 lg:w-42.5 bg-white rounded-xl shadow-[0_10px_40px_rgb(0,0,0,0.12)] border border-slate-100 overflow-hidden z-100 origin-top-right"
               >
                 <div className="py-1.5 flex flex-col">
                   {dropdownItems.map((item, idx) => (
@@ -220,7 +220,7 @@ export default function Header({ toggleSidebar, isSuperAdmin }) {
                       }}
                       className="flex items-center gap-2.5 px-4 py-2 hover:bg-slate-50 transition-colors w-full text-left group/item"
                     >
-                      <item.icon className="w-[15px] h-[15px] text-slate-500 group-hover/item:text-indigo-600 transition-colors" />
+                      <item.icon className="w-3.75 h-3.75 text-slate-500 group-hover/item:text-indigo-600 transition-colors" />
                       <span className="text-[12px] font-semibold text-slate-700 group-hover/item:text-indigo-600 transition-colors">{item.label}</span>
                     </button>
                   ))}
@@ -231,7 +231,7 @@ export default function Header({ toggleSidebar, isSuperAdmin }) {
                     onClick={handleLogout}
                     className="flex items-center gap-2.5 px-4 py-2 hover:bg-red-50 transition-colors w-full text-left group/logout"
                   >
-                    <LogOut className="w-[15px] h-[15px] text-red-500 group-hover/logout:text-red-600 transition-colors" />
+                    <LogOut className="w-3.75 h-3.75 text-red-500 group-hover/logout:text-red-600 transition-colors" />
                     <span className="text-[12px] font-semibold text-red-500 group-hover/logout:text-red-600 transition-colors">{t('dashboard.nav.logout')}</span>
                   </button>
                 </div>

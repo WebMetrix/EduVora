@@ -93,13 +93,13 @@ export default function Footer() {
 
   return (
     <footer
-      className="mt-6 lg:mt-8 flex flex-col group relative"
+      className="hidden lg:flex mt-6 lg:mt-8 flex-col group relative"
     >
 
       <div className="relative z-10 flex flex-col lg:flex-row justify-between gap-6 lg:gap-8 mb-4 lg:mb-5">
 
         {/* Brand & Social Section */}
-        <div className="flex flex-col max-w-[220px]">
+        <div className="flex flex-col max-w-55">
           <div className="flex items-center gap-2 mb-3 group/brand cursor-pointer">
             <div className="w-6 h-6 rounded-md bg-linear-to-br from-indigo-500 to-indigo-700 flex items-center justify-center shadow-md group-hover/brand:shadow-indigo-500/30 transition-all duration-300">
               <span className="text-white font-black text-[12px]">E</span>
