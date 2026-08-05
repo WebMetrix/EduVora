@@ -700,5 +700,50 @@
       "viewDetails": "View Details",
       "startNow": "Start Now"
     }
+  },
+  "orders": {
+    "title": "Orders",
+    "subtitle": "View all your package purchases and order details.",
+    "stats": {
+      "total": "Total Orders",
+      "totalDesc": "All time orders",
+      "completed": "Completed",
+      "completedDesc": "Successfully purchased",
+      "pending": "Pending",
+      "pendingDesc": "Awaiting payment",
+      "failed": "Failed",
+      "failedDesc": "Payment failed"
+    },
+    "filters": {
+      "allTime": "All Time",
+      "allStatus": "All Status",
+      "search": "Search by order ID or package...",
+      "export": "Export"
+    },
+    "table": {
+      "orderId": "Order ID",
+      "package": "Package",
+      "amount": "Amount",
+      "paymentMethod": "Payment Method",
+      "orderDate": "Order Date",
+      "status": "Status",
+      "action": "Action",
+      "showing": "Showing {start} to {end} of {total} orders"
+    },
+    "status": {
+      "completed": "Completed",
+      "pending": "Pending",
+      "failed": "Failed"
+    },
+    "levels": {
+      "beginner": "Beginner",
+      "intermediate": "Intermediate",
+      "advanced": "Advanced"
+    },
+    "actions": {
+      "viewDetails": "View Details",
+      "payNow": "Pay Now",
+      "retryPayment": "Retry Payment"
+    }
   }
 }

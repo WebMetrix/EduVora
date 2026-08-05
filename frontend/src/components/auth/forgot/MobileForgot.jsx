@@ -130,7 +130,7 @@ export default function MobileForgot() {
   };
 
   return (
-    <div className="w-full h-dvh flex flex-col relative pb-safe pt-safe bg-white px-5 py-4 md:hidden overflow-hidden">
+    <div className="w-full min-h-screen flex flex-col relative pb-safe pt-safe bg-white px-5 py-4 md:hidden overflow-hidden">
       {/* Header with Logo */}
       <div className="flex justify-between items-start w-full mb-3 relative z-10">
         <div className="flex flex-col items-center flex-1 mt-2">

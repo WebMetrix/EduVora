@@ -23,6 +23,7 @@ export default function PackageCards() {
   const { t } = useTranslation();
   const [selectedPackage, setSelectedPackage] = useState(null);
   const [dbPackages, setDbPackages] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchPackages = async () => {
@@ -31,6 +32,8 @@ export default function PackageCards() {
         setDbPackages(response.data);
       } catch (error) {
         console.error('Error fetching packages from DB:', error);
+      } finally {
+        setLoading(false);
       }
     };
     fetchPackages();
@@ -121,46 +124,57 @@ export default function PackageCards() {
 
         <div className="relative z-10 flex flex-1 overflow-x-auto snap-x snap-mandatory gap-4 pb-4 pt-4 -mt-4 custom-scrollbar">
           {packages.map((pkg) => (
-            <div key={pkg.id} className="w-[85vw] sm:w-[calc((100%-2rem)/3)] flex-none snap-center group/pkg flex flex-col bg-white rounded-[20px] border border-slate-200 overflow-hidden shadow-sm hover:-translate-y-1 hover:shadow-[0_8px_30px_rgb(79,59,243,0.12)] hover:border-indigo-300 transition-all duration-300 transform-gpu isolate">
+            <div key={pkg.id} className={`w-[85vw] sm:w-[calc((100%-2rem)/3)] flex-none snap-center group/pkg flex flex-col bg-white rounded-[20px] border border-slate-200 overflow-hidden shadow-sm transition-all duration-300 transform-gpu isolate ${loading ? 'pointer-events-none' : 'hover:-translate-y-1 hover:shadow-[0_8px_30px_rgb(79,59,243,0.12)] hover:border-indigo-300'}`}>
               {/* Header */}
               <div
-                className={`relative w-full p-2.5 sm:p-2.5 ${pkg.headerBg} flex flex-col items-center justify-center min-h-[65px]`}
+                className={`relative w-full p-2.5 sm:p-2.5 ${pkg.headerBg} flex flex-col items-center justify-center min-h-[65px] ${loading ? 'animate-pulse' : ''}`}
                 style={{ backgroundImage: `url(${pkg.bgImage})`, backgroundSize: 'cover', backgroundPosition: 'center' }}
               >
-                {pkg.badge && (
+                {pkg.badge && !loading && (
                   <div className={`absolute top-2 right-2 px-2 py-0.5 rounded text-[9px] font-bold shadow-sm ${pkg.badgeColor}`}>
                     {pkg.badge}
                   </div>
                 )}
-                <img src={pkg.icon} alt={pkg.name} className="w-8 h-8 mb-0.5 drop-shadow-md" />
-                <h4 className="text-white font-bold text-[13px]">{pkg.name}</h4>
+                {loading ? (
+                   <div className="w-8 h-8 rounded-full bg-white/20 mb-0.5" />
+                ) : (
+                   <img src={pkg.icon} alt={pkg.name} className="w-8 h-8 mb-0.5 drop-shadow-md" />
+                )}
+                <h4 className={`font-bold text-[13px] ${loading ? 'text-transparent bg-white/20 rounded mt-1' : 'text-white'}`}>{pkg.name}</h4>
               </div>
 
               {/* Price */}
-              <div className="flex flex-col items-center py-1.5 border-b border-slate-100">
-                <div className="text-[18px] lg:text-[20px] font-extrabold text-[#4f3bf3]">{pkg.price}</div>
-                <div className="text-[9px] lg:text-[10px] font-bold text-slate-400">{t('dashboard.packages.oneTimePayment')}</div>
+              <div className={`flex flex-col items-center py-1.5 border-b border-slate-100 ${loading ? 'animate-pulse' : ''}`}>
+                <div className={`text-[18px] lg:text-[20px] font-extrabold ${loading ? 'text-transparent bg-slate-200 rounded mb-1' : 'text-[#4f3bf3]'}`}>{pkg.price}</div>
+                <div className={`text-[9px] lg:text-[10px] font-bold ${loading ? 'text-transparent bg-slate-200 rounded' : 'text-slate-400'}`}>{t('dashboard.packages.oneTimePayment')}</div>
               </div>
 
               {/* Features */}
-              <div className="flex-1 px-2.5 py-1.5 lg:px-3 lg:py-2 flex flex-col gap-1.5 [&_li]:!mb-1.5 lg:[&_li]:!mb-2 [&_li]:!text-[11px] lg:[&_li]:!text-[12px] [&_svg]:!w-3.5 [&_svg]:!h-3.5 [&_ul]:!flex [&_ul]:!flex-col [&_ul]:!h-full [&_ul]:!justify-start">
-                {pkg.isDynamic && pkg.Description ? (
+              <div className={`flex-1 px-2.5 py-1.5 lg:px-3 lg:py-2 flex flex-col gap-1.5 [&_li]:!mb-1.5 lg:[&_li]:!mb-2 [&_li]:!text-[11px] lg:[&_li]:!text-[12px] [&_svg]:!w-3.5 [&_svg]:!h-3.5 [&_ul]:!flex [&_ul]:!flex-col [&_ul]:!h-full [&_ul]:!justify-start ${loading ? 'animate-pulse' : ''}`}>
+                {pkg.isDynamic && pkg.Description && !loading ? (
                   <div className="flex-1" dangerouslySetInnerHTML={{ __html: pkg.Description }} />
                 ) : (
-                  Array.isArray(pkg.features) && pkg.features.map((feature, idx) => (
+                  (loading ? Array.from({ length: 4 }) : (Array.isArray(pkg.features) ? pkg.features : [])).map((feature, idx) => (
                     <div key={idx} className="flex items-start gap-2">
-                      <CheckCircle2 className="w-3.5 h-3.5 text-[#4f3bf3] shrink-0 mt-0.5" />
-                      <span className="text-[10px] lg:text-[11px] font-semibold text-[#1a1446]/80 leading-tight">{feature}</span>
+                      {loading ? (
+                        <div className="w-3.5 h-3.5 rounded-full bg-slate-200 shrink-0 mt-0.5" />
+                      ) : (
+                        <CheckCircle2 className="w-3.5 h-3.5 text-[#4f3bf3] shrink-0 mt-0.5" />
+                      )}
+                      <span className={`text-[10px] lg:text-[11px] font-semibold leading-tight ${loading ? 'text-transparent bg-slate-200 rounded' : 'text-[#1a1446]/80'}`}>
+                        {loading ? (idx % 2 === 0 ? 'Placeholder for a standard line' : 'Placeholder for a slightly longer wrapping line') : feature}
+                      </span>
                     </div>
                   ))
                 )}
               </div>
 
               {/* Action */}
-              <div className="p-2.5 lg:p-3 pt-0 mt-auto">
+              <div className={`p-2.5 lg:p-3 pt-0 mt-auto ${loading ? 'animate-pulse' : ''}`}>
                 <button
                   onClick={() => setSelectedPackage(pkg)}
-                  className="w-full py-1.5 bg-white border border-[#4f3bf3]/30 rounded-lg text-[12px] font-bold text-[#4f3bf3] hover:bg-[#4f3bf3] hover:text-white group-hover/pkg:bg-[#4f3bf3] group-hover/pkg:text-white transition-all duration-300 shadow-sm"
+                  disabled={loading}
+                  className={`w-full py-1.5 border rounded-lg text-[12px] font-bold transition-all duration-300 shadow-sm ${loading ? 'bg-slate-200 border-transparent text-transparent cursor-not-allowed' : 'bg-white border-[#4f3bf3]/30 text-[#4f3bf3] hover:bg-[#4f3bf3] hover:text-white group-hover/pkg:bg-[#4f3bf3] group-hover/pkg:text-white'}`}
                 >
                   {t('dashboard.packages.viewDetails')}
                 </button>

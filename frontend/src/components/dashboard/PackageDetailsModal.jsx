@@ -35,7 +35,7 @@ export default function PackageDetailsModal({ packageData, onClose }) {
     <div className="fixed inset-0 z-[9999] flex items-center justify-center p-0 md:p-4 bg-slate-900/60 backdrop-blur-sm transition-opacity">
       {/* Modal Container */}
       <div
-        className="w-full h-auto max-h-[95vh] md:max-h-[90vh] md:max-w-3xl bg-white rounded-t-3xl md:rounded-[24px] flex flex-col shadow-2xl relative mt-auto md:mt-0 overflow-hidden animate-slide-up md:animate-fade-in"
+        className="w-full h-[90vh] md:h-[580px] md:max-w-3xl bg-white rounded-t-3xl md:rounded-[24px] flex flex-col shadow-2xl relative mt-auto md:mt-0 overflow-hidden animate-slide-up md:animate-fade-in"
       >
         {/* Mobile Drag Handle */}
         <div className="w-full flex justify-center pt-3 pb-1 md:hidden">
@@ -54,12 +54,12 @@ export default function PackageDetailsModal({ packageData, onClose }) {
         </div>
 
         {/* Content Scrollable Area */}
-        <div className="flex-1 overflow-y-auto custom-scrollbar p-3 md:p-4">
-          <div className="grid grid-cols-[135px_1fr] md:grid-cols-[240px_1fr] gap-x-3 gap-y-3 md:gap-x-5 md:gap-y-4 md:[grid-template-rows:1fr_auto_auto_auto]">
+        <div className="flex-1 overflow-y-auto custom-scrollbar p-3">
+          <div className="grid grid-cols-[135px_1fr] md:grid-cols-[240px_1fr] gap-x-3 gap-y-3 md:gap-x-5 md:gap-y-3 md:[grid-template-rows:1fr_auto_auto_auto] min-h-full">
 
             {/* Left Side: Dark Card */}
             <div
-              className="col-span-1 row-span-1 md:row-span-4 bg-[#0B1221] rounded-[12px] md:rounded-[16px] p-2.5 md:p-4 pb-12 md:pb-20 flex flex-col items-center relative overflow-hidden text-white shadow-xl h-full min-h-[360px] md:min-h-[480px] bg-cover bg-center border border-white/5 transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_8px_30px_rgba(168,85,247,0.25)] hover:border-white/20 group/darkcard"
+              className="col-span-1 row-span-1 md:row-span-4 bg-[#0B1221] rounded-[12px] md:rounded-[16px] p-2.5 md:p-4 pb-6 md:pb-8 flex flex-col items-center relative overflow-hidden text-white shadow-xl h-full bg-cover bg-center border border-white/5 transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_8px_30px_rgba(168,85,247,0.25)] hover:border-white/20 group/darkcard"
               style={{ backgroundImage: `url(${packageData.detailedBg})` }}
             >
               {/* Decorative faint background element */}
@@ -87,7 +87,7 @@ export default function PackageDetailsModal({ packageData, onClose }) {
             {/* Right Side: Details Top Section */}
             <div className="col-span-1 row-span-1 flex flex-col justify-start">
               {packageData.isDynamic && packageData.DescriptionDialog ? (
-                <div dangerouslySetInnerHTML={{ __html: packageData.DescriptionDialog }} />
+                <div className="[&_p]:!mb-2.5 [&_h4]:!mb-1.5 [&_li]:!mb-1.5" dangerouslySetInnerHTML={{ __html: packageData.DescriptionDialog }} />
               ) : (
                 <>
                   <h4 className="text-[11px] md:text-[12px] font-bold text-slate-900 mb-0.5">{t('dashboard.packages.modal.about')}</h4>
