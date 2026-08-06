@@ -638,7 +638,7 @@
       "week": "Week",
       "month": "Month",
       "customDate": "Custom Date",
-      "searchPlaceholder": "Search by Name or User ID...",
+      "searchPlaceholder": "Search by Name, User ID, or Date...",
       "export": "Export",
       "profile": "Profile",
       "userId": "User ID",
@@ -745,5 +745,21 @@
       "payNow": "Pay Now",
       "retryPayment": "Retry Payment"
     }
+  },
+  "coursePlayer": {
+    "backToCourses": "Back to My Courses",
+    "completed": "Completed",
+    "lesson": "Lesson",
+    "module": "Module",
+    "modules": "Modules",
+    "whatYouWillLearn": "What you'll learn in this lesson",
+    "previousLesson": "Previous Lesson",
+    "nextLesson": "Next Lesson",
+    "courseContent": "Course Content",
+    "lessons": "Lessons",
+    "yourProgress": "Your Progress",
+    "needHelp": "Need Help?",
+    "stuckText": "If you're stuck somewhere,\nour support team is here to help.",
+    "contactSupport": "Contact Support"
   }
 }

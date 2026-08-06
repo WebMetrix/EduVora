@@ -3,6 +3,7 @@ import { Users, UserCheck, Package, TrendingUp } from 'lucide-react';
 
 export default function ReferralStats({ t }) {
   const stats = [
+    /*
     {
       title: t('myReferrals.totalReferrals'),
       value: "128",
@@ -13,11 +14,12 @@ export default function ReferralStats({ t }) {
       trendColor: "text-emerald-500",
       hoverShadow: "hover:shadow-lg hover:border-purple-300"
     },
+    */
     {
       title: t('myReferrals.activeReferrals'),
       value: "96",
       trend: "+ 15.4%",
-      icon: <UserCheck className="w-5 h-5 text-emerald-600" />,
+      icon: <UserCheck className="w-7 h-7 text-emerald-600" />,
       bg: "bg-emerald-100",
       borderColor: "border-emerald-200",
       trendColor: "text-emerald-500",
@@ -27,7 +29,7 @@ export default function ReferralStats({ t }) {
       title: t('myReferrals.purchasedPackage'),
       value: "32",
       trend: "+ 8.2%",
-      icon: <Package className="w-5 h-5 text-amber-500" />,
+      icon: <Package className="w-7 h-7 text-amber-500" />,
       bg: "bg-amber-100",
       borderColor: "border-amber-200",
       trendColor: "text-emerald-500",
@@ -37,7 +39,7 @@ export default function ReferralStats({ t }) {
       title: t('myReferrals.level1Referrals'),
       value: "102",
       trend: "+ 17.2%",
-      icon: <span className="text-blue-600 font-extrabold text-[16px]">L1</span>,
+      icon: <span className="text-blue-600 font-extrabold text-[20px]">L1</span>,
       bg: "bg-blue-100",
       borderColor: "border-blue-200",
       trendColor: "text-emerald-500",
@@ -47,7 +49,7 @@ export default function ReferralStats({ t }) {
       title: t('myReferrals.level2Referrals'),
       value: "26",
       trend: "+ 12.5%",
-      icon: <span className="text-purple-600 font-extrabold text-[16px]">L2</span>,
+      icon: <span className="text-purple-600 font-extrabold text-[20px]">L2</span>,
       bg: "bg-purple-100",
       borderColor: "border-purple-200",
       trendColor: "text-emerald-500",
@@ -62,19 +64,19 @@ export default function ReferralStats({ t }) {
 
       <h3 className="relative z-10 font-bold text-[#1a1446] text-[16px] mb-6">{t('myReferrals.referralStatistics')}</h3>
 
-      <div className="relative z-10 grid grid-cols-2 md:grid-cols-3 xl:grid-cols-5 gap-4 lg:gap-6">
+      <div className="relative z-10 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6">
         {stats.map((stat, idx) => (
-          <div key={idx} className={`flex flex-col items-center xl:items-start text-center xl:text-left gap-3 group bg-white p-4 lg:p-5 rounded-2xl border shadow-sm transition-all duration-300 hover:-translate-y-1 cursor-pointer ${stat.borderColor} ${stat.hoverShadow}`}>
-            <div className={`w-12 h-12 rounded-full flex items-center justify-center shrink-0 transition-transform group-hover:scale-110 duration-300 ${stat.bg}`}>
+          <div key={idx} className={`flex items-center gap-4 group bg-white p-4 lg:p-5 rounded-2xl border shadow-sm transition-all duration-300 hover:-translate-y-1 cursor-pointer ${stat.borderColor} ${stat.hoverShadow}`}>
+            <div className={`w-16 h-16 rounded-2xl flex items-center justify-center shrink-0 transition-transform group-hover:scale-110 duration-300 ${stat.bg}`}>
               {stat.icon}
             </div>
-            <div>
-              <div className="text-[12px] font-bold text-slate-500 uppercase tracking-wider mb-1">{stat.title}</div>
-              <div className="text-[28px] font-extrabold text-slate-900 leading-none mb-2">{stat.value}</div>
-              <div className="flex items-center justify-center xl:justify-start gap-1 text-[11px] font-bold">
+            <div className="flex flex-col">
+              <div className="text-[24px] font-extrabold text-slate-900 leading-none mb-1">{stat.value}</div>
+              <div className="text-[14px] font-bold text-slate-800 leading-tight mb-0.5">{stat.title}</div>
+              <div className="flex items-center gap-1 text-[11px] font-bold mt-1">
                 <TrendingUp className={`w-3.5 h-3.5 ${stat.trendColor}`} />
                 <span className={stat.trendColor}>{stat.trend}</span>
-                <span className="text-slate-400 font-medium ml-1">{t('myReferrals.vsLastMonth')}</span>
+                <span className="text-slate-500 font-medium ml-0.5">{t('myReferrals.vsLastMonth')}</span>
               </div>
             </div>
           </div>

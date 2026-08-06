@@ -10,6 +10,7 @@ import MyReferrals from './pages/MyReferrals';
 import SuperAdmin from './pages/SuperAdmin';
 import MyCourses from './pages/MyCourses';
 import Orders from './pages/Orders';
+import CoursePlayer from './pages/CoursePlayer';
 
 import ProtectedRoute from './components/common/ProtectedRoute';
 import GlobalLayout from './components/layout/GlobalLayout';
@@ -31,6 +32,7 @@ function App() {
           <Route path="/completeprofile" element={<CompleteProfile />} />
           <Route path="/myreferrals" element={<MyReferrals />} />
           <Route path="/courses" element={<MyCourses />} />
+          <Route path="/courses/:courseId" element={<CoursePlayer />} />
           <Route path="/orders" element={<Orders />} />
         </Route>
       </Route>

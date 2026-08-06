@@ -1,7 +1,9 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { MoreVertical, FileText, Clock, Play } from 'lucide-react';
 
 export default function PurchasedCourses({ t, searchQuery }) {
+  const navigate = useNavigate();
   const courses = [
     {
       id: 1,
@@ -136,7 +138,10 @@ export default function PurchasedCourses({ t, searchQuery }) {
               <span className={`px-3 py-1.5 rounded-lg text-[12px] font-bold ${getStatusStyles(course.status)}`}>
                 {t(`myCourses.status.${course.status}`)}
               </span>
-              <button className="flex items-center gap-1.5 px-5 py-2 bg-white border-2 border-indigo-500 text-indigo-600 rounded-xl text-[13px] font-bold hover:bg-indigo-500 hover:text-white transition-all shadow-sm">
+              <button 
+                onClick={() => navigate(`/courses/${course.id}`)}
+                className="flex items-center gap-1.5 px-5 py-2 bg-white border-2 border-indigo-500 text-indigo-600 rounded-xl text-[13px] font-bold hover:bg-indigo-500 hover:text-white transition-all shadow-sm"
+              >
                 {getActionIcon(course.status)}
                 {getActionText(course.status)}
               </button>

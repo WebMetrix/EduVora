@@ -107,8 +107,8 @@ export default function PackageCards() {
   ];
 
   return (
-    <div className="flex flex-col h-full xl:col-span-7">
-      <div className="relative overflow-hidden flex-1 rounded-3xl bg-linear-to-br from-white/90 to-indigo-50/40 backdrop-blur-xl p-4 lg:p-5 border border-indigo-100/60 shadow-sm group/card transition-all duration-300 hover:shadow-none hover:border-indigo-200 flex flex-col">
+    <div className="flex flex-col xl:col-span-7">
+      <div className="relative overflow-hidden rounded-3xl bg-linear-to-br from-white/90 to-indigo-50/40 backdrop-blur-xl p-4 lg:p-5 border border-indigo-100/60 shadow-sm group/card transition-all duration-300 hover:shadow-none hover:border-indigo-200 flex flex-col">
         {/* Decorative background flare */}
         <div className="absolute top-0 right-0 w-64 h-64 bg-indigo-400/10 rounded-full blur-[80px] -translate-y-1/2 translate-x-1/3 pointer-events-none group-hover/card:bg-indigo-400/20 transition-colors duration-700" />
 
@@ -122,12 +122,12 @@ export default function PackageCards() {
           <p className="text-[12px] text-slate-500">{t('dashboard.packages.subtitle')}</p>
         </div>
 
-        <div className="relative z-10 flex flex-1 overflow-x-auto snap-x snap-mandatory gap-4 pb-4 pt-4 -mt-4 custom-scrollbar">
+        <div className="relative z-10 flex overflow-x-auto snap-x snap-mandatory gap-4 pb-4 pt-4 -mt-4 custom-scrollbar">
           {packages.map((pkg) => (
-            <div key={pkg.id} className={`w-[85vw] sm:w-[calc((100%-2rem)/3)] flex-none snap-center group/pkg flex flex-col bg-white rounded-[20px] border border-slate-200 overflow-hidden shadow-sm transition-all duration-300 transform-gpu isolate ${loading ? 'pointer-events-none' : 'hover:-translate-y-1 hover:shadow-[0_8px_30px_rgb(79,59,243,0.12)] hover:border-indigo-300'}`}>
+            <div key={pkg.id} className={`w-[75vw] sm:w-[calc((100%-2rem)/3)] flex-none snap-center group/pkg flex flex-col bg-white rounded-[20px] border border-slate-200 overflow-hidden shadow-sm transition-all duration-300 transform-gpu isolate ${loading ? 'pointer-events-none' : 'hover:-translate-y-1 hover:shadow-[0_8px_30px_rgb(79,59,243,0.12)] hover:border-indigo-300'}`}>
               {/* Header */}
               <div
-                className={`relative w-full p-2.5 sm:p-2.5 ${pkg.headerBg} flex flex-col items-center justify-center min-h-[65px] ${loading ? 'animate-pulse' : ''}`}
+                className={`relative w-full p-2 lg:p-2.5 ${pkg.headerBg} flex flex-col items-center justify-center min-h-[55px] ${loading ? 'animate-pulse' : ''}`}
                 style={{ backgroundImage: `url(${pkg.bgImage})`, backgroundSize: 'cover', backgroundPosition: 'center' }}
               >
                 {pkg.badge && !loading && (
@@ -150,7 +150,7 @@ export default function PackageCards() {
               </div>
 
               {/* Features */}
-              <div className={`flex-1 px-2.5 py-1.5 lg:px-3 lg:py-2 flex flex-col gap-1.5 [&_li]:!mb-1.5 lg:[&_li]:!mb-2 [&_li]:!text-[11px] lg:[&_li]:!text-[12px] [&_svg]:!w-3.5 [&_svg]:!h-3.5 [&_ul]:!flex [&_ul]:!flex-col [&_ul]:!h-full [&_ul]:!justify-start ${loading ? 'animate-pulse' : ''}`}>
+              <div className={`flex-1 px-2.5 py-1 lg:px-3 lg:py-1.5 flex flex-col gap-1.5 [&_li]:!mb-1 lg:[&_li]:!mb-1.5 [&_li]:!text-[11px] lg:[&_li]:!text-[12px] [&_svg]:!w-3.5 [&_svg]:!h-3.5 [&_ul]:!flex [&_ul]:!flex-col [&_ul]:!h-full [&_ul]:!justify-start ${loading ? 'animate-pulse' : ''}`}>
                 {pkg.isDynamic && pkg.Description && !loading ? (
                   <div className="flex-1" dangerouslySetInnerHTML={{ __html: pkg.Description }} />
                 ) : (
@@ -170,7 +170,7 @@ export default function PackageCards() {
               </div>
 
               {/* Action */}
-              <div className={`p-2.5 lg:p-3 pt-0 mt-auto ${loading ? 'animate-pulse' : ''}`}>
+              <div className={`p-2 lg:p-2.5 pt-0 mt-auto ${loading ? 'animate-pulse' : ''}`}>
                 <button
                   onClick={() => setSelectedPackage(pkg)}
                   disabled={loading}

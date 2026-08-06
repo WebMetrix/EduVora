@@ -310,6 +310,7 @@ Fetches a flattened hierarchy of the user's downline (up to Level 2) and all Das
 
 ### `EV_GetMyReferralsList`
 Fetches a searchable and filterable list of the user's direct (Level 1) and indirect (Level 2) referrals for the Referrals Table UI.
+Includes dynamic search matching for UserID, FullName, and Registration Date (adjusted for +5:30 IST timezone).
 - **Inputs**: `@UserID VARCHAR(100)`, `@DateFilter VARCHAR(20) = NULL`, `@SearchQuery VARCHAR(100) = NULL`
 - **Outputs**: Result Set containing `ProfilePicturePath`, `UserID`, `Name`, `PackageId`, `PackageName`, `RegistrationDate`, `StatusId`, `Status`, `ReferralLevel`
 

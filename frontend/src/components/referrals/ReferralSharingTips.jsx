@@ -59,17 +59,17 @@ export default function ReferralSharingTips({ t, profile }) {
   ];
 
   return (
-    <div className="relative overflow-hidden rounded-3xl bg-linear-to-br from-white/90 to-indigo-50/40 backdrop-blur-xl p-4 lg:p-5 border border-indigo-100/60 shadow-sm group/card h-full flex flex-col transition-all duration-300 hover:shadow-lg hover:border-indigo-200">
+    <div className="relative overflow-hidden rounded-3xl bg-linear-to-br from-white/90 to-indigo-50/40 backdrop-blur-xl p-3 lg:p-4 border border-indigo-100/60 shadow-sm group/card h-full flex flex-col transition-all duration-300 hover:shadow-lg hover:border-indigo-200">
       {/* Decorative background flare */}
       <div className="absolute top-0 right-0 w-64 h-64 bg-indigo-400/10 rounded-full blur-[80px] -translate-y-1/2 translate-x-1/3 pointer-events-none transition-colors duration-700" />
 
-      <div className="relative z-10 flex items-center mb-3 lg:mb-4">
+      <div className="relative z-10 flex items-center mb-2 lg:mb-3">
         <h3 className="font-bold text-[#1a1446] text-[14px] lg:text-[15px]">{t('myReferrals.sharingTips')}</h3>
       </div>
 
-      <div className="relative z-10 flex flex-col justify-center flex-1 gap-2 lg:gap-3">
+      <div className="relative z-10 flex flex-col justify-center flex-1 gap-1.5 lg:gap-2">
         {tips.map((tip, idx) => (
-          <button onClick={() => handleShare(tip.id)} key={idx} className={`flex items-center justify-between py-2 px-3 lg:py-3 lg:px-4 rounded-xl border bg-white hover:-translate-y-1 transition-all duration-300 group shadow-sm ${tip.borderColor} ${tip.hoverShadow}`}>
+          <button onClick={() => handleShare(tip.id)} key={idx} className={`flex items-center justify-between py-1.5 px-3 lg:py-2 lg:px-4 rounded-xl border bg-white hover:-translate-y-1 transition-all duration-300 group shadow-sm ${tip.borderColor} ${tip.hoverShadow}`}>
             <div className="flex items-center gap-2">
               <div className={`w-5 h-5 lg:w-6 lg:h-6 rounded-full flex items-center justify-center shrink-0 transition-transform duration-300 group-hover:scale-110 ${tip.bg}`}>
                 <tip.icon className={`w-3 h-3 lg:w-3.5 lg:h-3.5 ${tip.color}`} />
