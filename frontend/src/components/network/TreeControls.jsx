@@ -34,7 +34,7 @@ export default function TreeControls({
       <div className="absolute top-0 right-0 w-48 h-48 bg-indigo-400/10 rounded-full blur-[60px] -translate-y-1/2 translate-x-1/3 pointer-events-none group-hover/card:bg-indigo-400/20 transition-colors duration-700" />
 
       {/* Controls */}
-      <div className="relative z-10 flex-1 min-w-0 flex flex-nowrap overflow-x-auto items-center gap-1 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
+      <div className="relative z-10 flex-1 min-w-0 flex flex-wrap items-center gap-2 lg:gap-3">
         {/* Expand / Collapse */}
         <div className="flex items-center gap-1 pr-1 lg:pr-2 lg:border-r border-slate-200">
           <button 
@@ -75,7 +75,7 @@ export default function TreeControls({
             <span className="hidden lg:inline">{t('network.toolbar.center')}</span>
           </button>
           
-          <div className="relative shrink-0 w-[110px] lg:w-[130px] xl:w-[150px] focus-within:w-[140px] lg:focus-within:w-[160px] xl:focus-within:w-[180px] transition-all duration-300">
+          <div className="relative shrink-0 w-[140px] lg:w-[160px] xl:w-[180px]">
             <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-indigo-400 group-focus-within/controls:text-indigo-600 transition-colors" />
             <input
               type="text"

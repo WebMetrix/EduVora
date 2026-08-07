@@ -1,7 +1,7 @@
 import React from 'react';
 import { Clock, ChevronDown, Search, Download } from 'lucide-react';
 
-export default function OrderFilters({ t, searchTerm, setSearchTerm }) {
+export default function OrderFilters({ t, searchTerm, setSearchTerm, onExport }) {
   return (
     <div className="flex flex-col md:flex-row items-stretch md:items-center justify-between gap-4">
       <div className="flex flex-wrap items-center gap-3">
@@ -37,7 +37,7 @@ export default function OrderFilters({ t, searchTerm, setSearchTerm }) {
         </div>
 
         {/* Export Button */}
-        <button className="flex items-center justify-center gap-2 px-4 py-2 bg-white border border-[#4f3bf3] rounded-lg text-[12px] font-bold text-[#4f3bf3] hover:bg-indigo-50 transition-colors shrink-0">
+        <button onClick={onExport} className="flex items-center justify-center gap-2 px-4 py-2 bg-white border border-[#4f3bf3] rounded-lg text-[12px] font-bold text-[#4f3bf3] hover:bg-indigo-50 transition-colors shrink-0">
           <Download className="w-4 h-4" />
           {t('orders.filters.export')}
         </button>

@@ -25,7 +25,7 @@ export default function ActivityItem({
           <h4 className="text-[13px] font-bold text-slate-800 leading-tight mb-0.5 group-hover:text-indigo-600 transition-colors">
             {title}
           </h4>
-          <p className="text-[15px] font-medium text-slate-500">
+          <p className="text-[11px] lg:text-[12px] font-semibold text-slate-500">
             {time}
           </p>
         </div>

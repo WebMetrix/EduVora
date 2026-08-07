@@ -110,7 +110,7 @@ export default function CourseDetailsTable({ t, searchQuery }) {
                 <td className="px-6 py-3 text-[12px] font-semibold text-slate-600">{course.duration}</td>
                 <td className="px-6 py-3 text-[12px] font-semibold text-slate-600">{course.purchasedOn}</td>
                 <td className="px-6 py-3">
-                  <span className={`px-2.5 py-1 rounded-full text-[11px] font-bold border border-white/40 shadow-sm ${getStatusStyles(course.status)}`}>
+                  <span className={`px-2.5 py-1 rounded-full text-[11px] font-bold border border-white/40 shadow-sm whitespace-nowrap ${getStatusStyles(course.status)}`}>
                     {t(`myCourses.status.${course.status}`)}
                   </span>
                 </td>

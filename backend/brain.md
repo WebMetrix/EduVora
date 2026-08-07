@@ -218,6 +218,17 @@ Tracks hierarchical relationships between users (e.g. referrals/sponsors).
 | Level          | int          | No          |             |
 | CreatedDate    | datetime     | No          |             |
 
+### 19. `Tb_Courses`
+Stores the courses available in the system.
+| Column Name | Data Type     | Allow Nulls | Notes       |
+|-------------|---------------|-------------|-------------|
+| CourseId    | int           | No          | Primary Key |
+| PackageId   | int           | No          |             |
+| CourseName  | nvarchar(255) | No          |             |
+| CourseDescr | nvarchar(MAX) | Yes         |             |
+| IsActive    | bit           | No          |             |
+| CreatedDate | datetime      | No          |             |
+
 
 
 ## Stored Procedures
@@ -317,3 +328,8 @@ Includes dynamic search matching for UserID, FullName, and Registration Date (ad
 ### `EV_GetPackages`
 Fetches all active packages from `Tb_Package`.
 - **Outputs**: Result Set containing `PackageId`, `PackageName`, `Price`, `Description`, `IsActive`, `DescriptionDialog`
+
+### `EV_UpdateProfilePicture`
+Updates the profile picture path for a specific user instantly.
+- **Inputs**: `@UUID VARCHAR(36)`, `@ProfilePicturePath VARCHAR(500)`
+- **Updates**: Updates `ProfilePicturePath` in `Tb_UserDesc`.

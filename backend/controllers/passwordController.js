@@ -3,6 +3,7 @@ import pool, { sql } from "../config/db.js";
 import logger from '../utils/logger.js';
 import { otpCache } from '../controllers/otpController.js';
 import { t } from '../utils/translation.js';
+import { sendEmail } from '../services/emailService.js';
 
 
 
@@ -27,6 +28,7 @@ export const resetPassword = async (req, res) => {
         const userResult = await checkUserReq.execute('dbo.EV_LogIn');
         
         if (userResult.output.Result === 1) {
+            var fullName = userResult.recordset[0].FullName; // Store for email later
             const currentHash = userResult.recordset[0].Password;
             const isSameAsOld = await bcrypt.compare(newPassword, currentHash);
             
@@ -53,6 +55,14 @@ export const resetPassword = async (req, res) => {
         logger.info(`Password successfully reset for ${emailAddress}`);
 
         res.status(200).send({ message: t('api.password.resetSuccess') });
+
+        // Send Password Reset Success Email asynchronously
+        sendEmail({
+            eventId: 4, // Event ID for Password Reset Success
+            to: emailAddress,
+            replacements: { FullName: fullName || '' }
+        }).catch(err => logger.error(`Failed to send Password Reset Email to ${emailAddress}: ${err.message}`));
+
 
     } catch (err) {
         logger.error(`RESET PASSWORD ERROR: ${err.message}`, { stack: err.stack });

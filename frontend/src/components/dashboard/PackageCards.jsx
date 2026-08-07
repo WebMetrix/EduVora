@@ -122,7 +122,7 @@ export default function PackageCards() {
           <p className="text-[12px] text-slate-500">{t('dashboard.packages.subtitle')}</p>
         </div>
 
-        <div className="relative z-10 flex overflow-x-auto snap-x snap-mandatory gap-4 pb-4 pt-4 -mt-4 custom-scrollbar">
+        <div className="relative z-10 flex overflow-x-auto snap-x snap-mandatory gap-4 pb-4 pt-4 -mt-4 px-4 lg:px-5 -mx-4 lg:-mx-5 custom-scrollbar after:content-[''] after:w-[1px] after:shrink-0">
           {packages.map((pkg) => (
             <div key={pkg.id} className={`w-[75vw] sm:w-[calc((100%-2rem)/3)] flex-none snap-center group/pkg flex flex-col bg-white rounded-[20px] border border-slate-200 overflow-hidden shadow-sm transition-all duration-300 transform-gpu isolate ${loading ? 'pointer-events-none' : 'hover:-translate-y-1 hover:shadow-[0_8px_30px_rgb(79,59,243,0.12)] hover:border-indigo-300'}`}>
               {/* Header */}

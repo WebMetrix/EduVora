@@ -34,7 +34,7 @@ export default function ReferralRewards({ t }) {
   ];
 
   return (
-    <div className="relative overflow-hidden rounded-3xl bg-linear-to-br from-white/90 to-indigo-50/40 backdrop-blur-xl p-3 lg:p-4 border border-indigo-100/60 shadow-sm group/card h-full flex flex-col transition-all duration-300 hover:shadow-lg hover:border-indigo-200">
+    <div className="relative overflow-hidden rounded-3xl bg-linear-to-br from-white/90 to-indigo-50/40 backdrop-blur-xl p-3 lg:p-3 border border-indigo-100/60 shadow-sm group/card h-full flex flex-col transition-all duration-300 hover:shadow-lg hover:border-indigo-200">
       {/* Decorative background flare */}
       <div className="absolute top-0 right-0 w-64 h-64 bg-indigo-400/10 rounded-full blur-[80px] -translate-y-1/2 translate-x-1/3 pointer-events-none transition-colors duration-700" />
 
@@ -43,9 +43,9 @@ export default function ReferralRewards({ t }) {
         <button className="text-[12px] font-bold text-[#4f3bf3] hover:underline">{t('myReferrals.viewAll')}</button>
       </div>
 
-      <div className="relative z-10 flex flex-col justify-center flex-1 gap-2">
+      <div className="relative z-10 flex flex-col flex-1 gap-2 lg:gap-2.5">
         {rewards.map((reward, idx) => (
-          <div key={idx} className={`group flex items-center justify-between p-1.5 lg:p-2 rounded-xl transition-all duration-300 hover:-translate-y-1 cursor-pointer ${reward.bg} ${reward.hoverShadow}`}>
+          <div key={idx} className={`flex-1 group flex items-center justify-between p-2 lg:p-3 rounded-xl transition-all duration-300 hover:-translate-y-1 cursor-pointer ${reward.bg} ${reward.hoverShadow}`}>
             <div className="flex items-center gap-2">
               <div className={`w-8 h-8 lg:w-9 lg:h-9 rounded-full flex items-center justify-center shrink-0 transition-transform duration-300 group-hover:scale-110 ${reward.iconBg}`}>
                 <Award className={`w-4 h-4 lg:w-4.5 lg:h-4.5 ${reward.iconColor}`} />

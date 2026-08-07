@@ -1,5 +1,5 @@
-import { useState, useEffect } from 'react';
-import { Outlet } from 'react-router-dom';
+import { useState, useEffect, useRef } from 'react';
+import { Outlet, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useDispatch, useSelector } from 'react-redux';
 import Sidebar from '../dashboard/Sidebar';
@@ -17,6 +17,15 @@ export default function GlobalLayout({
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const dispatch = useDispatch();
   const { data: profileData } = useSelector((state) => state.profile || {});
+  const location = useLocation();
+  const mainRef = useRef(null);
+
+  // Scroll to top on route change
+  useEffect(() => {
+    if (mainRef.current) {
+      mainRef.current.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+    }
+  }, [location.pathname]);
 
   // Fetch profile on layout mount if not super admin
   useEffect(() => {
@@ -51,7 +60,7 @@ export default function GlobalLayout({
       <div className="flex-1 flex flex-col h-screen overflow-hidden relative z-10">
         <Header toggleSidebar={() => setIsSidebarOpen(!isSidebarOpen)} isSuperAdmin={isSuperAdmin} />
 
-        <main className={mainClassName}>
+        <main ref={mainRef} className={mainClassName}>
           <div className={innerClassName}>
             {children || <Outlet />}
             {/* Bottom-most: Footer */}

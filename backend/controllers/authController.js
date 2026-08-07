@@ -7,6 +7,7 @@ import crypto from 'crypto';
 import logger from '../utils/logger.js';
 import { t } from '../utils/translation.js';
 import { decryptUserId } from '../utils/encryption.js';
+import { sendEmail } from '../services/emailService.js';
 
 // Initialize the Google Client
 const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
@@ -92,6 +93,13 @@ export const registerUser = async (req, res) => {
 
         // 6. Respond on Success (Result === 1)
         res.status(200).send({ message: t('api.auth.registerSuccess') });
+
+        // 7. Send Welcome Email asynchronously
+        sendEmail({
+            eventId: 3, // Event ID for Welcome Email
+            to: emailAddress,
+            replacements: { FullName: fullName }
+        }).catch(err => logger.error(`Failed to send Welcome Email to ${emailAddress}: ${err.message}`));
 
     } catch (err) {
         logger.error(`REGISTER ERROR: ${err.message}`, { stack: err.stack });

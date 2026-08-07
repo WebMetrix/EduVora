@@ -27,8 +27,7 @@ export default function RecentActivities() {
       iconBg: "bg-blue-100",
       badgeText: "Sale",
       badgeColor: "text-blue-700",
-      badgeBg: "bg-blue-50",
-      amount: "₹1,250"
+      badgeBg: "bg-blue-50"
     },
     {
       id: 3,

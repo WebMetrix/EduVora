@@ -36,7 +36,7 @@ export default function MyReferrals() {
 
       <ReferralStats t={t} />
 
-      <div className="flex flex-col lg:flex-row justify-center items-stretch gap-4 lg:gap-6">
+      <div className="flex flex-col lg:flex-row justify-center items-stretch gap-4 lg:gap-6 mt-4">
         <div className="w-full lg:w-[45%] xl:w-[40%]"><ReferralRewards t={t} /></div>
         <div className="w-full lg:w-[35%] xl:w-[30%]"><ReferralSharingTips t={t} profile={profile} /></div>
       </div>

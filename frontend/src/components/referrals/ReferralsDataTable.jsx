@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Search, Download, ChevronLeft, ChevronRight, MoreHorizontal } from 'lucide-react';
 import { fetchReferralsList } from '../../redux/slices/referralSlice';
+import { exportToExcel } from '../../utils/excelExport';
 
 export default function ReferralsDataTable({ t }) {
   const dispatch = useDispatch();
@@ -43,6 +44,29 @@ export default function ReferralsDataTable({ t }) {
     if (!dateString) return '';
     const d = new Date(dateString);
     return d.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
+  };
+
+  const handleExport = () => {
+    const columns = [
+      { header: 'User ID', key: 'UserID', width: 20 },
+      { header: 'Name', key: 'Name', width: 25 },
+      { header: 'Package Name', key: 'PackageName', width: 25 },
+      { header: 'Registration Date', key: 'RegistrationDate', width: 20, format: (item) => formatDate(item.RegistrationDate) },
+      { header: 'Status', key: 'StatusId', width: 15, format: (item) => {
+          if (item.StatusId === 3) return 'Active';
+          if (item.StatusId === 2) return 'Registered';
+          if (item.StatusId === 4) return 'Cancelled';
+          return 'Pending';
+      }},
+      { header: 'Referral Level', key: 'ReferralLevel', width: 15, format: (item) => `Level ${item.ReferralLevel}` }
+    ];
+
+    exportToExcel({
+      data: listData, // Exporting all data, not just paginated
+      fileName: 'Referrals_Report',
+      columns,
+      sheetName: 'Referrals'
+    });
   };
 
   // Pagination logic
@@ -95,7 +119,7 @@ export default function ReferralsDataTable({ t }) {
             </div>
 
             {/* Export */}
-            <button className="flex items-center gap-2 px-4 py-2 border border-indigo-200 text-[#4f3bf3] bg-white/60 backdrop-blur-md hover:bg-[#4f3bf3] hover:text-white hover:shadow-md hover:-translate-y-0.5 rounded-xl text-[13px] font-bold transition-all duration-300 shrink-0 group/export">
+            <button onClick={handleExport} className="flex items-center gap-2 px-4 py-2 border border-indigo-200 text-[#4f3bf3] bg-white/60 backdrop-blur-md hover:bg-[#4f3bf3] hover:text-white hover:shadow-md hover:-translate-y-0.5 rounded-xl text-[13px] font-bold transition-all duration-300 shrink-0 group/export">
               <Download className="w-4 h-4 group-hover/export:-translate-y-0.5 transition-transform" />
               <span className="hidden sm:block">{t('myReferrals.table.export')}</span>
             </button>

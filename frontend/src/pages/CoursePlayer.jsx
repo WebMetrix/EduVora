@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { useTranslation } from '../hooks/useTranslation';
 import { 
@@ -124,7 +124,7 @@ export default function CoursePlayer() {
       
       {/* Top Breadcrumb & Back Button */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-4 lg:mb-6">
-        <div className="flex items-center flex-wrap text-[13px] font-semibold text-slate-500 gap-1.5 md:gap-2">
+        <div className="hidden md:flex items-center flex-wrap text-[13px] font-semibold text-slate-500 gap-1.5 md:gap-2">
           <Link to="/courses" className="hover:text-indigo-600 transition-colors">{t('myCourses.breadcrumb1')}</Link>
           <ChevronRight className="w-3.5 h-3.5 text-slate-400" />
           <Link to="/courses" className="hover:text-indigo-600 transition-colors">{t('myCourses.breadcrumb2')}</Link>
@@ -136,7 +136,7 @@ export default function CoursePlayer() {
         
         <button 
           onClick={() => navigate('/courses')}
-          className="flex items-center justify-center gap-2 px-4 py-2 bg-white border border-[#4f3bf3] rounded-xl text-[13px] font-bold text-[#4f3bf3] hover:bg-indigo-50 transition-colors shadow-sm whitespace-nowrap shrink-0"
+          className="w-full sm:w-auto flex items-center justify-center gap-2 px-4 py-2 bg-white border border-[#4f3bf3] rounded-xl text-[13px] font-bold text-[#4f3bf3] hover:bg-indigo-50 transition-colors shadow-sm whitespace-nowrap shrink-0"
         >
           <ArrowLeft className="w-4 h-4" />
           {t('coursePlayer.backToCourses')}
@@ -145,8 +145,8 @@ export default function CoursePlayer() {
 
       {/* Title Area */}
       <div className="mb-4 lg:mb-5">
-        <div className="flex items-center gap-3">
-          <h1 className="text-[24px] lg:text-[28px] font-extrabold text-[#1a1446] leading-tight">
+        <div className="flex flex-col sm:flex-row sm:items-center items-start gap-2 sm:gap-3">
+          <h1 className="text-[20px] lg:text-[28px] font-extrabold text-[#1a1446] leading-tight">
             {mockCourseData.title}
           </h1>
           <span className={`px-3 py-1 rounded-full text-[12px] font-extrabold tracking-wide ${getLevelStyles(mockCourseData.level)}`}>
@@ -184,41 +184,41 @@ export default function CoursePlayer() {
             />
 
             {/* Top Info overlay */}
-            <div className="absolute top-0 left-0 w-full p-6 z-20">
-              <h2 className="text-white text-[28px] font-extrabold max-w-[70%] leading-tight drop-shadow-md">
+            <div className="absolute top-0 left-0 w-full p-4 md:p-6 z-20">
+              <h2 className="text-white text-[16px] md:text-[28px] font-extrabold max-w-[90%] md:max-w-[70%] leading-tight drop-shadow-md">
                 {activeLesson.title.replace(/^[0-9]+\.\s/, '')}
               </h2>
-              <div className="text-white/80 text-[14px] font-medium mt-2 drop-shadow-md">
+              <div className="text-white/80 text-[11px] md:text-[14px] font-medium mt-1 md:mt-2 drop-shadow-md">
                 {t('coursePlayer.lesson')} 1 of 3 • {t('coursePlayer.module')} 1
               </div>
             </div>
 
             {/* Huge Play Button */}
-            <button className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-20 w-20 h-20 rounded-full border-2 border-white/30 bg-black/40 backdrop-blur-sm flex items-center justify-center hover:bg-[#4f3bf3] hover:border-[#4f3bf3] transition-all duration-300 group-hover:scale-110 shadow-[0_0_30px_rgba(0,0,0,0.3)]">
-              <Play className="w-8 h-8 text-white fill-white ml-1.5" />
+            <button className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-20 w-12 h-12 md:w-20 md:h-20 rounded-full border-2 border-white/30 bg-black/40 backdrop-blur-sm flex items-center justify-center hover:bg-[#4f3bf3] hover:border-[#4f3bf3] transition-all duration-300 group-hover:scale-110 shadow-[0_0_30px_rgba(0,0,0,0.3)]">
+              <Play className="w-5 h-5 md:w-8 md:h-8 text-white fill-white ml-1 md:ml-1.5" />
             </button>
 
             {/* Video Controls Footer */}
-            <div className="absolute bottom-0 left-0 w-full p-4 z-20 flex flex-col gap-3">
+            <div className="absolute bottom-0 left-0 w-full p-3 md:p-4 z-20 flex flex-col gap-2 md:gap-3">
               {/* Progress Bar inside video */}
-              <div className="w-full h-1.5 bg-white/30 rounded-full cursor-pointer relative group/scrub">
+              <div className="w-full h-1 md:h-1.5 bg-white/30 rounded-full cursor-pointer relative group/scrub">
                 <div className="absolute left-0 top-0 h-full bg-[#4f3bf3] w-[45%] rounded-full relative">
-                  <div className="absolute right-0 top-1/2 -translate-y-1/2 w-3.5 h-3.5 bg-white rounded-full shadow border-2 border-[#4f3bf3] opacity-0 group-hover/scrub:opacity-100 transition-opacity translate-x-1/2" />
+                  <div className="absolute right-0 top-1/2 -translate-y-1/2 w-2.5 h-2.5 md:w-3.5 md:h-3.5 bg-white rounded-full shadow border-2 border-[#4f3bf3] opacity-0 group-hover/scrub:opacity-100 transition-opacity translate-x-1/2" />
                 </div>
               </div>
               
-              <div className="flex items-center justify-between text-white/90">
-                <div className="flex items-center gap-5">
-                  <button className="hover:text-white transition-colors"><Play className="w-5 h-5 fill-current" /></button>
-                  <button className="hover:text-white transition-colors"><SkipBack className="w-5 h-5 fill-current" /></button>
-                  <button className="hover:text-white transition-colors"><SkipForward className="w-5 h-5 fill-current" /></button>
-                  <button className="hover:text-white transition-colors"><Volume2 className="w-5 h-5" /></button>
-                  <span className="text-[13px] font-medium tracking-wide">06:20 / {activeLesson.duration}</span>
+              <div className="flex items-center justify-between text-white/90 mt-0.5">
+                <div className="flex items-center gap-3 md:gap-5">
+                  <button className="hover:text-white transition-colors"><Play className="w-4 h-4 md:w-5 md:h-5 fill-current" /></button>
+                  <button className="hover:text-white transition-colors hidden sm:block"><SkipBack className="w-4 h-4 md:w-5 md:h-5 fill-current" /></button>
+                  <button className="hover:text-white transition-colors hidden sm:block"><SkipForward className="w-4 h-4 md:w-5 md:h-5 fill-current" /></button>
+                  <button className="hover:text-white transition-colors"><Volume2 className="w-4 h-4 md:w-5 md:h-5" /></button>
+                  <span className="text-[10px] md:text-[13px] font-medium tracking-wide">06:20 / {activeLesson.duration}</span>
                 </div>
-                <div className="flex items-center gap-4">
-                  <button className="px-2 py-0.5 rounded border border-white/30 text-[12px] font-bold hover:bg-white/20 transition-colors">1x</button>
-                  <button className="text-[14px] font-bold hover:text-white transition-colors">CC</button>
-                  <button className="hover:text-white transition-colors"><Maximize className="w-5 h-5" /></button>
+                <div className="flex items-center gap-3 md:gap-4">
+                  <button className="px-1.5 py-0.5 md:px-2 md:py-0.5 rounded border border-white/30 text-[10px] md:text-[12px] font-bold hover:bg-white/20 transition-colors">1x</button>
+                  <button className="text-[12px] md:text-[14px] font-bold hover:text-white transition-colors">CC</button>
+                  <button className="hover:text-white transition-colors"><Maximize className="w-4 h-4 md:w-5 md:h-5" /></button>
                 </div>
               </div>
             </div>
