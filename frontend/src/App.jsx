@@ -11,6 +11,10 @@ import SuperAdmin from './pages/SuperAdmin';
 import MyCourses from './pages/MyCourses';
 import Orders from './pages/Orders';
 import CoursePlayer from './pages/CoursePlayer';
+import AccessDenied from './pages/AccessDenied';
+import CourseAccessDenied from './pages/CourseAccessDenied';
+import PaymentSuccess from './pages/payment/PaymentSuccess';
+import PaymentFailed from './pages/payment/PaymentFailed';
 
 import ProtectedRoute from './components/common/ProtectedRoute';
 import GlobalLayout from './components/layout/GlobalLayout';
@@ -22,6 +26,7 @@ function App() {
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
       <Route path="/forgotpassword" element={<Forgot />} />
+      <Route path="/accessdenied" element={<AccessDenied />} />
       
       {/* Protected Routes */}
       <Route element={<ProtectedRoute />}>
@@ -34,6 +39,9 @@ function App() {
           <Route path="/courses" element={<MyCourses />} />
           <Route path="/courses/:courseId" element={<CoursePlayer />} />
           <Route path="/orders" element={<Orders />} />
+          <Route path="/courseaccessdenied" element={<CourseAccessDenied />} />
+          <Route path="/payment/success" element={<PaymentSuccess />} />
+          <Route path="/payment/failed" element={<PaymentFailed />} />
         </Route>
       </Route>
 

@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
 import { Eye, ChevronLeft, ChevronRight } from 'lucide-react';
+import CourseDetailsModal from './CourseDetailsModal';
 
 export default function CourseDetailsTable({ t, searchQuery }) {
   const [page, setPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [selectedCourse, setSelectedCourse] = useState(null);
   
   const courses = [
     {
@@ -115,7 +117,10 @@ export default function CourseDetailsTable({ t, searchQuery }) {
                   </span>
                 </td>
                 <td className="px-6 py-3 text-center rounded-r-xl">
-                  <button className="p-2 text-indigo-400 hover:text-indigo-600 hover:bg-indigo-50 rounded-xl transition-colors inline-flex justify-center items-center">
+                  <button 
+                    onClick={() => setSelectedCourse(course)}
+                    className="p-2 text-indigo-400 hover:text-indigo-600 hover:bg-indigo-50 rounded-xl transition-colors inline-flex justify-center items-center"
+                  >
                     <Eye className="w-4.5 h-4.5" />
                   </button>
                 </td>
@@ -168,7 +173,10 @@ export default function CourseDetailsTable({ t, searchQuery }) {
             </div>
             
             <div className="flex justify-end pt-1">
-              <button className="flex items-center justify-center gap-1.5 w-full py-2 text-[12px] font-bold text-indigo-500 hover:text-indigo-600 hover:bg-indigo-50 rounded-xl transition-colors border border-indigo-100 bg-white shadow-sm">
+              <button 
+                onClick={() => setSelectedCourse(course)}
+                className="flex items-center justify-center gap-1.5 w-full py-2 text-[12px] font-bold text-indigo-500 hover:text-indigo-600 hover:bg-indigo-50 rounded-xl transition-colors border border-indigo-100 bg-white shadow-sm"
+              >
                 <Eye className="w-4 h-4" />
                 {t('myCourses.actions.viewDetails')}
               </button>
@@ -232,6 +240,11 @@ export default function CourseDetailsTable({ t, searchQuery }) {
           </div>
         )}
       </div>
+
+      <CourseDetailsModal 
+        courseData={selectedCourse} 
+        onClose={() => setSelectedCourse(null)} 
+      />
     </div>
   );
 }

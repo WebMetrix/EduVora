@@ -699,6 +699,29 @@
       "continue": "Continue",
       "viewDetails": "View Details",
       "startNow": "Start Now"
+    },
+    "modal": {
+      "aboutCourse": "About this course",
+      "whatYouWillLearn": "What you'll learn",
+      "courseIncludes": "Course Includes",
+      "cert": "Cert",
+      "included": "Included",
+      "lessons": "Lessons",
+      "onDemandVideo": "On-demand Video",
+      "quizzesAssignments": "Quizzes & Assignments",
+      "certificateOfCompletion": "Certificate of Completion",
+      "defaultDesc": "Learn the essential strategies of digital marketing and grow your online business. This course covers everything from basics to advanced techniques with practical examples.",
+      "defaultAbout": "This comprehensive course is designed for beginners and professionals who want to master digital marketing skills and grow their business online.",
+      "learnItems": [
+        "Understand digital marketing fundamentals",
+        "Build and optimize marketing strategies",
+        "Use social media for business growth",
+        "Analyze data and measure campaign success",
+        "Create high-converting ad campaigns"
+      ],
+      "defaultModules": "12",
+      "defaultLessons": "48",
+      "defaultDuration": "8h 45m"
     }
   },
   "orders": {
@@ -761,5 +784,54 @@
     "needHelp": "Need Help?",
     "stuckText": "If you're stuck somewhere,\nour support team is here to help.",
     "contactSupport": "Contact Support"
+  },
+  "accessDenied": {
+    "generic": {
+      "title": "Access Denied",
+      "desc": "Sorry, you don't have permission to access this page. If you believe this is a mistake, please contact support.",
+      "goToLogin": "Go to Login"
+    },
+    "course": {
+      "title": "Access Denied",
+      "desc1": "You don't have access to any course yet.",
+      "desc2": "Please purchase a course to start learning.",
+      "goToHome": "Go to Home",
+      "purchaseCourse": "Purchase a Course",
+      "whyPurchase": "Why purchase a course?",
+      "whyPurchaseDesc": "Get access to high-quality videos, quizzes, assignments, and earn certificates to grow your skills."
+    }
+  },
+  "payment": {
+    "success": {
+      "title": "Payment Successful!",
+      "message": "Your payment of {{amount}} has been completed successfully.",
+      "orderId": "Order ID",
+      "packagePurchased": "Package Purchased",
+      "immediateAccess": "Immediate Access",
+      "lifetimeAccess": "Lifetime Access",
+      "premiumContent": "Premium Content",
+      "certificateIncluded": "Certificate Included",
+      "activationNote": "Your package is now activated and available in \"My Courses\".",
+      "startLearning": "Start learning and grow your skills today!",
+      "viewCourses": "View My Courses",
+      "dashboard": "Go to Dashboard"
+    },
+    "failed": {
+      "title": "Payment Failed!",
+      "message1": "We couldn't process your payment.",
+      "message2": "Please check your payment details and try again.",
+      "orderId": "Order ID",
+      "possibleReasons": "Possible Reasons",
+      "reasons": [
+        "Insufficient balance in your account",
+        "Incorrect card details",
+        "Bank declined the transaction",
+        "Network issue or payment timeout"
+      ],
+      "noDeduction": "No amount has been deducted from your account.",
+      "tryAgain": "Please try again or use a different payment method.",
+      "dashboard": "Go to Dashboard",
+      "retry": "Retry Payment"
+    }
   }
 }
