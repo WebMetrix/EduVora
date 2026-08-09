@@ -130,13 +130,13 @@ export default function PaymentSuccessModal({ paymentData, onClose, onDashboard,
           <div className="flex flex-row w-full gap-3 mt-auto pt-6">
             <button
               onClick={onViewCourses}
-              className="flex-1 py-3 px-4 rounded-xl border border-indigo-600 text-indigo-600 font-bold text-[13px] hover:bg-indigo-50 transition-colors"
+              className="flex-1 py-3 px-4 rounded-xl border border-indigo-600 text-indigo-600 font-bold text-[13px] hover:bg-indigo-50 transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_8px_20px_rgba(79,70,229,0.15)]"
             >
               {t('payment.success.viewCourses')}
             </button>
             <button
               onClick={onDashboard}
-              className="flex-1 py-3 px-4 rounded-xl bg-indigo-600 text-white font-bold text-[13px] hover:bg-indigo-700 shadow-md shadow-indigo-200 transition-colors"
+              className="flex-1 py-3 px-4 rounded-xl bg-indigo-600 text-white font-bold text-[13px] hover:bg-indigo-700 transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_8px_20px_rgba(79,70,229,0.3)]"
             >
               {t('payment.success.dashboard')}
             </button>

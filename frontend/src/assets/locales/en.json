@@ -833,5 +833,126 @@
       "dashboard": "Go to Dashboard",
       "retry": "Retry Payment"
     }
+  },
+  "earnings": {
+    "title": "Earnings",
+    "subtitle": "Track your earnings, commissions and wallet details.",
+    "breadcrumb1": "Home",
+    "breadcrumb2": "Earnings",
+    "tabs": {
+      "summary": "Summary",
+      "history": "Commission History",
+      "wallet": "Wallet"
+    },
+    "stats": {
+      "total": "Total Earnings",
+      "totalSub": "All Time",
+      "thisMonth": "This Month",
+      "thisMonthSub": "01 May - 31 May 2025",
+      "pending": "Pending Amount",
+      "pendingSub": "To be credited",
+      "available": "Available Balance",
+      "availableSub": "In Wallet"
+    },
+    "charts": {
+      "overview": "Earnings Overview",
+      "thisMonthFilter": "This Month",
+      "byLevel": "Earnings by Level",
+      "direct": "Direct Commission",
+      "levelCommission": "Level Commission",
+      "level1": "Level 1",
+      "level2": "Level 2",
+      "total": "Total",
+      "other": "Other Earnings",
+      "directPercent": "Direct",
+      "level1Percent": "Level 1",
+      "level2Percent": "Level 2"
+    },
+    "table": {
+      "recent": "Recent Commission",
+      "viewAll": "View All",
+      "date": "Date",
+      "type": "Type",
+      "level": "Level",
+      "from": "From",
+      "amount": "Amount",
+      "status": "Status",
+      "showing": "Showing {{start}} to {{end}} of {{total}} entries"
+    },
+    "wallet": {
+      "summary": "Wallet Summary",
+      "view": "View Wallet",
+      "available": "Available Balance",
+      "pending": "Pending Amount",
+      "totalPayouts": "Total Payouts",
+      "lastPayout": "Last Payout",
+      "goToWallet": "Go to Wallet",
+      "stats": {
+        "availableBalance": "Available Balance",
+        "inWallet": "In Wallet",
+        "pendingWithdrawal": "Pending Withdrawal",
+        "underProcess": "Under Process",
+        "totalWithdrawn": "Total Withdrawn",
+        "totalTransactions": "Total Transactions",
+        "allTime": "All Time"
+      },
+      "transactions": {
+        "title": "Recent Transactions",
+        "table": {
+          "dateTime": "Date & Time",
+          "type": "Type",
+          "description": "Description",
+          "amount": "Amount (₹)",
+          "status": "Status",
+          "referenceId": "Reference ID"
+        }
+      },
+      "details": {
+        "title": "Wallet Details",
+        "walletId": "Wallet ID",
+        "memberId": "Member ID",
+        "walletStatus": "Wallet Status",
+        "dateCreated": "Date Created",
+        "lastUpdated": "Last Updated",
+        "withdrawNow": "Withdraw Now"
+      },
+      "actions": {
+        "title": "Quick Actions",
+        "paymentMethods": "Payment Methods",
+        "paymentMethodsDesc": "Manage your bank accounts",
+        "withdrawalHistory": "Withdrawal History",
+        "withdrawalHistoryDesc": "View your withdrawal history",
+        "helpCenter": "Help Center",
+        "helpCenterDesc": "Get help with wallet & payments"
+      },
+      "secure": {
+        "title": "Secure Transactions",
+        "desc": "Your transactions are 100% secure and encrypted."
+      }
+    },
+    "history": {
+      "stats": {
+        "totalCommission": "Total Commission",
+        "thisMonth": "This Month",
+        "totalTransactions": "Total Transactions",
+        "pendingCommission": "Pending Commission"
+      },
+      "filters": {
+        "allLevels": "All Levels",
+        "allTypes": "All Types",
+        "export": "Export",
+        "filter": "Filter"
+      },
+      "table": {
+        "dateTime": "Date & Time",
+        "userDetails": "User Details",
+        "level": "Level",
+        "type": "Type",
+        "description": "Description",
+        "amount": "Amount (₹)",
+        "status": "Status",
+        "idPrefix": "ID: "
+      }
+    }
   }
 }
