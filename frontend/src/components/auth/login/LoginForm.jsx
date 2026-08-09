@@ -38,7 +38,10 @@ export default function LoginForm() {
   };
 
   return (
-    <form className="w-full space-y-3 lg:space-y-5" onSubmit={handleLogin}>
+    <form
+      className="w-full space-y-[clamp(0.625rem,2dvh,0.875rem)] lg:space-y-[clamp(1rem,2.5dvh,1.25rem)]"
+      onSubmit={handleLogin}
+    >
       <div>
         <label className="block text-[14px] md:text-[13px] font-bold text-slate-800 mb-1.5">
           {t('login.emailLabel')}
@@ -51,7 +54,7 @@ export default function LoginForm() {
             type="text"
             value={emailAddress}
             onChange={(e) => setEmailAddress(e.target.value)}
-            className="w-full pl-11 md:pl-10 lg:pl-12 pr-4 py-3.5 md:py-3 bg-white border border-slate-200 rounded-xl focus:outline-none focus:ring-1 focus:ring-indigo-600 focus:border-indigo-600 transition-all text-sm text-slate-900 placeholder:text-slate-400 shadow-sm"
+            className="w-full pl-11 md:pl-10 lg:pl-12 pr-4 py-[clamp(0.625rem,1.8dvh,0.875rem)] md:py-[clamp(0.5rem,1.6dvh,0.75rem)] bg-white border border-slate-200 rounded-xl focus:outline-none focus:ring-1 focus:ring-indigo-600 focus:border-indigo-600 transition-all text-sm text-slate-900 placeholder:text-slate-400 shadow-sm"
             placeholder={t('login.emailPlaceholder')}
           />
         </div>
@@ -69,7 +72,7 @@ export default function LoginForm() {
             type={showPassword ? 'text' : 'password'}
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            className="w-full pl-11 md:pl-10 lg:pl-12 pr-12 py-3.5 md:py-3 bg-white border border-slate-200 rounded-xl focus:outline-none focus:ring-1 focus:ring-indigo-600 focus:border-indigo-600 transition-all text-sm text-slate-900 placeholder:text-slate-400 shadow-sm"
+            className="w-full pl-11 md:pl-10 lg:pl-12 pr-12 py-[clamp(0.625rem,1.8dvh,0.875rem)] md:py-[clamp(0.5rem,1.6dvh,0.75rem)] bg-white border border-slate-200 rounded-xl focus:outline-none focus:ring-1 focus:ring-indigo-600 focus:border-indigo-600 transition-all text-sm text-slate-900 placeholder:text-slate-400 shadow-sm"
             placeholder={t('login.passwordPlaceholder')}
           />
           <button
@@ -82,7 +85,7 @@ export default function LoginForm() {
         </div>
       </div>
 
-      <div className="flex items-center justify-between pt-0.5 pb-1 lg:pt-2 lg:pb-3">
+      <div className="flex items-center justify-between pt-[clamp(0.125rem,0.5dvh,0.25rem)] pb-[clamp(0.25rem,1dvh,0.375rem)] lg:pt-[clamp(0.375rem,1dvh,0.5rem)] lg:pb-[clamp(0.5rem,1.5dvh,0.75rem)]">
         <div className="flex items-center group cursor-pointer">
           <div className="relative w-4 h-4 lg:w-4 lg:h-4 shrink-0 flex items-center justify-center">
             <input
@@ -109,7 +112,7 @@ export default function LoginForm() {
       <button
         type="submit"
         disabled={loading}
-        className="w-full py-3.5 md:py-3 lg:py-3.5 px-6 bg-linear-to-r from-[#7C4DFF] to-[#4F46E5] md:bg-none md:bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl font-bold text-[18px] md:text-sm lg:text-[15px] shadow-sm transform hover:-translate-y-0.5 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 flex items-center justify-center gap-2 disabled:opacity-70 disabled:hover:translate-y-0"
+        className="w-full py-[clamp(0.625rem,1.8dvh,0.875rem)] md:py-[clamp(0.5rem,1.6dvh,0.75rem)] lg:py-[clamp(0.625rem,1.8dvh,0.875rem)] px-6 bg-linear-to-r from-[#7C4DFF] to-[#4F46E5] md:bg-none md:bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl font-bold text-[18px] md:text-sm lg:text-[15px] shadow-sm transform hover:-translate-y-0.5 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 flex items-center justify-center gap-2 disabled:opacity-70 disabled:hover:translate-y-0"
       >
         <LogIn className="w-5 h-5 md:hidden" />
         {loading ? 'Logging in...' : t('login.submit')}

@@ -5,7 +5,7 @@
     "loadingDots": "...",
     "loading": "Loading...",
     "editing": "Validating Credentials",
-    "processing":"Saving"
+    "processing": "Saving"
   },
   "toast": {
     "auth": {
