@@ -10,6 +10,13 @@ export default function WelcomeCard() {
   const rawName = profileData?.FullName || t('dashboard.mock.userName');
   const firstName = rawName.split(' ')[0];
 
+  const rankName = profileData?.CurrentRankName || t('dashboard.mock.gold');
+  const rawIconPath = profileData?.RankIconPath;
+  const baseUrl = import.meta.env.VITE_API_URL ? import.meta.env.VITE_API_URL.replace(/\/+$/, '') : '';
+  const rankIconUrl = rawIconPath 
+    ? `${baseUrl}/${rawIconPath.replace(/\\/g, '/').replace(/^\/+/, '')}` 
+    : null;
+
   return (
     <div 
       className="relative w-full h-full rounded-3xl bg-linear-to-br from-indigo-50/70 to-indigo-100/40 backdrop-blur-xl border border-indigo-100/60 p-4 flex flex-row items-center justify-between gap-4 shadow-[0_8px_30px_rgb(0,0,0,0.04)] overflow-hidden group transition-all duration-300 hover:shadow-[0_8px_30px_rgb(99,102,241,0.15)] hover:border-indigo-300 hover:-translate-y-1"
@@ -43,11 +50,15 @@ export default function WelcomeCard() {
         className="relative z-10 shrink-0 bg-linear-to-br from-indigo-600 to-indigo-700 rounded-2xl p-3 sm:p-4 flex items-center gap-3 sm:gap-4 shadow-lg shadow-indigo-600/20 cursor-pointer"
       >
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-full bg-white/20 backdrop-blur-md flex items-center justify-center border border-white/20 shadow-inner shrink-0">
-            <Award className="w-5 h-5 text-yellow-300" />
+          <div className="w-10 h-10 rounded-full bg-white/20 backdrop-blur-md flex items-center justify-center border border-white/20 shadow-inner shrink-0 overflow-hidden p-1.5">
+            {rankIconUrl ? (
+              <img src={rankIconUrl} alt={rankName} className="w-full h-full object-contain drop-shadow-md" />
+            ) : (
+              <Award className="w-5 h-5 text-yellow-300" />
+            )}
           </div>
           <div className="flex flex-col">
-            <h3 className="text-white font-bold text-[15px] leading-tight">{t('dashboard.mock.gold')}</h3>
+            <h3 className="text-white font-bold text-[15px] leading-tight">{rankName}</h3>
             <p className="text-indigo-200 text-[11px] font-medium">{t('dashboard.welcome.rank')}</p>
           </div>
         </div>

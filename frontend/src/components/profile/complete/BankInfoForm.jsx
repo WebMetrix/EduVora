@@ -151,7 +151,7 @@ export default function BankInfoForm({ t, onBack, onNext, formData, updateFormDa
             </div>
             <div className="pl-6 pr-2">
               <span className={`font-bold text-[14px] block truncate ${formData.bankName ? 'text-[#1a1446]' : 'text-slate-400 font-medium'}`}>
-                {formData.bankName || 'Verify IFSC code first'}
+                {formData.bankName || t('completeProfile.verifyIfscFirst')}
               </span>
             </div>
           </div>

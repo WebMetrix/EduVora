@@ -27,7 +27,7 @@ export default function AccountOverviewCard({ t, profileData }) {
                 </div>
                 <div className="flex items-center justify-between">
                     <span className="text-[13px] font-semibold text-slate-500">{t('profile.overview.rank')}</span>
-                    <span className="text-[13px] font-extrabold text-amber-500">{profileData?.RankName || profileData?.Rank || 'Member'}</span>
+                    <span className="text-[13px] font-extrabold text-amber-500">{profileData?.RankName || profileData?.Rank || ''}</span>
                 </div>
                 <div className="h-px bg-slate-200/60 my-1" />
                 <div className="flex items-center justify-between">

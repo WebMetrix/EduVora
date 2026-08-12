@@ -24,10 +24,10 @@ export default function PackageDetailsModal({ packageData, onClose }) {
 
   if (!packageData) return null;
 
-  // Calculate pricing
-  const priceValue = parseInt((packageData.price || "0").replace(/[^\d]/g, ''), 10) || 0;
-  const gstValue = Math.round(priceValue * 0.18);
-  const totalValue = priceValue + gstValue;
+  // Calculate pricing (total price includes 18% GST)
+  const totalValue = parseInt((packageData.price || "0").replace(/[^\d]/g, ''), 10) || 0;
+  const basePriceValue = Math.round(totalValue / 1.18);
+  const gstValue = totalValue - basePriceValue;
 
   const formatCurrency = (val) => new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR', minimumFractionDigits: 0 }).format(val);
 
@@ -114,7 +114,7 @@ export default function PackageDetailsModal({ packageData, onClose }) {
             <div className="col-span-2 md:col-span-1 md:col-start-2 bg-indigo-50/50 rounded-[10px] p-2.5 mt-2 md:mt-auto">
               <div className="flex justify-between items-center mb-1">
                 <span className="text-[11px] font-semibold text-slate-700">{t('dashboard.packages.modal.price')}</span>
-                <span className="text-[11px] font-bold text-slate-900">{packageData.price}</span>
+                <span className="text-[11px] font-bold text-slate-900">{formatCurrency(basePriceValue)}</span>
               </div>
               <div className="flex justify-between items-center mb-1.5">
                 <span className="text-[11px] font-semibold text-slate-600">{t('dashboard.packages.modal.gst')}</span>

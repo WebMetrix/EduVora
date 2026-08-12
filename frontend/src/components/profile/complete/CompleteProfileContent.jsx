@@ -76,7 +76,7 @@ export default function CompleteProfileContent() {
         dateOfBirth: dob,
         gender: profileData.Gender || '',
         maritalStatus: profileData.MaritalStatus || '',
-        nationality: profileData.Nationality || t('completeProfile.options.in') || 'Indian',
+        nationality: profileData.Nationality || t('completeProfile.options.in'),
         emailAddress: profileData.EmailAddress || '',
         mobileNumber: profileData.MobileNumber || profileData.PrimaryMobile || profileData.ContactMobile || '',
         altMobileNumber: profileData.AltMobileNumber || '',

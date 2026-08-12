@@ -55,7 +55,7 @@ export default function OrdersDataTable({ t, orders }) {
     }
   };
 
-  let formattedTotalString = t('orders.table.showing') || 'Showing {start} to {end} of {total} entries';
+  let formattedTotalString = t('orders.table.showing');
   formattedTotalString = formattedTotalString.replace('{start}', startIndex + 1);
   formattedTotalString = formattedTotalString.replace('{end}', endIndex);
   formattedTotalString = formattedTotalString.replace('{total}', totalEntries);
@@ -221,7 +221,7 @@ export default function OrdersDataTable({ t, orders }) {
             </div>
 
             <div className="flex items-center gap-2 shrink-0">
-              <span className="text-[13px] font-medium text-slate-500 hidden sm:inline-block whitespace-nowrap">{t('orders.table.rowsPerPage') || 'Rows per page:'}</span>
+              <span className="text-[13px] font-medium text-slate-500 hidden sm:inline-block whitespace-nowrap">{t('orders.table.rowsPerPage')}</span>
               <select
                 value={rowsPerPage}
                 onChange={(e) => { setRowsPerPage(Number(e.target.value)); setPage(1); }}

@@ -279,7 +279,7 @@ export default function ReviewConfirmForm({ t, onEditStep, onSubmit, formData })
           {isSubmitting ? (
             <>
               <Loader2 className="w-5 h-5 animate-spin" />
-              {t('common.processing') || 'Processing...'}
+              {t('common.processing')}
             </>
           ) : (
             t('completeProfile.completeProfileBtn')

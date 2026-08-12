@@ -69,7 +69,7 @@ export default function PaymentSuccessModal({ paymentData, onClose, onDashboard,
           <div className="bg-green-50 border border-green-100 px-4 py-2 rounded-lg flex items-center justify-center gap-2 mb-4 transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_8px_30px_rgba(34,197,94,0.15)] hover:border-green-200/50">
              <Receipt className="w-4 h-4 text-green-600" />
              <span className="text-[13px] font-bold text-slate-800">
-               {t('payment.success.orderId')}: <span className="text-green-600">#{paymentData.orderId || 'ORD123456789'}</span>
+               {t('payment.success.orderId')}: <span className="text-green-600">#{paymentData.orderId}</span>
              </span>
           </div>
 
@@ -85,8 +85,8 @@ export default function PaymentSuccessModal({ paymentData, onClose, onDashboard,
                    <Shield className="w-5 h-5 text-orange-500" />
                  </div>
                  <div className="flex flex-col">
-                   <span className="text-[14px] font-extrabold text-slate-900">{paymentData.packageName || 'Gold Package'}</span>
-                   <span className="text-[13px] font-bold text-slate-700">{paymentData.packagePrice || '₹4,999'}</span>
+                   <span className="text-[14px] font-extrabold text-slate-900">{paymentData.packageName}</span>
+                   <span className="text-[13px] font-bold text-slate-700">{paymentData.packagePrice}</span>
                  </div>
                </div>
              </div>

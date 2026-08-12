@@ -13,7 +13,7 @@ export const fetchReferralsList = createAsyncThunk(
             const response = await api.get(`/referral/list?${params.toString()}`);
             return response.data;
         } catch (error) {
-            return rejectWithValue(error.response?.data?.message || 'Failed to fetch referrals');
+            return rejectWithValue(error.response?.data?.message || 'referrals.errors.fetchFailed');
         }
     }
 );

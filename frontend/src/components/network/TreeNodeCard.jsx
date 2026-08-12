@@ -7,7 +7,7 @@ export default function TreeNodeCard({ user, onClick, isSelected, level = 0 }) {
   // 1. Setup the Fallback Avatar (with safety net)
   const defaultUiAvatarUrl = import.meta.env.VITE_FALLBACK_PROF_PICTURE;
   const baseFallbackUrl = import.meta.env.VITE_FALLBACK_PROF_PICTURE || defaultUiAvatarUrl;
-  const fallbackAvatar = `${baseFallbackUrl}${encodeURIComponent(user?.name || 'User')}&background=random`;
+  const fallbackAvatar = `${baseFallbackUrl}${encodeURIComponent(user?.name || t('network.defaultUser'))}&background=random`;
 
   // 2. Parse and construct the valid Avatar URL
   let avatarUrl = fallbackAvatar;
@@ -89,7 +89,7 @@ export default function TreeNodeCard({ user, onClick, isSelected, level = 0 }) {
         {/* 3. Render the parsed URL with the onError fallback */}
         <img 
           src={avatarUrl} 
-          alt={user?.name || 'User'} 
+          alt={user?.name || t('network.defaultUser')} 
           className="w-full h-full object-cover" 
           onError={(e) => {
             e.currentTarget.onerror = null;

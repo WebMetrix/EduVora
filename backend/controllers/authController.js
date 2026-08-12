@@ -128,8 +128,13 @@ export const logoutUser = async (req, res) => {
             }
         }
         // res.clearCookie('token', { sameSite: 'lax', secure: process.env.NODE_ENV === 'production' });
-        res.clearCookie('token', { sameSite: 'none', secure: true });
+        // res.clearCookie('token', { sameSite: 'none', secure: true });
         // res.redirect('/login');
+        const isProduction = process.env.NODE_ENV === 'production';
+        res.clearCookie('token', { 
+            sameSite: isProduction ? 'none' : 'lax', 
+            secure: isProduction 
+        });
         res.status(200).send({ message: t('api.auth.logoutSuccess') });
     } catch (err) {
         logger.error(`LOGOUT ERROR: ${err.message}`, { stack: err.stack });
@@ -178,11 +183,14 @@ export const loginUser = async (req, res) => {
         await auditReq.execute("EV_InsertLogUserSession");
 
         // 7. Set Cookie & Respond
+        const isProduction = process.env.NODE_ENV === 'production';
         res.cookie('token', token, {
             httpOnly: true,
-            // secure: false,
-            secure: true,
-            sameSite: 'none',
+            secure: isProduction,
+            sameSite: isProduction ? 'none' : 'lax',
+            // secure: true,
+            // sameSite: 'none',
+            // secure: false,            
             // secure: process.env.NODE_ENV === 'production',
             // sameSite: 'lax',
             maxAge: 24 * 60 * 60 * 1000
@@ -288,10 +296,13 @@ export const googleAuthUser = async (req, res) => {
         await auditReq.execute("EV_InsertLogUserSession");
 
         // 6. Set Cookie & Respond
+        const isProduction = process.env.NODE_ENV === 'production';
         res.cookie('token', token, {
             httpOnly: true,
-            secure: true,
-            sameSite: 'none',
+            secure: isProduction,
+            sameSite: isProduction ? 'none' : 'lax',
+            // secure: true,
+            // sameSite: 'none',
             // secure: process.env.NODE_ENV === 'production',
             // sameSite: 'lax',
             maxAge: 24 * 60 * 60 * 1000

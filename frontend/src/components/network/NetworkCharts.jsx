@@ -15,9 +15,9 @@ export default function NetworkCharts() {
   const registrationGrowth = dashboardStats?.[trendFilter]?.periodGrowthPercentage || 0;
 
   const getVsText = () => {
-    if (trendFilter === 'quarterly') return t('network.dashboard.vsLastQuarter') || 'vs last quarter';
-    if (trendFilter === 'yearly') return t('network.dashboard.vsLastYear') || 'vs last year';
-    return t('network.dashboard.vsLastMonth') || 'vs last month';
+    if (trendFilter === 'quarterly') return t('network.dashboard.vsLastQuarter');
+    if (trendFilter === 'yearly') return t('network.dashboard.vsLastYear');
+    return t('network.dashboard.vsLastMonth');
   };
 
   // Mock data for Referral Growth (left hardcoded as requested)
@@ -110,7 +110,7 @@ export default function NetworkCharts() {
     if (active && payload && payload.length) {
       return (
         <div className="bg-white p-3 rounded-lg shadow-lg border border-slate-100">
-          <p className="text-[12px] font-bold text-slate-600 mb-1">{payload[0].payload.name || payload[0].payload.date || 'Value'}</p>
+          <p className="text-[12px] font-bold text-slate-600 mb-1">{payload[0].payload.name || payload[0].payload.date || t('network.charts.value')}</p>
           <p className="text-[14px] font-extrabold text-slate-900">{payload[0].value}</p>
         </div>
       );
@@ -174,7 +174,7 @@ export default function NetworkCharts() {
               onChange={(e) => setTrendFilter(e.target.value)}
               className="appearance-none flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-50 border border-slate-100 text-[12px] font-bold text-slate-600 hover:bg-slate-100 transition-colors pr-8 focus:outline-none cursor-pointer"
             >
-              <option value="monthly">{t('network.charts.thisMonth') || 'This Month'}</option>
+              <option value="monthly">{t('network.charts.thisMonth')}</option>
               <option value="quarterly">Quarterly</option>
               <option value="yearly">Yearly</option>
             </select>

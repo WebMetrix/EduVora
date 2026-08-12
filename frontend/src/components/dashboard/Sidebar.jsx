@@ -1,6 +1,6 @@
 import {
   Home, Network, Users, BookOpen, ShoppingBag,
-  DollarSign, Wallet, ArrowUpRight, FileText,
+  IndianRupee, Wallet, ArrowUpRight, FileText,
   Award, User, Settings, HelpCircle, Crown, X, ChevronDown, ShieldCheck, UserCog
 } from 'lucide-react';
 import { useState } from 'react';
@@ -15,7 +15,7 @@ const menuItems = [
   { id: 'referrals', icon: Users, labelKey: 'nav.referrals' },
   { id: 'courses', icon: BookOpen, labelKey: 'nav.courses' },
   { id: 'orders', icon: ShoppingBag, labelKey: 'nav.orders' },
-  { id: 'earnings', icon: DollarSign, labelKey: 'nav.earnings' },
+  { id: 'earnings', icon: IndianRupee, labelKey: 'nav.earnings' },
   { id: 'reports', icon: FileText, labelKey: 'nav.reports' },
   { id: 'rank', icon: Award, labelKey: 'nav.rank' }
 ];

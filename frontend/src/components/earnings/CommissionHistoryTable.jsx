@@ -102,32 +102,33 @@ export default function CommissionHistoryTable({ t }) {
   };
 
   return (
-    <div className="relative overflow-hidden bg-white border border-slate-200 rounded-3xl p-4 lg:p-6 shadow-sm flex flex-col h-full mt-6 group/card transition-all duration-300 hover:shadow-md hover:border-indigo-200">
+    <div className="relative overflow-hidden bg-white border border-slate-200 rounded-3xl shadow-sm flex flex-col h-full mt-6 group/card transition-all duration-300 hover:-translate-y-1 hover:shadow-md hover:border-indigo-200">
+      <div className="absolute top-0 right-0 w-64 h-64 bg-indigo-400/10 rounded-full blur-[80px] -translate-y-1/2 translate-x-1/3 pointer-events-none group-hover/card:bg-indigo-400/20 transition-colors duration-700" />
       
       {/* Desktop Table */}
       <div className="hidden lg:block overflow-x-auto w-full relative z-10">
         <table className="w-full text-left border-collapse">
-          <thead>
-            <tr className="border-b border-slate-100 bg-slate-50/50">
-              <th className="px-4 py-4 text-[13px] font-extrabold text-slate-600 uppercase tracking-wider whitespace-nowrap rounded-tl-xl">{t('earnings.history.table.dateTime')}</th>
-              <th className="px-4 py-4 text-[13px] font-extrabold text-slate-600 uppercase tracking-wider whitespace-nowrap">{t('earnings.history.table.userDetails')}</th>
-              <th className="px-4 py-4 text-[13px] font-extrabold text-slate-600 uppercase tracking-wider whitespace-nowrap">{t('earnings.history.table.level')}</th>
-              <th className="px-4 py-4 text-[13px] font-extrabold text-slate-600 uppercase tracking-wider whitespace-nowrap">{t('earnings.history.table.type')}</th>
-              <th className="px-4 py-4 text-[13px] font-extrabold text-slate-600 uppercase tracking-wider whitespace-nowrap">{t('earnings.history.table.description')}</th>
-              <th className="px-4 py-4 text-[13px] font-extrabold text-slate-600 uppercase tracking-wider whitespace-nowrap">{t('earnings.history.table.amount')}</th>
-              <th className="px-4 py-4 text-[13px] font-extrabold text-slate-600 uppercase tracking-wider whitespace-nowrap rounded-tr-xl">{t('earnings.history.table.status')}</th>
+          <thead className="bg-slate-50/90 backdrop-blur-md shadow-sm">
+            <tr>
+              <th className="px-3 2xl:px-4 py-4 text-[13px] font-extrabold text-slate-600 uppercase tracking-wider whitespace-nowrap">{t('earnings.history.table.dateTime')}</th>
+              <th className="px-3 2xl:px-4 py-4 text-[13px] font-extrabold text-slate-600 uppercase tracking-wider whitespace-nowrap">{t('earnings.history.table.userDetails')}</th>
+              <th className="px-3 2xl:px-4 py-4 text-[13px] font-extrabold text-slate-600 uppercase tracking-wider whitespace-nowrap">{t('earnings.history.table.level')}</th>
+              <th className="px-3 2xl:px-4 py-4 text-[13px] font-extrabold text-slate-600 uppercase tracking-wider whitespace-nowrap">{t('earnings.history.table.type')}</th>
+              <th className="px-3 2xl:px-4 py-4 text-[13px] font-extrabold text-slate-600 uppercase tracking-wider whitespace-nowrap">{t('earnings.history.table.description')}</th>
+              <th className="px-3 2xl:px-4 py-4 text-[13px] font-extrabold text-slate-600 uppercase tracking-wider whitespace-nowrap">{t('earnings.history.table.amount')}</th>
+              <th className="px-3 2xl:px-4 py-4 text-[13px] font-extrabold text-slate-600 uppercase tracking-wider whitespace-nowrap">{t('earnings.history.table.status')}</th>
             </tr>
           </thead>
           <tbody>
             {tableData.map((row) => (
               <tr key={row.id} className="group border-b last:border-b-0 border-indigo-100/30 hover:bg-slate-50/50 hover:shadow-sm hover:-translate-y-0.5 relative transition-all duration-300 cursor-pointer">
-                <td className="px-4 py-4 whitespace-nowrap">
+                <td className="px-3 2xl:px-4 py-4 whitespace-nowrap">
                   <div className="flex flex-col">
                     <span className="text-[13px] font-extrabold text-[#1a1446] group-hover:text-[#4f3bf3] transition-colors">{row.date}</span>
                     <span className="text-[12px] font-semibold text-slate-500">{row.time}</span>
                   </div>
                 </td>
-                <td className="px-4 py-4 whitespace-nowrap">
+                <td className="px-3 2xl:px-4 py-4 whitespace-nowrap">
                   <div className="flex items-center gap-3">
                     <div className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 ${row.avatarColor} transition-transform duration-300 group-hover:scale-110`}>
                       <span className="text-[12px] font-bold">{row.userName.charAt(0)}</span>
@@ -138,24 +139,24 @@ export default function CommissionHistoryTable({ t }) {
                     </div>
                   </div>
                 </td>
-                <td className="px-4 py-4 whitespace-nowrap">
+                <td className="px-3 2xl:px-4 py-4 whitespace-nowrap">
                   <span className={`inline-flex items-center px-2.5 py-1 rounded-md text-[11px] font-extrabold border ${getLevelStyle(row.level)}`}>
                     {row.level}
                   </span>
                 </td>
-                <td className="px-4 py-4 whitespace-nowrap text-[13px] font-bold text-slate-700">
+                <td className="px-3 2xl:px-4 py-4 whitespace-nowrap text-[13px] font-bold text-slate-700">
                   {row.type}
                 </td>
-                <td className="px-4 py-4 text-[12px] font-semibold text-slate-600 max-w-[200px] truncate" title={row.desc}>
+                <td className="px-3 2xl:px-4 py-4 text-[12px] font-semibold text-slate-600 max-w-[200px] truncate" title={row.desc}>
                   <div className="flex flex-col">
                     <span>{row.desc.split(' for ')[0]} for</span>
                     <span>{row.desc.split(' for ')[1]}</span>
                   </div>
                 </td>
-                <td className="px-4 py-4 whitespace-nowrap text-[14px] font-extrabold text-emerald-600">
+                <td className="px-3 2xl:px-4 py-4 whitespace-nowrap text-[14px] font-extrabold text-emerald-600">
                   {row.amount}
                 </td>
-                <td className="px-4 py-4 whitespace-nowrap">
+                <td className="px-3 2xl:px-4 py-4 whitespace-nowrap">
                   <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-[11px] font-extrabold border shadow-sm ${getStatusStyle(row.status)}`}>
                     {row.status}
                   </span>
@@ -167,7 +168,7 @@ export default function CommissionHistoryTable({ t }) {
       </div>
 
       {/* Mobile Stacked Cards */}
-      <div className="block lg:hidden w-full space-y-4 relative z-10 mt-4">
+      <div className="block lg:hidden w-full space-y-4 relative z-10 p-4 lg:p-6 pt-0">
         {tableData.map((row) => (
           <div key={row.id} className="group p-4 flex flex-col gap-3 bg-slate-50/50 border border-indigo-100/30 rounded-2xl hover:bg-white hover:shadow-md hover:border-indigo-200 transition-all duration-300 cursor-pointer">
             <div className="flex justify-between items-start mb-1">
@@ -210,7 +211,7 @@ export default function CommissionHistoryTable({ t }) {
       </div>
 
       {/* Pagination */}
-      <div className="flex flex-col sm:flex-row items-center justify-between gap-4 mt-6 pt-6 border-t border-slate-100 relative z-10">
+      <div className="flex flex-col sm:flex-row items-center justify-between gap-4 p-4 lg:p-6 border-t border-slate-100 relative z-10 bg-slate-50/50">
         <p className="text-[13px] font-medium text-slate-500">
           Showing 1 to 10 of 128 entries
         </p>

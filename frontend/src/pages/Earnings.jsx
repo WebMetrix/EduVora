@@ -46,10 +46,10 @@ export default function Earnings() {
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id)}
-              className={`flex items-center gap-2 px-6 py-2.5 rounded-lg text-[13px] font-bold transition-all whitespace-nowrap ${
+              className={`flex items-center gap-2 px-6 py-2.5 rounded-lg text-[13px] font-bold transition-all whitespace-nowrap outline-none ${
                 isActive 
                   ? 'bg-indigo-50/50 text-indigo-600 shadow-sm border border-indigo-100/50' 
-                  : 'text-slate-500 hover:text-slate-700 hover:bg-slate-50'
+                  : 'text-slate-500 hover:text-slate-700 hover:bg-slate-50 border border-transparent'
               }`}
             >
               <Icon className={`w-4 h-4 ${isActive ? 'text-indigo-600' : 'text-slate-400'}`} />

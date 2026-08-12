@@ -36,7 +36,7 @@ export default function ReferralQRCodeCard({ t, profile }) {
     if (!qrDataUrl) return;
     const a = document.createElement('a');
     a.href = qrDataUrl;
-    a.download = `Eduvora_QR_${referralCode || 'Code'}.png`;
+    a.download = `Eduvora_QR_${referralCode || t('myReferrals.defaultCode')}.png`;
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);

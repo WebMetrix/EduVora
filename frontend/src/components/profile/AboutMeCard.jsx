@@ -115,7 +115,7 @@ export default function AboutMeCard({ t, profileData, onUpdate }) {
                     </div>
                 ) : (
                     <p className="text-[13px] text-slate-600 leading-relaxed font-semibold whitespace-pre-wrap">
-                        {aboutText || 'No about me provided yet.'}
+                        {aboutText || t('profile.about.empty')}
                     </p>
                 )}
             </div>

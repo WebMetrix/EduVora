@@ -229,6 +229,191 @@ Stores the courses available in the system.
 | IsActive    | bit           | No          |             |
 | CreatedDate | datetime      | No          |             |
 
+### 20. `Tb_CommissionLedger`
+Tracks individual commission entries generated from orders.
+| Column Name      | Data Type      | Allow Nulls | Notes       |
+|------------------|----------------|-------------|-------------|
+| Id               | int            | No          | Primary Key |
+| UUID             | varchar(36)    | No          |             |
+| FromUUID         | varchar(36)    | No          |             |
+| OrderId          | int            | No          |             |
+| LevelNumber      | int            | No          |             |
+| CommissionAmount | decimal(18, 2) | No          |             |
+| LedgerStatusId   | int            | No          |             |
+| CreatedDate      | datetime       | No          |             |
+
+### 21. `Tb_CommissionLedgerStatusMaster`
+Master table for commission ledger statuses (1: Pending, 2: Credited, 3: Withdrawn).
+| Column Name    | Data Type    | Allow Nulls | Notes       |
+|----------------|--------------|-------------|-------------|
+| LedgerStatusId | int          | No          | Primary Key |
+| StatusName     | nvarchar(50) | No          |             |
+| IsActive       | bit          | No          |             |
+| CreatedDate    | datetime     | No          |             |
+
+### 22. `Tb_CommissionRuleMaster`
+Defines the commission rules, percentages, and flat amounts for packages and levels.
+| Column Name          | Data Type      | Allow Nulls | Notes       |
+|----------------------|----------------|-------------|-------------|
+| RuleId               | int            | No          | Primary Key |
+| PackageId            | int            | No          |             |
+| LevelNumber          | int            | No          |             |
+| CommissionPercentage | decimal(5, 2)  | Yes         |             |
+| CommissionFlatAmount | decimal(18, 2) | Yes         |             |
+| IsActive             | bit            | No          |             |
+| CreatedDate          | datetime       | No          |             |
+
+### 23. `Tb_CommissionStatusHistory`
+Tracks the history of status changes for commission ledger entries.
+| Column Name  | Data Type     | Allow Nulls | Notes       |
+|--------------|---------------|-------------|-------------|
+| HistoryId    | int           | No          | Primary Key |
+| LedgerId     | int           | No          |             |
+| PrevStatusId | int           | Yes         |             |
+| NewStatusId  | int           | No          |             |
+| Remarks      | nvarchar(255) | Yes         |             |
+| ModifiedBy   | varchar(36)   | Yes         |             |
+| ModifiedDate | datetime      | No          |             |
+
+### 24. `Tb_Invoice`
+Stores invoice details generated for orders.
+| Column Name    | Data Type      | Allow Nulls | Notes       |
+|----------------|----------------|-------------|-------------|
+| InvoiceId      | int            | No          | Primary Key |
+| InvoiceNumber  | nvarchar(50)   | No          |             |
+| OrderId        | int            | No          |             |
+| BillingName    | nvarchar(255)  | No          |             |
+| BillingAddress | nvarchar(MAX)  | Yes         |             |
+| SubTotal       | decimal(18, 2) | No          |             |
+| GSTAmount      | decimal(18, 2) | No          |             |
+| TotalAmount    | decimal(18, 2) | No          |             |
+| InvoiceDate    | datetime       | No          |             |
+
+### 25. `Tb_Order`
+Core table for tracking user orders.
+| Column Name   | Data Type      | Allow Nulls | Notes       |
+|---------------|----------------|-------------|-------------|
+| OrderId       | int            | No          | Primary Key |
+| OrderNumber   | nvarchar(50)   | No          |             |
+| UUID          | varchar(36)    | No          |             |
+| TotalAmount   | decimal(18, 2) | No          |             |
+| GSTAmount     | decimal(18, 2) | No          |             |
+| OrderStatusId | nvarchar(50)   | No          |             |
+| PaymentMethod | nvarchar(50)   | Yes         |             |
+| TransactionId | nvarchar(100)  | Yes         |             |
+| OrderDate     | datetime       | No          |             |
+
+### 26. `Tb_OrderItem`
+Tracks the individual items (packages) within an order.
+| Column Name | Data Type      | Allow Nulls | Notes       |
+|-------------|----------------|-------------|-------------|
+| OrderItemId | int            | No          | Primary Key |
+| OrderId     | int            | No          |             |
+| PackageId   | int            | No          |             |
+| ItemPrice   | decimal(18, 2) | No          |             |
+
+### 27. `Tb_OrderStatus`
+Master table for order statuses.
+| Column Name   | Data Type    | Allow Nulls | Notes       |
+|---------------|--------------|-------------|-------------|
+| OrderStatusId | int          | No          | Primary Key |
+| StatusName    | nvarchar(50) | No          |             |
+| IsActive      | bit          | No          |             |
+| CreatedDate   | datetime     | No          |             |
+
+### 28. `Tb_OrderStatusTrail`
+Audit trail for changes in order status.
+| Column Name  | Data Type     | Allow Nulls | Notes       |
+|--------------|---------------|-------------|-------------|
+| TrailId      | int           | No          | Primary Key |
+| OrderId      | int           | No          |             |
+| PrevStatusId | int           | Yes         |             |
+| NextStatusId | int           | No          |             |
+| Comments     | nvarchar(255) | Yes         |             |
+| ChangedBy    | varchar(36)   | Yes         |             |
+| ModifiedDate | datetime      | No          |             |
+
+### 29. `Tb_Payment`
+Tracks payments made for orders.
+| Column Name     | Data Type      | Allow Nulls | Notes       |
+|-----------------|----------------|-------------|-------------|
+| PaymentId       | int            | No          | Primary Key |
+| OrderId         | int            | No          |             |
+| PaymentAmount   | decimal(18, 2) | No          |             |
+| PaymentMethod   | nvarchar(50)   | Yes         |             |
+| TransactionId   | nvarchar(100)  | Yes         |             |
+| PaymentStatusId | int            | No          |             |
+| GatewayResponse | nvarchar(MAX)  | Yes         |             |
+| PaymentDate     | datetime       | No          |             |
+
+### 30. `Tb_PaymentStatusMaster`
+Master table for payment statuses.
+| Column Name     | Data Type    | Allow Nulls | Notes       |
+|-----------------|--------------|-------------|-------------|
+| PaymentStatusId | int          | No          | Primary Key |
+| StatusName      | nvarchar(50) | No          |             |
+| IsActive        | bit          | No          |             |
+| CreatedDate     | datetime     | No          |             |
+
+### 31. `Tb_TransactionTypeMaster`
+Master table for transaction types.
+| Column Name         | Data Type    | Allow Nulls | Notes       |
+|---------------------|--------------|-------------|-------------|
+| TransactionTypeId   | int          | No          | Primary Key |
+| TransactionTypeName | nvarchar(20) | No          |             |
+| IsActive            | bit          | No          |             |
+| CreatedDate         | datetime     | No          |             |
+
+### 32. `Tb_Lesson`
+Stores individual lessons belonging to a module.
+| Column Name     | Data Type      | Allow Nulls | Notes       |
+|-----------------|----------------|-------------|-------------|
+| LessonId        | int            | No          | Primary Key |
+| ModuleId        | int            | No          |             |
+| LessonTitle     | nvarchar(255)  | No          |             |
+| VideoPath       | nvarchar(1000) | Yes         |             |
+| DurationMinutes | int            | Yes         |             |
+| SequenceNo      | int            | No          |             |
+| IsActive        | bit            | No          |             |
+| CreatedDate     | datetime       | No          |             |
+
+### 33. `Tb_Module`
+Stores modules that group lessons within a course.
+| Column Name | Data Type     | Allow Nulls | Notes       |
+|-------------|---------------|-------------|-------------|
+| ModuleId    | int           | No          | Primary Key |
+| CourseId    | int           | No          |             |
+| ModuleName  | nvarchar(255) | No          |             |
+| SequenceNo  | int           | No          |             |
+| IsActive    | bit           | No          |             |
+| CreatedDate | datetime      | No          |             |
+
+### 34. `Tb_Wallet`
+Stores wallet balance and summary for users.
+| Column Name    | Data Type      | Allow Nulls | Notes       |
+|----------------|----------------|-------------|-------------|
+| Id             | int            | No          | Primary Key |
+| UUID           | varchar(36)    | No          |             |
+| CurrentBalance | decimal(18, 2) | No          |             |
+| TotalEarned    | decimal(18, 2) | No          |             |
+| TotalWithdrawn | decimal(18, 2) | No          |             |
+| IsActive       | bit            | No          |             |
+| CreatedDate    | datetime       | No          |             |
+| ModifiedDate   | datetime       | Yes         |             |
+
+### 35. `Tb_WalletTransaction`
+Tracks all transactions within a user's wallet.
+| Column Name       | Data Type      | Allow Nulls | Notes       |
+|-------------------|----------------|-------------|-------------|
+| TransactionId     | int            | No          | Primary Key |
+| WalletId          | int            | No          |             |
+| UUID              | varchar(36)    | No          |             |
+| TransactionTypeId | int            | No          |             |
+| Amount            | decimal(18, 2) | No          |             |
+| ClosingBalance    | decimal(18, 2) | No          |             |
+| Description       | nvarchar(255)  | No          |             |
+| TransactionDate   | datetime       | No          |             |
+
 
 
 ## Stored Procedures
@@ -261,10 +446,10 @@ Fetches active genders from `Tb_GenderMaster`.
 Fetches distinct active states from `Tb_Cities` where CountryCode = 'IN'.
 
 ### `EV_GetUserProfile`
-Fetches the complete profile of a user (Core + Desc + Bank) using `LEFT JOIN`s on UUID.
+Fetches the complete profile of a user (Core + Desc + Bank + Package + Rank) using `LEFT JOIN`s on UUID.
 - **Inputs**: `@UUID VARCHAR(36)`
 
-- **Outputs**: Result Set (UUID, EmailAddress, PrimaryMobile, CreatedDate, IsEmailVerified, UserID, FullName, Username, DateOfBirth, Gender, Nationality, ProfilePicturePath, ContactMobile, WhatsAppNumber, AddressLine1, AddressLine2, Country, State, City, Pincode, AccountHolderName, AccountNumber, BankName, BranchName, IFSCCode, AccountType, AdditionalBankNotes, AboutNotes)
+- **Outputs**: Result Set (UserID, EmailAddress, PrimaryMobile, CreatedDate, IsEmailVerified, FullName, Username, DateOfBirth, Gender, Nationality, ProfilePicturePath, ContactMobile, WhatsAppNumber, AddressLine1, AddressLine2, Country, State, StateName, City, CityName, Pincode, AboutNotes, AccountHolderName, AccountNumber, BankName, BranchName, IFSCCode, AccountType, AccountTypeName, AdditionalBankNotes, ActivePackageId, ActivePackageName, CurrentRankId, CurrentRankName, RankColor, RankIconPath)
 
 ### `EV_UpdateAboutMe`
 Updates the `AboutNotes` column in `Tb_UserDesc` for a specific user.

@@ -13,15 +13,15 @@ export default function TeamDashboard() {
   const dashboardStats = allStats?.[trendFilter] || null;
 
   const getVsText = () => {
-    if (trendFilter === 'quarterly') return t('network.dashboard.vsLastQuarter') || 'vs last quarter';
-    if (trendFilter === 'yearly') return t('network.dashboard.vsLastYear') || 'vs last year';
-    return t('network.dashboard.vsLastMonth') || 'vs last month';
+    if (trendFilter === 'quarterly') return t('network.dashboard.vsLastQuarter');
+    if (trendFilter === 'yearly') return t('network.dashboard.vsLastYear');
+    return t('network.dashboard.vsLastMonth');
   };
 
   const getGrowthLabel = () => {
     if (trendFilter === 'quarterly') return 'Quarterly Growth';
     if (trendFilter === 'yearly') return 'Yearly Growth';
-    return t('network.dashboard.monthlyGrowth') || 'Monthly Growth';
+    return t('network.dashboard.monthlyGrowth');
   };
 
   const stats = [
@@ -101,7 +101,7 @@ export default function TeamDashboard() {
             onChange={(e) => setTrendFilter(e.target.value)}
             className="appearance-none flex items-center gap-1.5 px-3 py-1.5 lg:py-2 rounded-lg bg-white border border-slate-200 text-[12px] lg:text-[13px] font-semibold text-slate-600 hover:bg-slate-50 transition-colors shadow-sm pr-8 focus:outline-none cursor-pointer"
           >
-            <option value="monthly">{t('network.charts.thisMonth') || 'This Month'}</option>
+            <option value="monthly">{t('network.charts.thisMonth')}</option>
             <option value="quarterly">Quarterly</option>
             <option value="yearly">Yearly</option>
           </select>

@@ -12,7 +12,7 @@ export const fetchUserProfile = createAsyncThunk(
             }
             return response.data;
         } catch (error) {
-            return rejectWithValue(error.response?.data?.message || 'Failed to fetch profile');
+            return rejectWithValue(error.response?.data?.message || 'profile.errors.fetchFailed');
         }
     }
 );

@@ -1,15 +1,21 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Send, Building2, Clock, HelpCircle, ChevronRight, ShieldCheck } from 'lucide-react';
+import WithdrawFundsModal from './WithdrawFundsModal';
 
 export default function WalletDetailsSidebar({ t }) {
+  const [isWithdrawModalOpen, setIsWithdrawModalOpen] = useState(false);
+
   return (
+    <>
     <div className="grid grid-cols-1 lg:grid-cols-2 2xl:grid-cols-1 gap-6 2xl:col-span-1 h-fit">
       
       {/* Wallet Details Card */}
-      <div className="bg-white border border-slate-200 rounded-3xl p-5 shadow-sm transition-all duration-300">
-        <h3 className="text-[15px] font-extrabold text-[#1a1446] mb-5">{t('earnings.wallet.details.title')}</h3>
+      <div className="relative overflow-hidden bg-white border border-slate-200 rounded-3xl p-5 shadow-sm flex flex-col group/card transition-all duration-300 hover:-translate-y-1 hover:shadow-md hover:border-indigo-200">
+        <div className="absolute top-0 right-0 w-64 h-64 bg-indigo-400/10 rounded-full blur-[80px] -translate-y-1/2 translate-x-1/3 pointer-events-none group-hover/card:bg-indigo-400/20 transition-colors duration-700" />
         
-        <div className="flex flex-col gap-3 mb-6">
+        <h3 className="text-[15px] font-extrabold text-[#1a1446] mb-5 relative z-10">{t('earnings.wallet.details.title')}</h3>
+        
+        <div className="flex flex-col gap-3 mb-6 relative z-10">
           <div className="flex items-center justify-between">
             <span className="text-[13px] font-semibold text-slate-500">{t('earnings.wallet.details.walletId')}</span>
             <span className="text-[13px] font-bold text-slate-700">WALLET1254</span>
@@ -32,17 +38,22 @@ export default function WalletDetailsSidebar({ t }) {
           </div>
         </div>
 
-        <button className="w-full flex items-center justify-center gap-2 py-3 bg-[#4f3bf3] text-white rounded-xl text-[14px] font-bold hover:bg-indigo-700 hover:shadow-lg hover:-translate-y-0.5 transition-all active:scale-95">
+        <button 
+          onClick={() => setIsWithdrawModalOpen(true)}
+          className="relative z-10 w-full flex items-center justify-center gap-2 py-3 bg-[#4f3bf3] text-white rounded-xl text-[14px] font-bold hover:bg-indigo-700 hover:shadow-lg hover:-translate-y-0.5 transition-all active:scale-95"
+        >
           {t('earnings.wallet.details.withdrawNow')}
           <Send className="w-4 h-4 ml-1" />
         </button>
       </div>
 
       {/* Quick Actions Card */}
-      <div className="bg-white border border-slate-200 rounded-3xl p-5 shadow-sm transition-all duration-300">
-        <h3 className="text-[15px] font-extrabold text-[#1a1446] mb-4">{t('earnings.wallet.actions.title')}</h3>
+      <div className="relative overflow-hidden bg-white border border-slate-200 rounded-3xl p-5 shadow-sm flex flex-col group/card transition-all duration-300 hover:-translate-y-1 hover:shadow-md hover:border-indigo-200">
+        <div className="absolute top-0 right-0 w-64 h-64 bg-indigo-400/10 rounded-full blur-[80px] -translate-y-1/2 translate-x-1/3 pointer-events-none group-hover/card:bg-indigo-400/20 transition-colors duration-700" />
+
+        <h3 className="text-[15px] font-extrabold text-[#1a1446] mb-4 relative z-10">{t('earnings.wallet.actions.title')}</h3>
         
-        <div className="flex flex-col gap-2">
+        <div className="flex flex-col gap-2 relative z-10">
           {/* Payment Methods */}
           <div className="flex items-center justify-between p-3 rounded-2xl hover:bg-indigo-50/50 hover:shadow-sm hover:-translate-y-0.5 transition-all cursor-pointer group border border-transparent hover:border-indigo-100">
             <div className="flex items-center gap-4">
@@ -101,5 +112,11 @@ export default function WalletDetailsSidebar({ t }) {
       </div>
 
     </div>
+    
+    <WithdrawFundsModal 
+      isOpen={isWithdrawModalOpen} 
+      onClose={() => setIsWithdrawModalOpen(false)} 
+    />
+    </>
   );
 }

@@ -11,7 +11,7 @@ export default function UserDetailsSidebar({ user }) {
   // 1. Setup the Fallback Avatar (with safety net)
   const defaultUiAvatarUrl = import.meta.env.VITE_FALLBACK_PROF_PICTURE;
   const baseFallbackUrl = import.meta.env.VITE_FALLBACK_PROF_PICTURE || defaultUiAvatarUrl;
-  const fallbackAvatar = `${baseFallbackUrl}${encodeURIComponent(user.name || 'User')}&background=random`;
+  const fallbackAvatar = `${baseFallbackUrl}${encodeURIComponent(user.name || t('network.defaultUser'))}&background=random`;
 
   // 2. Parse and construct the valid Avatar URL
   let avatarUrl = fallbackAvatar;

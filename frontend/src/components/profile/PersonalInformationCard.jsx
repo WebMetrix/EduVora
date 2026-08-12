@@ -246,7 +246,7 @@ export default function PersonalInformationCard({ t, profileData, onPictureUpdat
                             <label className="text-[11px] font-bold uppercase tracking-wider">{t('completeProfile.nationality')}</label>
                         </div>
                         <div className="pl-6 text-[14px] text-slate-900 font-bold">
-                            {profileData?.Nationality || t('completeProfile.options.in') || 'Indian'}
+                            {profileData?.Nationality || t('completeProfile.options.in')}
                         </div>
                     </div>
 

@@ -45,7 +45,7 @@ export default function OrderDetailsModal({ order, onClose }) {
 
         {/* Header */}
         <div className="flex items-center justify-between px-4 md:px-6 py-3 md:py-5 shrink-0">
-          <h2 className="text-[16px] md:text-[20px] font-extrabold text-slate-900">Order Details</h2>
+          <h2 className="text-[16px] md:text-[20px] font-extrabold text-slate-900">{t('orders.details.title')}</h2>
           <button
             onClick={onClose}
             className="p-1.5 rounded-full hover:bg-slate-100 transition-colors text-slate-500 hover:text-slate-700"
@@ -65,7 +65,7 @@ export default function OrderDetailsModal({ order, onClose }) {
                 <Calendar className="w-5 h-5 text-[#4f3bf3]" />
               </div>
               <div className="flex flex-col">
-                <span className="text-[12px] font-semibold text-slate-500">Order ID</span>
+                <span className="text-[12px] font-semibold text-slate-500">{t('orders.details.orderId')}</span>
                 <div className="flex items-center gap-2">
                   <span className="text-[16px] font-extrabold text-slate-900">{order.id}</span>
                   <button className="text-slate-400 hover:text-[#4f3bf3] transition-colors">
@@ -73,7 +73,7 @@ export default function OrderDetailsModal({ order, onClose }) {
                   </button>
                 </div>
                 <div className="mt-2">
-                  <span className="text-[12px] font-semibold text-slate-500 block">Order Date</span>
+                  <span className="text-[12px] font-semibold text-slate-500 block">{t('orders.details.orderDate')}</span>
                   <span className="text-[13px] font-bold text-slate-800">{order.date}, {order.time}</span>
                 </div>
               </div>
@@ -86,17 +86,17 @@ export default function OrderDetailsModal({ order, onClose }) {
             <div className="flex flex-col items-start pt-3 md:pt-0 border-t md:border-t-0 border-slate-100 md:w-1/2 relative mt-2 md:mt-0">
               {/* Completed Badge Floating Right */}
               <div className="absolute top-0 right-0 mt-3 md:mt-0">
-                <span className="px-3 py-1 bg-green-100 text-green-600 text-[10px] md:text-[11px] font-bold rounded-full">Completed</span>
+                <span className="px-3 py-1 bg-green-100 text-green-600 text-[10px] md:text-[11px] font-bold rounded-full">{t('orders.status.completed')}</span>
               </div>
               
               <div className="flex flex-col items-start">
-                <span className="text-[12px] font-semibold text-slate-500">Payment Method</span>
+                <span className="text-[12px] font-semibold text-slate-500">{t('orders.details.paymentMethod')}</span>
                 <div className="flex items-center gap-1.5 mt-0.5">
                   <RazorpayIcon /> <span className="text-[13px] font-bold text-slate-800">UPI</span>
                 </div>
               </div>
               <div className="mt-2 flex flex-col items-start">
-                <span className="text-[12px] font-semibold text-slate-500">Transaction ID</span>
+                <span className="text-[12px] font-semibold text-slate-500">{t('orders.details.transactionId')}</span>
                 <span className="text-[13px] font-bold text-slate-800">pay_QwErTy123456</span>
               </div>
             </div>
@@ -104,7 +104,7 @@ export default function OrderDetailsModal({ order, onClose }) {
 
           {/* Package Details Section */}
           <div className="border border-slate-100 rounded-[14px] p-3 md:p-4 shadow-sm shrink-0">
-            <h3 className="text-[13px] font-extrabold text-slate-900 mb-2">Package Details</h3>
+            <h3 className="text-[13px] font-extrabold text-slate-900 mb-2">{t('orders.details.packageDetails')}</h3>
             <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-3">
               <div className="flex items-start gap-3">
                 <div className={`w-14 h-14 rounded-xl shrink-0 shadow-md ${order.iconBg || 'bg-[#0B1221]'} flex items-center justify-center relative overflow-hidden bg-cover bg-center border border-indigo-900/50`}>
@@ -136,14 +136,14 @@ export default function OrderDetailsModal({ order, onClose }) {
 
           {/* Order Summary */}
           <div className="border border-slate-100 rounded-[14px] p-3 md:p-4 shadow-sm shrink-0">
-            <h3 className="text-[13px] font-extrabold text-slate-900 mb-1.5">Order Summary</h3>
+            <h3 className="text-[13px] font-extrabold text-slate-900 mb-1.5">{t('orders.details.orderSummary')}</h3>
             <div className="flex flex-col gap-1.5">
               <div className="flex justify-between items-center text-[12px] font-semibold text-slate-600">
-                <span>Subtotal</span>
+                <span>{t('orders.details.subtotal')}</span>
                 <span className="text-slate-900">{order.amount}</span>
               </div>
               <div className="flex justify-between items-center text-[12px] font-semibold text-slate-600">
-                <span>Discount</span>
+                <span>{t('orders.details.discount')}</span>
                 <span className="text-slate-900">- ₹0</span>
               </div>
               <div className="flex justify-between items-center text-[12px] font-semibold text-slate-600">
@@ -152,7 +152,7 @@ export default function OrderDetailsModal({ order, onClose }) {
               </div>
               <div className="w-full h-px border-t border-dashed border-slate-200 my-1" />
               <div className="flex justify-between items-center">
-                <span className="text-[13px] font-extrabold text-slate-900">Total Amount</span>
+                <span className="text-[13px] font-extrabold text-slate-900">{t('orders.details.totalAmount')}</span>
                 <span className="text-[15px] font-black text-[#4f3bf3]">{order.amount}</span>
               </div>
             </div>
@@ -166,7 +166,7 @@ export default function OrderDetailsModal({ order, onClose }) {
             <div className="flex-1 flex flex-col justify-center">
               <div className="flex items-center gap-2 mb-0.5">
                 <CheckCircle2 className="w-4 h-4 text-green-600 sm:hidden" />
-                <h5 className="text-[12px] md:text-[13px] font-bold text-slate-900">Payment Completed</h5>
+                <h5 className="text-[12px] md:text-[13px] font-bold text-slate-900">{t('orders.details.paymentCompleted')}</h5>
               </div>
               <p className="text-[10px] text-slate-500 leading-tight max-w-[90%]">
                 Your payment was successful and your package is now active.

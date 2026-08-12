@@ -74,7 +74,7 @@ export default function PaymentFailedModal({ paymentData, onClose, onDashboard, 
           <div className="bg-red-50 border border-red-100 px-4 py-2 rounded-lg flex items-center justify-center gap-2 mb-4 w-full max-w-[280px]">
              <Receipt className="w-4 h-4 text-red-600" />
              <span className="text-[13px] font-bold text-slate-800">
-               {t('payment.failed.orderId')}: <span className="text-red-600">#{paymentData.orderId || 'ORD123456789'}</span>
+               {t('payment.failed.orderId')}: <span className="text-red-600">#{paymentData.orderId}</span>
              </span>
           </div>
 

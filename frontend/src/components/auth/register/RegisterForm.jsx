@@ -66,14 +66,14 @@ export default function RegisterForm() {
     switch (strengthScore) {
       case 0:
       case 1:
-        return { color: 'text-red-500', bg: 'bg-red-500', border: 'border-red-500 focus:border-red-500', shadow: 'shadow-[0_0_0_4px_rgba(239,68,68,0.1)]', label: t('forgot.strengthWeak') || 'Weak' };
+        return { color: 'text-red-500', bg: 'bg-red-500', border: 'border-red-500 focus:border-red-500', shadow: 'shadow-[0_0_0_4px_rgba(239,68,68,0.1)]', label: t('forgot.strengthWeak') };
       case 2:
-        return { color: 'text-amber-500', bg: 'bg-amber-500', border: 'border-amber-500 focus:border-amber-500', shadow: 'shadow-[0_0_0_4px_rgba(245,158,11,0.1)]', label: t('forgot.strengthFair') || 'Fair' };
+        return { color: 'text-amber-500', bg: 'bg-amber-500', border: 'border-amber-500 focus:border-amber-500', shadow: 'shadow-[0_0_0_4px_rgba(245,158,11,0.1)]', label: t('forgot.strengthFair') };
       case 3:
-        return { color: 'text-emerald-400', bg: 'bg-emerald-400', border: 'border-emerald-400 focus:border-emerald-400', shadow: 'shadow-[0_0_0_4px_rgba(52,211,153,0.1)]', label: t('forgot.strengthGood') || 'Good' };
+        return { color: 'text-emerald-400', bg: 'bg-emerald-400', border: 'border-emerald-400 focus:border-emerald-400', shadow: 'shadow-[0_0_0_4px_rgba(52,211,153,0.1)]', label: t('forgot.strengthGood') };
       case 4:
       default:
-        return { color: 'text-emerald-500', bg: 'bg-emerald-500', border: 'border-emerald-500 focus:border-emerald-500', shadow: 'shadow-[0_0_0_4px_rgba(16,185,129,0.1)]', label: t('forgot.strengthStrong') || 'Strong' };
+        return { color: 'text-emerald-500', bg: 'bg-emerald-500', border: 'border-emerald-500 focus:border-emerald-500', shadow: 'shadow-[0_0_0_4px_rgba(16,185,129,0.1)]', label: t('forgot.strengthStrong') };
     }
   };
 
@@ -242,7 +242,7 @@ export default function RegisterForm() {
               disabled={loading || isOtpBoxVisible}
               className="px-5 py-3 md:py-2.5 whitespace-nowrap text-sm font-bold text-white bg-linear-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 rounded-lg shadow-md hover:shadow-lg transform hover:-translate-y-0.5 transition-all duration-300 disabled:opacity-50 disabled:hover:translate-y-0 disabled:shadow-none disabled:pointer-events-none"
             >
-              {isOtpBoxVisible ? 'OTP Sent' : (loading ? 'Sending...' : t('register.verifyEmail') || 'Verify Email')}
+              {isOtpBoxVisible ? t('register.otpSent') : (loading ? t('common.sending') : t('register.verifyEmail'))}
             </button>
           )}
         </div>
@@ -252,7 +252,7 @@ export default function RegisterForm() {
       {isOtpBoxVisible && (
         <div className="bg-slate-50 border border-slate-200 p-4 rounded-xl animate-fade-in">
           <label className="block text-[14px] md:text-[13px] font-bold text-slate-800 mb-1.5">
-            {t('register.otpLabel') || 'Enter OTP'} <span className="text-red-500">*</span>
+            {t('register.otpLabel')} <span className="text-red-500">*</span>
           </label>
           <div className="relative group flex gap-2 mb-2">
             <div className="relative flex-1">
@@ -292,7 +292,7 @@ export default function RegisterForm() {
 
           {!isEmailVerified && (
             <div className="text-[12px] text-slate-500 flex justify-between items-center px-1">
-              <p>{t('register.otpHint') || 'OTP sent to your email.'}</p>
+              <p>{t('register.otpHint')}</p>
               <button
                 type="button"
                 onClick={handleResendOtp}
@@ -404,7 +404,7 @@ export default function RegisterForm() {
         </div>
         {confirmPassword && (
           <p className={`text-[12px] font-bold ${passwordsMatch ? 'text-emerald-500' : 'text-red-500'}`}>
-            {passwordsMatch ? t('register.passwordsMatch') || 'Passwords match' : t('register.passwordsDoNotMatch') || 'Passwords do not match'}
+            {passwordsMatch ? t('register.passwordsMatch') : t('register.passwordsDoNotMatch')}
           </p>
         )}
       </div>
@@ -460,7 +460,7 @@ export default function RegisterForm() {
           className="w-full py-3.5 md:py-3 px-6 bg-linear-to-r from-[#7C4DFF] to-[#4F46E5] hover:bg-indigo-700 text-white rounded-lg font-bold text-[16px] md:text-[15px] shadow-sm transform hover:-translate-y-0.5 transition-all duration-300 flex items-center justify-center gap-2 disabled:opacity-70 disabled:hover:translate-y-0"
         >
           <UserPlus className="w-5 h-5" />
-          {loading ? 'Creating...' : t('register.submit') || 'Create Account'}
+          {loading ? t('register.creating') : t('register.submit')}
         </button>
       </div>
 
