@@ -1,18 +1,19 @@
 import { Cashfree, CFEnvironment } from "cashfree-pg";
 
-// Initialize Cashfree SDK instance
-const cashfree = new Cashfree(
-    CFEnvironment.SANDBOX, 
-    process.env.CASHFREE_APP_ID,
-    process.env.CASHFREE_SECRET_KEY
-);
 
 
 export const createDemoOrder = async (req, res) => {
     // #swagger.tags = ['Payment']
     try {
+        // Initialize Cashfree SDK instance here to ensure process.env variables are loaded
+        const cashfree = new Cashfree(
+            CFEnvironment.SANDBOX,
+            process.env.CASHFREE_APP_ID,
+            process.env.CASHFREE_SECRET_KEY
+        );
+
         const { packageId, amount, packageName } = req.body;
-        
+
         const orderId = `order_${Date.now()}_${Math.floor(Math.random() * 1000)}`;
         const orderAmount = amount || 1; // Use provided amount or default to 1
 
@@ -66,7 +67,7 @@ export const handleWebhook = async (req, res) => {
 
         // Here you would verify the signature to ensure authenticity
         // Cashfree.PGVerifyWebhookSignature(req.headers["x-webhook-signature"], req.rawBody, Cashfree.XClientSecret);
-        
+
         // Return 200 OK to acknowledge receipt of the webhook
         res.status(200).send("Webhook received");
     } catch (error) {
