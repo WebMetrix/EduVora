@@ -9,6 +9,7 @@ const cashfree = new Cashfree(
 
 
 export const createDemoOrder = async (req, res) => {
+    // #swagger.tags = ['Payment']
     try {
         const { packageId, amount, packageName } = req.body;
         
@@ -55,6 +56,7 @@ export const createDemoOrder = async (req, res) => {
 };
 
 export const handleWebhook = async (req, res) => {
+    // #swagger.tags = ['Payment']
     try {
         console.log("-----------------------------------------");
         console.log("Webhook Received from Cashfree!");
