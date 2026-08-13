@@ -1,11 +1,85 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
-import { X, CheckCircle2, ShieldCheck, Lock } from 'lucide-react';
+import { X, CheckCircle2, ShieldCheck, Lock, Loader2 } from 'lucide-react';
 import { useTranslation } from '../../hooks/useTranslation';
+import { load } from '@cashfreepayments/cashfree-js';
+import { useNavigate } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { setPaymentData, createPaymentOrder } from '../../redux/slices/paymentSlice';
 
 export default function PackageDetailsModal({ packageData, onClose }) {
   const { t } = useTranslation();
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  const [isProcessing, setIsProcessing] = useState(false);
   const isOpen = !!packageData;
+
+  const handlePayment = async () => {
+    try {
+        setIsProcessing(true);
+        // Calculate the total value to send to the backend
+        const totalValue = parseInt((packageData.price || "0").replace(/[^\d]/g, ''), 10) || 1;
+
+        const orderData = { 
+            packageId: packageData?.id || 'demo_pkg',
+            amount: totalValue,
+            packageName: packageData?.name || 'Demo Package'
+        };
+
+        // 1. Fetch payment_session_id via Redux Thunk
+        const resultAction = await dispatch(createPaymentOrder(orderData)).unwrap();
+        
+        if (!resultAction.success || !resultAction.payment_session_id) {
+            throw new Error("Failed to create payment session");
+        }
+
+        // 2. Load Cashfree SDK
+        const cashfree = await load({
+            mode: "sandbox", // use Sandbox for testing
+        });
+
+        // 3. Open Cashfree Checkout Modal
+        const checkoutOptions = {
+            paymentSessionId: resultAction.payment_session_id,
+            redirectTarget: "_modal", 
+        };
+
+        const paymentContext = {
+            orderId: resultAction.order_id,
+            amount: packageData?.price || "₹0", // Note: The modal might expect formatted price
+            packageName: packageData?.name || "Demo Package",
+            packagePrice: packageData?.price || "₹0"
+        };
+        
+        // Dispatch to Redux store instead of passing via route state
+        dispatch(setPaymentData(paymentContext));
+
+        cashfree.checkout(checkoutOptions).then((result) => {
+            if(result.error){
+                console.error("Payment failed", result.error);
+                navigate('/payment/failed');
+                setTimeout(() => onClose(), 100);
+            }
+            if(result.redirect){
+                console.log("Payment will be redirected");
+            }
+            if(result.paymentDetails){
+                console.log("Payment completed successfully!", result.paymentDetails);
+                navigate('/payment/success');
+                setTimeout(() => onClose(), 100);
+            }
+        });
+    } catch (error) {
+        console.error("Error initiating payment:", error);
+        alert("Failed to initiate payment. Check console and ensure backend is running.");
+        onClose();
+        navigate('/payment/failed');
+    } finally {
+        setIsProcessing(false);
+    }
+  };
+
   // Prevent scrolling when modal is open and fix layout shift
   useEffect(() => {
     if (isOpen) {
@@ -133,14 +207,18 @@ export default function PackageDetailsModal({ packageData, onClose }) {
             <div className="col-span-2 md:col-span-1 md:col-start-2 flex gap-2">
               <button
                 onClick={onClose}
-                className="flex-1 py-1.5 bg-white border border-[#4f3bf3] rounded-[6px] text-[11px] font-bold text-[#4f3bf3] hover:bg-indigo-50 hover:-translate-y-0.5 hover:shadow-md transition-all duration-300"
+                disabled={isProcessing}
+                className="flex-1 py-1.5 bg-white border border-[#4f3bf3] rounded-[6px] text-[11px] font-bold text-[#4f3bf3] hover:bg-indigo-50 hover:-translate-y-0.5 hover:shadow-md transition-all duration-300 disabled:opacity-50 disabled:pointer-events-none"
               >
                 {t('dashboard.packages.modal.cancel')}
               </button>
               <button
-                className="flex-1 py-1.5 bg-[#4f3bf3] border border-[#4f3bf3] rounded-[6px] text-[11px] font-bold text-white shadow-md shadow-indigo-500/20 hover:bg-[#3f2ee6] hover:-translate-y-0.5 hover:shadow-lg hover:shadow-indigo-500/40 transition-all duration-300"
+                onClick={handlePayment}
+                disabled={isProcessing}
+                className="flex-1 flex items-center justify-center gap-1.5 py-1.5 bg-[#4f3bf3] border border-[#4f3bf3] rounded-[6px] text-[11px] font-bold text-white shadow-md shadow-indigo-500/20 hover:bg-[#3f2ee6] hover:-translate-y-0.5 hover:shadow-lg hover:shadow-indigo-500/40 transition-all duration-300 disabled:opacity-70 disabled:pointer-events-none"
               >
-                {t('dashboard.packages.modal.purchase')}
+                {isProcessing ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : null}
+                {isProcessing ? 'Processing...' : t('dashboard.packages.modal.purchase')}
               </button>
             </div>
 

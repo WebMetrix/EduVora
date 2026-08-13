@@ -15,6 +15,8 @@ import passwordRoutes from './routes/passwordRoutes.js';
 import referralRoutes from './routes/referralRoutes.js';
 import networkRoutes from './routes/networkRoutes.js';
 import packageRoutes from './routes/packageRoutes.js';
+import paymentRoutes from './routes/paymentRoutes.js';
+
 
 
 // Cors configuration
@@ -58,6 +60,8 @@ app.use('/password', passwordRoutes);
 app.use('/referral', referralRoutes);
 app.use('/network', networkRoutes);
 app.use('/packages', packageRoutes);
+app.use('/payment', paymentRoutes);
+
 
 const userDataPath = process.env.USER_DATA_PATH;
 app.use('/UserData', express.static(userDataPath));
