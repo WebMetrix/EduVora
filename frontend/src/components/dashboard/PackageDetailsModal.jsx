@@ -17,66 +17,66 @@ export default function PackageDetailsModal({ packageData, onClose }) {
 
   const handlePayment = async () => {
     try {
-        setIsProcessing(true);
-        // Calculate the total value to send to the backend
-        const totalValue = parseInt((packageData.price || "0").replace(/[^\d]/g, ''), 10) || 1;
+      setIsProcessing(true);
+      // Calculate the total value to send to the backend
+      const totalValue = parseInt((packageData.price || "0").replace(/[^\d]/g, ''), 10) || 1;
 
-        const orderData = { 
-            packageId: packageData?.id || 'demo_pkg',
-            amount: totalValue,
-            packageName: packageData?.name || 'Demo Package'
-        };
+      const orderData = {
+        packageId: packageData?.id,
+        amount: totalValue,
+        packageName: packageData?.name
+      };
 
-        // 1. Fetch payment_session_id via Redux Thunk
-        const resultAction = await dispatch(createPaymentOrder(orderData)).unwrap();
-        
-        if (!resultAction.success || !resultAction.payment_session_id) {
-            throw new Error("Failed to create payment session");
+      // 1. Fetch payment_session_id via Redux Thunk
+      const resultAction = await dispatch(createPaymentOrder(orderData)).unwrap();
+
+      if (!resultAction.success || !resultAction.payment_session_id) {
+        throw new Error("Failed to create payment session");
+      }
+
+      // 2. Load Cashfree SDK
+      const cashfree = await load({
+        mode: "sandbox", // use Sandbox for testing
+      });
+
+      // 3. Open Cashfree Checkout Modal
+      const checkoutOptions = {
+        paymentSessionId: resultAction.payment_session_id,
+        redirectTarget: "_modal",
+      };
+
+      const paymentContext = {
+        orderId: resultAction.order_id,
+        amount: packageData?.price || "₹0", // Note: The modal might expect formatted price
+        packageName: packageData?.name || "Demo Package",
+        packagePrice: packageData?.price || "₹0"
+      };
+
+      // Dispatch to Redux store instead of passing via route state
+      dispatch(setPaymentData(paymentContext));
+
+      cashfree.checkout(checkoutOptions).then((result) => {
+        if (result.error) {
+          console.error("Payment failed", result.error);
+          navigate('/payment/failed');
+          setTimeout(() => onClose(), 100);
         }
-
-        // 2. Load Cashfree SDK
-        const cashfree = await load({
-            mode: "sandbox", // use Sandbox for testing
-        });
-
-        // 3. Open Cashfree Checkout Modal
-        const checkoutOptions = {
-            paymentSessionId: resultAction.payment_session_id,
-            redirectTarget: "_modal", 
-        };
-
-        const paymentContext = {
-            orderId: resultAction.order_id,
-            amount: packageData?.price || "₹0", // Note: The modal might expect formatted price
-            packageName: packageData?.name || "Demo Package",
-            packagePrice: packageData?.price || "₹0"
-        };
-        
-        // Dispatch to Redux store instead of passing via route state
-        dispatch(setPaymentData(paymentContext));
-
-        cashfree.checkout(checkoutOptions).then((result) => {
-            if(result.error){
-                console.error("Payment failed", result.error);
-                navigate('/payment/failed');
-                setTimeout(() => onClose(), 100);
-            }
-            if(result.redirect){
-                console.log("Payment will be redirected");
-            }
-            if(result.paymentDetails){
-                console.log("Payment completed successfully!", result.paymentDetails);
-                navigate('/payment/success');
-                setTimeout(() => onClose(), 100);
-            }
-        });
+        if (result.redirect) {
+          console.log("Payment will be redirected");
+        }
+        if (result.paymentDetails) {
+          console.log("Payment completed successfully!", result.paymentDetails);
+          navigate('/payment/success');
+          setTimeout(() => onClose(), 100);
+        }
+      });
     } catch (error) {
-        console.error("Error initiating payment:", error);
-        alert("Failed to initiate payment. Check console and ensure backend is running.");
-        onClose();
-        navigate('/payment/failed');
+      console.error("Error initiating payment:", error);
+      alert("Failed to initiate payment. Check console and ensure backend is running.");
+      onClose();
+      navigate('/payment/failed');
     } finally {
-        setIsProcessing(false);
+      setIsProcessing(false);
     }
   };
 

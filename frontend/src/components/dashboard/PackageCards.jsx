@@ -39,72 +39,78 @@ export default function PackageCards() {
     fetchPackages();
   }, []);
 
-  const bronzeDb = dbPackages.find(p => p.PackageName === 'Bronze Package' || p.PackageId === 1);
-  const silverDb = dbPackages.find(p => p.PackageName === 'Silver Package' || p.PackageId === 2);
-  const goldDb = dbPackages.find(p => p.PackageName === 'Gold Package' || p.PackageId === 3);
-  const diamondDb = dbPackages.find(p => p.PackageName === 'Diamond Package' || p.PackageId === 4);
-
-  const packages = [
-    {
-      id: 'diamond',
-      name: diamondDb ? diamondDb.PackageName : t('dashboard.packages.diamond.name'),
-      price: diamondDb ? `₹${diamondDb.Price}` : t('dashboard.packages.diamond.price'),
-      icon: diamondIcon,
-      badge: t('dashboard.packages.premium'),
-      badgeColor: 'bg-[#a855f7] text-white',
-      headerBg: 'bg-[#1a1446]',
-      bgImage: diamondBg,
-      detailedBg: diamondDetailedBg,
-      features: t('dashboard.packages.diamond.leftFeatures', { returnObjects: true }),
-      isDynamic: !!diamondDb,
-      Description: diamondDb?.Description,
-      DescriptionDialog: diamondDb?.DescriptionDialog
-    },
-    {
-      id: 'gold',
-      name: goldDb ? goldDb.PackageName : t('dashboard.packages.gold.name'),
-      price: goldDb ? `₹${goldDb.Price}` : t('dashboard.packages.gold.price'),
-      icon: goldIcon,
-      badge: t('dashboard.packages.bestSeller'),
-      badgeColor: 'bg-[#fbbf24] text-slate-900',
-      headerBg: 'bg-[#1e293b]',
-      bgImage: goldBg,
-      detailedBg: goldDetailedBg,
-      features: t('dashboard.packages.gold.leftFeatures', { returnObjects: true }),
-      isDynamic: !!goldDb,
-      Description: goldDb?.Description,
-      DescriptionDialog: goldDb?.DescriptionDialog
-    },
-    {
-      id: 'silver',
-      name: silverDb ? silverDb.PackageName : t('dashboard.packages.silver.name'),
-      price: silverDb ? `₹${silverDb.Price}` : t('dashboard.packages.silver.price'),
-      icon: silverIcon,
-      badge: t('dashboard.packages.mostPopular'),
-      badgeColor: 'bg-[#5b8cff] text-white',
-      headerBg: 'bg-[#7c8393]',
-      bgImage: silverBg,
-      detailedBg: silverDetailedBg,
-      features: t('dashboard.packages.silver.leftFeatures', { returnObjects: true }),
-      isDynamic: !!silverDb,
-      Description: silverDb?.Description,
-      DescriptionDialog: silverDb?.DescriptionDialog
-    },
-    {
-      id: 'bronze',
-      name: bronzeDb ? bronzeDb.PackageName : t('dashboard.packages.bronze.name'),
-      price: bronzeDb ? `₹${bronzeDb.Price}` : t('dashboard.packages.bronze.price'),
+  const getPackageStyles = (packageId, packageName) => {
+    const name = (packageName || '').toLowerCase();
+    if (name.includes('diamond') || packageId === 4) {
+      return {
+        icon: diamondIcon,
+        badge: t('dashboard.packages.premium'),
+        badgeColor: 'bg-[#a855f7] text-white',
+        headerBg: 'bg-[#1a1446]',
+        bgImage: diamondBg,
+        detailedBg: diamondDetailedBg,
+        features: t('dashboard.packages.diamond.leftFeatures', { returnObjects: true })
+      };
+    }
+    if (name.includes('gold') || packageId === 3) {
+      return {
+        icon: goldIcon,
+        badge: t('dashboard.packages.bestSeller'),
+        badgeColor: 'bg-[#fbbf24] text-slate-900',
+        headerBg: 'bg-[#1e293b]',
+        bgImage: goldBg,
+        detailedBg: goldDetailedBg,
+        features: t('dashboard.packages.gold.leftFeatures', { returnObjects: true })
+      };
+    }
+    if (name.includes('silver') || packageId === 2) {
+      return {
+        icon: silverIcon,
+        badge: t('dashboard.packages.mostPopular'),
+        badgeColor: 'bg-[#5b8cff] text-white',
+        headerBg: 'bg-[#7c8393]',
+        bgImage: silverBg,
+        detailedBg: silverDetailedBg,
+        features: t('dashboard.packages.silver.leftFeatures', { returnObjects: true })
+      };
+    }
+    return {
       icon: bronzeIcon,
       badge: null,
       headerBg: 'bg-[#966b44]',
       bgImage: bronzeBg,
       detailedBg: bronzeDetailedBg,
-      features: t('dashboard.packages.bronze.leftFeatures', { returnObjects: true }),
-      isDynamic: !!bronzeDb,
-      Description: bronzeDb?.Description,
-      DescriptionDialog: bronzeDb?.DescriptionDialog
-    }
-  ];
+      features: t('dashboard.packages.bronze.leftFeatures', { returnObjects: true })
+    };
+  };
+
+  let packages = [...dbPackages]
+    .sort((a, b) => b.PackageId - a.PackageId)
+    .map(dbPkg => {
+      const styles = getPackageStyles(dbPkg.PackageId, dbPkg.PackageName);
+      return {
+        id: dbPkg.PackageId,
+        name: dbPkg.PackageName,
+        price: `₹${dbPkg.Price}`,
+        isDynamic: true,
+        Description: dbPkg.Description,
+        DescriptionDialog: dbPkg.DescriptionDialog,
+        ...styles
+      };
+    });
+
+  // Preserve the skeleton loading animation by showing temporary cards while fetching
+  if (loading && packages.length === 0) {
+    packages = [4, 3, 2, 1].map(id => ({
+      ...getPackageStyles(id, ''),
+      id: `loading-${id}`,
+      name: 'Loading...',
+      price: '₹...',
+      isDynamic: false,
+      Description: null,
+      DescriptionDialog: null
+    }));
+  }
 
   return (
     <div className="flex flex-col xl:col-span-7">
@@ -136,9 +142,9 @@ export default function PackageCards() {
                   </div>
                 )}
                 {loading ? (
-                   <div className="w-8 h-8 rounded-full bg-white/20 mb-0.5" />
+                  <div className="w-8 h-8 rounded-full bg-white/20 mb-0.5" />
                 ) : (
-                   <img src={pkg.icon} alt={pkg.name} className="w-8 h-8 mb-0.5 drop-shadow-md" />
+                  <img src={pkg.icon} alt={pkg.name} className="w-8 h-8 mb-0.5 drop-shadow-md" />
                 )}
                 <h4 className={`font-bold text-[13px] ${loading ? 'text-transparent bg-white/20 rounded mt-1' : 'text-white'}`}>{pkg.name}</h4>
               </div>

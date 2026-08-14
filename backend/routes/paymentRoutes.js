@@ -1,10 +1,11 @@
 import express from 'express';
-import { createDemoOrder, handleWebhook } from '../controllers/paymentController.js';
+import { createOrder, processWebhook } from '../controllers/paymentController.js';
+
+import { isLoggedIn } from '../middlewares/authMiddleware.js';
 
 const router = express.Router();
 
-// Demo routes for testing Cashfree integration
-router.post('/demo/create-order', createDemoOrder);
-router.post('/demo/webhook', handleWebhook);
+router.post('/create-order', isLoggedIn, createOrder);
+router.post('/webhook', processWebhook);
 
 export default router;

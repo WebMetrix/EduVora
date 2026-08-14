@@ -6,7 +6,7 @@ export const createPaymentOrder = createAsyncThunk(
     'payment/createOrder',
     async (orderData, { rejectWithValue }) => {
         try {
-            const response = await api.post('/payment/demo/create-order', orderData);
+            const response = await api.post('/payment/create-order', orderData);
             return response.data;
         } catch (error) {
             return rejectWithValue(error.response?.data?.message || 'Failed to create payment session');
