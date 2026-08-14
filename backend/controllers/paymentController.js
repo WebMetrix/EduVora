@@ -1,5 +1,6 @@
 import { Cashfree, CFEnvironment } from "cashfree-pg";
 import pool, { sql } from "../config/db.js";
+import logger from "../utils/logger.js";
 
 export const createOrder = async (req, res) => {
     // #swagger.tags = ['Payment']
@@ -10,8 +11,9 @@ export const createOrder = async (req, res) => {
             process.env.CASHFREE_APP_ID,
             process.env.CASHFREE_SECRET_KEY
         );
+        
         // Using the latest API version (requires newer TEST_... Sandbox keys)
-        cashfree.XApiVersion = "2023-08-01";
+        // cashfree.XApiVersion = "2023-08-01";
 
         const { packageId, amount, packageName } = req.body;
         const uuid = req.user.id; // From isLoggedIn middleware
@@ -68,7 +70,7 @@ export const createOrder = async (req, res) => {
         };
 
         const response = await cashfree.PGCreateOrder(request);
-        console.log("Cashfree Order Created:", response.data.order_id);
+        logger.info(`Cashfree Order Created: ${response.data.order_id} for UUID: ${uuid}`);
 
         res.status(200).json({
             success: true,
@@ -77,7 +79,7 @@ export const createOrder = async (req, res) => {
         });
 
     } catch (error) {
-        console.error("Error creating Cashfree order (Full):", error);
+        logger.error(`Error creating Cashfree order for UUID ${req.user?.id}: ${error.message || String(error)}`, { error: error.response?.data || error });
         res.status(500).json({
             success: false,
             message: "Failed to create order",
@@ -89,8 +91,8 @@ export const createOrder = async (req, res) => {
 export const processWebhook = async (req, res) => {
     // #swagger.tags = ['Payment']
     try {
-        console.log("-----------------------------------------");
-        console.log("Webhook Received from Cashfree!");
+        logger.info("-----------------------------------------");
+        logger.info("Webhook Received from Cashfree!");
         
         const payload = req.body;
         
@@ -108,7 +110,7 @@ export const processWebhook = async (req, res) => {
             // Extract the payment method/group (e.g., net_banking, upi, card)
             const paymentMethod = paymentData?.payment_group || paymentData?.payment_method?.card?.card_network || 'UNKNOWN';
             
-            console.log(`Processing Webhook for Order: ${orderNumber}, Status: ${paymentStatus}, Method: ${paymentMethod}`);
+            logger.info(`Processing Webhook for Order: ${orderNumber}, Status: ${paymentStatus}, Method: ${paymentMethod}`);
             
             // Update Database with Webhook data
             const hookReq = pool.request();
@@ -122,13 +124,13 @@ export const processWebhook = async (req, res) => {
             hookReq.input('PaymentMethod', sql.VarChar(50), String(paymentMethod).toUpperCase());
             
             await hookReq.execute('dbo.EV_ProcessCashfreePayment');
-            console.log("Database updated successfully from Webhook.");
+            logger.info(`Database updated successfully from Webhook for Order: ${orderNumber}`);
         }
 
         // Return 200 OK to acknowledge receipt of the webhook to Cashfree
         res.status(200).send("Webhook received");
     } catch (error) {
-        console.error("Error processing webhook:", error);
+        logger.error(`Error processing webhook: ${error.message || String(error)}`, { error });
         res.status(500).send("Webhook error");
     }
 };

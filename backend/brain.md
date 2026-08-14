@@ -518,3 +518,13 @@ Fetches all active packages from `Tb_Package`.
 Updates the profile picture path for a specific user instantly.
 - **Inputs**: `@UUID VARCHAR(36)`, `@ProfilePicturePath VARCHAR(500)`
 - **Updates**: Updates `ProfilePicturePath` in `Tb_UserDesc`.
+
+### `EV_ProcessCashfreePayment`
+Processes both the initialization and the webhook response of a Cashfree payment.
+- **Inputs**: `@ActionType VARCHAR(20)` ('INITIATE' or 'WEBHOOK'), `@UUID VARCHAR(36)`, `@PackageId INT`, `@Amount DECIMAL(18,2)`, `@OrderNumber VARCHAR(50)`, `@GatewayOrderId VARCHAR(100)`, `@PaymentStatus VARCHAR(50)`, `@PaymentMethod VARCHAR(50)`, `@GatewayResponse NVARCHAR(MAX)`
+- **Outputs**: 
+  - For INITIATE: Returns generated `OrderNumber`.
+  - For WEBHOOK: Returns `@Success INT` (1 = Success, 0 = Order not found).
+- **Updates**: 
+  - For INITIATE: Inserts initial Pending (1) records into `Tb_Order`, `Tb_OrderItem`, and `Tb_Payment`.
+  - For WEBHOOK: Updates `OrderStatusId` and `PaymentStatusId` to 2 (Success) or 3 (Failed). Automatically inserts into `Tb_UserPackage` if the payment was successful.
