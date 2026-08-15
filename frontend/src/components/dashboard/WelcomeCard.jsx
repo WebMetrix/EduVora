@@ -10,7 +10,7 @@ export default function WelcomeCard() {
   const rawName = profileData?.FullName || t('dashboard.mock.userName');
   const firstName = rawName.split(' ')[0];
 
-  const rankName = profileData?.CurrentRankName || t('dashboard.mock.gold');
+  const rankName = profileData?.CurrentRankName;
   const rawIconPath = profileData?.RankIconPath;
   const baseUrl = import.meta.env.VITE_API_URL ? import.meta.env.VITE_API_URL.replace(/\/+$/, '') : '';
   const rankIconUrl = rawIconPath 
@@ -44,29 +44,31 @@ export default function WelcomeCard() {
         </p>
       </div>
 
-      {/* Right Content - Rank Badge */}
-      <motion.div 
-        whileHover={{ scale: 1.02 }}
-        className="relative z-10 shrink-0 bg-linear-to-br from-indigo-600 to-indigo-700 rounded-2xl p-3 sm:p-4 flex items-center gap-3 sm:gap-4 shadow-lg shadow-indigo-600/20 cursor-pointer"
-      >
-        <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-full bg-white/20 backdrop-blur-md flex items-center justify-center border border-white/20 shadow-inner shrink-0 overflow-hidden p-1.5">
-            {rankIconUrl ? (
-              <img src={rankIconUrl} alt={rankName} className="w-full h-full object-contain drop-shadow-md" />
-            ) : (
-              <Award className="w-5 h-5 text-yellow-300" />
-            )}
+      {/* Right Content - Rank Badge (Only shown if user has a rank) */}
+      {rankName && (
+        <motion.div 
+          whileHover={{ scale: 1.02 }}
+          className="relative z-10 shrink-0 bg-linear-to-br from-indigo-600 to-indigo-700 rounded-2xl p-3 sm:p-4 flex items-center gap-3 sm:gap-4 shadow-lg shadow-indigo-600/20 cursor-pointer"
+        >
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-full bg-white/20 backdrop-blur-md flex items-center justify-center border border-white/20 shadow-inner shrink-0 overflow-hidden p-1.5">
+              {rankIconUrl ? (
+                <img src={rankIconUrl} alt={rankName} className="w-full h-full object-contain drop-shadow-md" />
+              ) : (
+                <Award className="w-5 h-5 text-yellow-300" />
+              )}
+            </div>
+            <div className="flex flex-col">
+              <h3 className="text-white font-bold text-[15px] leading-tight">{rankName}</h3>
+              <p className="text-indigo-200 text-[11px] font-medium">{t('dashboard.welcome.rank')}</p>
+            </div>
           </div>
-          <div className="flex flex-col">
-            <h3 className="text-white font-bold text-[15px] leading-tight">{rankName}</h3>
-            <p className="text-indigo-200 text-[11px] font-medium">{t('dashboard.welcome.rank')}</p>
+          <div className="hidden sm:flex items-center gap-1 border-l border-white/20 pl-4 ml-1">
+            <span className="text-white text-[12px] font-medium">{t('dashboard.welcome.viewDetails')}</span>
+            <ArrowRight className="w-3.5 h-3.5 text-white" />
           </div>
-        </div>
-        <div className="hidden sm:flex items-center gap-1 border-l border-white/20 pl-4 ml-1">
-          <span className="text-white text-[12px] font-medium">{t('dashboard.welcome.viewDetails')}</span>
-          <ArrowRight className="w-3.5 h-3.5 text-white" />
-        </div>
-      </motion.div>
+        </motion.div>
+      )}
     </div>
   );
 }

@@ -185,7 +185,9 @@ export default function Header({ toggleSidebar, isSuperAdmin }) {
               ) : (
                 <>
                   <h4 className="text-[13px] font-extrabold text-slate-900 leading-tight group-hover:text-indigo-700 transition-colors">{firstName}</h4>
-                  <p className="text-[11px] font-medium text-slate-500 mt-0.5 tracking-wide">{profileData?.CurrentRankName || t('dashboard.mock.userRank')}</p>
+                  {profileData?.CurrentRankName && (
+                    <p className="text-[11px] font-medium text-slate-500 mt-0.5 tracking-wide">{profileData.CurrentRankName}</p>
+                  )}
                 </>
               )}
             </div>
