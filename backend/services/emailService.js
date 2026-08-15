@@ -34,7 +34,7 @@ export const sendEmail = async ({
     let html = EmailTemplate;
 
     const common = {
-        LogoUrl: process.env.COMPANY_LOGO_URL,
+        LogoUrl: process.env.COMPANY_LOGO_PATH,
         CompanyName: process.env.COMPANY_NAME,
         LoginUrl: process.env.LOGIN_URL,
         TermsUrl: process.env.TERMS_URL,

@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useTranslation } from '../../hooks/useTranslation';
 import { ChevronDown } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { autoBatchEnhancer } from '@reduxjs/toolkit';
 
 
 // Raw SVGs for social icons to avoid lucide-react missing export issues
@@ -102,7 +103,8 @@ export default function Footer() {
         <div className="flex flex-col max-w-55">
           <div className="flex items-center gap-2 mb-3 group/brand cursor-pointer">
             <div className="w-6 h-6 rounded-md bg-linear-to-br from-indigo-500 to-indigo-700 flex items-center justify-center shadow-md group-hover/brand:shadow-indigo-500/30 transition-all duration-300">
-              <span className="text-white font-black text-[12px]">E</span>
+              {/* <span className="text-white font-black text-[12px]">E</span> */}
+              <span className="text-white font-black text-[12px]"><img src="../public/Eduvora.png" alt="EduVora" className="w-full h-full object-contain" height="100%"/></span>
             </div>
             <div className="flex flex-col">
               <span className="text-[13px] font-black text-indigo-950 leading-none tracking-tight group-hover/brand:text-indigo-700 transition-colors">{t('login.logoTitle')}</span>
