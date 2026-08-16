@@ -185,9 +185,11 @@ export default function PersonalInformationCard({ t, profileData, onPictureUpdat
                         {profileData?.FullName || '-'} {profileData?.RoleID === 2 && <CheckCircle className="w-4 h-4 text-indigo-600" />}
                     </h3>
 
-                    <div className="flex items-center gap-1.5 mt-1.5 text-amber-500 font-bold text-[12.5px]">
-                        {t('profile.personal.goldRank')}
-                    </div>
+                    {profileData?.CurrentRankName && (
+                        <div className="flex items-center gap-1.5 mt-1.5 text-amber-500 font-bold text-[12.5px]">
+                            ★ {profileData.CurrentRankName}
+                        </div>
+                    )}
 
                     <div className="mt-4 flex flex-col items-center">
                         <p className="text-[10px] text-slate-400 uppercase font-bold tracking-wider">{t('profile.personal.memberSince')}</p>

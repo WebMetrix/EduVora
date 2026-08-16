@@ -385,7 +385,8 @@
       "packageDistribution": "Package Distribution",
       "registrationTrend": "Registration Trend",
       "thisMonth": "This Month",
-      "total": "Total"
+      "total": "Total",
+      "value": "Value"
     },
     "toolbar": {
       "expandAll": "Expand All",
@@ -421,10 +422,7 @@
       "fetchFailed": "Failed to fetch network data",
       "noData": "No network data available."
     },
-    "defaultUser": "User",
-    "charts": {
-      "value": "Value"
-    }
+    "defaultUser": "User"
   },
   "profile": {
     "title": "My Profile",

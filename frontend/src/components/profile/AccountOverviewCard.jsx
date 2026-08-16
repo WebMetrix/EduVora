@@ -25,10 +25,12 @@ export default function AccountOverviewCard({ t, profileData }) {
                     <span className="text-[13px] font-semibold text-slate-500">{t('profile.overview.sponsor')}</span>
                     <span className="text-[13px] font-extrabold text-slate-900">{profileData?.SponsorName || profileData?.SponsorID || '-'}</span>
                 </div>
-                <div className="flex items-center justify-between">
-                    <span className="text-[13px] font-semibold text-slate-500">{t('profile.overview.rank')}</span>
-                    <span className="text-[13px] font-extrabold text-amber-500">{profileData?.RankName || profileData?.Rank || ''}</span>
-                </div>
+                {profileData?.CurrentRankName && (
+                    <div className="flex items-center justify-between">
+                        <span className="text-[13px] font-semibold text-slate-500">{t('profile.overview.rank')}</span>
+                        <span className="text-[13px] font-extrabold text-amber-500">{profileData.CurrentRankName}</span>
+                    </div>
+                )}
                 <div className="h-px bg-slate-200/60 my-1" />
                 <div className="flex items-center justify-between">
                     <span className="text-[13px] font-semibold text-slate-500">{t('profile.overview.totalReferrals')}</span>

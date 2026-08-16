@@ -131,9 +131,9 @@ export const logoutUser = async (req, res) => {
         // res.clearCookie('token', { sameSite: 'none', secure: true });
         // res.redirect('/login');
         const isProduction = process.env.NODE_ENV === 'production';
-        res.clearCookie('token', { 
-            sameSite: isProduction ? 'none' : 'lax', 
-            secure: isProduction 
+        res.clearCookie('token', {
+            sameSite: isProduction ? 'none' : 'lax',
+            secure: isProduction
         });
         res.status(200).send({ message: t('api.auth.logoutSuccess') });
     } catch (err) {

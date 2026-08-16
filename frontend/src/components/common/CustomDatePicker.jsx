@@ -17,12 +17,19 @@ const CustomDatePicker = ({ placeholder, value, onChange }) => {
 
   useEffect(() => {
     const handleClickOutside = (event) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+      // Check if click is outside dropdownRef AND outside the mobile modal portal
+      if (dropdownRef.current && 
+          !dropdownRef.current.contains(event.target) && 
+          !event.target.closest('.mobile-date-picker-modal')) {
         setIsOpen(false);
       }
     };
     document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
+    document.addEventListener('touchstart', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener('touchstart', handleClickOutside);
+    };
   }, []);
 
   const getDaysInMonth = (date) => {
@@ -232,7 +239,7 @@ const CustomDatePicker = ({ placeholder, value, onChange }) => {
               {/* Overlay clickable to close */}
               <div className="absolute inset-0" onClick={() => setIsOpen(false)} />
               {/* Modal Content */}
-              <div className="relative bg-white rounded-[24px] shadow-2xl p-5 w-full max-w-[320px] animate-fade-in">
+              <div className="mobile-date-picker-modal relative bg-white rounded-[24px] shadow-2xl p-5 w-full max-w-[320px] animate-fade-in">
                 <CalendarUI />
               </div>
             </div>,

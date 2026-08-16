@@ -1,13 +1,18 @@
 import {
   Home, Network, Users, BookOpen, ShoppingBag,
   IndianRupee, Wallet, ArrowUpRight, FileText,
-  Award, User, Settings, HelpCircle, Crown, X, ChevronDown, ShieldCheck, UserCog
+  Award, User, Settings, HelpCircle, Crown, X, ChevronDown, ShieldCheck, UserCog, Star, Zap
 } from 'lucide-react';
 import { useState } from 'react';
+import { useSelector } from 'react-redux';
 import { useTranslation } from '../../hooks/useTranslation';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate, useLocation } from 'react-router-dom';
 import logoImg from '../../assets/images/Eduvora.png';
+import BronzeIcon from '../../assets/icons/Bronze.svg';
+import SilverIcon from '../../assets/icons/Silver.svg';
+import GoldIcon from '../../assets/icons/Gold.svg';
+import DiamondIcon from '../../assets/icons/Diamond.svg';
 
 const menuItems = [
   { id: 'dashboard', icon: Home, labelKey: 'nav.dashboard', active: true },
@@ -45,6 +50,35 @@ export default function Sidebar({ isOpen, setIsOpen, isSuperAdmin }) {
   const navigate = useNavigate();
   const location = useLocation();
   const [isUserManagementOpen, setIsUserManagementOpen] = useState(true);
+  const { profileData } = useSelector((state) => state.profile);
+
+  // Logic to determine the next package
+  const getNextPackageInfo = (currentPackage) => {
+    const packageLevels = [
+      { name: 'Bronze', icon: BronzeIcon },
+      { name: 'Silver', icon: SilverIcon },
+      { name: 'Gold', icon: GoldIcon },
+      { name: 'Diamond', icon: DiamondIcon }
+    ];
+
+    if (!currentPackage) return packageLevels[0]; // Default to Bronze
+
+    const currentIndex = packageLevels.findIndex(p => 
+      currentPackage.toLowerCase().includes(p.name.toLowerCase())
+    );
+
+    if (currentIndex !== -1 && currentIndex < packageLevels.length - 1) {
+      return packageLevels[currentIndex + 1];
+    }
+    
+    if (currentIndex === packageLevels.length - 1) {
+      return null; // Highest package reached
+    }
+
+    return packageLevels[0]; // Fallback
+  };
+
+  const nextPackageInfo = getNextPackageInfo(profileData?.ActivePackageName);
 
   return (
     <>
@@ -196,7 +230,7 @@ export default function Sidebar({ isOpen, setIsOpen, isSuperAdmin }) {
                 <p className="text-slate-500 text-[12px] leading-relaxed font-medium">{t('dashboard.superadmin.accessDesc')}</p>
               </div>
             </div>
-          ) : (
+          ) : nextPackageInfo ? (
             <div
               className="relative overflow-hidden rounded-2xl bg-linear-to-br from-slate-50 to-indigo-50/30 border border-slate-200/60 p-3 shadow-sm hover:shadow-md hover:-translate-y-1 group cursor-pointer transition-all duration-300"
             >
@@ -204,10 +238,10 @@ export default function Sidebar({ isOpen, setIsOpen, isSuperAdmin }) {
               <div className="absolute -top-10 -right-10 w-32 h-32 bg-indigo-400/10 rounded-full blur-2xl group-hover:bg-indigo-400/20 transition-colors duration-500" />
 
               <div className="relative z-10">
-                <div className="w-8 h-8 rounded-full bg-indigo-100 flex items-center justify-center mb-2 group-hover:scale-110 transition-transform duration-300">
-                  <Crown className="w-4 h-4 text-indigo-600" />
+                <div className="mb-3 group-hover:scale-110 transition-transform duration-300 origin-left">
+                  <img src={nextPackageInfo.icon} alt={nextPackageInfo.name} className="w-10 h-10 object-contain drop-shadow-md" />
                 </div>
-                <h4 className="text-slate-900 text-[14px] font-bold mb-0.5">{t('dashboard.upgrade.title')}</h4>
+                <h4 className="text-slate-900 text-[14px] font-bold mb-0.5">Go {nextPackageInfo.name}</h4>
                 <p className="text-slate-500 text-[11px] leading-relaxed mb-3">{t('dashboard.upgrade.desc')}</p>
 
                 <button className="w-full py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-[12px] font-bold rounded-xl shadow-sm hover:shadow-md transition-all duration-300 hover:scale-[1.02] active:scale-95">
@@ -215,7 +249,7 @@ export default function Sidebar({ isOpen, setIsOpen, isSuperAdmin }) {
                 </button>
               </div>
             </div>
-          )}
+          ) : null}
         </div>
 
       </aside>
