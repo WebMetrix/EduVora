@@ -28,9 +28,9 @@ export const createOrder = async (req, res) => {
         }
         
         const userProfile = profileRes.recordset[0];
-        const customerName = userProfile.FullName || "Eduvora Student";
-        const customerEmail = userProfile.EmailAddress || "student@eduvora.com";
-        const customerPhone = userProfile.PrimaryMobile || userProfile.ContactMobile || "9999999999";
+        const customerName = userProfile.FullName;
+        const customerEmail = userProfile.EmailAddress;
+        const customerPhone = userProfile.PrimaryMobile || userProfile.ContactMobile;
         const orderAmount = Number(amount) || 1;
 
         // 2. Initialize Order in Database to get OrderNumber
@@ -51,7 +51,7 @@ export const createOrder = async (req, res) => {
         // 3. Create Cashfree Order
         var request = {
             "order_amount": orderAmount,
-            "order_currency": "INR",
+            "order_currency": process.env.UNIT,
             "order_id": orderId,
             "customer_details": {
                 "customer_id": uuid, // Strictly link Cashfree to Eduvora UUID
@@ -61,7 +61,7 @@ export const createOrder = async (req, res) => {
             },
             "order_meta": {
                 // In production, use your real domain here
-                "notify_url": "https://voyage-undercut-tricolor.ngrok-free.dev/payment/webhook"
+                "notify_url": process.env.WEBHOOK
             },
             "order_note": packageName ? `Payment for ${packageName}` : "Package Purchase",
             "order_tags": {
