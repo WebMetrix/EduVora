@@ -61,7 +61,7 @@ export const createOrder = async (req, res) => {
             },
             "order_meta": {
                 // In production, use your real domain here
-                "notify_url": "https://webhook.site/dummy-webhook-url-replace-later"
+                "notify_url": "https://voyage-undercut-tricolor.ngrok-free.dev/payment/webhook"
             },
             "order_note": packageName ? `Payment for ${packageName}` : "Package Purchase",
             "order_tags": {
@@ -102,15 +102,18 @@ export const processWebhook = async (req, res) => {
             
             // Extract core fields
             const orderNumber = orderData.order_id; // Our internal OrderNumber
-            const gatewayOrderId = orderData.cf_order_id;
+            const gatewayOrderId = paymentData?.cf_payment_id || orderData?.cf_order_id || 'UNKNOWN';
             const packageId = orderData.order_tags?.package_id;
             const customerUid = orderData.customer_details?.customer_id;
             const paymentStatus = paymentData?.payment_status; // SUCCESS, FAILED
             
             // Extract the payment method/group (e.g., net_banking, upi, card)
-            const paymentMethod = paymentData?.payment_group || paymentData?.payment_method?.card?.card_network || 'UNKNOWN';
+            const paymentMethod = paymentData?.payment_group || paymentData?.payment_method?.card?.card_network;
             
             logger.info(`Processing Webhook for Order: ${orderNumber}, Status: ${paymentStatus}, Method: ${paymentMethod}`);
+            // logger.info(`Extracted cf_payment_id: ${paymentData?.cf_payment_id}`);
+            // logger.info(`Final gatewayOrderId: ${gatewayOrderId}`);
+            // logger.info(`String(gatewayOrderId): ${String(gatewayOrderId)}`);
             
             // Update Database with Webhook data
             const hookReq = pool.request();

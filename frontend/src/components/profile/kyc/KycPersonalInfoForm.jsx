@@ -1,5 +1,5 @@
 import React from 'react';
-import { User, Edit2, Calendar, ChevronDown, ChevronRight } from 'lucide-react';
+import { User, Edit2, Calendar, ChevronDown, ChevronRight, CreditCard, Users, Phone, Mail, MapPin } from 'lucide-react';
 
 export default function KycPersonalInfoForm({ onNext }) {
   return (
@@ -27,27 +27,37 @@ export default function KycPersonalInfoForm({ onNext }) {
       </div>
 
       {/* Form Fields */}
-      <div className="space-y-5">
+      <div className="space-y-6">
         
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-5">
           {/* Full Name */}
-          <div className="space-y-1.5">
-            <label className="text-[12px] font-semibold text-slate-700 ml-1">Full Name (as per ID proof)</label>
+          <div>
+            <div className="flex items-center gap-2 mb-2">
+              <User className="w-4 h-4 text-slate-500" />
+              <label className="text-[13px] font-bold text-[#111]">
+                Full Name (as per ID proof) <span className="text-red-500">*</span>
+              </label>
+            </div>
             <input 
               type="text" 
-              className="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl text-[14px] text-slate-900 font-medium focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition-all placeholder:text-slate-400 placeholder:font-normal"
+              className="w-full px-4 py-3.5 bg-white border border-slate-200 rounded-xl focus:outline-none focus:border-[#4f3bf3] focus:ring-1 focus:ring-[#4f3bf3] transition-all text-[14px] text-slate-900 placeholder:text-slate-400 font-medium"
               placeholder="Enter your full name"
               defaultValue="Subham Chakraborty"
             />
           </div>
 
           {/* Date of Birth */}
-          <div className="space-y-1.5">
-            <label className="text-[12px] font-semibold text-slate-700 ml-1">Date of Birth</label>
+          <div>
+            <div className="flex items-center gap-2 mb-2">
+              <Calendar className="w-4 h-4 text-slate-500" />
+              <label className="text-[13px] font-bold text-[#111]">
+                Date of Birth <span className="text-red-500">*</span>
+              </label>
+            </div>
             <div className="relative">
               <input 
                 type="text" 
-                className="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl text-[14px] text-slate-900 font-medium focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition-all"
+                className="w-full px-4 py-3.5 bg-white border border-slate-200 rounded-xl focus:outline-none focus:border-[#4f3bf3] focus:ring-1 focus:ring-[#4f3bf3] transition-all text-[14px] text-slate-900 font-medium"
                 defaultValue="15/10/2000"
               />
               <Calendar className="w-4 h-4 text-slate-400 absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none" />
@@ -55,23 +65,33 @@ export default function KycPersonalInfoForm({ onNext }) {
           </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-5">
           {/* PAN Number */}
-          <div className="space-y-1.5">
-            <label className="text-[12px] font-semibold text-slate-700 ml-1">PAN Number (Optional)</label>
+          <div>
+            <div className="flex items-center gap-2 mb-2">
+              <CreditCard className="w-4 h-4 text-slate-500" />
+              <label className="text-[13px] font-bold text-[#111]">
+                PAN Number (Optional)
+              </label>
+            </div>
             <input 
               type="text" 
-              className="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl text-[14px] text-slate-900 font-medium focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition-all uppercase"
+              className="w-full px-4 py-3.5 bg-white border border-slate-200 rounded-xl focus:outline-none focus:border-[#4f3bf3] focus:ring-1 focus:ring-[#4f3bf3] transition-all text-[14px] text-slate-900 placeholder:text-slate-400 font-medium uppercase"
               placeholder="e.g. ABCDE1234F"
               defaultValue="ABCDE1234F"
             />
           </div>
 
           {/* Gender */}
-          <div className="space-y-1.5">
-            <label className="text-[12px] font-semibold text-slate-700 ml-1">Gender</label>
+          <div>
+            <div className="flex items-center gap-2 mb-2">
+              <Users className="w-4 h-4 text-slate-500" />
+              <label className="text-[13px] font-bold text-[#111]">
+                Gender <span className="text-red-500">*</span>
+              </label>
+            </div>
             <div className="relative">
-              <select className="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl text-[14px] text-slate-900 font-medium focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition-all appearance-none pr-10">
+              <select className="w-full px-4 py-3.5 bg-white border border-slate-200 rounded-xl focus:outline-none focus:border-[#4f3bf3] focus:ring-1 focus:ring-[#4f3bf3] transition-all text-[14px] text-slate-900 font-medium appearance-none pr-10">
                 <option value="Male">Male</option>
                 <option value="Female">Female</option>
                 <option value="Other">Other</option>
@@ -81,44 +101,59 @@ export default function KycPersonalInfoForm({ onNext }) {
           </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-5">
           {/* Mobile Number */}
-          <div className="space-y-1.5">
-            <label className="text-[12px] font-semibold text-slate-700 ml-1">Mobile Number</label>
+          <div>
+            <div className="flex items-center gap-2 mb-2">
+              <Phone className="w-4 h-4 text-slate-500" />
+              <label className="text-[13px] font-bold text-[#111]">
+                Mobile Number <span className="text-red-500">*</span>
+              </label>
+            </div>
             <input 
               type="text" 
-              className="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl text-[14px] text-slate-900 font-medium focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition-all"
+              className="w-full px-4 py-3.5 bg-white border border-slate-200 rounded-xl focus:outline-none focus:border-[#4f3bf3] focus:ring-1 focus:ring-[#4f3bf3] transition-all text-[14px] text-slate-900 font-medium"
               defaultValue="+91 98765 43210"
             />
           </div>
 
           {/* Email Address */}
-          <div className="space-y-1.5">
-            <label className="text-[12px] font-semibold text-slate-700 ml-1">Email Address</label>
+          <div>
+            <div className="flex items-center gap-2 mb-2">
+              <Mail className="w-4 h-4 text-slate-500" />
+              <label className="text-[13px] font-bold text-[#111]">
+                Email Address <span className="text-red-500">*</span>
+              </label>
+            </div>
             <input 
               type="email" 
-              className="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl text-[14px] text-slate-900 font-medium focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition-all"
+              className="w-full px-4 py-3.5 bg-white border border-slate-200 rounded-xl focus:outline-none focus:border-[#4f3bf3] focus:ring-1 focus:ring-[#4f3bf3] transition-all text-[14px] text-slate-900 font-medium"
               defaultValue="subham@email.com"
             />
           </div>
         </div>
 
         {/* Address */}
-        <div className="space-y-1.5">
-          <label className="text-[12px] font-semibold text-slate-700 ml-1">Address</label>
+        <div>
+          <div className="flex items-center gap-2 mb-2">
+            <MapPin className="w-4 h-4 text-slate-500" />
+            <label className="text-[13px] font-bold text-[#111]">
+              Address <span className="text-red-500">*</span>
+            </label>
+          </div>
           <textarea 
             rows={3}
-            className="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl text-[14px] text-slate-900 font-medium focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition-all resize-none"
+            className="w-full px-4 py-3.5 bg-white border border-slate-200 rounded-xl focus:outline-none focus:border-[#4f3bf3] focus:ring-1 focus:ring-[#4f3bf3] transition-all text-[14px] text-slate-900 font-medium resize-none"
             defaultValue="Kolkata, West Bengal, India"
           />
         </div>
       </div>
 
       {/* Footer / Button */}
-      <div className="mt-8">
+      <div className="mt-8 border-t border-slate-100 pt-6 flex justify-end">
         <button 
           onClick={onNext}
-          className="flex items-center gap-2 bg-[#4f3bf3] text-white px-6 py-3.5 rounded-xl font-bold text-[14px] hover:bg-indigo-700 hover:shadow-lg hover:shadow-indigo-500/20 transition-all active:scale-[0.98]"
+          className="w-full md:w-auto flex items-center justify-center gap-2 bg-[#4f3bf3] text-white px-8 py-3.5 rounded-xl font-bold text-[14px] hover:bg-indigo-700 hover:shadow-lg hover:shadow-indigo-500/20 transition-all active:scale-[0.98]"
         >
           Save & Continue
           <ChevronRight className="w-4 h-4" />

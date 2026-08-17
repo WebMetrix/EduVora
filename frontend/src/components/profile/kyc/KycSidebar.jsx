@@ -5,8 +5,9 @@ export default function KycSidebar() {
   return (
     <div className="space-y-6">
       
-      {/* Status Card */}
+      {/* Status & Why KYC Card */}
       <div className="bg-white rounded-3xl p-6 shadow-[0_8px_30px_rgba(0,0,0,0.04)] border border-slate-100">
+        {/* Status Section */}
         <div className="flex items-center gap-3 mb-4">
           <div className="w-10 h-10 rounded-xl bg-emerald-50 flex items-center justify-center shrink-0 border border-emerald-100">
             <ShieldCheck className="w-5 h-5 text-emerald-600" />
@@ -18,13 +19,13 @@ export default function KycSidebar() {
           <h4 className="text-[20px] font-extrabold text-[#f97316] tracking-tight">Not Verified</h4>
         </div>
         
-        <p className="text-[13px] text-slate-500 font-medium leading-relaxed">
+        <p className="text-[13px] text-slate-500 font-medium leading-relaxed mb-6">
           Complete your KYC to start withdrawals and unlock all features.
         </p>
-      </div>
 
-      {/* Why KYC is important */}
-      <div className="bg-white rounded-3xl p-6 shadow-[0_8px_30px_rgba(0,0,0,0.04)] border border-slate-100">
+        <hr className="border-t border-dashed border-slate-200 mb-6" />
+
+        {/* Why KYC Section */}
         <h4 className="text-[15px] font-bold text-slate-800 mb-4">Why KYC is important?</h4>
         <ul className="space-y-3">
           {[
@@ -65,13 +66,7 @@ export default function KycSidebar() {
         </ul>
       </div>
 
-      {/* Info Note */}
-      <div className="bg-[#f5f3ff] border border-indigo-100 rounded-2xl p-4 flex gap-3">
-        <Info className="w-5 h-5 text-indigo-600 shrink-0 mt-0.5" />
-        <p className="text-[12px] font-semibold text-indigo-900/80 leading-relaxed">
-          Your information is safe with us and used only for verification purposes.
-        </p>
-      </div>
+
 
     </div>
   );

@@ -1,13 +1,14 @@
 import React, { useState, useRef } from 'react';
-import { Check, User, FileText, ShieldCheck, Eye, Headset } from 'lucide-react';
+import { Check, User, FileText, ShieldCheck, Eye, Headset, Shield } from 'lucide-react';
 import { useTranslation } from '../../../hooks/useTranslation';
 import { useNavigate, Link } from 'react-router-dom';
 
 import KycPersonalInfoForm from './KycPersonalInfoForm';
 import KycSidebar from './KycSidebar';
 
-// Placeholders for steps 2-4
-const KycDocumentUploadForm = () => <div className="bg-white rounded-2xl p-8 border border-slate-100 shadow-[0_8px_30px_rgba(0,0,0,0.04)] text-center text-slate-500 font-medium h-[400px] flex items-center justify-center">Document Upload Form (Coming Soon)</div>;
+import KycDocumentUploadForm from './KycDocumentUploadForm';
+
+// Placeholders for steps 3-4
 const KycReviewSubmitForm = () => <div className="bg-white rounded-2xl p-8 border border-slate-100 shadow-[0_8px_30px_rgba(0,0,0,0.04)] text-center text-slate-500 font-medium h-[400px] flex items-center justify-center">Review & Submit Form (Coming Soon)</div>;
 const KycVerificationStatus = () => <div className="bg-white rounded-2xl p-8 border border-slate-100 shadow-[0_8px_30px_rgba(0,0,0,0.04)] text-center text-slate-500 font-medium h-[400px] flex items-center justify-center">Verification Status (Coming Soon)</div>;
 
@@ -60,7 +61,7 @@ export default function KycVerificationContent() {
       <div className="flex flex-col xl:flex-row gap-6">
         
         {/* Left Column (Main Form Area) */}
-        <div className="flex-1 min-w-0">
+        <div className="flex-1 min-w-0 flex flex-col gap-6">
           {/* Stepper Wrapper */}
           <div className="flex w-full mt-2 mb-8">
             <div className="w-full mx-auto relative z-10 flex items-center justify-between">
@@ -108,14 +109,40 @@ export default function KycVerificationContent() {
               scrollToTop();
             }} />
           )}
-          {step === 2 && <KycDocumentUploadForm />}
+          {step === 2 && (
+            <KycDocumentUploadForm 
+              onNext={() => { setStep(3); scrollToTop(); }}
+              onPrev={() => { setStep(1); scrollToTop(); }}
+            />
+          )}
           {step === 3 && <KycReviewSubmitForm />}
           {step === 4 && <KycVerificationStatus />}
+
+          {/* Safe Info Card (Desktop) */}
+          <div className="hidden xl:flex bg-linear-to-r from-indigo-50/70 to-purple-50/70 backdrop-blur-xl border border-indigo-100/50 rounded-2xl p-5 items-center gap-4 transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_8px_30px_rgba(79,70,229,0.15)] hover:border-indigo-200/50">
+            <div className="w-10 h-10 rounded-xl bg-indigo-100 text-indigo-600 flex items-center justify-center shrink-0 shadow-sm border border-indigo-200/50">
+                <Shield className="w-5 h-5" />
+            </div>
+            <div className="flex flex-col min-w-0">
+                <h4 className="text-[13px] font-bold text-slate-900 leading-tight mb-1">Your information is safe with us.</h4>
+                <p className="text-[12px] text-slate-500 font-medium break-words whitespace-normal">It is used securely and strictly for verification purposes only.</p>
+            </div>
+          </div>
         </div>
 
         {/* Right Column (Sidebar) */}
-        <div className="w-full xl:w-[320px] shrink-0">
+        <div className="w-full xl:w-[320px] shrink-0 flex flex-col gap-6">
            <KycSidebar />
+           {/* Safe Info Card (Mobile) */}
+           <div className="flex xl:hidden bg-linear-to-r from-indigo-50/70 to-purple-50/70 backdrop-blur-xl border border-indigo-100/50 rounded-2xl p-5 items-center gap-4 transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_8px_30px_rgba(79,70,229,0.15)] hover:border-indigo-200/50">
+             <div className="w-10 h-10 rounded-xl bg-indigo-100 text-indigo-600 flex items-center justify-center shrink-0 shadow-sm border border-indigo-200/50">
+                 <Shield className="w-5 h-5" />
+             </div>
+             <div className="flex flex-col min-w-0">
+                 <h4 className="text-[13px] font-bold text-slate-900 leading-tight mb-1">Your information is safe with us.</h4>
+                 <p className="text-[12px] text-slate-500 font-medium break-words whitespace-normal">It is used securely and strictly for verification purposes only.</p>
+             </div>
+           </div>
         </div>
 
       </div>
