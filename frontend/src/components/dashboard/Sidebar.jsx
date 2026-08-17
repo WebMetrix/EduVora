@@ -1,10 +1,11 @@
 import {
   Home, Network, Users, BookOpen, ShoppingBag,
   IndianRupee, Wallet, ArrowUpRight, FileText,
-  Award, User, Settings, HelpCircle, Crown, X, ChevronDown, ShieldCheck, UserCog, Star, Zap
+  Award, User, Settings, HelpCircle, Crown, X, ChevronDown, ShieldCheck, UserCog, Star, Zap, LogOut, BarChart2
 } from 'lucide-react';
 import { useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
+import { logoutUser } from '../../redux/slices/authSlice';
 import { useTranslation } from '../../hooks/useTranslation';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate, useLocation } from 'react-router-dom';
@@ -49,7 +50,9 @@ export default function Sidebar({ isOpen, setIsOpen, isSuperAdmin }) {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const location = useLocation();
+  const dispatch = useDispatch();
   const [isUserManagementOpen, setIsUserManagementOpen] = useState(true);
+  const [mobileTab, setMobileTab] = useState('pages'); // 'pages' or 'user'
   const { profileData } = useSelector((state) => state.profile);
 
   // Logic to determine the next package
@@ -119,8 +122,17 @@ export default function Sidebar({ isOpen, setIsOpen, isSuperAdmin }) {
 
         {/* Navigation Menu */}
         <div className="flex-1 flex flex-col px-4 pt-3 overflow-y-auto custom-scrollbar">
+          
+          {/* Mobile Tabs */}
+          <div className="lg:hidden flex p-1 mb-4 bg-slate-100/80 backdrop-blur-sm rounded-xl">
+             <button onClick={() => setMobileTab('pages')} className={`flex-1 py-1.5 text-[13px] font-semibold rounded-lg transition-all ${mobileTab === 'pages' ? 'bg-white text-indigo-600 shadow-sm' : 'text-slate-500 hover:text-slate-700'}`}>Pages</button>
+             <button onClick={() => setMobileTab('user')} className={`flex-1 py-1.5 text-[13px] font-semibold rounded-lg transition-all ${mobileTab === 'user' ? 'bg-white text-indigo-600 shadow-sm' : 'text-slate-500 hover:text-slate-700'}`}>User</button>
+          </div>
+
           <nav className="space-y-2">
-            {menuItems.map((item) => {
+            {/* Desktop always shows pages. Mobile shows pages only when tab is 'pages' */}
+            <div className={`space-y-2 ${mobileTab === 'pages' ? 'block' : 'hidden lg:block'}`}>
+              {menuItems.map((item) => {
               const Icon = item.icon;
               const routeMap = {
                 dashboard: '/dashboard',
@@ -216,6 +228,55 @@ export default function Sidebar({ isOpen, setIsOpen, isSuperAdmin }) {
                 </div>
               </>
             )}
+            </div>
+
+            {/* Mobile-only User Links (Profile, Settings, Logout) */}
+            <div className={`space-y-2 lg:hidden ${mobileTab === 'user' ? 'block' : 'hidden'}`}>
+              {[
+                { id: 'profile', icon: User, label: t('dashboard.nav.myProfile'), route: '/profile' },
+                { id: 'settings', icon: Settings, label: t('dashboard.nav.settings'), route: '#' },
+                { id: 'wallet', icon: Wallet, label: t('dashboard.nav.wallet'), route: '#' },
+                { id: 'payouts', icon: BarChart2, label: t('dashboard.nav.payouts'), route: '#' },
+                { id: 'help', icon: HelpCircle, label: t('dashboard.nav.helpSupport'), route: '#' }
+              ].map((item) => {
+                const Icon = item.icon;
+                const isActive = location.pathname === item.route;
+                return (
+                  <a
+                    key={item.id}
+                    href="#"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      if (item.route !== '#') navigate(item.route);
+                      setIsOpen(false);
+                    }}
+                    className={`group relative flex items-center gap-3.5 px-3.5 py-2.5 rounded-xl text-[13px] font-semibold transition-all duration-300 hover:-translate-y-0.5 hover:shadow-sm ${isActive
+                      ? 'text-white bg-indigo-600 shadow-md shadow-indigo-600/20'
+                      : 'text-slate-600 hover:text-indigo-600 hover:bg-indigo-50/50'
+                      }`}
+                  >
+                    <Icon className={`w-[18px] h-[18px] transition-transform duration-300 ${!isActive ? 'group-hover:rotate-6' : ''}`} />
+                    {item.label}
+                  </a>
+                );
+              })}
+
+              <div className="h-px bg-slate-200/60 my-2 mx-2" />
+              
+              <a
+                href="#"
+                onClick={async (e) => {
+                  e.preventDefault();
+                  await dispatch(logoutUser());
+                  navigate('/login');
+                  setIsOpen(false);
+                }}
+                className="group relative flex items-center gap-3.5 px-3.5 py-2.5 rounded-xl text-[13px] font-semibold transition-all duration-300 hover:-translate-y-0.5 hover:shadow-sm text-red-500 hover:text-red-600 hover:bg-red-50/50"
+              >
+                <LogOut className="w-[18px] h-[18px] transition-transform duration-300 group-hover:rotate-6" />
+                {t('dashboard.nav.logout')}
+              </a>
+            </div>
           </nav>
         </div>
 

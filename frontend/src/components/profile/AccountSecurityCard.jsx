@@ -1,6 +1,8 @@
 import { Shield } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
 export default function AccountSecurityCard({ t, profileData }) {
+    const navigate = useNavigate();
     const isEmailVerified = profileData?.IsEmailVerified;
 
     return (
@@ -35,7 +37,10 @@ export default function AccountSecurityCard({ t, profileData }) {
                         <span className="px-3 py-1 bg-amber-100 text-amber-700 text-[10px] font-bold uppercase tracking-wider rounded-md">{t('profile.security.pending')}</span>
                     </div>
                     <p className="text-[12px] text-slate-500 font-medium leading-relaxed">{t('profile.security.kycStatusDesc')}</p>
-                    <button className="mt-3 w-fit px-5 py-2 border border-indigo-200 text-indigo-600 font-bold text-[12px] rounded-lg hover:bg-indigo-50 transition-colors shadow-sm">
+                    <button 
+                        onClick={() => navigate('/kyc')}
+                        className="mt-3 w-fit px-5 py-2 border border-indigo-200 text-indigo-600 font-bold text-[12px] rounded-lg hover:bg-indigo-50 transition-colors shadow-sm"
+                    >
                         {t('profile.security.verifyNow')}
                     </button>
                 </div>

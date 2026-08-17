@@ -151,7 +151,13 @@ export default function Header({ toggleSidebar, isSuperAdmin }) {
         <div className="relative" ref={profileRef}>
           <motion.button
             whileHover={{ scale: 1.02 }}
-            onClick={() => setIsProfileOpen(!isProfileOpen)}
+            onClick={() => {
+              if (window.innerWidth < 1024) {
+                navigate('/profile');
+              } else {
+                setIsProfileOpen(!isProfileOpen);
+              }
+            }}
             className="flex items-center gap-2 lg:gap-3 focus:outline-none group hover:bg-slate-100/50 p-1.5 lg:p-2 rounded-2xl transition-all"
           >
             {/* Avatar */}
@@ -195,6 +201,7 @@ export default function Header({ toggleSidebar, isSuperAdmin }) {
             <motion.div
               animate={{ rotate: isProfileOpen ? 180 : 0 }}
               transition={{ duration: 0.2 }}
+              className="hidden lg:block"
             >
               <ChevronDown className="w-4 h-4 text-slate-400 group-hover:text-indigo-600 transition-colors lg:ml-1" />
             </motion.div>
