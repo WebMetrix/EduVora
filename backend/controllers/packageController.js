@@ -1,9 +1,9 @@
-import * as packageService from '../services/packageService.js';
+import pool from '../config/db.js';
 
 export const getPackages = async (req, res) => {
     try {
-        const packages = await packageService.getPackages();
-        res.status(200).json(packages);
+        const result = await pool.request().execute('EV_GetPackages');
+        res.status(200).json(result.recordset);
     } catch (error) {
         res.status(500).json({ message: error.message });
     }

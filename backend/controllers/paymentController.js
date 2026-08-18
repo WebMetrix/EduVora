@@ -15,27 +15,27 @@ export const createOrder = async (req, res) => {
         // Using the latest API version (requires newer TEST_... Sandbox keys)
         // cashfree.XApiVersion = "2023-08-01";
 
-        const { packageId, amount, packageName } = req.body;
+        const { packageId, amount, packageName, customerName, customerEmail, customerPhone } = req.body;
         const uuid = req.user.id; // From isLoggedIn middleware
 
-        // 1. Fetch user profile for Cashfree customer details
-        const profileReq = pool.request();
-        profileReq.input('UUID', sql.VarChar(36), uuid);
-        const profileRes = await profileReq.execute('dbo.EV_GetUserProfile');
-        
-        if (!profileRes.recordset || profileRes.recordset.length === 0) {
-            return res.status(404).json({ success: false, message: "User profile not found." });
+        // 1. Extract customer details from session (req.user) or frontend (req.body)
+        const finalCustomerName = customerName || req.user.name || req.user.FullName;
+        const finalCustomerEmail = customerEmail || req.user.email || req.user.EmailAddress;
+        const finalCustomerPhone = customerPhone || req.user.phone || req.user.MobileNumber;
+
+        // Cashfree requires name, email, and phone. If missing, reject the request instead of using dummy data.
+        if (!finalCustomerName || !finalCustomerEmail || !finalCustomerPhone) {
+            return res.status(400).json({ 
+                success: false, 
+                message: "Missing required customer details. Please provide customerName, customerEmail, and customerPhone in the request body." 
+            });
         }
         
-        const userProfile = profileRes.recordset[0];
-        const customerName = userProfile.FullName;
-        const customerEmail = userProfile.EmailAddress;
-        const customerPhone = userProfile.PrimaryMobile || userProfile.ContactMobile;
         const orderAmount = Number(amount) || 1;
 
         // 2. Initialize Order in Database to get OrderNumber
         const initReq = pool.request();
-        initReq.input('ActionType', sql.VarChar(20), 'INITIATE');
+        initReq.input('ActionTypeId', sql.Int, 1); // 1 = INITIATE
         initReq.input('UUID', sql.VarChar(36), uuid);
         initReq.input('PackageId', sql.Int, parseInt(packageId) || 1);
         initReq.input('Amount', sql.Decimal(18,2), orderAmount);
@@ -55,9 +55,9 @@ export const createOrder = async (req, res) => {
             "order_id": orderId,
             "customer_details": {
                 "customer_id": uuid, // Strictly link Cashfree to Eduvora UUID
-                "customer_phone": customerPhone,
-                "customer_name": customerName,
-                "customer_email": customerEmail
+                "customer_phone": finalCustomerPhone,
+                "customer_name": finalCustomerName,
+                "customer_email": finalCustomerEmail
             },
             "order_meta": {
                 // In production, use your real domain here
@@ -117,7 +117,7 @@ export const processWebhook = async (req, res) => {
             
             // Update Database with Webhook data
             const hookReq = pool.request();
-            hookReq.input('ActionType', sql.VarChar(20), 'WEBHOOK');
+            hookReq.input('ActionTypeId', sql.Int, 2); // 2 = WEBHOOK
             hookReq.input('OrderNumber', sql.VarChar(50), orderNumber);
             hookReq.input('GatewayOrderId', sql.VarChar(100), String(gatewayOrderId));
             hookReq.input('PaymentStatus', sql.VarChar(50), paymentStatus);

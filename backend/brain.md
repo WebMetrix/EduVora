@@ -414,6 +414,15 @@ Tracks all transactions within a user's wallet.
 | Description       | nvarchar(255)  | No          |             |
 | TransactionDate   | datetime       | No          |             |
 
+### 36. `Tb_PaymentActionMaster`
+Master table for payment action types (e.g., 1: INITIATE, 2: WEBHOOK).
+| Column Name       | Data Type    | Allow Nulls | Notes       |
+|-------------------|--------------|-------------|-------------|
+| ActionTypeId      | int          | No          | Primary Key |
+| ActionTypeName    | varchar(50)  | No          |             |
+| IsActive          | bit          | Yes         |             |
+| CreatedDate       | datetime     | Yes         |             |
+
 
 
 ## Stored Procedures
@@ -520,11 +529,11 @@ Updates the profile picture path for a specific user instantly.
 - **Updates**: Updates `ProfilePicturePath` in `Tb_UserDesc`.
 
 ### `EV_ProcessCashfreePayment`
-Processes both the initialization and the webhook response of a Cashfree payment.
+Processes both the initialization and the webhook response of a Cashfree payment. Includes fallback logic to extract `GatewayOrderId` (cf_payment_id) from the `GatewayResponse` JSON if Node.js passes 'undefined' or NULL.
 - **Inputs**: `@ActionType VARCHAR(20)` ('INITIATE' or 'WEBHOOK'), `@UUID VARCHAR(36)`, `@PackageId INT`, `@Amount DECIMAL(18,2)`, `@OrderNumber VARCHAR(50)`, `@GatewayOrderId VARCHAR(100)`, `@PaymentStatus VARCHAR(50)`, `@PaymentMethod VARCHAR(50)`, `@GatewayResponse NVARCHAR(MAX)`
 - **Outputs**: 
   - For INITIATE: Returns generated `OrderNumber`.
   - For WEBHOOK: Returns `@Success INT` (1 = Success, 0 = Order not found).
 - **Updates**: 
   - For INITIATE: Inserts initial Pending (1) records into `Tb_Order`, `Tb_OrderItem`, and `Tb_Payment`.
-  - For WEBHOOK: Updates `OrderStatusId` and `PaymentStatusId` to 2 (Success) or 3 (Failed). Automatically inserts into `Tb_UserPackage` if the payment was successful.
+  - For WEBHOOK: Updates `OrderStatusId` and `PaymentStatusId` to 2 (Success) or 3 (Failed), and updates `TransactionId` using the extracted or provided Gateway ID. Automatically inserts into `Tb_UserPackage` if the payment was a SUCCESS.

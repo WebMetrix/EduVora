@@ -4,13 +4,16 @@ import { X, CheckCircle2, ShieldCheck, Lock, Loader2 } from 'lucide-react';
 import { useTranslation } from '../../hooks/useTranslation';
 import { load } from '@cashfreepayments/cashfree-js';
 import { useNavigate } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { setPaymentData, createPaymentOrder } from '../../redux/slices/paymentSlice';
 
 export default function PackageDetailsModal({ packageData, onClose }) {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  
+  const user = useSelector((state) => state.auth?.user);
+  const profile = useSelector((state) => state.profile?.data);
 
   const [isProcessing, setIsProcessing] = useState(false);
   const isOpen = !!packageData;
@@ -24,7 +27,10 @@ export default function PackageDetailsModal({ packageData, onClose }) {
       const orderData = {
         packageId: packageData?.id,
         amount: totalValue,
-        packageName: packageData?.name
+        packageName: packageData?.name,
+        customerName: profile?.FullName || user?.name,
+        customerEmail: profile?.EmailAddress || user?.email,
+        customerPhone: profile?.PrimaryMobile || profile?.ContactMobile || user?.phone // Pass data to backend to satisfy strict validation
       };
 
       // 1. Fetch payment_session_id via Redux Thunk

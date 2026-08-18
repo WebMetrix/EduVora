@@ -100,11 +100,11 @@ export default function Header({ toggleSidebar, isSuperAdmin }) {
   }, []);
 
   const dropdownItems = [
-    { id: 'profile', icon: User, label: t('dashboard.nav.myProfile') },
-    { id: 'settings', icon: Settings, label: t('dashboard.nav.settings') },
-    { id: 'wallet', icon: Wallet, label: t('dashboard.nav.wallet') },
-    { id: 'payouts', icon: BarChart2, label: t('dashboard.nav.payouts') },
-    { id: 'help', icon: HelpCircle, label: t('dashboard.nav.helpSupport') }
+    { id: 1, icon: User, label: t('dashboard.nav.myProfile') },
+    { id: 2, icon: Settings, label: t('dashboard.nav.settings') },
+    { id: 3, icon: Wallet, label: t('dashboard.nav.wallet') },
+    { id: 4, icon: BarChart2, label: t('dashboard.nav.payouts') },
+    { id: 5, icon: HelpCircle, label: t('dashboard.nav.helpSupport') }
   ];
 
   // Handle user logout action
@@ -222,7 +222,7 @@ export default function Header({ toggleSidebar, isSuperAdmin }) {
                     <button
                       key={idx}
                       onClick={() => {
-                        if (item.id === 'profile') {
+                        if (item.id === 1) { // 1 = profile
                           navigate('/profile');
                         }
                         setIsProfileOpen(false);
