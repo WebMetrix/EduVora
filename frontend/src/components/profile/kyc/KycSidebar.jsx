@@ -30,7 +30,7 @@ export default function KycSidebar() {
         <ul className="space-y-3">
           {[
             'Secure your account',
-            'Increase withdrawal limit',
+            'Start withdrawing your earnings',
             'Build trust in the community',
             'Comply with legal regulations'
           ].map((text, i) => (
@@ -54,7 +54,7 @@ export default function KycSidebar() {
           {[
             'All documents must be clear and readable',
             'Document should be original, not expired',
-            'Name and DOB should match across all documents',
+            'Name and Date of Birth should match across all documents',
             'Supported formats: JPG, PNG, PDF',
             'Maximum file size: 5MB per document'
           ].map((text, i) => (

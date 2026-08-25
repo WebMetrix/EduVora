@@ -59,7 +59,7 @@ export default function KycVerificationSidebar() {
           </div>
           <div className="flex items-start gap-3">
             <CheckCircle2 className="w-4 h-4 text-green-500 shrink-0 mt-0.5" />
-            <span className="text-[13px] text-slate-700 font-medium">Increase withdrawal limit</span>
+            <span className="text-[13px] text-slate-700 font-medium">Start withdrawing your earnings</span>
           </div>
           <div className="flex items-start gap-3">
             <CheckCircle2 className="w-4 h-4 text-green-500 shrink-0 mt-0.5" />

@@ -24,8 +24,6 @@ export const getKycDetails = async (req, res) => {
     }
 };
 
-
-
 export const submitKyc = async (req, res) => {
     // #swagger.tags = ['KYC']
 

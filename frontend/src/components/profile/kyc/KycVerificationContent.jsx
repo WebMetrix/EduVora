@@ -102,7 +102,7 @@ export default function KycVerificationContent() {
     { num: 1, title: 'Personal Details', subtitle: 'Add your basic information', icon: User },
     { num: 2, title: 'Document Upload', subtitle: 'Upload required documents', icon: FileText },
     { num: 3, title: 'Review & Submit', subtitle: 'Review and confirm details', icon: ShieldCheck },
-    { num: 4, title: 'Verification', subtitle: 'Get verified and start earning', icon: Eye }
+    { num: 4, title: 'Verification', subtitle: 'Get verified and start withdrawing', icon: Eye }
   ];
 
   return (

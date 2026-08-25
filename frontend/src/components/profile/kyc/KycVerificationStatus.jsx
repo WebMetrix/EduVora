@@ -26,7 +26,7 @@ export default function KycVerificationStatus({ kycData, onEdit }) {
             </h3>
             <p className="text-[13px] text-slate-500 font-medium leading-relaxed">
               {statusId === 1 
-                ? <>We are currently reviewing your documents and information.<br className="hidden sm:block"/>This usually takes 1-2 business days.</>
+                ? <>We are currently reviewing your documents and information.<br className="hidden sm:block"/>This usually takes 24-48 hours.</>
                 : statusId === 2
                 ? 'Your KYC has been successfully verified.'
                 : 'Your KYC application was rejected. Please review the reasons and resubmit.'
@@ -83,7 +83,7 @@ export default function KycVerificationStatus({ kycData, onEdit }) {
                 <div>
                   <h4 className="text-[14px] font-bold text-[#1a1446] mb-0.5">Verification Decision</h4>
                   <p className="text-[13px] text-slate-500 font-medium">
-                    {statusId === 1 ? 'You will be notified once the verification is complete.' : statusId === 2 ? 'Your application is approved.' : 'Your application was rejected.'}
+                    {statusId === 1 ? 'You will be notified once the verification is done.' : statusId === 2 ? 'Your application is approved.' : 'Your application was rejected.'}
                   </p>
                 </div>
                 <span className={`text-[12.5px] font-bold ${statusId === 2 ? 'text-green-500' : statusId === 3 ? 'text-red-500' : 'text-slate-400'}`}>
@@ -109,11 +109,11 @@ export default function KycVerificationStatus({ kycData, onEdit }) {
               </div>
               <div className="flex items-start gap-2.5">
                 <CheckCircle className="w-4 h-4 text-[#4f3bf3] shrink-0 mt-0.5" />
-                <span className="text-[13.5px] text-slate-700 font-medium">You will receive an email and in-app notification with the result.</span>
+                <span className="text-[13.5px] text-slate-700 font-medium">You will receive an email notification with the result.</span>
               </div>
               <div className="flex items-start gap-2.5">
                 <CheckCircle className="w-4 h-4 text-[#4f3bf3] shrink-0 mt-0.5" />
-                <span className="text-[13.5px] text-slate-700 font-medium">Once verified, you can start earning and withdraw your commissions.</span>
+                <span className="text-[13.5px] text-slate-700 font-medium">Once verified, you can start withdrawing your commissions.</span>
               </div>
             </div>
           </div>
@@ -151,7 +151,7 @@ export default function KycVerificationStatus({ kycData, onEdit }) {
       <div className="bg-white rounded-3xl p-6 shadow-[0_8px_30px_rgba(0,0,0,0.04)] border border-slate-100 flex flex-col sm:flex-row items-center justify-between gap-4">
         <div>
           <h4 className="text-[15px] font-bold text-[#1a1446] mb-1">Need to update something?</h4>
-          <p className="text-[13px] text-slate-500 font-medium">If you want to update any information or documents, you can edit your details.</p>
+          <p className="text-[13px] text-slate-500 font-medium">If you want to update any information or documents, you can edit your information at any time.</p>
         </div>
         <button 
           onClick={onEdit}
