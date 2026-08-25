@@ -16,6 +16,7 @@ import referralRoutes from './routes/referralRoutes.js';
 import networkRoutes from './routes/networkRoutes.js';
 import packageRoutes from './routes/packageRoutes.js';
 import paymentRoutes from './routes/paymentRoutes.js';
+import kycRoutes from './routes/kycRoutes.js';
 
 
 
@@ -59,6 +60,7 @@ app.use('/referral', referralRoutes);
 app.use('/network', networkRoutes);
 app.use('/packages', packageRoutes);
 app.use('/payment', paymentRoutes);
+app.use('/kyc', kycRoutes);
 
 
 const userDataPath = process.env.USER_DATA_PATH;

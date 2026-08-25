@@ -1,7 +1,7 @@
 import React from 'react';
 import { User, Edit2, Calendar, ChevronDown, ChevronRight, CreditCard, Users, Phone, Mail, MapPin } from 'lucide-react';
 
-export default function KycPersonalInfoForm({ onNext }) {
+export default function KycPersonalInfoForm({ formData, updateFormData, onNext }) {
   return (
     <div className="bg-white rounded-3xl p-6 md:p-8 shadow-[0_8px_30px_rgba(0,0,0,0.04)] border border-slate-100 flex flex-col w-full relative z-20">
       
@@ -40,9 +40,10 @@ export default function KycPersonalInfoForm({ onNext }) {
             </div>
             <input 
               type="text" 
-              className="w-full px-4 py-3.5 bg-white border border-slate-200 rounded-xl focus:outline-none focus:border-[#4f3bf3] focus:ring-1 focus:ring-[#4f3bf3] transition-all text-[14px] text-slate-900 placeholder:text-slate-400 font-medium"
+              className="w-full px-4 py-3.5 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none transition-all text-[14px] text-slate-900 font-medium cursor-not-allowed"
               placeholder="Enter your full name"
-              defaultValue="Subham Chakraborty"
+              value={formData.fullName}
+              readOnly
             />
           </div>
 
@@ -57,8 +58,9 @@ export default function KycPersonalInfoForm({ onNext }) {
             <div className="relative">
               <input 
                 type="text" 
-                className="w-full px-4 py-3.5 bg-white border border-slate-200 rounded-xl focus:outline-none focus:border-[#4f3bf3] focus:ring-1 focus:ring-[#4f3bf3] transition-all text-[14px] text-slate-900 font-medium"
-                defaultValue="15/10/2000"
+                className="w-full px-4 py-3.5 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none transition-all text-[14px] text-slate-900 font-medium cursor-not-allowed"
+                value={formData.dateOfBirth}
+                readOnly
               />
               <Calendar className="w-4 h-4 text-slate-400 absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none" />
             </div>
@@ -78,7 +80,8 @@ export default function KycPersonalInfoForm({ onNext }) {
               type="text" 
               className="w-full px-4 py-3.5 bg-white border border-slate-200 rounded-xl focus:outline-none focus:border-[#4f3bf3] focus:ring-1 focus:ring-[#4f3bf3] transition-all text-[14px] text-slate-900 placeholder:text-slate-400 font-medium uppercase"
               placeholder="e.g. ABCDE1234F"
-              defaultValue="ABCDE1234F"
+              value={formData.panNumber}
+              onChange={(e) => updateFormData('panNumber', e.target.value.toUpperCase())}
             />
           </div>
 
@@ -91,7 +94,11 @@ export default function KycPersonalInfoForm({ onNext }) {
               </label>
             </div>
             <div className="relative">
-              <select className="w-full px-4 py-3.5 bg-white border border-slate-200 rounded-xl focus:outline-none focus:border-[#4f3bf3] focus:ring-1 focus:ring-[#4f3bf3] transition-all text-[14px] text-slate-900 font-medium appearance-none pr-10">
+              <select 
+                className="w-full px-4 py-3.5 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none transition-all text-[14px] text-slate-900 font-medium appearance-none pr-10 cursor-not-allowed"
+                value={formData.gender}
+                disabled
+              >
                 <option value="Male">Male</option>
                 <option value="Female">Female</option>
                 <option value="Other">Other</option>
@@ -112,8 +119,9 @@ export default function KycPersonalInfoForm({ onNext }) {
             </div>
             <input 
               type="text" 
-              className="w-full px-4 py-3.5 bg-white border border-slate-200 rounded-xl focus:outline-none focus:border-[#4f3bf3] focus:ring-1 focus:ring-[#4f3bf3] transition-all text-[14px] text-slate-900 font-medium"
-              defaultValue="+91 98765 43210"
+              className="w-full px-4 py-3.5 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none transition-all text-[14px] text-slate-900 font-medium cursor-not-allowed"
+              value={formData.mobileNumber}
+              readOnly
             />
           </div>
 
@@ -127,8 +135,9 @@ export default function KycPersonalInfoForm({ onNext }) {
             </div>
             <input 
               type="email" 
-              className="w-full px-4 py-3.5 bg-white border border-slate-200 rounded-xl focus:outline-none focus:border-[#4f3bf3] focus:ring-1 focus:ring-[#4f3bf3] transition-all text-[14px] text-slate-900 font-medium"
-              defaultValue="subham@email.com"
+              className="w-full px-4 py-3.5 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none transition-all text-[14px] text-slate-900 font-medium cursor-not-allowed"
+              value={formData.emailAddress}
+              readOnly
             />
           </div>
         </div>
@@ -143,8 +152,9 @@ export default function KycPersonalInfoForm({ onNext }) {
           </div>
           <textarea 
             rows={3}
-            className="w-full px-4 py-3.5 bg-white border border-slate-200 rounded-xl focus:outline-none focus:border-[#4f3bf3] focus:ring-1 focus:ring-[#4f3bf3] transition-all text-[14px] text-slate-900 font-medium resize-none"
-            defaultValue="Kolkata, West Bengal, India"
+            className="w-full px-4 py-3.5 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none transition-all text-[14px] text-slate-900 font-medium resize-none cursor-not-allowed"
+            value={formData.address}
+            readOnly
           />
         </div>
       </div>

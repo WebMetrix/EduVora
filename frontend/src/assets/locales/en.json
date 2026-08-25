@@ -510,6 +510,7 @@
       "notVerified": "Not Verified",
       "emailNotVerifiedDesc": "Please verify your email address to secure your account",
       "pending": "Pending",
+      "rejected": "Rejected",
       "verifyNow": "Verify Now"
     },
     "safe": {

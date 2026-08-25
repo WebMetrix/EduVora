@@ -1,6 +1,8 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Check, User, FileText, ShieldCheck, Eye, Headset, Shield } from 'lucide-react';
 import { useTranslation } from '../../../hooks/useTranslation';
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchKycDetails } from '../../../redux/slices/kycSlice';
 import { useNavigate, Link } from 'react-router-dom';
 
 import KycPersonalInfoForm from './KycPersonalInfoForm';
@@ -13,8 +15,80 @@ import KycVerificationSidebar from './KycVerificationSidebar';
 export default function KycVerificationContent() {
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const [step, setStep] = useState(1);
   const topRef = useRef(null);
+
+  const [formData, setFormData] = useState({
+    fullName: '',
+    dateOfBirth: '',
+    gender: '',
+    mobileNumber: '',
+    emailAddress: '',
+    address: '',
+    panNumber: '',
+    identityProofType: 'Aadhar Card',
+    identityProofNumber: '',
+    identityProofFrontPath: null,
+    identityProofBackPath: null,
+    panCardPath: null
+  });
+
+  const { data: profileData } = useSelector((state) => state.profile || {});
+  const { data: kycData, status: kycStatus } = useSelector((state) => state.kyc || {});
+
+  useEffect(() => {
+    if (kycStatus === 'idle') {
+      dispatch(fetchKycDetails());
+    }
+  }, [dispatch, kycStatus]);
+
+  useEffect(() => {
+    if (profileData) {
+      let dob = '';
+      if (profileData.DateOfBirth) {
+        const d = new Date(profileData.DateOfBirth);
+        if (!isNaN(d.getTime())) {
+          dob = `${d.getDate().toString().padStart(2, '0')}/${(d.getMonth() + 1).toString().padStart(2, '0')}/${d.getFullYear()}`;
+        }
+      }
+      
+      const addressStr = [
+        profileData.AddressLine1, 
+        profileData.CityName || profileData.City, 
+        profileData.StateName || profileData.State, 
+        profileData.Country
+      ].filter(Boolean).join(', ');
+
+      setFormData(prev => ({
+        ...prev,
+        fullName: profileData.FullName || '',
+        dateOfBirth: dob,
+        gender: profileData.Gender || '',
+        mobileNumber: profileData.MobileNumber || profileData.PrimaryMobile || '',
+        emailAddress: profileData.EmailAddress || '',
+        address: addressStr
+      }));
+    }
+
+    if (kycData) {
+      setFormData(prev => ({
+        ...prev,
+        panNumber: kycData.PanNumber || '',
+        identityProofType: kycData.IdentityProofType || 'Aadhar Card',
+        identityProofNumber: kycData.IdentityProofNumber || '',
+      }));
+      
+      // Auto redirect to step 4 if KYC is already submitted and not rejected
+      if (kycData.KYCStatusId && kycData.KYCStatusId !== 3 && step === 1) {
+          setStep(4);
+      }
+    }
+  }, [profileData, kycData]);
+
+  const updateFormData = (key, value) => {
+    setFormData(prev => ({ ...prev, [key]: value }));
+  };
 
   const scrollToTop = () => {
     if (topRef.current) {
@@ -102,25 +176,29 @@ export default function KycVerificationContent() {
             </div>
           </div>
           {step === 1 && (
-            <KycPersonalInfoForm onNext={() => {
-              setStep(2);
-              scrollToTop();
-            }} />
+            <KycPersonalInfoForm 
+              formData={formData} 
+              updateFormData={updateFormData}
+              onNext={() => { setStep(2); scrollToTop(); }} 
+            />
           )}
           {step === 2 && (
             <KycDocumentUploadForm 
+              formData={formData} 
+              updateFormData={updateFormData}
               onNext={() => { setStep(3); scrollToTop(); }}
               onPrev={() => { setStep(1); scrollToTop(); }}
             />
           )}
           {step === 3 && (
             <KycReviewSubmitForm 
+              formData={formData}
               onPrev={() => { setStep(2); scrollToTop(); }}
               onEditStep={(s) => { setStep(s); scrollToTop(); }}
               onSubmit={() => { setStep(4); scrollToTop(); }}
             />
           )}
-          {step === 4 && <KycVerificationStatus onEdit={() => { setStep(1); scrollToTop(); }} />}
+          {step === 4 && <KycVerificationStatus kycData={kycData} onEdit={() => { setStep(1); scrollToTop(); }} />}
 
           {/* Safe Info Card (Desktop) */}
           {step !== 4 && (

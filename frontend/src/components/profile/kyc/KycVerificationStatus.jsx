@@ -1,10 +1,14 @@
 import React from 'react';
 import { 
   ShieldCheck, CheckCircle2, Clock, Hourglass, 
-  Info, CheckCircle, Edit2, User
+  Info, CheckCircle, Edit2, User, XCircle
 } from 'lucide-react';
 
-export default function KycVerificationStatus({ onEdit }) {
+export default function KycVerificationStatus({ kycData, onEdit }) {
+  const statusId = kycData?.KYCStatusId || 1;
+  const submittedDate = kycData?.SubmittedDate 
+    ? new Date(kycData.SubmittedDate).toLocaleString('en-US', { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute:'2-digit' }) 
+    : 'Recently';
   return (
     <div className="flex flex-col gap-6 w-full relative z-20">
       
@@ -18,11 +22,15 @@ export default function KycVerificationStatus({ onEdit }) {
           </div>
           <div>
             <h3 className="text-[18px] font-bold text-[#1a1446] mb-1">
-              Verification in Progress
+              {statusId === 1 ? 'Verification in Progress' : statusId === 2 ? 'Verification Completed' : 'Verification Rejected'}
             </h3>
             <p className="text-[13px] text-slate-500 font-medium leading-relaxed">
-              We are currently reviewing your documents and information.<br className="hidden sm:block"/>
-              This usually takes 1-2 business days.
+              {statusId === 1 
+                ? <>We are currently reviewing your documents and information.<br className="hidden sm:block"/>This usually takes 1-2 business days.</>
+                : statusId === 2
+                ? 'Your KYC has been successfully verified.'
+                : 'Your KYC application was rejected. Please review the reasons and resubmit.'
+              }
             </p>
           </div>
         </div>
@@ -32,7 +40,7 @@ export default function KycVerificationStatus({ onEdit }) {
           {/* Vertical Line */}
           <div className="absolute left-[21px] top-6 bottom-6 w-0.5 bg-slate-100">
             {/* Active portion of the line */}
-            <div className="w-full bg-[#4f3bf3] h-[50%]" />
+            <div className={`w-full bg-[#4f3bf3] ${statusId === 1 ? 'h-[50%]' : 'h-full'}`} />
           </div>
 
           <div className="space-y-8 relative z-10">
@@ -46,35 +54,41 @@ export default function KycVerificationStatus({ onEdit }) {
                   <h4 className="text-[14px] font-bold text-[#1a1446] mb-0.5">Submitted Successfully</h4>
                   <p className="text-[13px] text-slate-500 font-medium">Your KYC application has been submitted.</p>
                 </div>
-                <span className="text-[12px] font-bold text-slate-500">14 May 2025, 10:30 AM</span>
+                <span className="text-[12px] font-bold text-slate-500">{submittedDate}</span>
               </div>
             </div>
 
             {/* Step 2: Under Review */}
             <div className="flex items-start gap-4">
-              <div className="w-7 h-7 rounded-full bg-indigo-50 border-[3px] border-white ring-[3px] ring-indigo-50 flex items-center justify-center shrink-0 mt-0.5">
-                <Clock className="w-4 h-4 text-[#4f3bf3]" />
+              <div className={`w-7 h-7 rounded-full border-[3px] border-white ring-[3px] flex items-center justify-center shrink-0 mt-0.5 ${statusId > 1 ? 'bg-green-50 ring-green-50' : 'bg-indigo-50 ring-indigo-50'}`}>
+                {statusId > 1 ? <CheckCircle2 className="w-4 h-4 text-green-500" /> : <Clock className="w-4 h-4 text-[#4f3bf3]" />}
               </div>
               <div className="flex-1 flex flex-col sm:flex-row sm:justify-between sm:items-start gap-1">
                 <div>
                   <h4 className="text-[14px] font-bold text-[#1a1446] mb-0.5">Under Review</h4>
                   <p className="text-[13px] text-slate-500 font-medium">Our team is verifying your documents and details.</p>
                 </div>
-                <span className="text-[12.5px] font-bold text-[#4f3bf3]">In Progress</span>
+                <span className={`text-[12.5px] font-bold ${statusId > 1 ? 'text-green-500' : 'text-[#4f3bf3]'}`}>
+                  {statusId > 1 ? 'Completed' : 'In Progress'}
+                </span>
               </div>
             </div>
 
             {/* Step 3: Decision */}
             <div className="flex items-start gap-4">
-              <div className="w-7 h-7 rounded-full bg-slate-50 border-[3px] border-white ring-[3px] ring-slate-50 flex items-center justify-center shrink-0 mt-0.5">
-                <Hourglass className="w-3.5 h-3.5 text-slate-400" />
+              <div className={`w-7 h-7 rounded-full border-[3px] border-white ring-[3px] flex items-center justify-center shrink-0 mt-0.5 ${statusId === 2 ? 'bg-green-50 ring-green-50' : statusId === 3 ? 'bg-red-50 ring-red-50' : 'bg-slate-50 ring-slate-50'}`}>
+                {statusId === 2 ? <CheckCircle2 className="w-4 h-4 text-green-500" /> : statusId === 3 ? <XCircle className="w-4 h-4 text-red-500" /> : <Hourglass className="w-3.5 h-3.5 text-slate-400" />}
               </div>
               <div className="flex-1 flex flex-col sm:flex-row sm:justify-between sm:items-start gap-1">
                 <div>
                   <h4 className="text-[14px] font-bold text-[#1a1446] mb-0.5">Verification Decision</h4>
-                  <p className="text-[13px] text-slate-500 font-medium">You will be notified once the verification is complete.</p>
+                  <p className="text-[13px] text-slate-500 font-medium">
+                    {statusId === 1 ? 'You will be notified once the verification is complete.' : statusId === 2 ? 'Your application is approved.' : 'Your application was rejected.'}
+                  </p>
                 </div>
-                <span className="text-[12.5px] font-bold text-slate-400">Pending</span>
+                <span className={`text-[12.5px] font-bold ${statusId === 2 ? 'text-green-500' : statusId === 3 ? 'text-red-500' : 'text-slate-400'}`}>
+                  {statusId === 1 ? 'Pending' : statusId === 2 ? 'Verified' : 'Rejected'}
+                </span>
               </div>
             </div>
           </div>

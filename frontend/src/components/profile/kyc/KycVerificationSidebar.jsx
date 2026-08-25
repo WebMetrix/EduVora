@@ -1,7 +1,21 @@
 import React from 'react';
 import { ShieldCheck, CheckCircle2, Headset } from 'lucide-react';
+import { useSelector } from 'react-redux';
 
 export default function KycVerificationSidebar() {
+  const { data: kycData } = useSelector((state) => state.kyc || {});
+  
+  // Determine Status Text & Color
+  let statusText = 'In Progress';
+  let statusColorClass = 'bg-amber-50 text-amber-600';
+  
+  if (kycData?.KYCStatusId === 2) {
+      statusText = 'Verified';
+      statusColorClass = 'bg-green-50 text-green-600';
+  } else if (kycData?.KYCStatusId === 3) {
+      statusText = 'Rejected';
+      statusColorClass = 'bg-red-50 text-red-600';
+  }
   return (
     <div className="w-full shrink-0 flex flex-col gap-6 relative z-20">
       
@@ -14,13 +28,16 @@ export default function KycVerificationSidebar() {
           <h4 className="text-[15px] font-bold text-[#1a1446]">KYC Status</h4>
         </div>
         
-        <div className="inline-flex px-3.5 py-1.5 bg-amber-50 text-amber-600 rounded-lg text-[13px] font-bold w-fit mb-5">
-          In Progress
+        <div className={`inline-flex px-3.5 py-1.5 rounded-lg text-[13px] font-bold w-fit mb-5 ${statusColorClass}`}>
+          {statusText}
         </div>
         
         <p className="text-[13px] text-slate-500 font-medium leading-relaxed mb-6">
-          Your KYC is under review.<br/>
-          We will notify you once it's done.
+          {kycData?.KYCStatusId === 2 
+            ? "Your KYC is verified. You can now access all features." 
+            : kycData?.KYCStatusId === 3
+            ? `KYC Rejected: ${kycData?.RejectionReason || 'Please resubmit your documents.'}`
+            : "Your KYC is under review. We will notify you once it's done."}
         </p>
 
         <div className="h-px w-full bg-slate-100 mb-6" />

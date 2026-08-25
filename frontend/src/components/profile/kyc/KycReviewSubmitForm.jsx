@@ -1,11 +1,46 @@
 import React, { useState } from 'react';
 import { 
   FileText, User, Edit2, CheckCircle2, 
-  IdCard, CreditCard, ArrowLeft, ArrowRight
+  IdCard, CreditCard, ArrowLeft, ArrowRight, Loader2
 } from 'lucide-react';
+import { useDispatch } from 'react-redux';
+import { fetchKycDetails } from '../../../redux/slices/kycSlice';
+import { toast } from 'react-toastify';
+import api from '../../../https/axios';
 
-export default function KycReviewSubmitForm({ onPrev, onEditStep, onSubmit }) {
+export default function KycReviewSubmitForm({ formData, onPrev, onEditStep, onSubmit }) {
   const [isChecked, setIsChecked] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const dispatch = useDispatch();
+
+  const handleSubmit = async () => {
+    setIsSubmitting(true);
+    try {
+      const payload = new FormData();
+      payload.append('panNumber', formData.panNumber);
+      payload.append('identityProofType', formData.identityProofType);
+      payload.append('identityProofNumber', formData.identityProofNumber);
+      
+      if (formData.identityProofFrontPath) payload.append('IdentityProofFrontPath', formData.identityProofFrontPath);
+      if (formData.identityProofBackPath) payload.append('IdentityProofBackPath', formData.identityProofBackPath);
+      if (formData.panCardPath) payload.append('PanCardPath', formData.panCardPath);
+
+      const response = await api.post('/kyc/submit', payload, {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      });
+      
+      toast.success(response.data.message || 'KYC submitted successfully!');
+      dispatch(fetchKycDetails()); // Refresh KYC data from backend
+      onSubmit(); // Proceed to step 4
+    } catch (error) {
+      console.error('Submit KYC Error:', error);
+      toast.error(error.response?.data?.message || 'Failed to submit KYC.');
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
 
   return (
     <div className="bg-white rounded-3xl p-6 md:p-8 shadow-[0_8px_30px_rgba(0,0,0,0.04)] border border-slate-100 flex flex-col w-full relative z-20">
@@ -48,31 +83,31 @@ export default function KycReviewSubmitForm({ onPrev, onEditStep, onSubmit }) {
           <div className="flex flex-col px-2 md:px-14">
             <div className="flex flex-col sm:flex-row sm:items-center py-4 border-b border-slate-100">
               <span className="text-[14px] text-slate-500 font-medium w-full sm:w-[250px] shrink-0 mb-1 sm:mb-0">Full Name</span>
-              <span className="text-[14px] font-bold text-slate-900">Subham Chakraborty</span>
+              <span className="text-[14px] font-bold text-slate-900">{formData.fullName || '-'}</span>
             </div>
             <div className="flex flex-col sm:flex-row sm:items-center py-4 border-b border-slate-100">
               <span className="text-[14px] text-slate-500 font-medium w-full sm:w-[250px] shrink-0 mb-1 sm:mb-0">Date of Birth</span>
-              <span className="text-[14px] font-bold text-slate-900">15/10/2000</span>
+              <span className="text-[14px] font-bold text-slate-900">{formData.dateOfBirth || '-'}</span>
             </div>
             <div className="flex flex-col sm:flex-row sm:items-center py-4 border-b border-slate-100">
               <span className="text-[14px] text-slate-500 font-medium w-full sm:w-[250px] shrink-0 mb-1 sm:mb-0">Gender</span>
-              <span className="text-[14px] font-bold text-slate-900">Male</span>
+              <span className="text-[14px] font-bold text-slate-900">{formData.gender || '-'}</span>
             </div>
             <div className="flex flex-col sm:flex-row sm:items-center py-4 border-b border-slate-100">
               <span className="text-[14px] text-slate-500 font-medium w-full sm:w-[250px] shrink-0 mb-1 sm:mb-0">Mobile Number</span>
-              <span className="text-[14px] font-bold text-slate-900">+91 98765 43210</span>
+              <span className="text-[14px] font-bold text-slate-900">{formData.mobileNumber || '-'}</span>
             </div>
             <div className="flex flex-col sm:flex-row sm:items-center py-4 border-b border-slate-100">
               <span className="text-[14px] text-slate-500 font-medium w-full sm:w-[250px] shrink-0 mb-1 sm:mb-0">Email Address</span>
-              <span className="text-[14px] font-bold text-slate-900">subham@email.com</span>
+              <span className="text-[14px] font-bold text-slate-900">{formData.emailAddress || '-'}</span>
             </div>
             <div className="flex flex-col sm:flex-row sm:items-center py-4 border-b border-slate-100">
               <span className="text-[14px] text-slate-500 font-medium w-full sm:w-[250px] shrink-0 mb-1 sm:mb-0">PAN Number</span>
-              <span className="text-[14px] font-bold text-slate-900">ABCDE1234F</span>
+              <span className="text-[14px] font-bold text-slate-900">{formData.panNumber || '-'}</span>
             </div>
             <div className="flex flex-col sm:flex-row sm:items-start py-4">
               <span className="text-[14px] text-slate-500 font-medium w-full sm:w-[250px] shrink-0 mb-1 sm:mb-0 mt-0.5">Address</span>
-              <span className="text-[14px] font-bold text-slate-900 leading-relaxed">Kolkata, West Bengal, India</span>
+              <span className="text-[14px] font-bold text-slate-900 leading-relaxed">{formData.address || '-'}</span>
             </div>
           </div>
         </div>
@@ -105,7 +140,7 @@ export default function KycReviewSubmitForm({ onPrev, onEditStep, onSubmit }) {
                 </div>
                 <div>
                   <h5 className="text-[14px] font-bold text-[#1a1446]">Identity Proof</h5>
-                  <p className="text-[12px] text-slate-500 font-medium mt-0.5">Aadhar Card</p>
+                  <p className="text-[12px] text-slate-500 font-medium mt-0.5">{formData.identityProofType}</p>
                 </div>
               </div>
 
@@ -113,15 +148,27 @@ export default function KycReviewSubmitForm({ onPrev, onEditStep, onSubmit }) {
                 <div>
                   <span className="text-[11px] font-bold text-slate-900 block mb-1.5">Front Side</span>
                   <div className="flex items-center gap-2">
-                    <CheckCircle2 className="w-4 h-4 text-green-500" />
-                    <span className="text-[13px] font-medium text-slate-600">Aadhaar_Front.jpg</span>
+                    {formData.identityProofFrontPath ? (
+                        <>
+                            <CheckCircle2 className="w-4 h-4 text-green-500" />
+                            <span className="text-[13px] font-medium text-slate-600">{formData.identityProofFrontPath.name}</span>
+                        </>
+                    ) : (
+                        <span className="text-[13px] font-medium text-red-500">Not Uploaded</span>
+                    )}
                   </div>
                 </div>
                 <div>
                   <span className="text-[11px] font-bold text-slate-900 block mb-1.5">Back Side</span>
                   <div className="flex items-center gap-2">
-                    <CheckCircle2 className="w-4 h-4 text-green-500" />
-                    <span className="text-[13px] font-medium text-slate-600">Aadhaar_Back.jpg</span>
+                    {formData.identityProofBackPath ? (
+                        <>
+                            <CheckCircle2 className="w-4 h-4 text-green-500" />
+                            <span className="text-[13px] font-medium text-slate-600">{formData.identityProofBackPath.name}</span>
+                        </>
+                    ) : (
+                        <span className="text-[13px] font-medium text-slate-400">Not Uploaded</span>
+                    )}
                   </div>
                 </div>
               </div>
@@ -150,8 +197,14 @@ export default function KycReviewSubmitForm({ onPrev, onEditStep, onSubmit }) {
                 <div>
                   <span className="text-[11px] font-bold text-slate-900 block mb-1.5">Front Side</span>
                   <div className="flex items-center gap-2">
-                    <CheckCircle2 className="w-4 h-4 text-green-500" />
-                    <span className="text-[13px] font-medium text-slate-600">PAN_Card.jpg</span>
+                    {formData.panCardPath ? (
+                        <>
+                            <CheckCircle2 className="w-4 h-4 text-green-500" />
+                            <span className="text-[13px] font-medium text-slate-600">{formData.panCardPath.name}</span>
+                        </>
+                    ) : (
+                        <span className="text-[13px] font-medium text-red-500">Not Uploaded</span>
+                    )}
                   </div>
                 </div>
               </div>
@@ -200,12 +253,21 @@ export default function KycReviewSubmitForm({ onPrev, onEditStep, onSubmit }) {
           Back
         </button>
         <button 
-          onClick={onSubmit}
-          disabled={!isChecked}
+          onClick={handleSubmit}
+          disabled={!isChecked || isSubmitting}
           className="w-full sm:w-auto flex items-center justify-center gap-2 bg-[#4f3bf3] text-white px-8 py-3.5 rounded-xl font-bold text-[14px] hover:bg-indigo-700 hover:shadow-lg hover:shadow-indigo-500/20 transition-all disabled:opacity-50 disabled:pointer-events-none active:scale-[0.98]"
         >
-          Submit for Verification
-          <ArrowRight className="w-4 h-4" />
+          {isSubmitting ? (
+              <>
+                <Loader2 className="w-4 h-4 animate-spin" />
+                Submitting...
+              </>
+          ) : (
+              <>
+                Submit for Verification
+                <ArrowRight className="w-4 h-4" />
+              </>
+          )}
         </button>
       </div>
 

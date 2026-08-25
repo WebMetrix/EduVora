@@ -153,6 +153,7 @@ Core table for user authentication and basic info.
 | Password        | varchar(255) | No          |             |
 | ReferralCode    | varchar(50)  | Yes         |             |
 | IsEmailVerified | bit          | Yes         |             |
+| IsKYCVerified   | int          | Yes         | Default 1 (Pending)|
 | SignupMethod    | varchar(50)  | Yes         |             |
 | CreatedDate     | datetime     | Yes         |             |
 | IsActive        | bit          | Yes         |             |
@@ -423,6 +424,32 @@ Master table for payment action types (e.g., 1: INITIATE, 2: WEBHOOK).
 | IsActive          | bit          | Yes         |             |
 | CreatedDate       | datetime     | Yes         |             |
 
+### 37. `Tb_KYCStatusMaster`
+Master table for defining KYC statuses (1: Pending, 2: Verified, 3: Rejected).
+| Column Name | Data Type    | Allow Nulls | Notes       |
+|-------------|--------------|-------------|-------------|
+| KYCStatusId | int          | No          | Primary Key |
+| StatusName  | nvarchar(50) | No          |             |
+| IsActive    | bit          | No          |             |
+| CreatedDate | datetime     | No          |             |
+
+### 38. `Tb_UserKYC`
+Core table to track a user's KYC submission and document paths.
+| Column Name            | Data Type     | Allow Nulls | Notes                                         |
+|------------------------|---------------|-------------|-----------------------------------------------|
+| KYCId                  | int           | No          | Primary Key (Sequential, No Identity)         |
+| UUID                   | varchar(36)   | No          | Foreign Key to Tb_User (Unique per user)      |
+| PanNumber              | varchar(20)   | No          |                                               |
+| IdentityProofType      | varchar(50)   | No          | e.g., 'Aadhar', 'Voter ID'                    |
+| IdentityProofNumber    | varchar(50)   | No          |                                               |
+| IdentityProofFrontPath | nvarchar(MAX) | No          | Path to Identity proof front image            |
+| IdentityProofBackPath  | nvarchar(MAX) | Yes         | Path to Identity proof back image             |
+| PanCardPath            | nvarchar(MAX) | No          | Path to PAN card image                        |
+| KYCStatusId            | int           | No          | Foreign Key to Tb_KYCStatusMaster             |
+| RejectionReason        | nvarchar(MAX) | Yes         | Null if not rejected                          |
+| SubmittedDate          | datetime      | No          | Default `GETDATE()`                           |
+| ModifiedDate           | datetime      | Yes         | Track resubmissions/updates                   |
+
 
 
 ## Stored Procedures
@@ -458,7 +485,7 @@ Fetches distinct active states from `Tb_Cities` where CountryCode = 'IN'.
 Fetches the complete profile of a user (Core + Desc + Bank + Package + Rank) using `LEFT JOIN`s on UUID.
 - **Inputs**: `@UUID VARCHAR(36)`
 
-- **Outputs**: Result Set (UserID, EmailAddress, PrimaryMobile, CreatedDate, IsEmailVerified, FullName, Username, DateOfBirth, Gender, Nationality, ProfilePicturePath, ContactMobile, WhatsAppNumber, AddressLine1, AddressLine2, Country, State, StateName, City, CityName, Pincode, AboutNotes, AccountHolderName, AccountNumber, BankName, BranchName, IFSCCode, AccountType, AccountTypeName, AdditionalBankNotes, ActivePackageId, ActivePackageName, CurrentRankId, CurrentRankName, RankColor, RankIconPath)
+- **Outputs**: Result Set (UserID, EmailAddress, PrimaryMobile, CreatedDate, IsEmailVerified, IsKYCVerified, FullName, Username, DateOfBirth, Gender, Nationality, ProfilePicturePath, ContactMobile, WhatsAppNumber, AddressLine1, AddressLine2, Country, State, StateName, City, CityName, Pincode, AboutNotes, AccountHolderName, AccountNumber, BankName, BranchName, IFSCCode, AccountType, AccountTypeName, AdditionalBankNotes, ActivePackageId, ActivePackageName, CurrentRankId, CurrentRankName, RankColor, RankIconPath)
 
 ### `EV_UpdateAboutMe`
 Updates the `AboutNotes` column in `Tb_UserDesc` for a specific user.
@@ -537,3 +564,13 @@ Processes both the initialization and the webhook response of a Cashfree payment
 - **Updates**: 
   - For INITIATE: Inserts initial Pending (1) records into `Tb_Order`, `Tb_OrderItem`, and `Tb_Payment`.
   - For WEBHOOK: Updates `OrderStatusId` and `PaymentStatusId` to 2 (Success) or 3 (Failed), and updates `TransactionId` using the extracted or provided Gateway ID. Automatically inserts into `Tb_UserPackage` if the payment was a SUCCESS.
+
+### `EV_ManageUserKYC`
+Manages KYC operations including retrieving, submitting, and updating the status of a user's KYC application.
+- **Inputs**: `@Action VARCHAR(20)` ('GET', 'SUBMIT', 'UPDATE_STATUS'), `@UUID VARCHAR(36)`, `@PanNumber VARCHAR(20)`, `@IdentityProofType VARCHAR(50)`, `@IdentityProofNumber VARCHAR(50)`, `@IdentityProofFrontPath NVARCHAR(MAX)`, `@IdentityProofBackPath NVARCHAR(MAX)`, `@PanCardPath NVARCHAR(MAX)`, `@KYCStatusId INT`, `@RejectionReason NVARCHAR(MAX)`
+- **Outputs**:
+  - For GET: Returns Result Set containing KYC details.
+  - For SUBMIT / UPDATE_STATUS: Returns `@Success INT`, `Message VARCHAR`.
+- **Updates**:
+  - For SUBMIT: Inserts/Updates `Tb_UserKYC` and sets `IsKYCVerified = 1` in `Tb_User`. (Uses sequential `KYCId` generation).
+  - For UPDATE_STATUS: Updates `KYCStatusId` in `Tb_UserKYC` and syncs `IsKYCVerified` in `Tb_User`.
