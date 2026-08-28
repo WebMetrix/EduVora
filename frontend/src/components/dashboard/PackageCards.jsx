@@ -17,11 +17,13 @@ import bronzeDetailedBg from '../../assets/packageBG/bronzeDetailed.webp';
 import diamondDetailedBg from '../../assets/packageBG/diamondDetailed.webp';
 
 import PackageDetailsModal from './PackageDetailsModal';
+import ComparePackagesModal from './ComparePackagesModal';
 import api from '../../https/axios';
 
 export default function PackageCards() {
   const { t } = useTranslation();
   const [selectedPackage, setSelectedPackage] = useState(null);
+  const [isCompareModalOpen, setIsCompareModalOpen] = useState(false);
   const [dbPackages, setDbPackages] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -121,9 +123,13 @@ export default function PackageCards() {
         <div className="relative z-10 flex flex-col mb-2 lg:mb-3">
           <div className="flex items-center justify-between mb-0.5">
             <h3 className="text-[14px] lg:text-[16px] font-bold text-slate-900">{t('dashboard.packages.title')}</h3>
-            <a href="#" className="text-[13px] lg:text-[14px] font-bold text-indigo-600 hover:text-indigo-700 hover:underline underline-offset-4 transition-all">
+            <button 
+              onClick={() => setIsCompareModalOpen(true)}
+              disabled={loading}
+              className="text-[13px] lg:text-[14px] font-bold text-indigo-600 hover:text-indigo-700 hover:underline underline-offset-4 transition-all disabled:opacity-50 disabled:pointer-events-none"
+            >
               {t('dashboard.packages.viewAll')}
-            </a>
+            </button>
           </div>
           <p className="text-[12px] text-slate-500">{t('dashboard.packages.subtitle')}</p>
         </div>
@@ -193,6 +199,13 @@ export default function PackageCards() {
       <PackageDetailsModal
         packageData={selectedPackage}
         onClose={() => setSelectedPackage(null)}
+      />
+
+      <ComparePackagesModal 
+        isOpen={isCompareModalOpen}
+        onClose={() => setIsCompareModalOpen(false)}
+        packages={packages}
+        onSelectPackage={(pkg) => setSelectedPackage(pkg)}
       />
     </div>
   );

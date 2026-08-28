@@ -7,11 +7,13 @@ import { useDispatch } from 'react-redux';
 import { fetchKycDetails } from '../../../redux/slices/kycSlice';
 import { toast } from 'react-toastify';
 import api from '../../../https/axios';
+import { useTranslation } from '../../../hooks/useTranslation';
 
 export default function KycReviewSubmitForm({ formData, onPrev, onEditStep, onSubmit }) {
   const [isChecked, setIsChecked] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const dispatch = useDispatch();
+  const { t } = useTranslation();
 
   const handleSubmit = async () => {
     setIsSubmitting(true);
@@ -31,12 +33,12 @@ export default function KycReviewSubmitForm({ formData, onPrev, onEditStep, onSu
         }
       });
       
-      toast.success(response.data.message || 'KYC submitted successfully!');
+      toast.success(response.data.message || t('kyc.reviewSubmit.successMsg'));
       dispatch(fetchKycDetails()); // Refresh KYC data from backend
       onSubmit(); // Proceed to step 4
     } catch (error) {
       console.error('Submit KYC Error:', error);
-      toast.error(error.response?.data?.message || 'Failed to submit KYC.');
+      toast.error(error.response?.data?.message || t('kyc.reviewSubmit.errorMsg'));
     } finally {
       setIsSubmitting(false);
     }
@@ -52,10 +54,10 @@ export default function KycReviewSubmitForm({ formData, onPrev, onEditStep, onSu
         </div>
         <div>
           <h3 className="text-[17px] font-bold text-[#1a1446] mb-0.5">
-            Review Your Information
+            {t('kyc.reviewSubmit.title')}
           </h3>
           <p className="text-[13px] text-slate-500 font-medium">
-            Please review all your details below before submitting. Make sure all information is correct.
+            {t('kyc.reviewSubmit.subtitle')}
           </p>
         </div>
       </div>
@@ -69,45 +71,45 @@ export default function KycReviewSubmitForm({ formData, onPrev, onEditStep, onSu
               <div className="w-10 h-10 rounded-lg bg-indigo-50/80 flex items-center justify-center text-[#4f3bf3]">
                 <User className="w-4 h-4" />
               </div>
-              <h4 className="text-[15px] font-bold text-[#1a1446]">1. Personal Details</h4>
+              <h4 className="text-[15px] font-bold text-[#1a1446]">{t('kyc.reviewSubmit.section1')}</h4>
             </div>
             <button 
               onClick={() => onEditStep(1)}
               className="flex items-center gap-1.5 px-4 py-2 border border-[#4f3bf3] text-[#4f3bf3] rounded-xl text-[12px] font-bold hover:bg-indigo-50 transition-colors"
             >
               <Edit2 className="w-3.5 h-3.5" />
-              Edit
+              {t('kyc.reviewSubmit.edit')}
             </button>
           </div>
           
           <div className="flex flex-col px-2 md:px-14">
             <div className="flex flex-col sm:flex-row sm:items-center py-4 border-b border-slate-100">
-              <span className="text-[14px] text-slate-500 font-medium w-full sm:w-[250px] shrink-0 mb-1 sm:mb-0">Full Name</span>
-              <span className="text-[14px] font-bold text-slate-900">{formData.fullName || '-'}</span>
+              <span className="text-[14px] text-slate-500 font-medium w-full sm:w-[250px] shrink-0 mb-1 sm:mb-0">{t('kyc.personalInfo.fullName')}</span>
+              <span className="text-[14px] font-bold text-slate-900">{formData.fullName || t('kyc.reviewSubmit.emptyFallback')}</span>
             </div>
             <div className="flex flex-col sm:flex-row sm:items-center py-4 border-b border-slate-100">
-              <span className="text-[14px] text-slate-500 font-medium w-full sm:w-[250px] shrink-0 mb-1 sm:mb-0">Date of Birth</span>
-              <span className="text-[14px] font-bold text-slate-900">{formData.dateOfBirth || '-'}</span>
+              <span className="text-[14px] text-slate-500 font-medium w-full sm:w-[250px] shrink-0 mb-1 sm:mb-0">{t('kyc.personalInfo.dob')}</span>
+              <span className="text-[14px] font-bold text-slate-900">{formData.dateOfBirth || t('kyc.reviewSubmit.emptyFallback')}</span>
             </div>
             <div className="flex flex-col sm:flex-row sm:items-center py-4 border-b border-slate-100">
-              <span className="text-[14px] text-slate-500 font-medium w-full sm:w-[250px] shrink-0 mb-1 sm:mb-0">Gender</span>
-              <span className="text-[14px] font-bold text-slate-900">{formData.gender || '-'}</span>
+              <span className="text-[14px] text-slate-500 font-medium w-full sm:w-[250px] shrink-0 mb-1 sm:mb-0">{t('kyc.personalInfo.gender')}</span>
+              <span className="text-[14px] font-bold text-slate-900">{formData.gender || t('kyc.reviewSubmit.emptyFallback')}</span>
             </div>
             <div className="flex flex-col sm:flex-row sm:items-center py-4 border-b border-slate-100">
-              <span className="text-[14px] text-slate-500 font-medium w-full sm:w-[250px] shrink-0 mb-1 sm:mb-0">Mobile Number</span>
-              <span className="text-[14px] font-bold text-slate-900">{formData.mobileNumber || '-'}</span>
+              <span className="text-[14px] text-slate-500 font-medium w-full sm:w-[250px] shrink-0 mb-1 sm:mb-0">{t('kyc.personalInfo.mobileNumber')}</span>
+              <span className="text-[14px] font-bold text-slate-900">{formData.mobileNumber || t('kyc.reviewSubmit.emptyFallback')}</span>
             </div>
             <div className="flex flex-col sm:flex-row sm:items-center py-4 border-b border-slate-100">
-              <span className="text-[14px] text-slate-500 font-medium w-full sm:w-[250px] shrink-0 mb-1 sm:mb-0">Email Address</span>
-              <span className="text-[14px] font-bold text-slate-900">{formData.emailAddress || '-'}</span>
+              <span className="text-[14px] text-slate-500 font-medium w-full sm:w-[250px] shrink-0 mb-1 sm:mb-0">{t('kyc.personalInfo.emailAddress')}</span>
+              <span className="text-[14px] font-bold text-slate-900">{formData.emailAddress || t('kyc.reviewSubmit.emptyFallback')}</span>
             </div>
             <div className="flex flex-col sm:flex-row sm:items-center py-4 border-b border-slate-100">
-              <span className="text-[14px] text-slate-500 font-medium w-full sm:w-[250px] shrink-0 mb-1 sm:mb-0">PAN Number</span>
-              <span className="text-[14px] font-bold text-slate-900">{formData.panNumber || '-'}</span>
+              <span className="text-[14px] text-slate-500 font-medium w-full sm:w-[250px] shrink-0 mb-1 sm:mb-0">{t('kyc.personalInfo.panNumber')}</span>
+              <span className="text-[14px] font-bold text-slate-900">{formData.panNumber || t('kyc.reviewSubmit.emptyFallback')}</span>
             </div>
             <div className="flex flex-col sm:flex-row sm:items-start py-4">
-              <span className="text-[14px] text-slate-500 font-medium w-full sm:w-[250px] shrink-0 mb-1 sm:mb-0 mt-0.5">Address</span>
-              <span className="text-[14px] font-bold text-slate-900 leading-relaxed">{formData.address || '-'}</span>
+              <span className="text-[14px] text-slate-500 font-medium w-full sm:w-[250px] shrink-0 mb-1 sm:mb-0 mt-0.5">{t('kyc.personalInfo.address')}</span>
+              <span className="text-[14px] font-bold text-slate-900 leading-relaxed">{formData.address || t('kyc.reviewSubmit.emptyFallback')}</span>
             </div>
           </div>
         </div>
@@ -119,14 +121,14 @@ export default function KycReviewSubmitForm({ formData, onPrev, onEditStep, onSu
               <div className="w-10 h-10 rounded-lg bg-indigo-50/80 flex items-center justify-center text-[#4f3bf3]">
                 <FileText className="w-4 h-4" />
               </div>
-              <h4 className="text-[15px] font-bold text-[#1a1446]">2. Uploaded Documents</h4>
+              <h4 className="text-[15px] font-bold text-[#1a1446]">{t('kyc.reviewSubmit.section2')}</h4>
             </div>
             <button 
               onClick={() => onEditStep(2)}
-              className="flex items-center gap-1.5 px-4 py-2 border border-[#4f3bf3] text-[#4f3bf3] rounded-xl text-[12px] font-bold hover:bg-indigo-50 transition-colors"
+              className="flex items-center gap-1.5 px-4 py-2 border-[#4f3bf3] text-[#4f3bf3] rounded-xl text-[12px] font-bold hover:bg-indigo-50 transition-colors"
             >
               <Edit2 className="w-3.5 h-3.5" />
-              Edit
+              {t('kyc.reviewSubmit.edit')}
             </button>
           </div>
 
@@ -139,14 +141,14 @@ export default function KycReviewSubmitForm({ formData, onPrev, onEditStep, onSu
                   <IdCard className="w-5 h-5" />
                 </div>
                 <div>
-                  <h5 className="text-[14px] font-bold text-[#1a1446]">Identity Proof</h5>
+                  <h5 className="text-[14px] font-bold text-[#1a1446]">{t('kyc.documentUpload.identityProof')}</h5>
                   <p className="text-[12px] text-slate-500 font-medium mt-0.5">{formData.identityProofType}</p>
                 </div>
               </div>
 
               <div className="flex-1 flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-16 w-full">
                 <div>
-                  <span className="text-[11px] font-bold text-slate-900 block mb-1.5">Front Side</span>
+                  <span className="text-[11px] font-bold text-slate-900 block mb-1.5">{t('kyc.documentUpload.frontSide')}</span>
                   <div className="flex items-center gap-2">
                     {formData.identityProofFrontPath ? (
                         <>
@@ -154,12 +156,12 @@ export default function KycReviewSubmitForm({ formData, onPrev, onEditStep, onSu
                             <span className="text-[13px] font-medium text-slate-600">{formData.identityProofFrontPath.name}</span>
                         </>
                     ) : (
-                        <span className="text-[13px] font-medium text-red-500">Not Uploaded</span>
+                        <span className="text-[13px] font-medium text-red-500">{t('kyc.reviewSubmit.notUploaded')}</span>
                     )}
                   </div>
                 </div>
                 <div>
-                  <span className="text-[11px] font-bold text-slate-900 block mb-1.5">Back Side</span>
+                  <span className="text-[11px] font-bold text-slate-900 block mb-1.5">{t('kyc.documentUpload.backSide')}</span>
                   <div className="flex items-center gap-2">
                     {formData.identityProofBackPath ? (
                         <>
@@ -167,7 +169,7 @@ export default function KycReviewSubmitForm({ formData, onPrev, onEditStep, onSu
                             <span className="text-[13px] font-medium text-slate-600">{formData.identityProofBackPath.name}</span>
                         </>
                     ) : (
-                        <span className="text-[13px] font-medium text-slate-400">Not Uploaded</span>
+                        <span className="text-[13px] font-medium text-slate-400">{t('kyc.reviewSubmit.notUploaded')}</span>
                     )}
                   </div>
                 </div>
@@ -176,7 +178,7 @@ export default function KycReviewSubmitForm({ formData, onPrev, onEditStep, onSu
               <div className="w-full sm:w-auto flex justify-end">
                 <button onClick={() => onEditStep(2)} className="flex items-center gap-1.5 px-4 py-2 border border-slate-200 text-indigo-600 rounded-xl text-[12px] font-bold hover:bg-slate-50 transition-colors">
                   <Edit2 className="w-3.5 h-3.5" />
-                  Edit
+                  {t('kyc.reviewSubmit.edit')}
                 </button>
               </div>
             </div>
@@ -188,14 +190,14 @@ export default function KycReviewSubmitForm({ formData, onPrev, onEditStep, onSu
                   <CreditCard className="w-5 h-5" />
                 </div>
                 <div>
-                  <h5 className="text-[14px] font-bold text-[#1a1446]">PAN Card</h5>
-                  <p className="text-[12px] text-slate-500 font-medium mt-0.5">PAN Card</p>
+                  <h5 className="text-[14px] font-bold text-[#1a1446]">{t('kyc.documentUpload.panCard')}</h5>
+                  <p className="text-[12px] text-slate-500 font-medium mt-0.5">{t('kyc.documentUpload.panCard')}</p>
                 </div>
               </div>
 
               <div className="flex-1 flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-16 w-full">
                 <div>
-                  <span className="text-[11px] font-bold text-slate-900 block mb-1.5">Front Side</span>
+                  <span className="text-[11px] font-bold text-slate-900 block mb-1.5">{t('kyc.documentUpload.frontSide')}</span>
                   <div className="flex items-center gap-2">
                     {formData.panCardPath ? (
                         <>
@@ -203,7 +205,7 @@ export default function KycReviewSubmitForm({ formData, onPrev, onEditStep, onSu
                             <span className="text-[13px] font-medium text-slate-600">{formData.panCardPath.name}</span>
                         </>
                     ) : (
-                        <span className="text-[13px] font-medium text-red-500">Not Uploaded</span>
+                        <span className="text-[13px] font-medium text-red-500">{t('kyc.reviewSubmit.notUploaded')}</span>
                     )}
                   </div>
                 </div>
@@ -212,7 +214,7 @@ export default function KycReviewSubmitForm({ formData, onPrev, onEditStep, onSu
               <div className="w-full sm:w-auto flex justify-end">
                 <button onClick={() => onEditStep(2)} className="flex items-center gap-1.5 px-4 py-2 border border-slate-200 text-indigo-600 rounded-xl text-[12px] font-bold hover:bg-slate-50 transition-colors">
                   <Edit2 className="w-3.5 h-3.5" />
-                  Edit
+                  {t('kyc.reviewSubmit.edit')}
                 </button>
               </div>
             </div>
@@ -233,10 +235,10 @@ export default function KycReviewSubmitForm({ formData, onPrev, onEditStep, onSu
           </div>
           <label htmlFor="declaration" className="cursor-pointer select-none">
             <p className="text-[13px] font-bold text-[#1a1446] mb-1">
-              I hereby declare that the information provided above is true and correct to the best of my knowledge.
+              {t('kyc.reviewSubmit.declarationText1')}
             </p>
             <p className="text-[12px] text-[#1a1446] font-medium leading-relaxed">
-              I understand that any false information may lead to rejection of my KYC and restriction of my account.
+              {t('kyc.reviewSubmit.declarationText2')}
             </p>
           </label>
         </div>
@@ -250,7 +252,7 @@ export default function KycReviewSubmitForm({ formData, onPrev, onEditStep, onSu
           className="w-full sm:w-auto flex items-center justify-center gap-2 bg-white text-slate-600 border border-slate-200 px-6 py-3.5 rounded-xl font-bold text-[14px] hover:bg-slate-50 transition-colors"
         >
           <ArrowLeft className="w-4 h-4" />
-          Back
+          {t('kyc.reviewSubmit.back')}
         </button>
         <button 
           onClick={handleSubmit}
@@ -260,11 +262,11 @@ export default function KycReviewSubmitForm({ formData, onPrev, onEditStep, onSu
           {isSubmitting ? (
               <>
                 <Loader2 className="w-4 h-4 animate-spin" />
-                Submitting...
+                {t('kyc.reviewSubmit.submitting')}
               </>
           ) : (
               <>
-                Submit for Verification
+                {t('kyc.reviewSubmit.submit')}
                 <ArrowRight className="w-4 h-4" />
               </>
           )}

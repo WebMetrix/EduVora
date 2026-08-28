@@ -67,11 +67,12 @@ const upload = multer({
   }
 });
 
+
 // Protected Routes
 router.get('/', isLoggedIn, getKycDetails);
 
 router.post(
-  '/submit', 
+  '/submit',
   isLoggedIn, 
   upload.fields([
     { name: 'IdentityProofFrontPath', maxCount: 1 },

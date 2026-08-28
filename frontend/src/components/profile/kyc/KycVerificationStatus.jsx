@@ -3,12 +3,14 @@ import {
   ShieldCheck, CheckCircle2, Clock, Hourglass, 
   Info, CheckCircle, Edit2, User, XCircle
 } from 'lucide-react';
+import { useTranslation } from '../../../hooks/useTranslation';
 
 export default function KycVerificationStatus({ kycData, onEdit }) {
+  const { t } = useTranslation();
   const statusId = kycData?.KYCStatusId || 1;
   const submittedDate = kycData?.SubmittedDate 
     ? new Date(kycData.SubmittedDate).toLocaleString('en-US', { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute:'2-digit' }) 
-    : 'Recently';
+    : t('kyc.verificationStatus.recently');
   return (
     <div className="flex flex-col gap-6 w-full relative z-20">
       
@@ -22,14 +24,14 @@ export default function KycVerificationStatus({ kycData, onEdit }) {
           </div>
           <div>
             <h3 className="text-[18px] font-bold text-[#1a1446] mb-1">
-              {statusId === 1 ? 'Verification in Progress' : statusId === 2 ? 'Verification Completed' : 'Verification Rejected'}
+              {statusId === 1 ? t('kyc.verificationStatus.inProgress') : statusId === 2 ? t('kyc.verificationStatus.completed') : t('kyc.verificationStatus.rejected')}
             </h3>
             <p className="text-[13px] text-slate-500 font-medium leading-relaxed">
               {statusId === 1 
-                ? <>We are currently reviewing your documents and information.<br className="hidden sm:block"/>This usually takes 24-48 hours.</>
+                ? <>{t('kyc.verificationStatus.inProgressDesc1')}<br className="hidden sm:block"/>{t('kyc.verificationStatus.inProgressDesc2')}</>
                 : statusId === 2
-                ? 'Your KYC has been successfully verified.'
-                : 'Your KYC application was rejected. Please review the reasons and resubmit.'
+                ? t('kyc.verificationStatus.completedDesc')
+                : t('kyc.verificationStatus.rejectedDesc')
               }
             </p>
           </div>
@@ -51,8 +53,8 @@ export default function KycVerificationStatus({ kycData, onEdit }) {
               </div>
               <div className="flex-1 flex flex-col sm:flex-row sm:justify-between sm:items-start gap-1">
                 <div>
-                  <h4 className="text-[14px] font-bold text-[#1a1446] mb-0.5">Submitted Successfully</h4>
-                  <p className="text-[13px] text-slate-500 font-medium">Your KYC application has been submitted.</p>
+                  <h4 className="text-[14px] font-bold text-[#1a1446] mb-0.5">{t('kyc.verificationStatus.step1Title')}</h4>
+                  <p className="text-[13px] text-slate-500 font-medium">{t('kyc.verificationStatus.step1Desc')}</p>
                 </div>
                 <span className="text-[12px] font-bold text-slate-500">{submittedDate}</span>
               </div>
@@ -65,11 +67,11 @@ export default function KycVerificationStatus({ kycData, onEdit }) {
               </div>
               <div className="flex-1 flex flex-col sm:flex-row sm:justify-between sm:items-start gap-1">
                 <div>
-                  <h4 className="text-[14px] font-bold text-[#1a1446] mb-0.5">Under Review</h4>
-                  <p className="text-[13px] text-slate-500 font-medium">Our team is verifying your documents and details.</p>
+                  <h4 className="text-[14px] font-bold text-[#1a1446] mb-0.5">{t('kyc.verificationStatus.step2Title')}</h4>
+                  <p className="text-[13px] text-slate-500 font-medium">{t('kyc.verificationStatus.step2Desc')}</p>
                 </div>
                 <span className={`text-[12.5px] font-bold ${statusId > 1 ? 'text-green-500' : 'text-[#4f3bf3]'}`}>
-                  {statusId > 1 ? 'Completed' : 'In Progress'}
+                  {statusId > 1 ? t('kyc.verificationStatus.step2Completed') : t('kyc.verificationStatus.step2Progress')}
                 </span>
               </div>
             </div>
@@ -81,13 +83,13 @@ export default function KycVerificationStatus({ kycData, onEdit }) {
               </div>
               <div className="flex-1 flex flex-col sm:flex-row sm:justify-between sm:items-start gap-1">
                 <div>
-                  <h4 className="text-[14px] font-bold text-[#1a1446] mb-0.5">Verification Decision</h4>
+                  <h4 className="text-[14px] font-bold text-[#1a1446] mb-0.5">{t('kyc.verificationStatus.step3Title')}</h4>
                   <p className="text-[13px] text-slate-500 font-medium">
-                    {statusId === 1 ? 'You will be notified once the verification is done.' : statusId === 2 ? 'Your application is approved.' : 'Your application was rejected.'}
+                    {statusId === 1 ? t('kyc.verificationStatus.step3DescPending') : statusId === 2 ? t('kyc.verificationStatus.step3DescVerified') : t('kyc.verificationStatus.step3DescRejected')}
                   </p>
                 </div>
                 <span className={`text-[12.5px] font-bold ${statusId === 2 ? 'text-green-500' : statusId === 3 ? 'text-red-500' : 'text-slate-400'}`}>
-                  {statusId === 1 ? 'Pending' : statusId === 2 ? 'Verified' : 'Rejected'}
+                  {statusId === 1 ? t('kyc.verificationStatus.step3Pending') : statusId === 2 ? t('kyc.verificationStatus.step3Verified') : t('kyc.verificationStatus.step3Rejected')}
                 </span>
               </div>
             </div>
@@ -100,20 +102,20 @@ export default function KycVerificationStatus({ kycData, onEdit }) {
           <div className="flex-1 z-10">
             <div className="flex items-center gap-2 mb-4">
               <Info className="w-5 h-5 text-[#4f3bf3]" />
-              <h4 className="text-[15px] font-bold text-[#1a1446]">What happens next?</h4>
+              <h4 className="text-[15px] font-bold text-[#1a1446]">{t('kyc.verificationStatus.whatNext')}</h4>
             </div>
             <div className="space-y-3">
               <div className="flex items-start gap-2.5">
                 <CheckCircle className="w-4 h-4 text-[#4f3bf3] shrink-0 mt-0.5" />
-                <span className="text-[13.5px] text-slate-700 font-medium">We will verify your documents and information.</span>
+                <span className="text-[13.5px] text-slate-700 font-medium">{t('kyc.verificationStatus.next1')}</span>
               </div>
               <div className="flex items-start gap-2.5">
                 <CheckCircle className="w-4 h-4 text-[#4f3bf3] shrink-0 mt-0.5" />
-                <span className="text-[13.5px] text-slate-700 font-medium">You will receive an email notification with the result.</span>
+                <span className="text-[13.5px] text-slate-700 font-medium">{t('kyc.verificationStatus.next2')}</span>
               </div>
               <div className="flex items-start gap-2.5">
                 <CheckCircle className="w-4 h-4 text-[#4f3bf3] shrink-0 mt-0.5" />
-                <span className="text-[13.5px] text-slate-700 font-medium">Once verified, you can start withdrawing your commissions.</span>
+                <span className="text-[13.5px] text-slate-700 font-medium">{t('kyc.verificationStatus.next3')}</span>
               </div>
             </div>
           </div>
@@ -150,15 +152,15 @@ export default function KycVerificationStatus({ kycData, onEdit }) {
       {/* Edit Container */}
       <div className="bg-white rounded-3xl p-6 shadow-[0_8px_30px_rgba(0,0,0,0.04)] border border-slate-100 flex flex-col sm:flex-row items-center justify-between gap-4">
         <div>
-          <h4 className="text-[15px] font-bold text-[#1a1446] mb-1">Need to update something?</h4>
-          <p className="text-[13px] text-slate-500 font-medium">If you want to update any information or documents, you can edit your information at any time.</p>
+          <h4 className="text-[15px] font-bold text-[#1a1446] mb-1">{t('kyc.verificationStatus.updateTitle')}</h4>
+          <p className="text-[13px] text-slate-500 font-medium">{t('kyc.verificationStatus.updateDesc')}</p>
         </div>
         <button 
           onClick={onEdit}
           className="flex items-center gap-1.5 px-4 py-2 border border-[#4f3bf3] text-[#4f3bf3] rounded-xl text-[12px] font-bold hover:bg-indigo-50 transition-colors shrink-0 w-full sm:w-auto justify-center"
         >
           <Edit2 className="w-3.5 h-3.5" />
-          Edit Information
+          {t('kyc.verificationStatus.editBtn')}
         </button>
       </div>
 

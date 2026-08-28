@@ -99,10 +99,10 @@ export default function KycVerificationContent() {
   };
 
   const stepsList = [
-    { num: 1, title: 'Personal Details', subtitle: 'Add your basic information', icon: User },
-    { num: 2, title: 'Document Upload', subtitle: 'Upload required documents', icon: FileText },
-    { num: 3, title: 'Review & Submit', subtitle: 'Review and confirm details', icon: ShieldCheck },
-    { num: 4, title: 'Verification', subtitle: 'Get verified and start withdrawing', icon: Eye }
+    { num: 1, title: t('kyc.steps.personalDetails'), subtitle: t('kyc.steps.personalDetailsDesc'), icon: User },
+    { num: 2, title: t('kyc.steps.documentUpload'), subtitle: t('kyc.steps.documentUploadDesc'), icon: FileText },
+    { num: 3, title: t('kyc.steps.reviewSubmit'), subtitle: t('kyc.steps.reviewSubmitDesc'), icon: ShieldCheck },
+    { num: 4, title: t('kyc.steps.verification'), subtitle: t('kyc.steps.verificationDesc'), icon: Eye }
   ];
 
   return (
@@ -110,22 +110,22 @@ export default function KycVerificationContent() {
       
       {/* Breadcrumb */}
       <div className="flex items-center text-[13px] font-semibold text-slate-500 mb-6 gap-2 px-2">
-        <Link to="/dashboard" className="hover:text-indigo-600 transition-colors">Dashboard</Link>
+        <Link to="/dashboard" className="hover:text-indigo-600 transition-colors">{t('kyc.breadcrumb.dashboard')}</Link>
         <span>›</span>
-        <Link to="/profile" className="hover:text-indigo-600 transition-colors">Profile</Link>
+        <Link to="/profile" className="hover:text-indigo-600 transition-colors">{t('kyc.breadcrumb.profile')}</Link>
         <span>›</span>
-        <span className="text-slate-900">KYC Verification</span>
+        <span className="text-slate-900">{t('kyc.breadcrumb.kycVerification')}</span>
       </div>
 
       {/* Header */}
       <div className="flex flex-col md:flex-row justify-between items-center md:items-start gap-4 mb-6 px-2 lg:px-0 text-center md:text-left">
         <div>
-          <h2 className="text-[24px] md:text-[28px] font-extrabold text-[#1a1446] mb-2 tracking-tight">KYC Verification</h2>
-          <p className="text-[14px] text-slate-500 leading-relaxed font-medium">Complete your KYC verification to enable withdrawals and access all platform features.</p>
+          <h2 className="text-[24px] md:text-[28px] font-extrabold text-[#1a1446] mb-2 tracking-tight">{t('kyc.title')}</h2>
+          <p className="text-[14px] text-slate-500 leading-relaxed font-medium">{t('kyc.subtitle')}</p>
         </div>
         <button className="flex items-center gap-2 px-4 py-2 bg-white border border-slate-200 rounded-xl shadow-sm text-[13px] font-bold text-indigo-600 hover:bg-indigo-50 transition-all shrink-0 mt-2 md:mt-0">
           <Headset className="w-4 h-4" />
-          Need Help?
+          {t('kyc.needHelp')}
         </button>
       </div>
 
@@ -207,8 +207,8 @@ export default function KycVerificationContent() {
                   <Shield className="w-5 h-5" />
               </div>
               <div className="flex flex-col min-w-0">
-                  <h4 className="text-[13px] font-bold text-slate-900 leading-tight mb-1">Your information is safe with us.</h4>
-                  <p className="text-[12px] text-slate-500 font-medium break-words whitespace-normal">It is used securely and strictly for verification purposes only.</p>
+                  <h4 className="text-[13px] font-bold text-slate-900 leading-tight mb-1">{t('kyc.safeInfo.title')}</h4>
+                  <p className="text-[12px] text-slate-500 font-medium break-words whitespace-normal">{t('kyc.safeInfo.desc')}</p>
               </div>
             </div>
           )}
@@ -225,8 +225,8 @@ export default function KycVerificationContent() {
                    <Shield className="w-5 h-5" />
                </div>
                <div className="flex flex-col min-w-0">
-                   <h4 className="text-[13px] font-bold text-slate-900 leading-tight mb-1">Your information is safe with us.</h4>
-                   <p className="text-[12px] text-slate-500 font-medium break-words whitespace-normal">It is used securely and strictly for verification purposes only.</p>
+                   <h4 className="text-[13px] font-bold text-slate-900 leading-tight mb-1">{t('kyc.safeInfo.title')}</h4>
+                   <p className="text-[12px] text-slate-500 font-medium break-words whitespace-normal">{t('kyc.safeInfo.desc')}</p>
                </div>
              </div>
            )}
