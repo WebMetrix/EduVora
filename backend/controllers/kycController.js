@@ -1,5 +1,6 @@
 import pool, { sql } from '../config/db.js';
 import path from 'path';
+import { validateKycSubmission } from '../utils/kycBasicValidator.js';
 
 
 export const getKycDetails = async (req, res) => {
@@ -35,20 +36,23 @@ export const submitKyc = async (req, res) => {
             identityProofNumber
         } = req.body;
 
-        // Ensure files were uploaded
-        if (!req.files || !req.files['IdentityProofFrontPath'] || !req.files['PanCardPath']) {
-            return res.status(400).json({ message: 'Required documents are missing.' });
+        // ── Server-side validation (mirrors frontend kyc_document_rules.json) ──
+        const { valid, errors } = await validateKycSubmission(req.body, req.files);
+        if (!valid) {
+            return res.status(400).json({ message: errors[0], errors });
         }
 
         
-        const getRelativePath = (file) => {
+        const getDbPath = (file) => {
             if (!file) return null;
-            return path.join(uuid, file.filename).replace(/\\/g, '/');
+            // Multer's file.path contains the full absolute path
+            // (e.g. \\EduVora-001\EduVora-001\KYCData\<uuid>\AdhaarFront.png)
+            return file.path; 
         };
 
-        const identityProofFrontPath = getRelativePath(req.files['IdentityProofFrontPath'][0]);
-        const identityProofBackPath = req.files['IdentityProofBackPath'] ? getRelativePath(req.files['IdentityProofBackPath'][0]) : null;
-        const panCardPath = getRelativePath(req.files['PanCardPath'][0]);
+        const identityProofFrontPath = getDbPath(req.files['IdentityProofFrontPath']?.[0]);
+        const identityProofBackPath = getDbPath(req.files['IdentityProofBackPath']?.[0]);
+        const panCardPath = getDbPath(req.files['PanCardPath']?.[0]);
 
         const request = pool.request();
         request.input('Action', sql.VarChar(20), 'SUBMIT');
