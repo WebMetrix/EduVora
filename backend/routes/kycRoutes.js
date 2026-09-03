@@ -30,7 +30,7 @@ const storage = multer.diskStorage({
     try {
       // Get the base path from your database for KYC documents
       const request = pool.request();
-      request.input('DocumentType', sql.VarChar(100), 'KYC');
+      request.input('DocumentType', sql.VarChar(100), 'TempKYC');
       const result = await request.execute('dbo.EV_GetFileRepositoryPath');
 
       if (!result.recordset || result.recordset.length === 0) {

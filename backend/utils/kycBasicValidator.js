@@ -4,7 +4,8 @@ import { fileURLToPath } from 'url';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-const rulesPath = path.join(__dirname, 'kyc_document_rules.json');
+// const rulesPath = path.join(__dirname, 'kyc_document_rules.json');
+const rulesPath = path.join(__dirname, '../App_Data/kyc_document_rules.json');
 const RULES = JSON.parse(fs.readFileSync(rulesPath, 'utf8'));
 
 /**
