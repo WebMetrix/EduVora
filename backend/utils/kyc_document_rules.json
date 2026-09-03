@@ -1,0 +1,31 @@
+{
+  "_meta": {
+    "version": "1.0.0",
+    "description": "EduVora KYC Document Validation Rules for Backend Basic Validator.",
+    "lastUpdated": "2026-08-30",
+    "supportedDocumentTypes": [
+      "Aadhar Card",
+      "Passport",
+      "Driving License",
+      "Voter ID",
+      "PAN Card"
+    ]
+  },
+  "globalFileRules": {
+    "maxFileSizeBytes": 5242880,
+    "maxFileSizeMB": 5,
+    "minFileSizeBytes": 5120,
+    "minFileSizeKB": 5
+  },
+  "documents": {
+    "Aadhar Card": {},
+    "PAN Card": {
+      "numberField": {
+        "pattern": "^[A-Z]{5}[0-9]{4}[A-Z]{1}$"
+      }
+    },
+    "Passport": {},
+    "Driving License": {},
+    "Voter ID": {}
+  }
+}
