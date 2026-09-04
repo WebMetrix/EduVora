@@ -83,6 +83,13 @@ Maps document types to their storage repository paths.
 | CreatedDate    | datetime      | No          |             |
 | UpdatedDate    | datetime      | Yes         |             |
 
+**Current Records (Reference):**
+| Id | DocumentType | RepositoryPath | IsActive | CreatedDate | UpdatedDate |
+|----|--------------|----------------|----------|-------------|-------------|
+| 1 | Profile | `\\EduVora-001\EduVora-001\UserData\Profile` | 1 | 2026-07-20 23:48:05.203 | NULL |
+| 2 | KYC | `\\EduVora-001\EduVora-001\KYCData\UserKYC` | 1 | 2026-07-20 23:48:05.203 | NULL |
+| 3 | TempKYC | `\\EduVora-001\EduVora-001\KYCData\TempKYC` | 1 | 2026-09-02 23:26:01.383 | NULL |
+
 ### 8. `Tb_Package`
 Stores the course packages and their prices.
 | Column Name | Data Type      | Allow Nulls | Notes       |
@@ -523,7 +530,7 @@ Updates the SessionId for a user across `Tb_User` and `Tb_UserDesc` tables.
 ### `EV_GetFileRepositoryPath`
 Fetches the file repository path based on the document type.
 - **Inputs**: `@DocumentType VARCHAR(100)`
-- **Outputs**: Result Set (`path`)
+- **Outputs**: Result Set containing `path`
 
 ### `EV_AssignReferral`
 Assigns a referral by establishing a relationship between a Sponsor and a new User. It is now strictly coupled and verified within the `EV_CreateUser` transaction.

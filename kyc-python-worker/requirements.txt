@@ -3,3 +3,5 @@ opencv-python
 SQLAlchemy
 pytesseract
 numpy
+pyodbc
+python-dotenv
