@@ -65,21 +65,35 @@ def process_kyc_files(user_uuid, is_passed):
             print(f"Error deleting temp files for user {user_uuid}: {e}")
             return False
 
-def update_kyc_status(user_uuid, status, message=None):
-    """
-    Update the KYC status in the database using the stored procedure.
-    status should be 'Approved' or 'Rejected'
-    """
+def update_kyc_status(user_uuid, status, message=None, front_path=None, back_path=None, pan_path=None):
+    # Update the KYC status in the database and optionally update file paths
+    # status should be 'APPROVED' or 'REJECTED'
     print(f"Updating DB for {user_uuid}: STATUS={status}, MESSAGE={message}")
     
     try:
         with engine.begin() as conn:
-            # 1: Pending, 2: Approved, 3: Rejected
-            status_id = 2 if status == 'Approved' else 3
-            conn.execute(
-                text("EXEC dbo.EV_ManageUserKYC @Action='UPDATE_STATUS', @UUID=:uuid, @KYCStatusId=:status_id, @RejectionReason=:msg"),
-                {"uuid": user_uuid, "status_id": status_id, "msg": message}
-            )
-            print(f"Updated KYC status for user {user_uuid} to {status}.")
+            # 1: Pending, 2: Verified, 3: Rejected
+            status_id = 2 if status.upper() == 'APPROVED' else 3
+            
+            query = text("""
+                EXEC dbo.EV_ManageUserKYC 
+                    @Action='UPDATE_STATUS', 
+                    @UUID=:uuid, 
+                    @KYCStatusId=:status_id, 
+                    @RejectionReason=:msg,
+                    @IdentityProofFrontPath=:front_path,
+                    @IdentityProofBackPath=:back_path,
+                    @PanCardPath=:pan_path
+            """)
+            
+            conn.execute(query, {
+                "uuid": user_uuid, 
+                "status_id": status_id, 
+                "msg": message,
+                "front_path": front_path,
+                "back_path": back_path,
+                "pan_path": pan_path
+            })
+            print(f"Updated KYC status for user {user_uuid} to {status} (Status ID: {status_id}).")
     except Exception as e:
         print(f"Error updating KYC status for {user_uuid}: {e}")

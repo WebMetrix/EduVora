@@ -4,7 +4,7 @@ import path from 'path';
 import fs from 'fs';
 import { isLoggedIn } from '../middlewares/authMiddleware.js';
 import pool, { sql } from '../config/db.js';
-import { getKycDetails, submitKyc } from '../controllers/kycController.js';
+import { getKycDetails, submitKyc, kycWebhook } from '../controllers/kycController.js';
 
 const router = express.Router();
 
@@ -100,5 +100,8 @@ router.post(
   ]), 
   submitKyc
 );
+
+// Python Webhook Route (no isLoggedIn middleware because it's called by Python worker)
+router.post('/webhook', kycWebhook);
 
 export default router;

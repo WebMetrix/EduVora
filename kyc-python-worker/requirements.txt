@@ -5,3 +5,4 @@ pytesseract
 numpy
 pyodbc
 python-dotenv
+requests

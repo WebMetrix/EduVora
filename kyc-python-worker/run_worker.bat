@@ -1,3 +1,3 @@
 @echo off
 echo Starting EduVora KYC Celery Worker...
-celery -A worker_app.celery_app worker --loglevel=info --pool=solo
+celery -A worker_app.celery_app worker --loglevel=info --pool=solo --without-mingle --without-gossip

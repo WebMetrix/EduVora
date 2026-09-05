@@ -1,6 +1,7 @@
 import pool, { sql } from '../config/db.js';
 import path from 'path';
 import { validateKycSubmission } from '../utils/kycBasicValidator.js';
+import { publishKycTask } from '../utils/rabbitmq.js';
 
 
 export const getKycDetails = async (req, res) => {
@@ -46,7 +47,6 @@ export const submitKyc = async (req, res) => {
         const getDbPath = (file) => {
             if (!file) return null;
             // Multer's file.path contains the full absolute path
-            // (e.g. \\EduVora-001\EduVora-001\KYCData\<uuid>\AdhaarFront.png)
             return file.path; 
         };
 
@@ -67,6 +67,10 @@ export const submitKyc = async (req, res) => {
         const result = await request.execute('dbo.EV_ManageUserKYC');
 
         if (result.recordset && result.recordset.length > 0 && result.recordset[0].Success === 1) {
+            
+            // ── Trigger Celery Worker via RabbitMQ HTTP API ──
+            await publishKycTask(uuid, identityProofType, identityProofFrontPath, identityProofBackPath, panCardPath);
+            
             res.status(200).json({ message: result.recordset[0].Message });
         } else {
             res.status(400).json({ message: 'Failed to submit KYC.' });
@@ -75,5 +79,21 @@ export const submitKyc = async (req, res) => {
     } catch (error) {
         console.error('Error in submitKyc:', error);
         res.status(500).json({ message: 'Failed to submit KYC details', error: error.message });
+    }
+};
+
+export const kycWebhook = async (req, res) => {
+    // #swagger.tags = ['KYC']
+    // Receives updates from the Python Celery Worker when processing finishes
+    try {
+        const { uuid, status, reason } = req.body;
+        console.log(`\n[KYC WEBHOOK RECEIVED] UUID: ${uuid} | Status: ${status} | Reason: ${reason || 'N/A'}`);
+        
+        // Here you can emit a Socket.io event to the frontend, send an email, etc.
+        
+        res.status(200).json({ message: 'Webhook received successfully' });
+    } catch (error) {
+        console.error('Error in kycWebhook:', error);
+        res.status(500).json({ message: 'Webhook processing failed' });
     }
 };
