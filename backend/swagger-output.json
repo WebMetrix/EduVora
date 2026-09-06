@@ -766,11 +766,11 @@
           "200": {
             "description": "OK"
           },
+          "400": {
+            "description": "Bad Request"
+          },
           "401": {
             "description": "Unauthorized"
-          },
-          "404": {
-            "description": "Not Found"
           },
           "500": {
             "description": "Internal Server Error"
@@ -789,6 +789,15 @@
                     "example": "any"
                   },
                   "packageName": {
+                    "example": "any"
+                  },
+                  "customerName": {
+                    "example": "any"
+                  },
+                  "customerEmail": {
+                    "example": "any"
+                  },
+                  "customerPhone": {
                     "example": "any"
                   }
                 }
@@ -819,6 +828,167 @@
                 "type": "object",
                 "properties": {
                   "data": {
+                    "example": "any"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/kyc/": {
+      "get": {
+        "tags": [
+          "KYC"
+        ],
+        "summary": "Check Live KYC Status",
+        "description": "Fetches the current KYC status of the logged-in user from the database.",
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        },
+        "security": [
+          {
+            "cookieAuth": []
+          }
+        ]
+      }
+    },
+    "/kyc/submit": {
+      "post": {
+        "tags": [
+          "KYC"
+        ],
+        "summary": "Submit KYC Documents",
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        },
+        "security": [
+          {
+            "cookieAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "panNumber",
+                  "identityProofType",
+                  "identityProofNumber",
+                  "IdentityProofFrontPath",
+                  "IdentityProofBackPath",
+                  "PanCardPath"
+                ],
+                "properties": {
+                  "panNumber": {
+                    "type": "string",
+                    "description": "User PAN Number"
+                  },
+                  "identityProofType": {
+                    "type": "string",
+                    "description": "E.g., Aadhar Card, Passport"
+                  },
+                  "identityProofNumber": {
+                    "type": "string",
+                    "description": "Document Number"
+                  },
+                  "IdentityProofFrontPath": {
+                    "type": "string",
+                    "format": "binary",
+                    "description": "Front image"
+                  },
+                  "IdentityProofBackPath": {
+                    "type": "string",
+                    "format": "binary",
+                    "description": "Back image"
+                  },
+                  "PanCardPath": {
+                    "type": "string",
+                    "format": "binary",
+                    "description": "PAN Card image"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/kyc/webhook": {
+      "post": {
+        "tags": [
+          "KYC"
+        ],
+        "summary": "Python Worker Webhook",
+        "description": "Endpoint used by the background Python worker to update the database with final KYC validation status.",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "userId": {
+                  "type": "string",
+                  "example": "string"
+                },
+                "status": {
+                  "type": "string",
+                  "example": "string"
+                },
+                "message": {
+                  "type": "string",
+                  "example": "string"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "uuid": {
+                    "example": "any"
+                  },
+                  "status": {
+                    "example": "any"
+                  },
+                  "reason": {
                     "example": "any"
                   }
                 }
