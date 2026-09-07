@@ -21,13 +21,13 @@ export const publishKycTask = async (userUuid, identityProofType, identityProofF
     try {
         // Parse the config from RABBITMQ_URL (same .env var used by the Python worker)
         const { host, user, password, vhost } = parseRabbitMqUrl(process.env.RABBITMQ_URL);
-        
+
         // RabbitMQ Management HTTP API endpoint - uses port 15672 not 5672
         const url = `http://${host}:15672/api/exchanges/${encodeURIComponent(vhost)}/celery/publish`;
-        
+
         // Basic Auth header
         const auth = Buffer.from(`${user}:${password}`).toString('base64');
-        
+
         // Celery Task JSON Payload
         const taskPayload = {
             id: crypto.randomUUID(),
@@ -35,7 +35,7 @@ export const publishKycTask = async (userUuid, identityProofType, identityProofF
             args: [userUuid, identityProofType, identityProofFrontPath, identityProofBackPath, panCardPath],
             kwargs: {}
         };
-        
+
         // RabbitMQ HTTP API Request Body
         const rabbitMqBody = {
             properties: {
@@ -66,7 +66,7 @@ export const publishKycTask = async (userUuid, identityProofType, identityProofF
             const errText = await response.text();
             throw new Error(`Status ${response.status}: ${errText}`);
         }
-        
+
         console.log(`[RabbitMQ] Successfully enqueued Celery task for UUID: ${userUuid}`);
         return true;
     } catch (error) {

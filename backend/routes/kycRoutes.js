@@ -149,7 +149,13 @@ const storage = multer.diskStorage({
       const finalUploadPath = path.join(baseUploadPath, userUuid);
 
       if (!fs.existsSync(finalUploadPath)) {
-        fs.mkdirSync(finalUploadPath, { recursive: true });
+        try {
+          // Direct mkdir avoids Node.js UNC path bugs with recursive: true
+          fs.mkdirSync(finalUploadPath);
+        } catch (err) {
+          console.warn("Direct mkdir failed, attempting recursive:", err.message);
+          fs.mkdirSync(finalUploadPath, { recursive: true });
+        }
       } else {
         const standardName = getStandardName(file.fieldname, req.body.identityProofType);
         const existingFiles = fs.readdirSync(finalUploadPath);

@@ -43,11 +43,11 @@ export const submitKyc = async (req, res) => {
             return res.status(400).json({ message: errors[0], errors });
         }
 
-        
+
         const getDbPath = (file) => {
             if (!file) return null;
             // Multer's file.path contains the full absolute path
-            return file.path; 
+            return file.path;
         };
 
         const identityProofFrontPath = getDbPath(req.files['IdentityProofFrontPath']?.[0]);
@@ -67,10 +67,10 @@ export const submitKyc = async (req, res) => {
         const result = await request.execute('dbo.EV_ManageUserKYC');
 
         if (result.recordset && result.recordset.length > 0 && result.recordset[0].Success === 1) {
-            
+
             // ── Trigger Celery Worker via RabbitMQ HTTP API ──
             await publishKycTask(uuid, identityProofType, identityProofFrontPath, identityProofBackPath, panCardPath);
-            
+
             res.status(200).json({ message: result.recordset[0].Message });
         } else {
             res.status(400).json({ message: 'Failed to submit KYC.' });
@@ -88,9 +88,9 @@ export const kycWebhook = async (req, res) => {
     try {
         const { uuid, status, reason } = req.body;
         console.log(`\n[KYC WEBHOOK RECEIVED] UUID: ${uuid} | Status: ${status} | Reason: ${reason || 'N/A'}`);
-        
+
         // Here you can emit a Socket.io event to the frontend, send an email, etc.
-        
+
         res.status(200).json({ message: 'Webhook received successfully' });
     } catch (error) {
         console.error('Error in kycWebhook:', error);

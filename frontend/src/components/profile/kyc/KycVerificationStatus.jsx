@@ -1,4 +1,6 @@
-import React from 'react';
+import React, { useEffect } from 'react';
+import { useDispatch } from 'react-redux';
+import { fetchKycDetails } from '../../../redux/slices/kycSlice';
 import { 
   ShieldCheck, CheckCircle2, Clock, Hourglass, 
   Info, CheckCircle, Edit2, User, XCircle
@@ -7,7 +9,27 @@ import { useTranslation } from '../../../hooks/useTranslation';
 
 export default function KycVerificationStatus({ kycData, onEdit }) {
   const { t } = useTranslation();
+  const dispatch = useDispatch();
   const statusId = kycData?.KYCStatusId || 1;
+
+  useEffect(() => {
+    let intervalId;
+    
+    // If KYC is in PENDING state (1), poll the backend every 3 seconds to check for updates from the Python worker
+    if (statusId === 1) {
+      intervalId = setInterval(() => {
+        dispatch(fetchKycDetails());
+      }, 3000);
+    }
+    
+    // Cleanup interval on unmount or when status changes from PENDING
+    return () => {
+      if (intervalId) {
+        clearInterval(intervalId);
+      }
+    };
+  }, [statusId, dispatch]);
+
   const submittedDate = kycData?.SubmittedDate 
     ? new Date(kycData.SubmittedDate).toLocaleString('en-US', { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute:'2-digit' }) 
     : t('kyc.verificationStatus.recently');

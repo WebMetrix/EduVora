@@ -67,25 +67,6 @@ export default function KycPersonalInfoForm({ formData, updateFormData, onNext }
               <Calendar className="w-4 h-4 text-slate-400 absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none" />
             </div>
           </div>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-5">
-          {/* PAN Number */}
-          <div>
-            <div className="flex items-center gap-2 mb-2">
-              <CreditCard className="w-4 h-4 text-slate-500" />
-              <label className="text-[13px] font-bold text-[#111]">
-                {t('kyc.personalInfo.panNumber')}
-              </label>
-            </div>
-            <input 
-              type="text" 
-              className="w-full px-4 py-3.5 bg-white border border-slate-200 rounded-xl focus:outline-none focus:border-[#4f3bf3] focus:ring-1 focus:ring-[#4f3bf3] transition-all text-[14px] text-slate-900 placeholder:text-slate-400 font-medium uppercase"
-              placeholder={t('kyc.personalInfo.panPlaceholder')}
-              value={formData.panNumber}
-              onChange={(e) => updateFormData('panNumber', e.target.value.toUpperCase())}
-            />
-          </div>
 
           {/* Gender */}
           <div>
@@ -108,9 +89,7 @@ export default function KycPersonalInfoForm({ formData, updateFormData, onNext }
               <ChevronDown className="w-4 h-4 text-slate-400 absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none" />
             </div>
           </div>
-        </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-5">
           {/* Mobile Number */}
           <div>
             <div className="flex items-center gap-2 mb-2">
