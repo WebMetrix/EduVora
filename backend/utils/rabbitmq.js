@@ -1,4 +1,5 @@
 import crypto from 'crypto';
+import logger from './logger.js';
 
 // Parse RabbitMQ connection details from the environment variable
 const parseRabbitMqUrl = (url) => {
@@ -67,10 +68,10 @@ export const publishKycTask = async (userUuid, identityProofType, identityProofF
             throw new Error(`Status ${response.status}: ${errText}`);
         }
 
-        console.log(`[RabbitMQ] Successfully enqueued Celery task for UUID: ${userUuid}`);
+        logger.info(`[RabbitMQ] Successfully enqueued Celery task for UUID: ${userUuid}`);
         return true;
     } catch (error) {
-        console.error(`[RabbitMQ] Failed to publish Celery task for ${userUuid}:`, error);
+        logger.error(`[RabbitMQ] Failed to publish Celery task for ${userUuid}:`, error);
         return false;
     }
 };

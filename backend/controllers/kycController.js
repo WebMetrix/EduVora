@@ -2,6 +2,7 @@ import pool, { sql } from '../config/db.js';
 import path from 'path';
 import { validateKycSubmission } from '../utils/kycBasicValidator.js';
 import { publishKycTask } from '../utils/rabbitmq.js';
+import logger from '../utils/logger.js';
 
 
 export const getKycDetails = async (req, res) => {
@@ -21,7 +22,7 @@ export const getKycDetails = async (req, res) => {
             res.json(null); // No KYC found for this user yet
         }
     } catch (error) {
-        console.error('Error in getKycDetails:', error);
+        logger.error('Error in getKycDetails:', error);
         res.status(500).json({ message: 'Failed to retrieve KYC details', error: error.message });
     }
 };
@@ -77,7 +78,7 @@ export const submitKyc = async (req, res) => {
         }
 
     } catch (error) {
-        console.error('Error in submitKyc:', error);
+        logger.error('Error in submitKyc:', error);
         res.status(500).json({ message: 'Failed to submit KYC details', error: error.message });
     }
 };
@@ -87,13 +88,13 @@ export const kycWebhook = async (req, res) => {
     // Receives updates from the Python Celery Worker when processing finishes
     try {
         const { uuid, status, reason } = req.body;
-        console.log(`\n[KYC WEBHOOK RECEIVED] UUID: ${uuid} | Status: ${status} | Reason: ${reason || 'N/A'}`);
+        logger.info(`[KYC WEBHOOK RECEIVED] UUID: ${uuid} | Status: ${status} | Reason: ${reason || 'N/A'}`);
 
         // Here you can emit a Socket.io event to the frontend, send an email, etc.
 
         res.status(200).json({ message: 'Webhook received successfully' });
     } catch (error) {
-        console.error('Error in kycWebhook:', error);
+        logger.error('Error in kycWebhook:', error);
         res.status(500).json({ message: 'Webhook processing failed' });
     }
 };

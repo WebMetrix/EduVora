@@ -113,6 +113,7 @@ import fs from 'fs';
 import { isLoggedIn } from '../middlewares/authMiddleware.js';
 import pool, { sql } from '../config/db.js';
 import { getKycDetails, submitKyc, kycWebhook } from '../controllers/kycController.js';
+import logger from '../utils/logger.js';
 
 const router = express.Router();
 
@@ -153,7 +154,7 @@ const storage = multer.diskStorage({
           // Direct mkdir avoids Node.js UNC path bugs with recursive: true
           fs.mkdirSync(finalUploadPath);
         } catch (err) {
-          console.warn("Direct mkdir failed, attempting recursive:", err.message);
+          logger.warn("Direct mkdir failed, attempting recursive:", err.message);
           fs.mkdirSync(finalUploadPath, { recursive: true });
         }
       } else {
