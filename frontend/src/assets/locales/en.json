@@ -1069,7 +1069,7 @@
       "emptyFallback": "-",
       "notUploaded": "Not Uploaded",
       "section2": "2. Uploaded Documents",
-      "declarationText1": "I hereby declare that the information provided above is true and correct to the best of my knowledge.",
+      "declarationText1": "I hereby voluntarily submit my PAN and identity proof (Aadhaar / Voter ID / Passport / Driving License) for the purpose of identity verification and Tax Deducted at Source (TDS) compliance under the Income Tax Act. I understand that my Aadhaar number will be masked and that all financial records are encrypted before storing",
       "declarationText2": "I understand that any false information may lead to rejection of my KYC and restriction of my account.",
       "back": "Back",
       "submit": "Submit for Verification",
@@ -1080,7 +1080,7 @@
     "sidebar": {
       "status": "KYC Status",
       "notVerified": "Not Verified",
-      "notVerifiedDesc": "Complete your KYC to start withdrawals and unlock all features.",
+      "notVerifiedDesc": "Complete your KYC to start withdrawals.",
       "whyImportant": "Why KYC is important?",
       "reason1": "Secure your account",
       "reason2": "Start withdrawing your earnings",

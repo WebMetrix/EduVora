@@ -33,7 +33,7 @@ export default function KycSidebar() {
           {[
             t('kyc.sidebar.reason1'),
             t('kyc.sidebar.reason2'),
-            t('kyc.sidebar.reason3'),
+            // t('kyc.sidebar.reason3'),
             t('kyc.sidebar.reason4')
           ].map((text, i) => (
             <li key={i} className="flex items-start gap-2.5">

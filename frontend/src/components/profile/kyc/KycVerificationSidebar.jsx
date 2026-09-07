@@ -63,10 +63,10 @@ export default function KycVerificationSidebar() {
             <CheckCircle2 className="w-4 h-4 text-green-500 shrink-0 mt-0.5" />
             <span className="text-[13px] text-slate-700 font-medium">{t('kyc.verificationSidebar.reasons.withdrawEarnings')}</span>
           </div>
-          <div className="flex items-start gap-3">
+          {/* <div className="flex items-start gap-3">
             <CheckCircle2 className="w-4 h-4 text-green-500 shrink-0 mt-0.5" />
             <span className="text-[13px] text-slate-700 font-medium">{t('kyc.verificationSidebar.reasons.buildTrust')}</span>
-          </div>
+          </div> */}
           <div className="flex items-start gap-3">
             <CheckCircle2 className="w-4 h-4 text-green-500 shrink-0 mt-0.5" />
             <span className="text-[13px] text-slate-700 font-medium">{t('kyc.verificationSidebar.reasons.complyRegulations')}</span>
