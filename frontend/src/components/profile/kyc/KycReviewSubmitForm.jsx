@@ -135,87 +135,73 @@ export default function KycReviewSubmitForm({ formData, onPrev, onEditStep, onSu
           <div className="flex flex-col gap-4 px-2 md:px-14">
             
             {/* Identity Proof */}
-            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between p-4 bg-[#f8fafc]/50 border border-slate-100 rounded-2xl gap-4">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center p-4 bg-[#f8fafc]/50 border border-slate-100 rounded-2xl gap-4 sm:gap-8">
               <div className="flex items-center gap-4 w-full sm:w-[220px] shrink-0">
                 <div className="w-11 h-11 rounded-xl bg-green-50 flex items-center justify-center text-green-600 shrink-0">
                   <IdCard className="w-5 h-5" />
                 </div>
-                <div>
-                  <h5 className="text-[14px] font-bold text-[#1a1446]">{t('kyc.documentUpload.identityProof')}</h5>
-                  <p className="text-[12px] text-slate-500 font-medium mt-0.5">{formData.identityProofType}</p>
+                <div className="min-w-0">
+                  <h5 className="text-[14px] font-bold text-[#1a1446] truncate">{t('kyc.documentUpload.identityProof')}</h5>
+                  <p className="text-[12px] text-slate-500 font-medium mt-0.5 truncate">{formData.identityProofType}</p>
                 </div>
               </div>
 
-              <div className="flex-1 flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-16 w-full">
-                <div>
+              <div className="flex-1 flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-12 min-w-0 w-full">
+                <div className="min-w-0 flex-1">
                   <span className="text-[11px] font-bold text-slate-900 block mb-1.5">{t('kyc.documentUpload.frontSide')}</span>
                   <div className="flex items-center gap-2">
                     {formData.identityProofFrontPath ? (
                         <>
-                            <CheckCircle2 className="w-4 h-4 text-green-500" />
-                            <span className="text-[13px] font-medium text-slate-600">{formData.identityProofFrontPath.name}</span>
+                            <CheckCircle2 className="w-4 h-4 text-green-500 shrink-0" />
+                            <span className="text-[13px] font-medium text-slate-600 truncate">{formData.identityProofFrontPath.name}</span>
                         </>
                     ) : (
-                        <span className="text-[13px] font-medium text-red-500">{t('kyc.reviewSubmit.notUploaded')}</span>
+                        <span className="text-[13px] font-medium text-red-500 truncate">{t('kyc.reviewSubmit.notUploaded')}</span>
                     )}
                   </div>
                 </div>
-                <div>
+                <div className="min-w-0 flex-1">
                   <span className="text-[11px] font-bold text-slate-900 block mb-1.5">{t('kyc.documentUpload.backSide')}</span>
                   <div className="flex items-center gap-2">
                     {formData.identityProofBackPath ? (
                         <>
-                            <CheckCircle2 className="w-4 h-4 text-green-500" />
-                            <span className="text-[13px] font-medium text-slate-600">{formData.identityProofBackPath.name}</span>
+                            <CheckCircle2 className="w-4 h-4 text-green-500 shrink-0" />
+                            <span className="text-[13px] font-medium text-slate-600 truncate">{formData.identityProofBackPath.name}</span>
                         </>
                     ) : (
-                        <span className="text-[13px] font-medium text-slate-400">{t('kyc.reviewSubmit.notUploaded')}</span>
+                        <span className="text-[13px] font-medium text-slate-400 truncate">{t('kyc.reviewSubmit.notUploaded')}</span>
                     )}
                   </div>
                 </div>
-              </div>
-              
-              <div className="w-full sm:w-auto flex justify-end">
-                <button onClick={() => onEditStep(2)} className="flex items-center gap-1.5 px-4 py-2 border border-slate-200 text-indigo-600 rounded-xl text-[12px] font-bold hover:bg-slate-50 transition-colors">
-                  <Edit2 className="w-3.5 h-3.5" />
-                  {t('kyc.reviewSubmit.edit')}
-                </button>
               </div>
             </div>
 
             {/* PAN Card */}
-            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between p-4 bg-[#f8fafc]/50 border border-slate-100 rounded-2xl gap-4">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center p-4 bg-[#f8fafc]/50 border border-slate-100 rounded-2xl gap-4 mt-4 sm:gap-8">
               <div className="flex items-center gap-4 w-full sm:w-[220px] shrink-0">
                 <div className="w-11 h-11 rounded-xl bg-[#e0f2fe]/60 flex items-center justify-center text-[#0ea5e9] shrink-0">
                   <CreditCard className="w-5 h-5" />
                 </div>
-                <div>
-                  <h5 className="text-[14px] font-bold text-[#1a1446]">{t('kyc.documentUpload.panCard')}</h5>
-                  <p className="text-[12px] text-slate-500 font-medium mt-0.5">{t('kyc.documentUpload.panCard')}</p>
+                <div className="min-w-0">
+                  <h5 className="text-[14px] font-bold text-[#1a1446] truncate">{t('kyc.documentUpload.panCard')}</h5>
+                  <p className="text-[12px] text-slate-500 font-medium mt-0.5 truncate">{t('kyc.documentUpload.panCard')}</p>
                 </div>
               </div>
 
-              <div className="flex-1 flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-16 w-full">
-                <div>
+              <div className="flex-1 flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-12 min-w-0 w-full">
+                <div className="min-w-0 flex-1">
                   <span className="text-[11px] font-bold text-slate-900 block mb-1.5">{t('kyc.documentUpload.frontSide')}</span>
                   <div className="flex items-center gap-2">
                     {formData.panCardPath ? (
                         <>
-                            <CheckCircle2 className="w-4 h-4 text-green-500" />
-                            <span className="text-[13px] font-medium text-slate-600">{formData.panCardPath.name}</span>
+                            <CheckCircle2 className="w-4 h-4 text-green-500 shrink-0" />
+                            <span className="text-[13px] font-medium text-slate-600 truncate">{formData.panCardPath.name}</span>
                         </>
                     ) : (
-                        <span className="text-[13px] font-medium text-red-500">{t('kyc.reviewSubmit.notUploaded')}</span>
+                        <span className="text-[13px] font-medium text-red-500 truncate">{t('kyc.reviewSubmit.notUploaded')}</span>
                     )}
                   </div>
                 </div>
-              </div>
-
-              <div className="w-full sm:w-auto flex justify-end">
-                <button onClick={() => onEditStep(2)} className="flex items-center gap-1.5 px-4 py-2 border border-slate-200 text-indigo-600 rounded-xl text-[12px] font-bold hover:bg-slate-50 transition-colors">
-                  <Edit2 className="w-3.5 h-3.5" />
-                  {t('kyc.reviewSubmit.edit')}
-                </button>
               </div>
             </div>
 

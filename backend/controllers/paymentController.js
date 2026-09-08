@@ -11,7 +11,7 @@ export const createOrder = async (req, res) => {
             process.env.CASHFREE_APP_ID,
             process.env.CASHFREE_SECRET_KEY
         );
-        
+
         // Using the latest API version (requires newer TEST_... Sandbox keys)
         // cashfree.XApiVersion = "2023-08-01";
 
@@ -25,12 +25,12 @@ export const createOrder = async (req, res) => {
 
         // Cashfree requires name, email, and phone. If missing, reject the request instead of using dummy data.
         if (!finalCustomerName || !finalCustomerEmail || !finalCustomerPhone) {
-            return res.status(400).json({ 
-                success: false, 
-                message: "Missing required customer details. Please provide customerName, customerEmail, and customerPhone in the request body." 
+            return res.status(400).json({
+                success: false,
+                message: "Missing required customer details. Please provide customerName, customerEmail, and customerPhone in the request body."
             });
         }
-        
+
         const orderAmount = Number(amount) || 1;
 
         // 2. Initialize Order in Database to get OrderNumber
@@ -38,14 +38,14 @@ export const createOrder = async (req, res) => {
         initReq.input('ActionTypeId', sql.Int, 1); // 1 = INITIATE
         initReq.input('UUID', sql.VarChar(36), uuid);
         initReq.input('PackageId', sql.Int, parseInt(packageId) || 1);
-        initReq.input('Amount', sql.Decimal(18,2), orderAmount);
-        
+        initReq.input('Amount', sql.Decimal(18, 2), orderAmount);
+
         const initRes = await initReq.execute('dbo.EV_ProcessCashfreePayment');
-        
+
         if (!initRes.recordset || initRes.recordset.length === 0) {
-             throw new Error("Failed to generate Order in database");
+            throw new Error("Failed to generate Order in database");
         }
-        
+
         const orderId = initRes.recordset[0].OrderNumber;
 
         // 3. Create Cashfree Order
@@ -93,28 +93,28 @@ export const processWebhook = async (req, res) => {
     try {
         logger.info("-----------------------------------------");
         logger.info("Webhook Received from Cashfree!");
-        
+
         const payload = req.body;
-        
+
         if (payload && payload.data && payload.data.order) {
             const orderData = payload.data.order;
             const paymentData = payload.data.payment;
-            
+
             // Extract core fields
             const orderNumber = orderData.order_id; // Our internal OrderNumber
             const gatewayOrderId = paymentData?.cf_payment_id || orderData?.cf_order_id || 'UNKNOWN';
             const packageId = orderData.order_tags?.package_id;
             const customerUid = orderData.customer_details?.customer_id;
             const paymentStatus = paymentData?.payment_status; // SUCCESS, FAILED
-            
+
             // Extract the payment method/group (e.g., net_banking, upi, card)
             const paymentMethod = paymentData?.payment_group || paymentData?.payment_method?.card?.card_network;
-            
+
             logger.info(`Processing Webhook for Order: ${orderNumber}, Status: ${paymentStatus}, Method: ${paymentMethod}`);
             // logger.info(`Extracted cf_payment_id: ${paymentData?.cf_payment_id}`);
             // logger.info(`Final gatewayOrderId: ${gatewayOrderId}`);
             // logger.info(`String(gatewayOrderId): ${String(gatewayOrderId)}`);
-            
+
             // Update Database with Webhook data
             const hookReq = pool.request();
             hookReq.input('ActionTypeId', sql.Int, 2); // 2 = WEBHOOK
@@ -125,7 +125,7 @@ export const processWebhook = async (req, res) => {
             hookReq.input('UUID', sql.VarChar(36), customerUid);
             hookReq.input('PackageId', sql.Int, parseInt(packageId) || 1);
             hookReq.input('PaymentMethod', sql.VarChar(50), String(paymentMethod).toUpperCase());
-            
+
             await hookReq.execute('dbo.EV_ProcessCashfreePayment');
             logger.info(`Database updated successfully from Webhook for Order: ${orderNumber}`);
         }

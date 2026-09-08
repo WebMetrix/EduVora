@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { FileText, ArrowLeft, ChevronRight, UploadCloud, File, Info, CreditCard, ChevronDown } from 'lucide-react';
 import { useTranslation } from '../../../hooks/useTranslation';
+import CustomSelect from '../../common/CustomSelect';
 
 export default function KycDocumentUploadForm({ formData, updateFormData, onNext, onPrev }) {
   const { t } = useTranslation();
@@ -50,17 +51,17 @@ export default function KycDocumentUploadForm({ formData, updateFormData, onNext
               {t('kyc.documentUpload.selectIdentityProof')}
             </label>
             <div className="relative">
-              <select
+              <CustomSelect
+                options={[
+                  { value: 'Aadhar Card', label: t('kyc.documentUpload.identityProofTypes.aadhar') },
+                  { value: 'Passport', label: t('kyc.documentUpload.identityProofTypes.passport') },
+                  { value: 'Driving License', label: t('kyc.documentUpload.identityProofTypes.drivingLicense') },
+                  { value: 'Voter ID', label: t('kyc.documentUpload.identityProofTypes.voterId') }
+                ]}
+                placeholder={t('kyc.documentUpload.selectIdentityProof')}
                 value={formData.identityProofType}
-                onChange={(e) => updateFormData('identityProofType', e.target.value)}
-                className="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl text-[14px] text-slate-900 font-medium focus:outline-none focus:border-[#4f3bf3] focus:ring-1 focus:ring-[#4f3bf3] transition-all appearance-none pr-10"
-              >
-                <option value="Aadhar Card">{t('kyc.documentUpload.identityProofTypes.aadhar')}</option>
-                <option value="Passport">{t('kyc.documentUpload.identityProofTypes.passport')}</option>
-                <option value="Driving License">{t('kyc.documentUpload.identityProofTypes.drivingLicense')}</option>
-                <option value="Voter ID">{t('kyc.documentUpload.identityProofTypes.voterId')}</option>
-              </select>
-              <ChevronDown className="w-4 h-4 text-slate-400 absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none" />
+                onChange={(val) => updateFormData('identityProofType', val)}
+              />
             </div>
           </div>
 
@@ -83,18 +84,20 @@ export default function KycDocumentUploadForm({ formData, updateFormData, onNext
             <div>
               <label className="text-[13px] font-bold text-slate-800 mb-2 block">{t('kyc.documentUpload.frontSide')}</label>
               <div className="border border-dashed border-indigo-200 rounded-2xl p-5 flex flex-col items-center justify-center text-center bg-white hover:bg-[#f8f9fe] transition-colors cursor-pointer min-h-[140px]">
-                <UploadCloud className="w-6 h-6 text-[#4f3bf3] mb-3" />
-                <p className="text-[12px] text-slate-500 font-medium mb-3">
-                  {formData.identityProofFrontPath ? formData.identityProofFrontPath.name : t('kyc.documentUpload.uploadFrontImage')}
-                </p>
-                <div className="relative">
+                <UploadCloud className="w-6 h-6 text-[#4f3bf3] mb-3 shrink-0" />
+                <div className="h-9 flex items-center justify-center mb-3 w-full px-2">
+                  <p className="text-[12px] text-slate-500 font-medium line-clamp-2 break-words">
+                    {formData.identityProofFrontPath ? formData.identityProofFrontPath.name : t('kyc.documentUpload.uploadFrontImage')}
+                  </p>
+                </div>
+                <div className="relative mt-auto">
                   <input
                     type="file"
                     accept=".jpg,.jpeg,.png,.pdf"
                     onChange={(e) => handleFileChange('identityProofFrontPath', e)}
                     className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
                   />
-                  <button type="button" className="px-5 py-2 border border-indigo-200 text-[#4f3bf3] rounded-xl text-[13px] font-bold bg-white hover:bg-indigo-50 transition-colors pointer-events-none">
+                  <button type="button" className="px-5 py-2 border border-indigo-200 text-[#4f3bf3] rounded-xl text-[13px] font-bold bg-white hover:bg-indigo-50 transition-colors pointer-events-none whitespace-nowrap">
                     {formData.identityProofFrontPath ? t('kyc.documentUpload.changeFile') : t('kyc.documentUpload.chooseFile')}
                   </button>
                 </div>
@@ -103,18 +106,20 @@ export default function KycDocumentUploadForm({ formData, updateFormData, onNext
             <div>
               <label className="text-[13px] font-bold text-slate-800 mb-2 block">{t('kyc.documentUpload.backSide')}</label>
               <div className="border border-dashed border-indigo-200 rounded-2xl p-5 flex flex-col items-center justify-center text-center bg-white hover:bg-[#f8f9fe] transition-colors cursor-pointer min-h-[140px]">
-                <UploadCloud className="w-6 h-6 text-[#4f3bf3] mb-3" />
-                <p className="text-[12px] text-slate-500 font-medium mb-3">
-                  {formData.identityProofBackPath ? formData.identityProofBackPath.name : t('kyc.documentUpload.uploadBackImage')}
-                </p>
-                <div className="relative">
+                <UploadCloud className="w-6 h-6 text-[#4f3bf3] mb-3 shrink-0" />
+                <div className="h-9 flex items-center justify-center mb-3 w-full px-2">
+                  <p className="text-[12px] text-slate-500 font-medium line-clamp-2 break-words">
+                    {formData.identityProofBackPath ? formData.identityProofBackPath.name : t('kyc.documentUpload.uploadBackImage')}
+                  </p>
+                </div>
+                <div className="relative mt-auto">
                   <input
                     type="file"
                     accept=".jpg,.jpeg,.png,.pdf"
                     onChange={(e) => handleFileChange('identityProofBackPath', e)}
                     className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
                   />
-                  <button type="button" className="px-5 py-2 border border-indigo-200 text-[#4f3bf3] rounded-xl text-[13px] font-bold bg-white hover:bg-indigo-50 transition-colors pointer-events-none">
+                  <button type="button" className="px-5 py-2 border border-indigo-200 text-[#4f3bf3] rounded-xl text-[13px] font-bold bg-white hover:bg-indigo-50 transition-colors pointer-events-none whitespace-nowrap">
                     {formData.identityProofBackPath ? t('kyc.documentUpload.changeFile') : t('kyc.documentUpload.chooseFile')}
                   </button>
                 </div>
@@ -154,18 +159,20 @@ export default function KycDocumentUploadForm({ formData, updateFormData, onNext
           <div className="mb-6 mt-auto">
             <label className="text-[13px] font-bold text-slate-800 mb-2 block">{t('kyc.documentUpload.frontSide')}</label>
             <div className="border border-dashed border-indigo-200 rounded-2xl p-8 flex flex-col items-center justify-center text-center bg-white hover:bg-[#f8f9fe] transition-colors cursor-pointer min-h-[160px]">
-              <UploadCloud className="w-7 h-7 text-[#4f3bf3] mb-4" />
-              <p className="text-[13px] text-slate-500 font-medium mb-4">
-                {formData.panCardPath ? formData.panCardPath.name : t('kyc.documentUpload.uploadPanImage')}
-              </p>
-              <div className="relative">
+              <UploadCloud className="w-7 h-7 text-[#4f3bf3] mb-4 shrink-0" />
+              <div className="h-9 flex items-center justify-center mb-4 w-full px-2">
+                <p className="text-[13px] text-slate-500 font-medium line-clamp-2 break-words">
+                  {formData.panCardPath ? formData.panCardPath.name : t('kyc.documentUpload.uploadPanImage')}
+                </p>
+              </div>
+              <div className="relative mt-auto">
                 <input
                   type="file"
                   accept=".jpg,.jpeg,.png,.pdf"
                   onChange={(e) => handleFileChange('panCardPath', e)}
                   className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
                 />
-                <button type="button" className="px-5 py-2 border border-indigo-200 text-[#4f3bf3] rounded-xl text-[13px] font-bold bg-white hover:bg-indigo-50 transition-colors pointer-events-none">
+                <button type="button" className="px-5 py-2 border border-indigo-200 text-[#4f3bf3] rounded-xl text-[13px] font-bold bg-white hover:bg-indigo-50 transition-colors pointer-events-none whitespace-nowrap">
                   {formData.panCardPath ? t('kyc.documentUpload.changeFile') : t('kyc.documentUpload.chooseFile')}
                 </button>
               </div>
