@@ -7,6 +7,7 @@ import {
 
 import { useState } from 'react';
 import { useSelector } from 'react-redux';
+import CustomSelect from '../common/CustomSelect';
 
 export default function NetworkCharts() {
   const { t } = useTranslation();
@@ -163,22 +164,24 @@ export default function NetworkCharts() {
 
       {/* 2. Registration Trend */}
       <div className="flex-1 min-w-full lg:min-w-[calc(50%-10px)] xl:min-w-[30%] bg-white rounded-2xl border border-slate-100 shadow-[0_2px_10px_rgba(0,0,0,0.02)] p-5 relative overflow-hidden transition-all duration-300 hover:border-indigo-300 hover:shadow-md cursor-pointer group/card">
-        <div className="flex justify-between items-start mb-6 relative z-10">
+        <div className="flex justify-between items-start mb-6 relative z-20">
           <div className="flex items-center gap-1.5 cursor-pointer">
             <h3 className="text-[15px] font-bold text-slate-900">{t('network.charts.registrationTrend')}</h3>
             <Info className="w-4 h-4 text-slate-400 hover:text-indigo-500 transition-colors" />
           </div>
           <div className="relative">
-            <select
+            <CustomSelect
+              options={[
+                { label: t('network.charts.thisMonth'), value: 'monthly' },
+                { label: 'Quarterly', value: 'quarterly' },
+                { label: 'Yearly', value: 'yearly' }
+              ]}
               value={trendFilter}
-              onChange={(e) => setTrendFilter(e.target.value)}
-              className="appearance-none flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-50 border border-slate-100 text-[12px] font-bold text-slate-600 hover:bg-slate-100 transition-colors pr-8 focus:outline-none cursor-pointer"
-            >
-              <option value="monthly">{t('network.charts.thisMonth')}</option>
-              <option value="quarterly">Quarterly</option>
-              <option value="yearly">Yearly</option>
-            </select>
-            <ChevronDown className="w-3.5 h-3.5 absolute right-2.5 top-1/2 -translate-y-1/2 pointer-events-none text-slate-500" />
+              onChange={(val) => setTrendFilter(val)}
+              buttonClassName="flex items-center justify-between gap-1.5 px-3 py-1.5 rounded-lg bg-slate-50 border border-slate-100 hover:bg-slate-100 transition-colors shadow-[0_2px_10px_rgba(0,0,0,0.02)] w-auto min-w-[125px]"
+              textClassName="text-[12px] font-bold text-slate-600"
+              iconClassName="w-3.5 h-3.5 text-slate-500"
+            />
           </div>
         </div>
 

@@ -30,9 +30,21 @@ export default function KycVerificationStatus({ kycData, onEdit }) {
     };
   }, [statusId, dispatch]);
 
-  const submittedDate = kycData?.SubmittedDate 
-    ? new Date(kycData.SubmittedDate).toLocaleString('en-US', { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute:'2-digit' }) 
-    : t('kyc.verificationStatus.recently');
+  const dateToUse = kycData?.ModifiedDate || kycData?.SubmittedDate;
+  let submittedDate = t('kyc.verificationStatus.recently');
+  
+  if (dateToUse) {
+    // Remove the 'Z' from the end of the date string if it exists.
+    // The DB stores local time (IST), but the backend sends it with a 'Z' (UTC marker).
+    // This causes the browser to add +5:30 again. Removing 'Z' forces it to be treated as local time.
+    const localDateStr = typeof dateToUse === 'string' && dateToUse.endsWith('Z') 
+        ? dateToUse.slice(0, -1) 
+        : dateToUse;
+        
+    submittedDate = new Date(localDateStr).toLocaleString('en-US', { 
+        day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute:'2-digit' 
+    });
+  }
   return (
     <div className="flex flex-col gap-6 w-full relative z-20">
       
@@ -179,7 +191,7 @@ export default function KycVerificationStatus({ kycData, onEdit }) {
         </div>
         <button 
           onClick={onEdit}
-          className="flex items-center gap-1.5 px-4 py-2 border border-[#4f3bf3] text-[#4f3bf3] rounded-xl text-[12px] font-bold hover:bg-indigo-50 transition-colors shrink-0 w-full sm:w-auto justify-center"
+          className="shrink-0 flex items-center justify-center gap-1 sm:gap-2 px-3 sm:px-4 py-1.5 rounded-lg border border-indigo-200 text-indigo-600 font-bold shadow-sm text-[12px] transition-all hover:bg-indigo-50 w-full sm:w-auto"
         >
           <Edit2 className="w-3.5 h-3.5" />
           {t('kyc.verificationStatus.editBtn')}

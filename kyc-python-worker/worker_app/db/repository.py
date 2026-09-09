@@ -77,7 +77,7 @@ def update_kyc_status(user_uuid, status, message=None, front_path=None, back_pat
             
             query = text("""
                 EXEC dbo.EV_ManageUserKYC 
-                    @Action='UPDATE_STATUS', 
+                    @Action=3, 
                     @UUID=:uuid, 
                     @KYCStatusId=:status_id, 
                     @RejectionReason=:msg,

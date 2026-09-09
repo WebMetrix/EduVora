@@ -144,7 +144,7 @@ export default function KycDocumentUploadForm({ formData, updateFormData, onNext
           <div className="mb-5">
             <label className="text-[13px] font-bold text-slate-800 mb-2 flex items-center gap-2">
               <CreditCard className="w-4 h-4 text-slate-500" />
-              PAN Number (Optional)
+              PAN Number
             </label>
             <input
               type="text"

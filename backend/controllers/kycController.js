@@ -11,7 +11,7 @@ export const getKycDetails = async (req, res) => {
         const uuid = req.user.id;
 
         const request = pool.request();
-        request.input('Action', sql.VarChar(20), 'GET');
+        request.input('Action', sql.Int, 1); // 1 = GET
         request.input('UUID', sql.VarChar(36), uuid);
 
         const result = await request.execute('dbo.EV_ManageUserKYC');
@@ -56,7 +56,7 @@ export const submitKyc = async (req, res) => {
         const panCardPath = getDbPath(req.files['PanCardPath']?.[0]);
 
         const request = pool.request();
-        request.input('Action', sql.VarChar(20), 'SUBMIT');
+        request.input('Action', sql.Int, 2); // 2 = SUBMIT
         request.input('UUID', sql.VarChar(36), uuid);
         request.input('PanNumber', sql.VarChar(20), panNumber || null);
         request.input('IdentityProofType', sql.VarChar(50), identityProofType);

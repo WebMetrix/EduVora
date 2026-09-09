@@ -564,7 +564,7 @@ Updates the profile picture path for a specific user instantly.
 
 ### `EV_ProcessCashfreePayment`
 Processes both the initialization and the webhook response of a Cashfree payment. Includes fallback logic to extract `GatewayOrderId` (cf_payment_id) from the `GatewayResponse` JSON if Node.js passes 'undefined' or NULL.
-- **Inputs**: `@ActionType VARCHAR(20)` ('INITIATE' or 'WEBHOOK'), `@UUID VARCHAR(36)`, `@PackageId INT`, `@Amount DECIMAL(18,2)`, `@OrderNumber VARCHAR(50)`, `@GatewayOrderId VARCHAR(100)`, `@PaymentStatus VARCHAR(50)`, `@PaymentMethod VARCHAR(50)`, `@GatewayResponse NVARCHAR(MAX)`
+- **Inputs**: `@ActionType INT` (1 = INITIATE, 2 = WEBHOOK), `@UUID VARCHAR(36)`, `@PackageId INT`, `@Amount DECIMAL(18,2)`, `@OrderNumber VARCHAR(50)`, `@GatewayOrderId VARCHAR(100)`, `@PaymentStatus VARCHAR(50)`, `@PaymentMethod VARCHAR(50)`, `@GatewayResponse NVARCHAR(MAX)`
 - **Outputs**: 
   - For INITIATE: Returns generated `OrderNumber`.
   - For WEBHOOK: Returns `@Success INT` (1 = Success, 0 = Order not found).
@@ -574,7 +574,7 @@ Processes both the initialization and the webhook response of a Cashfree payment
 
 ### `EV_ManageUserKYC`
 Manages KYC operations including retrieving, submitting, and updating the status of a user's KYC application.
-- **Inputs**: `@Action VARCHAR(20)` ('GET', 'SUBMIT', 'UPDATE_STATUS'), `@UUID VARCHAR(36)`, `@PanNumber VARCHAR(20)`, `@IdentityProofType VARCHAR(50)`, `@IdentityProofNumber VARCHAR(50)`, `@IdentityProofFrontPath NVARCHAR(MAX)`, `@IdentityProofBackPath NVARCHAR(MAX)`, `@PanCardPath NVARCHAR(MAX)`, `@KYCStatusId INT`, `@RejectionReason NVARCHAR(MAX)`
+- **Inputs**: `@Action INT` (1 = GET, 2 = SUBMIT, 3 = UPDATE_STATUS), `@UUID VARCHAR(36)`, `@PanNumber VARCHAR(20)`, `@IdentityProofType VARCHAR(50)`, `@IdentityProofNumber VARCHAR(50)`, `@IdentityProofFrontPath NVARCHAR(MAX)`, `@IdentityProofBackPath NVARCHAR(MAX)`, `@PanCardPath NVARCHAR(MAX)`, `@KYCStatusId INT`, `@RejectionReason NVARCHAR(MAX)`
 - **Outputs**:
   - For GET: Returns Result Set containing KYC details.
   - For SUBMIT / UPDATE_STATUS: Returns `@Success INT`, `Message VARCHAR`.

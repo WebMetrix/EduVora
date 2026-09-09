@@ -22,7 +22,7 @@ export default function KycPersonalInfoForm({ formData, updateFormData, onNext }
             </p>
           </div>
         </div>
-        <button className="flex items-center gap-2 px-4 py-2 border border-[#4f3bf3] text-[#4f3bf3] rounded-xl text-[13px] font-semibold hover:bg-indigo-50 transition-colors shrink-0">
+        <button className="shrink-0 flex items-center gap-1 sm:gap-2 px-3 sm:px-4 py-1.5 rounded-lg border border-indigo-200 text-indigo-600 font-bold shadow-sm text-[12px] transition-all hover:bg-indigo-50">
           <Edit2 className="w-3.5 h-3.5" />
           {t('kyc.personalInfo.edit')}
         </button>
