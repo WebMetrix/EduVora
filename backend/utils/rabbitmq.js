@@ -18,7 +18,7 @@ const parseRabbitMqUrl = (url) => {
  * Publishes a Celery task directly to RabbitMQ using its native HTTP Management API.
  * This completely avoids the need to install `amqplib`.
  */
-export const publishKycTask = async (userUuid, identityProofType, identityProofFrontPath, identityProofBackPath, panCardPath) => {
+export const publishKycTask = async (userUuid, identityTypeId, identityProofFrontPath, identityProofBackPath, panCardPath) => {
     try {
         // Parse the config from RABBITMQ_URL (same .env var used by the Python worker)
         const { host, user, password, vhost } = parseRabbitMqUrl(process.env.RABBITMQ_URL);
@@ -33,7 +33,7 @@ export const publishKycTask = async (userUuid, identityProofType, identityProofF
         const taskPayload = {
             id: crypto.randomUUID(),
             task: 'tasks.process_kyc_documents',
-            args: [userUuid, identityProofType, identityProofFrontPath, identityProofBackPath, panCardPath],
+            args: [userUuid, identityTypeId, identityProofFrontPath, identityProofBackPath, panCardPath],
             kwargs: {}
         };
 

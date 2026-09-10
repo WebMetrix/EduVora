@@ -446,20 +446,43 @@ Core table to track a user's KYC submission and document paths.
 |------------------------|---------------|-------------|-----------------------------------------------|
 | KYCId                  | int           | No          | Primary Key (Sequential, No Identity)         |
 | UUID                   | varchar(36)   | No          | Foreign Key to Tb_User (Unique per user)      |
-| PanNumber              | varchar(20)   | No          |                                               |
-| IdentityProofType      | varchar(50)   | No          | e.g., 'Aadhar', 'Voter ID'                    |
-| IdentityProofNumber    | varchar(50)   | No          |                                               |
+| ApplicationId          | varchar(50)   | Yes         | Auto-generated on KYC submission              |
+| PanNumber              | varchar(255)  | No          | Stored as encrypted AES-256 hex string        |
+| IdentityTypeId         | int           | No          | Foreign Key to Tb_IdentityTypeMaster          |
+| IdentityProofNumber    | varchar(255)  | No          | Stored as encrypted AES-256 hex string        |
 | IdentityProofFrontPath | nvarchar(MAX) | No          | Path to Identity proof front image            |
 | IdentityProofBackPath  | nvarchar(MAX) | Yes         | Path to Identity proof back image             |
 | PanCardPath            | nvarchar(MAX) | No          | Path to PAN card image                        |
 | KYCStatusId            | int           | No          | Foreign Key to Tb_KYCStatusMaster             |
-| RejectionReason        | nvarchar(MAX) | Yes         | Null if not rejected                          |
+| RejectionReasonId      | int           | Yes         | Foreign Key to Tb_KYCRejectionReasonMaster    |
 | SubmittedDate          | datetime      | No          | Default `GETDATE()`                           |
 | ModifiedDate           | datetime      | Yes         | Track resubmissions/updates                   |
 
+### 39. `Tb_IdentityTypeMaster`
+Master table for defining supported identity document types.
+| Column Name      | Data Type   | Allow Nulls | Notes       |
+|------------------|-------------|-------------|-------------|
+| IdentityTypeId   | int         | No          | Primary Key |
+| IdentityTypeName | varchar(50) | No          |             |
+| IsActive         | bit         | No          |             |
+| CreatedDate      | datetime    | No          |             |
 
+### 40. `Tb_KYCRejectionReasonMaster`
+Master table for predefined automated and manual KYC rejection reasons.
+| Column Name       | Data Type     | Allow Nulls | Notes                         |
+|-------------------|---------------|-------------|-------------------------------|
+| RejectionReasonId | int           | No          | Primary Key                   |
+| ReasonText        | nvarchar(MAX) | No          | The reason string             |
+| Type              | varchar(50)   | No          | 'Automated' or 'Manual'       |
+| IsActive          | bit           | No          |                               |
+| CreatedDate       | datetime      | No          |                               |
 
 ## Stored Procedures
+
+### `EV_GetIdentityProofTypes`
+Fetches all active identity document types, excluding the PAN Card which is handled separately.
+- **Outputs**: Result Set containing `value` (IdentityTypeId) and `label` (IdentityTypeName)
+
 
 ### `EV_CheckUsernameAvailability`
 Checks if a given username is available.
@@ -574,7 +597,7 @@ Processes both the initialization and the webhook response of a Cashfree payment
 
 ### `EV_ManageUserKYC`
 Manages KYC operations including retrieving, submitting, and updating the status of a user's KYC application.
-- **Inputs**: `@Action INT` (1 = GET, 2 = SUBMIT, 3 = UPDATE_STATUS), `@UUID VARCHAR(36)`, `@PanNumber VARCHAR(20)`, `@IdentityProofType VARCHAR(50)`, `@IdentityProofNumber VARCHAR(50)`, `@IdentityProofFrontPath NVARCHAR(MAX)`, `@IdentityProofBackPath NVARCHAR(MAX)`, `@PanCardPath NVARCHAR(MAX)`, `@KYCStatusId INT`, `@RejectionReason NVARCHAR(MAX)`
+- **Inputs**: `@Action INT` (1 = GET, 2 = SUBMIT, 3 = UPDATE_STATUS), `@UUID VARCHAR(36)`, `@ApplicationId VARCHAR(50)`, `@PanNumber VARCHAR(20)`, `@IdentityTypeId INT`, `@IdentityProofNumber VARCHAR(50)`, `@IdentityProofFrontPath NVARCHAR(MAX)`, `@IdentityProofBackPath NVARCHAR(MAX)`, `@PanCardPath NVARCHAR(MAX)`, `@KYCStatusId INT`, `@RejectionReasonId INT`
 - **Outputs**:
   - For GET: Returns Result Set containing KYC details.
   - For SUBMIT / UPDATE_STATUS: Returns `@Success INT`, `Message VARCHAR`.

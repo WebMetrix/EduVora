@@ -2,7 +2,24 @@ import cv2
 import pytesseract
 import re
 import os
+import json
 from worker_app.utils.logger import logger
+
+RULES_PATH = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'services', 'rules.json')
+
+def load_masking_rules():
+    try:
+        with open(RULES_PATH, 'r') as f:
+            rules = json.load(f)
+            return rules['documents']['Aadhar Card']['maskingRules']
+    except Exception as e:
+        logger.error(f"Failed to load rules.json for masking: {e}. Falling back to env vars.")
+        return {
+            "digitPattern": os.getenv("MASKING_DIGIT_PATTERN", r'^\d{4}$'),
+            "minDigitGroupsRequired": int(os.getenv("MASKING_MIN_GROUPS", "2")),
+            "groupsToMask": int(os.getenv("MASKING_GROUPS_TO_MASK", "2")),
+            "maskColorRGB": [int(x) for x in os.getenv("MASKING_COLOR_RGB", "0,0,0").split(',')]
+        }
 
 def mask_aadhaar(image_path):
     """
@@ -13,14 +30,16 @@ def mask_aadhaar(image_path):
     
     if not os.path.exists(image_path):
         logger.error(f"File does not exist: {image_path}")
-        return False, "File does not exist."
+        return False, 5
 
     img = cv2.imread(image_path)
     if img is None:
         logger.error(f"Failed to load image for masking: {image_path}")
-        return False, "Failed to load image."
+        return False, 5
 
     gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+    rules = load_masking_rules()
+    color_bgr = tuple(reversed(rules['maskColorRGB'])) # cv2 uses BGR instead of RGB
 
     # 1. Find and Mask QR Code using OpenCV
     qr_detector = cv2.QRCodeDetector()
@@ -28,7 +47,7 @@ def mask_aadhaar(image_path):
     if retval and points is not None:
         for qr_points in points:
             pts = qr_points.astype(int)
-            cv2.fillPoly(img, [pts], (0, 0, 0))
+            cv2.fillPoly(img, [pts], color_bgr)
             logger.info("QR code detected and successfully masked.")
     else:
         logger.info("No QR code detected to mask.")
@@ -38,7 +57,7 @@ def mask_aadhaar(image_path):
         data = pytesseract.image_to_data(gray, output_type=pytesseract.Output.DICT)
     except Exception as e:
         logger.error(f"Tesseract Error during masking: {e}")
-        return False, "OCR Engine failed to initialize. Please check Tesseract configuration."
+        return False, 5
 
     n_boxes = len(data['text'])
     digit_groups_found = 0
@@ -47,22 +66,22 @@ def mask_aadhaar(image_path):
     for i in range(n_boxes):
         word = data['text'][i].strip()
         
-        # Look for exactly 4 digits without letters
-        if re.fullmatch(r'\d{4}', word):
+        # Look for the configured digit pattern
+        if re.fullmatch(rules['digitPattern'], word):
             digit_groups_found += 1
             
-            # Mask only the first 2 groups (8 digits)
-            if masked_groups < 2:
+            # Mask up to the configured number of groups
+            if masked_groups < rules['groupsToMask']:
                 x, y = data['left'][i], data['top'][i]
                 w, h = data['width'][i], data['height'][i]
-                # Draw black rectangle to mask
-                cv2.rectangle(img, (x, y), (x + w, y + h), (0, 0, 0), -1)
+                # Draw solid rectangle to mask
+                cv2.rectangle(img, (x, y), (x + w, y + h), color_bgr, -1)
                 masked_groups += 1
 
-    # 3. Validation: If < 2 groups found, OCR failed to read
-    if digit_groups_found < 2:
-        logger.warning(f"Aadhaar scan failed for {image_path}: Found {digit_groups_found} digit groups.")
-        return False, "We could not clearly read your Aadhaar card. Please upload a clearer, un-skewed, well-lit photo of your Aadhaar card and try again."
+    # 3. Validation: Check if we found the minimum required groups
+    if digit_groups_found < rules['minDigitGroupsRequired']:
+        logger.warning(f"Aadhaar scan failed for {image_path}: Found {digit_groups_found} digit groups, required {rules['minDigitGroupsRequired']}.")
+        return False, 4
 
     # 4. Save the masked image, overwriting the original temp image
     cv2.imwrite(image_path, img)

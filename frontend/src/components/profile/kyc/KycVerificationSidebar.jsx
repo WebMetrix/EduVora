@@ -44,10 +44,12 @@ export default function KycVerificationSidebar() {
 
         <div className="h-px w-full bg-slate-100 mb-6" />
 
-        <div>
-          <span className="text-[12px] font-bold text-slate-900 block mb-1.5">{t('kyc.verificationSidebar.appId')}</span>
-          <span className="text-[13px] font-bold text-[#4f3bf3]">KYC-2025-0514-7842</span>
-        </div>
+        {kycData?.ApplicationId && (
+          <div>
+            <span className="text-[12px] font-bold text-slate-900 block mb-1.5">{t('kyc.verificationSidebar.appId')}</span>
+            <span className="text-[13px] font-bold text-[#4f3bf3]">{kycData.ApplicationId}</span>
+          </div>
+        )}
       </div>
 
       {/* Why KYC is important Box */}

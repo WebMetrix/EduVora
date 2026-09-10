@@ -21,7 +21,9 @@
       "minHeightPx": 250,
       "minDpi": 96,
       "maxDarkPixelRatio": 0.85,
-      "maxLightPixelRatio": 0.90
+      "maxLightPixelRatio": 0.90,
+      "darkPixelIntensity": 20,
+      "lightPixelIntensity": 240
     },
     "errors": {
       "invalidMimeType": {
@@ -128,6 +130,12 @@
           "userMessage": "We could not clearly read your Aadhaar card. Please upload a clearer, un-skewed, well-lit photo of your Aadhaar card and try again.",
           "preventDiskWrite": true
         }
+      },
+      "maskingRules": {
+        "digitPattern": "^\\d{4}$",
+        "minDigitGroupsRequired": 2,
+        "groupsToMask": 2,
+        "maskColorRGB": [0, 0, 0]
       },
       "commonUploadFailureScenarios": [
         { "scenario": "Blurry or out-of-focus image", "errorCode": "AADHAAR_SCAN_FAILED", "frontendHint": "Hold your phone steady and ensure good lighting. Use a flat surface." },

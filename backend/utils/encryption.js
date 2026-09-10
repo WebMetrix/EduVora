@@ -46,3 +46,44 @@ export const decryptUserId = (encryptedString) => {
         return null;
     }
 };
+
+/**
+ * Encrypts generic string data
+ */
+export const encryptData = (data) => {
+    if (!data) return null;
+    try {
+        const cipher = crypto.createCipheriv(
+            t('api.encryption.algorithm'), 
+            Buffer.from(ENCRYPTION_KEY), 
+            Buffer.from(FIXED_IV)
+        );
+        let encrypted = cipher.update(data, 'utf8', 'hex');
+        encrypted += cipher.final('hex');
+        return encrypted; 
+    } catch (err) {
+        console.error(`Encryption error:`, err);
+        return null;
+    }
+};
+
+/**
+ * Decrypts generic hex string data
+ */
+export const decryptData = (encryptedString) => {
+    if (!encryptedString) return null;
+    // If it's not a hex string (e.g. legacy plain text), return it as is or handle error
+    try {
+        const decipher = crypto.createDecipheriv(
+            t('api.encryption.algorithm'), 
+            Buffer.from(ENCRYPTION_KEY), 
+            Buffer.from(FIXED_IV)
+        );
+        let decrypted = decipher.update(encryptedString, 'hex', 'utf8');
+        decrypted += decipher.final('utf8');
+        return decrypted; 
+    } catch (err) {
+        // If decryption fails, it might be unencrypted legacy data, so return original
+        return encryptedString;
+    }
+};

@@ -13,10 +13,23 @@ export const fetchKycDetails = createAsyncThunk(
     }
 );
 
+export const fetchIdentityProofTypes = createAsyncThunk(
+    'kyc/fetchIdentityProofTypes',
+    async (_, { rejectWithValue }) => {
+        try {
+            const response = await api.get('/kyc/dropdowns/identity-types');
+            return response.data;
+        } catch (error) {   
+            return rejectWithValue(error.response?.data?.message || 'Failed to fetch identity proof types');
+        }
+    }
+);
+
 const kycSlice = createSlice({
     name: 'kyc',
     initialState: {
         data: null,
+        identityProofTypes: [], // To store dropdown options
         status: 'idle', // 'idle' | 'loading' | 'succeeded' | 'failed'
         error: null,
     },
@@ -40,6 +53,10 @@ const kycSlice = createSlice({
             .addCase(fetchKycDetails.rejected, (state, action) => {
                 state.status = 'failed';
                 state.error = action.payload;
+            })
+            // Identity Proof Types
+            .addCase(fetchIdentityProofTypes.fulfilled, (state, action) => {
+                state.identityProofTypes = action.payload;
             });
     }
 });

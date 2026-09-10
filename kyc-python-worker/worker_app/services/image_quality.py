@@ -12,15 +12,8 @@ def load_quality_thresholds():
             rules = json.load(f)
             return rules['globalFileRules']['imageQualityThresholds']
     except Exception as e:
-        logger.error(f"Failed to load rules.json: {e}")
-        # Default fallback if rules.json is unreadable
-        return {
-            "minLaplacianVariance": 80.0,
-            "minWidthPx": 400,
-            "minHeightPx": 250,
-            "maxDarkPixelRatio": 0.85,
-            "maxLightPixelRatio": 0.90
-        }
+        logger.error(f"Failed to load rules.json: {e}. Cannot proceed without quality thresholds.")
+        raise
 
 def check_blur(image_path):
     """
@@ -56,8 +49,8 @@ def check_blur(image_path):
 
     # 3. Light/Dark Pixel Ratio (Exposure check)
     total_pixels = w * h
-    dark_pixels = np.sum(gray < 20)
-    light_pixels = np.sum(gray > 240)
+    dark_pixels = np.sum(gray < thresholds.get('darkPixelIntensity', 20))
+    light_pixels = np.sum(gray > thresholds.get('lightPixelIntensity', 240))
     
     if dark_pixels / total_pixels > thresholds['maxDarkPixelRatio']:
         logger.warning("Image is too dark.")

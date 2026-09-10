@@ -65,10 +65,10 @@ def process_kyc_files(user_uuid, is_passed):
             print(f"Error deleting temp files for user {user_uuid}: {e}")
             return False
 
-def update_kyc_status(user_uuid, status, message=None, front_path=None, back_path=None, pan_path=None):
+def update_kyc_status(user_uuid, status, reason_id=None, front_path=None, back_path=None, pan_path=None):
     # Update the KYC status in the database and optionally update file paths
     # status should be 'APPROVED' or 'REJECTED'
-    print(f"Updating DB for {user_uuid}: STATUS={status}, MESSAGE={message}")
+    print(f"Updating DB for {user_uuid}: STATUS={status}, REASON_ID={reason_id}")
     
     try:
         with engine.begin() as conn:
@@ -80,7 +80,7 @@ def update_kyc_status(user_uuid, status, message=None, front_path=None, back_pat
                     @Action=3, 
                     @UUID=:uuid, 
                     @KYCStatusId=:status_id, 
-                    @RejectionReason=:msg,
+                    @RejectionReasonId=:reason_id,
                     @IdentityProofFrontPath=:front_path,
                     @IdentityProofBackPath=:back_path,
                     @PanCardPath=:pan_path
@@ -89,7 +89,7 @@ def update_kyc_status(user_uuid, status, message=None, front_path=None, back_pat
             conn.execute(query, {
                 "uuid": user_uuid, 
                 "status_id": status_id, 
-                "msg": message,
+                "reason_id": reason_id,
                 "front_path": front_path,
                 "back_path": back_path,
                 "pan_path": pan_path

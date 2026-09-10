@@ -69,6 +69,7 @@ export default function KycVerificationStatus({ kycData, onEdit }) {
               }
             </p>
           </div>
+
         </div>
 
         {/* Timeline */}

@@ -1,10 +1,21 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { FileText, ArrowLeft, ChevronRight, UploadCloud, File, Info, CreditCard, ChevronDown } from 'lucide-react';
 import { useTranslation } from '../../../hooks/useTranslation';
 import CustomSelect from '../../common/CustomSelect';
+import DelayedMaskInput from '../../common/DelayedMaskInput';
+import { fetchIdentityProofTypes } from '../../../redux/slices/kycSlice';
 
 export default function KycDocumentUploadForm({ formData, updateFormData, onNext, onPrev }) {
   const { t } = useTranslation();
+  const dispatch = useDispatch();
+  const { identityProofTypes } = useSelector((state) => state.kyc);
+
+  useEffect(() => {
+    if (!identityProofTypes || identityProofTypes.length === 0) {
+      dispatch(fetchIdentityProofTypes());
+    }
+  }, [dispatch, identityProofTypes]);
   const handleFileChange = (field, e) => {
     const file = e.target.files[0];
     if (file) {
@@ -52,15 +63,10 @@ export default function KycDocumentUploadForm({ formData, updateFormData, onNext
             </label>
             <div className="relative">
               <CustomSelect
-                options={[
-                  { value: 'Aadhar Card', label: t('kyc.documentUpload.identityProofTypes.aadhar') },
-                  { value: 'Passport', label: t('kyc.documentUpload.identityProofTypes.passport') },
-                  { value: 'Driving License', label: t('kyc.documentUpload.identityProofTypes.drivingLicense') },
-                  { value: 'Voter ID', label: t('kyc.documentUpload.identityProofTypes.voterId') }
-                ]}
+                options={identityProofTypes || []}
                 placeholder={t('kyc.documentUpload.selectIdentityProof')}
-                value={formData.identityProofType}
-                onChange={(val) => updateFormData('identityProofType', val)}
+                value={formData.identityTypeId}
+                onChange={(val) => updateFormData('identityTypeId', val)}
               />
             </div>
           </div>
@@ -68,14 +74,16 @@ export default function KycDocumentUploadForm({ formData, updateFormData, onNext
           <div className="mb-6">
             <label className="text-[13px] font-bold text-slate-800 mb-2 flex items-center gap-2">
               <FileText className="w-4 h-4 text-slate-500" />
-              {formData.identityProofType ? `${formData.identityProofType} Number` : 'Identity Proof Number'}
+              {formData.identityTypeId 
+                ? `${identityProofTypes?.find(o => o.value == formData.identityTypeId)?.label || 'Identity Proof'} Number` 
+                : 'Identity Proof Number'}
             </label>
-            <input
-              type="text"
-              placeholder={`E.G. ENTER ${formData.identityProofType ? formData.identityProofType.toUpperCase() : 'DOCUMENT'} NUMBER`}
+            <DelayedMaskInput
+              placeholder={`E.G. ENTER DOCUMENT NUMBER`}
               value={formData.identityProofNumber || ''}
-              onChange={(e) => updateFormData('identityProofNumber', e.target.value.toUpperCase())}
-              disabled={!formData.identityProofType}
+              onChange={(val) => updateFormData('identityProofNumber', val)}
+              disabled={!formData.identityTypeId}
+              type={formData.identityTypeId === 1 ? 'AADHAR' : 'DEFAULT'}
               className="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl text-[14px] text-slate-900 font-medium focus:outline-none focus:border-[#4f3bf3] focus:ring-1 focus:ring-[#4f3bf3] transition-all placeholder:text-slate-400 disabled:bg-slate-50 disabled:text-slate-400 disabled:cursor-not-allowed"
             />
           </div>
@@ -87,7 +95,7 @@ export default function KycDocumentUploadForm({ formData, updateFormData, onNext
                 <UploadCloud className="w-6 h-6 text-[#4f3bf3] mb-3 shrink-0" />
                 <div className="h-9 flex items-center justify-center mb-3 w-full px-2">
                   <p className="text-[12px] text-slate-500 font-medium line-clamp-2 break-words">
-                    {formData.identityProofFrontPath ? formData.identityProofFrontPath.name : t('kyc.documentUpload.uploadFrontImage')}
+                    {formData.identityProofFrontPath ? (formData.identityProofFrontPath.name || (typeof formData.identityProofFrontPath === 'string' && formData.identityProofFrontPath.split(/[\/\\]/).pop())) : t('kyc.documentUpload.uploadFrontImage')}
                   </p>
                 </div>
                 <div className="relative mt-auto">
@@ -109,7 +117,7 @@ export default function KycDocumentUploadForm({ formData, updateFormData, onNext
                 <UploadCloud className="w-6 h-6 text-[#4f3bf3] mb-3 shrink-0" />
                 <div className="h-9 flex items-center justify-center mb-3 w-full px-2">
                   <p className="text-[12px] text-slate-500 font-medium line-clamp-2 break-words">
-                    {formData.identityProofBackPath ? formData.identityProofBackPath.name : t('kyc.documentUpload.uploadBackImage')}
+                    {formData.identityProofBackPath ? (formData.identityProofBackPath.name || (typeof formData.identityProofBackPath === 'string' && formData.identityProofBackPath.split(/[\/\\]/).pop())) : t('kyc.documentUpload.uploadBackImage')}
                   </p>
                 </div>
                 <div className="relative mt-auto">
@@ -146,12 +154,12 @@ export default function KycDocumentUploadForm({ formData, updateFormData, onNext
               <CreditCard className="w-4 h-4 text-slate-500" />
               PAN Number
             </label>
-            <input
-              type="text"
+            <DelayedMaskInput
               placeholder="E.G. ABCDE1234F"
               value={formData.panNumber || ''}
-              onChange={(e) => updateFormData('panNumber', e.target.value.toUpperCase())}
+              onChange={(val) => updateFormData('panNumber', val)}
               maxLength={10}
+              type="PAN"
               className="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl text-[14px] text-slate-900 font-medium focus:outline-none focus:border-[#4f3bf3] focus:ring-1 focus:ring-[#4f3bf3] transition-all placeholder:text-slate-400"
             />
           </div>
@@ -162,7 +170,7 @@ export default function KycDocumentUploadForm({ formData, updateFormData, onNext
               <UploadCloud className="w-7 h-7 text-[#4f3bf3] mb-4 shrink-0" />
               <div className="h-9 flex items-center justify-center mb-4 w-full px-2">
                 <p className="text-[13px] text-slate-500 font-medium line-clamp-2 break-words">
-                  {formData.panCardPath ? formData.panCardPath.name : t('kyc.documentUpload.uploadPanImage')}
+                  {formData.panCardPath ? (formData.panCardPath.name || (typeof formData.panCardPath === 'string' && formData.panCardPath.split(/[\/\\]/).pop())) : t('kyc.documentUpload.uploadPanImage')}
                 </p>
               </div>
               <div className="relative mt-auto">

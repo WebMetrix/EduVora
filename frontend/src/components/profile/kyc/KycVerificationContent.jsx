@@ -27,7 +27,7 @@ export default function KycVerificationContent() {
     emailAddress: '',
     address: '',
     panNumber: '',
-    identityProofType: 'Aadhar Card',
+    identityTypeId: 1, // Default to Aadhar Card ID
     identityProofNumber: '',
     identityProofFrontPath: null,
     identityProofBackPath: null,
@@ -49,7 +49,7 @@ export default function KycVerificationContent() {
       if (profileData.DateOfBirth) {
         const d = new Date(profileData.DateOfBirth);
         if (!isNaN(d.getTime())) {
-          dob = `${d.getDate().toString().padStart(2, '0')}/${(d.getMonth() + 1).toString().padStart(2, '0')}/${d.getFullYear()}`;
+          dob = d.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
         }
       }
       
@@ -75,8 +75,11 @@ export default function KycVerificationContent() {
       setFormData(prev => ({
         ...prev,
         panNumber: kycData.PanNumber || '',
-        identityProofType: kycData.IdentityProofType || 'Aadhar Card',
+        identityTypeId: kycData.IdentityTypeId || 1,
         identityProofNumber: kycData.IdentityProofNumber || '',
+        identityProofFrontPath: kycData.IdentityProofFrontPath ? kycData.IdentityProofFrontPath : prev.identityProofFrontPath,
+        identityProofBackPath: kycData.IdentityProofBackPath ? kycData.IdentityProofBackPath : prev.identityProofBackPath,
+        panCardPath: kycData.PanCardPath ? kycData.PanCardPath : prev.panCardPath,
       }));
       
       // Auto redirect to step 4 if KYC is already submitted and not rejected

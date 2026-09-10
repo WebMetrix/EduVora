@@ -3,8 +3,8 @@ import {
   FileText, User, Edit2, CheckCircle2, 
   IdCard, CreditCard, ArrowLeft, ArrowRight, Loader2
 } from 'lucide-react';
-import { useDispatch } from 'react-redux';
-import { fetchKycDetails } from '../../../redux/slices/kycSlice';
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchKycDetails, fetchIdentityProofTypes } from '../../../redux/slices/kycSlice';
 import { toast } from 'react-toastify';
 import api from '../../../https/axios';
 import { useTranslation } from '../../../hooks/useTranslation';
@@ -13,14 +13,29 @@ export default function KycReviewSubmitForm({ formData, onPrev, onEditStep, onSu
   const [isChecked, setIsChecked] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const dispatch = useDispatch();
+  const { identityProofTypes } = useSelector((state) => state.kyc);
   const { t } = useTranslation();
+
+  const staticMask = (val) => {
+    if (!val) return '';
+    let unformatted = val.replace(/[^A-Z0-9]/ig, '').toUpperCase();
+    let masked = '';
+    for (let i = 0; i < unformatted.length; i++) {
+      if (i >= unformatted.length - 4) {
+        masked += unformatted[i];
+      } else {
+        masked += 'X';
+      }
+    }
+    return masked;
+  };
 
   const handleSubmit = async () => {
     setIsSubmitting(true);
     try {
       const payload = new FormData();
       payload.append('panNumber', formData.panNumber);
-      payload.append('identityProofType', formData.identityProofType);
+      payload.append('identityTypeId', formData.identityTypeId);
       payload.append('identityProofNumber', formData.identityProofNumber);
       
       if (formData.identityProofFrontPath) payload.append('IdentityProofFrontPath', formData.identityProofFrontPath);
@@ -104,8 +119,8 @@ export default function KycReviewSubmitForm({ formData, onPrev, onEditStep, onSu
               <span className="text-[14px] font-bold text-slate-900">{formData.emailAddress || t('kyc.reviewSubmit.emptyFallback')}</span>
             </div>
             <div className="flex flex-col sm:flex-row sm:items-center py-4 border-b border-slate-100">
-              <span className="text-[14px] text-slate-500 font-medium w-full sm:w-[250px] shrink-0 mb-1 sm:mb-0">{t('kyc.personalInfo.panNumber')}</span>
-              <span className="text-[14px] font-bold text-slate-900">{formData.panNumber || t('kyc.reviewSubmit.emptyFallback')}</span>
+              <span className="text-[14px] text-slate-500 font-medium w-full sm:w-[250px] shrink-0 mb-1 sm:mb-0">PAN Number</span>
+              <span className="text-[14px] font-bold text-slate-900">{formData.panNumber ? staticMask(formData.panNumber) : t('kyc.reviewSubmit.emptyFallback')}</span>
             </div>
             <div className="flex flex-col sm:flex-row sm:items-start py-4">
               <span className="text-[14px] text-slate-500 font-medium w-full sm:w-[250px] shrink-0 mb-1 sm:mb-0 mt-0.5">{t('kyc.personalInfo.address')}</span>
@@ -142,7 +157,9 @@ export default function KycReviewSubmitForm({ formData, onPrev, onEditStep, onSu
                 </div>
                 <div className="min-w-0">
                   <h5 className="text-[14px] font-bold text-[#1a1446] truncate">{t('kyc.documentUpload.identityProof')}</h5>
-                  <p className="text-[12px] text-slate-500 font-medium mt-0.5 truncate">{formData.identityProofType}</p>
+                  <p className="text-[12px] text-slate-500 font-medium mt-0.5 truncate">
+                    {identityProofTypes?.find(o => o.value == formData.identityTypeId)?.label || 'Document Provided'}
+                  </p>
                 </div>
               </div>
 

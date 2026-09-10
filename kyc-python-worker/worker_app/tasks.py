@@ -9,17 +9,20 @@ from worker_app.db.repository import update_kyc_status, process_kyc_files, get_f
 def notify_backend(user_uuid, status, reason=""):
     """Helper to send webhook back to Node.js API"""
     try:
-        # Calling the Node.js Webhook
+        webhook_url = os.getenv('BACKEND_WEBHOOK_URL')
+        if not webhook_url:
+            raise ValueError("BACKEND_WEBHOOK_URL is not set in .env file.")
+            
         requests.post(
-            'http://127.0.0.1:3000/kyc/webhook', 
-            json={"uuid": user_uuid, "status": status, "reason": reason},
+            webhook_url, 
+            json={"uuid": user_uuid, "status": status, "reasonId": reason},
             timeout=5
         )
     except Exception as e:
         print(f"[{user_uuid}] Failed to notify backend webhook: {e}")
 
 @app.task(name='tasks.process_kyc_documents')
-def process_kyc_documents(user_uuid, identity_proof_type, front_image_path, back_image_path=None, pan_image_path=None):
+def process_kyc_documents(user_uuid, identity_type_id, front_image_path, back_image_path=None, pan_image_path=None):
     # Main Celery task triggered by Node.js to process KYC documents async
     print(f"[{user_uuid}] Started processing KYC documents...")
     
@@ -27,44 +30,44 @@ def process_kyc_documents(user_uuid, identity_proof_type, front_image_path, back
     
     # 1. Quality Check for Front Image
     if not check_blur(front_image_path):
-        err = "Identity proof front image failed quality checks (blurry or bad exposure)."
+        err_id = 1
         process_kyc_files(user_uuid, False)
-        update_kyc_status(user_uuid, "REJECTED", err)
-        notify_backend(user_uuid, "REJECTED", err)
-        return {"status": "REJECTED", "reason": err}
+        update_kyc_status(user_uuid, "REJECTED", err_id)
+        notify_backend(user_uuid, "REJECTED", err_id)
+        return {"status": "REJECTED", "reasonId": err_id}
         
     # 2. Quality Check for Back Image (if provided)
     if back_image_path and not check_blur(back_image_path):
-        err = "Identity proof back image failed quality checks (blurry or bad exposure)."
+        err_id = 2
         process_kyc_files(user_uuid, False)
-        update_kyc_status(user_uuid, "REJECTED", err)
-        notify_backend(user_uuid, "REJECTED", err)
-        return {"status": "REJECTED", "reason": err}
+        update_kyc_status(user_uuid, "REJECTED", err_id)
+        notify_backend(user_uuid, "REJECTED", err_id)
+        return {"status": "REJECTED", "reasonId": err_id}
         
     # 3. Quality Check for PAN Image (if provided)
     if pan_image_path and not check_blur(pan_image_path):
-        err = "PAN card image failed quality checks (blurry or bad exposure)."
+        err_id = 3
         process_kyc_files(user_uuid, False)
-        update_kyc_status(user_uuid, "REJECTED", err)
-        notify_backend(user_uuid, "REJECTED", err)
-        return {"status": "REJECTED", "reason": err}
+        update_kyc_status(user_uuid, "REJECTED", err_id)
+        notify_backend(user_uuid, "REJECTED", err_id)
+        return {"status": "REJECTED", "reasonId": err_id}
 
     # 4. Masking (Only if the document is Aadhaar)
-    if identity_proof_type == "Aadhar Card" or identity_proof_type == "Aadhaar Card":
-        success, err = mask_aadhaar(front_image_path)
+    if identity_type_id == 1:
+        success, err_id = mask_aadhaar(front_image_path)
         if not success:
             process_kyc_files(user_uuid, False)
-            update_kyc_status(user_uuid, "REJECTED", err)
-            notify_backend(user_uuid, "REJECTED", err)
-            return {"status": "REJECTED", "reason": err}
+            update_kyc_status(user_uuid, "REJECTED", err_id)
+            notify_backend(user_uuid, "REJECTED", err_id)
+            return {"status": "REJECTED", "reasonId": err_id}
             
     # 5. Finalize and Move Files to Permanent Storage
     move_success = process_kyc_files(user_uuid, True)
     if not move_success:
-        err = "Failed to move files to permanent storage."
-        update_kyc_status(user_uuid, "REJECTED", err)
-        notify_backend(user_uuid, "REJECTED", err)
-        return {"status": "REJECTED", "reason": err}
+        err_id = 5
+        update_kyc_status(user_uuid, "REJECTED", err_id)
+        notify_backend(user_uuid, "REJECTED", err_id)
+        return {"status": "REJECTED", "reasonId": err_id}
     
     # Calculate new paths in the UserKYC folder
     user_kyc_base = get_file_repository_path('KYC')

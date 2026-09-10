@@ -4,6 +4,7 @@ import logger from '../utils/logger.js';
 import { otpCache } from '../controllers/otpController.js';
 import { t } from '../utils/translation.js';
 import { sendEmail } from '../services/emailService.js';
+import EmailEvents from '../utils/emailEvents.js';
 
 
 
@@ -58,7 +59,7 @@ export const resetPassword = async (req, res) => {
 
         // Send Password Reset Success Email asynchronously
         sendEmail({
-            eventId: 4, // Event ID for Password Reset Success
+            eventId: EmailEvents.PASSWORD_RESET_SUCCESS, // Event ID for Password Reset Success
             to: emailAddress,
             replacements: { FullName: fullName || '' }
         }).catch(err => logger.error(`Failed to send Password Reset Email to ${emailAddress}: ${err.message}`));

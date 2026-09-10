@@ -112,21 +112,22 @@ import path from 'path';
 import fs from 'fs';
 import { isLoggedIn } from '../middlewares/authMiddleware.js';
 import pool, { sql } from '../config/db.js';
-import { getKycDetails, submitKyc, kycWebhook } from '../controllers/kycController.js';
+import { getKycDetails, submitKyc, kycWebhook, getIdentityProofTypes } from '../controllers/kycController.js';
 import logger from '../utils/logger.js';
 
 const router = express.Router();
 
-const getStandardName = (fieldname, identityProofType) => {
+const getStandardName = (fieldname, identityTypeId) => {
   if (fieldname === 'PanCardPath') return 'PanCardFront';
   
-  if (identityProofType === 'Aadhar Card') {
+  const id = parseInt(identityTypeId);
+  if (id === 1) { // Aadhar Card
     return fieldname === 'IdentityProofFrontPath' ? 'AdhaarFront' : 'AdhaarBack';
-  } else if (identityProofType === 'Driving License') {
+  } else if (id === 3) { // Driving License
     return fieldname === 'IdentityProofFrontPath' ? 'DLFront' : 'DLBack';
-  } else if (identityProofType === 'Passport') {
+  } else if (id === 2) { // Passport
     return fieldname === 'IdentityProofFrontPath' ? 'PassportFront' : 'PassportBack';
-  } else if (identityProofType === 'Voter ID') {
+  } else if (id === 4) { // Voter ID
     return fieldname === 'IdentityProofFrontPath' ? 'VoterFront' : 'VoterBack';
   }
   
@@ -158,7 +159,7 @@ const storage = multer.diskStorage({
           fs.mkdirSync(finalUploadPath, { recursive: true });
         }
       } else {
-        const standardName = getStandardName(file.fieldname, req.body.identityProofType);
+        const standardName = getStandardName(file.fieldname, req.body.identityTypeId);
         const existingFiles = fs.readdirSync(finalUploadPath);
         for (const existingFile of existingFiles) {
           if (existingFile.startsWith(standardName)) {
@@ -174,7 +175,7 @@ const storage = multer.diskStorage({
   },
   filename: function (req, file, cb) {
     const extension = path.extname(file.originalname);
-    const standardName = getStandardName(file.fieldname, req.body.identityProofType);
+    const standardName = getStandardName(file.fieldname, req.body.identityTypeId);
     cb(null, `${standardName}${extension}`);
   }
 });
@@ -204,6 +205,15 @@ router.get('/', isLoggedIn, (req, res, next) => {
   getKycDetails(req, res, next);
 });
 
+router.get('/dropdowns/identity-types', (req, res, next) => {
+  /* 
+    #swagger.tags = ['KYC']
+    #swagger.summary = 'Get Identity Proof Types'
+    #swagger.description = 'Fetches all active identity document types for the dropdown.'
+  */
+  getIdentityProofTypes(req, res, next);
+});
+
 router.post(
   '/submit',
   isLoggedIn, 
@@ -223,10 +233,10 @@ router.post(
       "multipart/form-data": {
         schema: {
           type: "object",
-          required: ["panNumber", "identityProofType", "identityProofNumber", "IdentityProofFrontPath", "IdentityProofBackPath", "PanCardPath"],
+          required: ["panNumber", "identityTypeId", "identityProofNumber", "IdentityProofFrontPath", "IdentityProofBackPath", "PanCardPath"],
           properties: {
             panNumber: { type: "string", description: "User PAN Number" },
-            identityProofType: { type: "string", description: "E.g., Aadhar Card, Passport" },
+            identityTypeId: { type: "integer", description: "Identity Type ID (e.g. 1 for Aadhar)" },
             identityProofNumber: { type: "string", description: "Document Number" },
             IdentityProofFrontPath: { type: "string", format: "binary", description: "Front image" },
             IdentityProofBackPath: { type: "string", format: "binary", description: "Back image" },
