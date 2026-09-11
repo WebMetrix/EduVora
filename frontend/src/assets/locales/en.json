@@ -1023,7 +1023,7 @@
       "fullName": "Full Name (as per ID proof)",
       "fullNamePlaceholder": "Enter your full name",
       "dob": "Date of Birth",
-      "panNumber": "PAN Number (Optional)",
+      "panNumber": "PAN Number",
       "panPlaceholder": "e.g. ABCDE1234F",
       "gender": "Gender",
       "mobileNumber": "Mobile Number",

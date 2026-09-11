@@ -95,31 +95,13 @@ export const submitKyc = async (req, res) => {
         let identityProofBackPath = getDbPath(req.files['IdentityProofBackPath']?.[0]);
         let panCardPath = getDbPath(req.files['PanCardPath']?.[0]);
 
-        // If no new files were uploaded, fetch the existing paths from the DB to send to the worker
-        if (!identityProofFrontPath || !panCardPath) {
-            const kycReq = pool.request();
-            kycReq.input('Action', sql.Int, 1);
-            kycReq.input('UUID', sql.VarChar(36), uuid);
-            const kycRes = await kycReq.execute('dbo.EV_ManageUserKYC');
-            if (kycRes.recordset && kycRes.recordset.length > 0) {
-                const existing = kycRes.recordset[0];
-                if (!identityProofFrontPath) identityProofFrontPath = existing.IdentityProofFrontPath;
-                if (!identityProofBackPath) identityProofBackPath = existing.IdentityProofBackPath;
-                if (!panCardPath) panCardPath = existing.PanCardPath;
-            }
-        }
-
-        // Generate Application ID: EDV-KYC-[TIMESTAMP]-[FIRST_4_LETTERS_OF_NAME]
-        const userReq = pool.request();
-        userReq.input('UUID', sql.VarChar(36), uuid);
-        const userRes = await userReq.execute('dbo.EV_GetUserProfile');
-        let userNamePart = 'USER';
-        if (userRes.recordset && userRes.recordset.length > 0) {
-            const fullName = userRes.recordset[0].FullName || '';
-            userNamePart = fullName.replace(/[^a-zA-Z]/g, '').substring(0, 4).toUpperCase();
-            if (userNamePart.length < 4) userNamePart = userNamePart.padEnd(4, 'X');
-        }
-        const applicationId = `EDV-KYC-${Date.now()}-${userNamePart}`;
+        // Generate Application ID: EDV-KYC-[DDMMYYYY]-[RANDOM_4_DIGITS]
+        const today = new Date();
+        const dd = String(today.getDate()).padStart(2, '0');
+        const mm = String(today.getMonth() + 1).padStart(2, '0');
+        const yyyy = today.getFullYear();
+        const random4 = Math.floor(1000 + Math.random() * 9000);
+        const applicationId = `EDV-KYC-${dd}${mm}${yyyy}-${random4}`;
 
         const request = pool.request();
         request.input('Action', sql.Int, 2); // 2 = SUBMIT
@@ -165,7 +147,7 @@ export const kycWebhook = async (req, res) => {
         if (userRes.recordset && userRes.recordset.length > 0) {
             const user = userRes.recordset[0];
             
-            if (status === 'APPROVED') {
+            if (status === 2) { // 2 = Verified (Approved)
                 sendEmail({
                     eventId: EmailEvents.KYC_APPROVED,
                     to: user.EmailAddress,
@@ -173,7 +155,7 @@ export const kycWebhook = async (req, res) => {
                         FullName: user.FullName
                     }
                 }).catch(err => logger.error(`Failed to send KYC Approved email: ${err}`));
-            } else if (status === 'REJECTED') {
+            } else if (status === 3) { // 3 = Rejected
                 // Fetch the reason text
                 const kycReq = pool.request();
                 kycReq.input('Action', sql.Int, 1);
@@ -181,8 +163,10 @@ export const kycWebhook = async (req, res) => {
                 const kycRes = await kycReq.execute('dbo.EV_ManageUserKYC');
                 
                 let reasonText = "Quality checks failed.";
+                let kycRef = "N/A";
                 if (kycRes.recordset && kycRes.recordset.length > 0) {
                     reasonText = kycRes.recordset[0].RejectionReason || reasonText;
+                    kycRef = kycRes.recordset[0].ApplicationId || "N/A";
                 }
                 
                 sendEmail({
@@ -190,7 +174,9 @@ export const kycWebhook = async (req, res) => {
                     to: user.EmailAddress,
                     replacements: {
                         FullName: user.FullName,
-                        Reason: reasonText
+                        KycReference: kycRef,
+                        KycRejectedDateTime: new Date().toLocaleString(),
+                        KycRejectionReason: reasonText
                     }
                 }).catch(err => logger.error(`Failed to send KYC Rejected email: ${err}`));
             }

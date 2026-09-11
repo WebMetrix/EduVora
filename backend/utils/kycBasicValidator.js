@@ -20,16 +20,10 @@ export async function validateKycSubmission(body, files) {
   const errors = [];
   const { panNumber, identityTypeId, identityProofNumber } = body || {};
 
-  let identityProofType = '';
   const id = parseInt(identityTypeId);
-  if (id === 1) identityProofType = 'Aadhar Card';
-  else if (id === 3) identityProofType = 'Driving License';
-  else if (id === 2) identityProofType = 'Passport';
-  else if (id === 4) identityProofType = 'Voter ID';
-
 
   // 1. PAN Validation
-  const panRules = RULES.documents['PAN Card']?.numberField;
+  const panRules = RULES.documents['5']?.numberField;
   if (!panNumber) {
     errors.push('PAN number is required.');
   } else if (panRules && !new RegExp(panRules.pattern).test(panNumber)) {
@@ -37,11 +31,11 @@ export async function validateKycSubmission(body, files) {
   }
 
   // 2. Identity Proof Validation
-  const idDocRules = RULES.documents[identityProofType];
+  const idDocRules = RULES.documents[id.toString()];
   if (!idDocRules) {
-    errors.push(`Invalid identity proof type: ${identityProofType}`);
+    errors.push(`Invalid identity proof type selected.`);
   } else if (!identityProofNumber) {
-    errors.push(`${identityProofType} number is required.`);
+    errors.push(`${idDocRules.name} number is required.`);
   }
 
   // 3. Basic File Upload Checks
@@ -49,11 +43,8 @@ export async function validateKycSubmission(body, files) {
   const panFile = files?.PanCardPath?.[0];
   const fileRules = RULES.globalFileRules;
 
-  const hasExistingFront = !!body?.IdentityProofFrontPath;
-  const hasExistingPan = !!body?.PanCardPath;
-
   // Validate Identity Proof image size and presence
-  if (!frontFile && !hasExistingFront) {
+  if (!frontFile) {
     errors.push('Identity proof front image is required.');
   } else if (frontFile) {
     if (frontFile.size > fileRules.maxFileSizeBytes) {
@@ -64,7 +55,7 @@ export async function validateKycSubmission(body, files) {
   }
   
   // Validate PAN Card image size and presence
-  if (!panFile && !hasExistingPan) {
+  if (!panFile) {
     errors.push('PAN card image is required.');
   } else if (panFile) {
     if (panFile.size > fileRules.maxFileSizeBytes) {

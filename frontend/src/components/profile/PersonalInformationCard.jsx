@@ -227,7 +227,10 @@ export default function PersonalInformationCard({ t, profileData, onPictureUpdat
                             <label className="text-[11px] font-bold uppercase tracking-wider">{t('completeProfile.dob')}</label>
                         </div>
                         <div className="pl-6 text-[14px] text-slate-900 font-bold">
-                            {profileData?.DateOfBirth ? new Date(profileData.DateOfBirth).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }) : '-'}
+                            {profileData?.DateOfBirth ? (() => {
+                                const d = new Date(profileData.DateOfBirth);
+                                return `${d.getDate().toString().padStart(2, '0')}-${(d.getMonth() + 1).toString().padStart(2, '0')}-${d.getFullYear()}`;
+                            })() : '-'}
                         </div>
                     </div>
 

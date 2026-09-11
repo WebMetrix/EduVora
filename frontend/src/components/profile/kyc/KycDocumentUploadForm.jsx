@@ -154,12 +154,12 @@ export default function KycDocumentUploadForm({ formData, updateFormData, onNext
               <CreditCard className="w-4 h-4 text-slate-500" />
               PAN Number
             </label>
-            <DelayedMaskInput
-              placeholder="E.G. ABCDE1234F"
+            <input 
+              type="text"
               value={formData.panNumber || ''}
-              onChange={(val) => updateFormData('panNumber', val)}
+              onChange={(e) => updateFormData('panNumber', e.target.value.toUpperCase().replace(/[^A-Z0-9]/ig, '').slice(0, 10))}
+              placeholder="ABCDE1234F"
               maxLength={10}
-              type="PAN"
               className="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl text-[14px] text-slate-900 font-medium focus:outline-none focus:border-[#4f3bf3] focus:ring-1 focus:ring-[#4f3bf3] transition-all placeholder:text-slate-400"
             />
           </div>

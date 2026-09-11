@@ -16,26 +16,29 @@ def get_file_repository_path(document_type):
         print(f"Error fetching repository path for {document_type}: {e}")
         return None
 
-def process_kyc_files(user_uuid, is_passed):
+def process_kyc_files(user_uuid, is_passed, front_image_path=None):
     """
     If passed, moves files from TempKYC to UserKYC.
     If failed, deletes the TempKYC folder.
     """
-    temp_kyc_base = get_file_repository_path('TempKYC')
-    user_kyc_base = get_file_repository_path('KYC')
-    
-    if not temp_kyc_base or not user_kyc_base:
-        print("Error: Could not retrieve repository paths from DB.")
-        return False
-        
-    temp_user_folder = os.path.join(temp_kyc_base, user_uuid)
-    final_user_folder = os.path.join(user_kyc_base, user_uuid)
+    if front_image_path:
+        # Securely determine the exact local temp folder from the file path passed by Node.js
+        temp_user_folder = os.path.dirname(front_image_path)
+    else:
+        temp_kyc_base = get_file_repository_path('TempKYC')
+        if not temp_kyc_base:
+            print("Error: Could not retrieve repository paths from DB.")
+            return False
+        temp_user_folder = os.path.join(temp_kyc_base, user_uuid)
     
     if not os.path.exists(temp_user_folder):
         print(f"No TempKYC folder found for user {user_uuid} at {temp_user_folder}")
         return False
 
     if is_passed:
+        user_kyc_base = get_file_repository_path('KYC')
+        final_user_folder = os.path.join(user_kyc_base, user_uuid)
+        
         try:
             # Move files from TempKYC to UserKYC
             os.makedirs(final_user_folder, exist_ok=True)
@@ -65,16 +68,13 @@ def process_kyc_files(user_uuid, is_passed):
             print(f"Error deleting temp files for user {user_uuid}: {e}")
             return False
 
-def update_kyc_status(user_uuid, status, reason_id=None, front_path=None, back_path=None, pan_path=None):
+def update_kyc_status(user_uuid, status_id, reason_id=None, front_path=None, back_path=None, pan_path=None):
     # Update the KYC status in the database and optionally update file paths
-    # status should be 'APPROVED' or 'REJECTED'
-    print(f"Updating DB for {user_uuid}: STATUS={status}, REASON_ID={reason_id}")
+    # status_id should be 2 (Verified) or 3 (Rejected)
+    print(f"Updating DB for {user_uuid}: STATUS_ID={status_id}, REASON_ID={reason_id}")
     
     try:
         with engine.begin() as conn:
-            # 1: Pending, 2: Verified, 3: Rejected
-            status_id = 2 if status.upper() == 'APPROVED' else 3
-            
             query = text("""
                 EXEC dbo.EV_ManageUserKYC 
                     @Action=3, 
@@ -94,6 +94,6 @@ def update_kyc_status(user_uuid, status, reason_id=None, front_path=None, back_p
                 "back_path": back_path,
                 "pan_path": pan_path
             })
-            print(f"Updated KYC status for user {user_uuid} to {status} (Status ID: {status_id}).")
+            print(f"Updated KYC status for user {user_uuid} (Status ID: {status_id}).")
     except Exception as e:
         print(f"Error updating KYC status for {user_uuid}: {e}")

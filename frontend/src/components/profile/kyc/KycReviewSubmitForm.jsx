@@ -119,8 +119,14 @@ export default function KycReviewSubmitForm({ formData, onPrev, onEditStep, onSu
               <span className="text-[14px] font-bold text-slate-900">{formData.emailAddress || t('kyc.reviewSubmit.emptyFallback')}</span>
             </div>
             <div className="flex flex-col sm:flex-row sm:items-center py-4 border-b border-slate-100">
+              <span className="text-[14px] text-slate-500 font-medium w-full sm:w-[250px] shrink-0 mb-1 sm:mb-0">
+                {identityProofTypes?.find(o => o.value == formData.identityTypeId)?.label ? `${identityProofTypes.find(o => o.value == formData.identityTypeId).label} Number` : 'Identity Proof Number'}
+              </span>
+              <span className="text-[14px] font-bold text-slate-900">{formData.identityProofNumber ? staticMask(formData.identityProofNumber) : t('kyc.reviewSubmit.emptyFallback')}</span>
+            </div>
+            <div className="flex flex-col sm:flex-row sm:items-center py-4 border-b border-slate-100">
               <span className="text-[14px] text-slate-500 font-medium w-full sm:w-[250px] shrink-0 mb-1 sm:mb-0">PAN Number</span>
-              <span className="text-[14px] font-bold text-slate-900">{formData.panNumber ? staticMask(formData.panNumber) : t('kyc.reviewSubmit.emptyFallback')}</span>
+              <span className="text-[14px] font-bold text-slate-900">{formData.panNumber || t('kyc.reviewSubmit.emptyFallback')}</span>
             </div>
             <div className="flex flex-col sm:flex-row sm:items-start py-4">
               <span className="text-[14px] text-slate-500 font-medium w-full sm:w-[250px] shrink-0 mb-1 sm:mb-0 mt-0.5">{t('kyc.personalInfo.address')}</span>

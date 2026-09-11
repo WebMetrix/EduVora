@@ -5,11 +5,11 @@
     "lastUpdated": "2026-08-30",
     "governingLaw": "DPDP Act 2023 (India), Income Tax Act 1961 (PAN/TDS)",
     "supportedDocumentTypes": [
-      "Aadhar Card",
-      "Passport",
-      "Driving License",
-      "Voter ID",
-      "PAN Card"
+      "1",
+      "2",
+      "3",
+      "4",
+      "5"
     ]
   },
   "globalFileRules": {
@@ -44,7 +44,7 @@
     }
   },
   "documents": {
-    "Aadhar Card": {
+    "1": {
       "displayName": "Aadhaar Card",
       "legalName": "Aadhaar (UIDAI)",
       "storageBehavior": {
@@ -148,7 +148,7 @@
         { "scenario": "Laminated card causing reflection", "errorCode": "AADHAAR_SCAN_FAILED", "frontendHint": "Tilt the card slightly at an angle to avoid direct glare while keeping it readable." }
       ]
     },
-    "PAN Card": {
+    "5": {
       "displayName": "PAN Card",
       "legalName": "Permanent Account Number (Income Tax Dept.)",
       "storageBehavior": {
@@ -226,7 +226,7 @@
         { "scenario": "Only a photocopy uploaded", "errorCode": "PAN_PHOTOCOPY", "frontendHint": "Upload a clear photo or scan of the original PAN card. Photocopies may be rejected." }
       ]
     },
-    "Passport": {
+    "2": {
       "displayName": "Passport",
       "legalName": "Indian Passport (MEA)",
       "storageBehavior": {
@@ -295,7 +295,7 @@
         { "scenario": "Book spine blocking view", "errorCode": "PASSPORT_SPINE_BLOCK", "frontendHint": "Open the passport fully flat. Place it face-down on a scanner for best results." }
       ]
     },
-    "Driving License": {
+    "3": {
       "displayName": "Driving License",
       "legalName": "Driving License (RTO India)",
       "storageBehavior": {
@@ -380,7 +380,7 @@
         { "scenario": "State code not recognized", "errorCode": "DL_UNRECOGNIZED_STATE", "frontendHint": "If your state or UT code is not recognized, please contact support." }
       ]
     },
-    "Voter ID": {
+    "4": {
       "displayName": "Voter ID Card",
       "legalName": "EPIC - Electoral Photo Identity Card (ECI)",
       "storageBehavior": {
@@ -461,7 +461,7 @@
     },
     "step2_documentUpload": {
       "dynamicFieldsBasedOnIdType": {
-        "Aadhar Card": {
+        "1": {
           "showIdNumberInput": true,
           "idNumberLabel": "Aadhaar Number (12 digits)",
           "showFrontUpload": true,
@@ -469,7 +469,7 @@
           "backUploadOptional": true,
           "showAadhaarMaskingNote": true
         },
-        "Passport": {
+        "2": {
           "showIdNumberInput": true,
           "idNumberLabel": "Passport Number",
           "showFrontUpload": true,
@@ -478,7 +478,7 @@
           "backUploadOptional": true,
           "showExpiryWarning": true
         },
-        "Driving License": {
+        "3": {
           "showIdNumberInput": true,
           "idNumberLabel": "Driving License Number",
           "showFrontUpload": true,
@@ -487,7 +487,7 @@
           "showExpiryWarning": true,
           "showLearnerWarning": true
         },
-        "Voter ID": {
+        "4": {
           "showIdNumberInput": true,
           "idNumberLabel": "EPIC (Voter ID) Number",
           "showFrontUpload": true,

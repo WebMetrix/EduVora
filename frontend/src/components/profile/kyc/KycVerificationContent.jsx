@@ -49,7 +49,7 @@ export default function KycVerificationContent() {
       if (profileData.DateOfBirth) {
         const d = new Date(profileData.DateOfBirth);
         if (!isNaN(d.getTime())) {
-          dob = d.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
+          dob = `${d.getDate().toString().padStart(2, '0')}-${(d.getMonth() + 1).toString().padStart(2, '0')}-${d.getFullYear()}`;
         }
       }
       
@@ -72,16 +72,6 @@ export default function KycVerificationContent() {
     }
 
     if (kycData) {
-      setFormData(prev => ({
-        ...prev,
-        panNumber: kycData.PanNumber || '',
-        identityTypeId: kycData.IdentityTypeId || 1,
-        identityProofNumber: kycData.IdentityProofNumber || '',
-        identityProofFrontPath: kycData.IdentityProofFrontPath ? kycData.IdentityProofFrontPath : prev.identityProofFrontPath,
-        identityProofBackPath: kycData.IdentityProofBackPath ? kycData.IdentityProofBackPath : prev.identityProofBackPath,
-        panCardPath: kycData.PanCardPath ? kycData.PanCardPath : prev.panCardPath,
-      }));
-      
       // Auto redirect to step 4 if KYC is already submitted and not rejected
       if (kycData.KYCStatusId && kycData.KYCStatusId !== 3 && step === 1) {
           setStep(4);

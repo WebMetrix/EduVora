@@ -57,11 +57,22 @@ export const resetPassword = async (req, res) => {
 
         res.status(200).send({ message: t('api.password.resetSuccess') });
 
+        // Extract metadata for the email
+        const ipAddress = req.headers['x-forwarded-for'] || req.socket.remoteAddress || 'Unknown IP';
+        const userAgent = req.headers['user-agent'] || 'Unknown Browser';
+        const resetDateTime = new Date().toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' });
+
         // Send Password Reset Success Email asynchronously
         sendEmail({
             eventId: EmailEvents.PASSWORD_RESET_SUCCESS, // Event ID for Password Reset Success
             to: emailAddress,
-            replacements: { FullName: fullName || '' }
+            replacements: { 
+                FullName: fullName || '',
+                ResetDateTime: resetDateTime,
+                IPAddress: ipAddress,
+                Browser: userAgent,
+                Location: 'Not Available'
+            }
         }).catch(err => logger.error(`Failed to send Password Reset Email to ${emailAddress}: ${err.message}`));
 
 

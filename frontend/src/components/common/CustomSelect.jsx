@@ -41,7 +41,7 @@ const CustomSelect = ({ options, placeholder, value, onChange, disabled, buttonC
       </div>
       
       {isOpen && (
-        <div className={`absolute top-full right-0 mt-1.5 min-w-[140px] bg-white/95 backdrop-blur-xl border border-slate-200 shadow-[0_10px_40px_rgba(0,0,0,0.08)] rounded-xl overflow-hidden z-[100] py-1 ${dropdownClassName || ''}`}>
+        <div className={`absolute top-full left-0 w-full mt-1.5 bg-white/95 backdrop-blur-xl border border-slate-200 shadow-[0_10px_40px_rgba(0,0,0,0.08)] rounded-xl overflow-hidden z-[100] py-1 ${dropdownClassName || ''}`}>
           {options.map((opt) => (
             <div 
               key={opt.value}

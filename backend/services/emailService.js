@@ -40,7 +40,8 @@ export const sendEmail = async ({
         TermsUrl: process.env.TERMS_URL,
         PrivacyUrl: process.env.PRIVACY_URL,
         SupportEmail: process.env.SUPPORT_EMAIL,
-        CurrentYear: new Date().getFullYear()
+        CurrentYear: new Date().getFullYear(),
+        KycUrl: process.env.LOGIN_URL ? process.env.LOGIN_URL.replace('/login', '/profile/kyc') : ""
     };
 
     const values = {
@@ -49,8 +50,12 @@ export const sendEmail = async ({
     };
 
     Object.keys(values).forEach(key => {
+        // Replace both {{key}} and {key}
         html = html.replace(
-            new RegExp(`{{${key}}}`, "g"),
+            new RegExp(`\\{\\{${key}\\}\\}`, "g"),
+            values[key] ?? ""
+        ).replace(
+            new RegExp(`\\{${key}\\}`, "g"),
             values[key] ?? ""
         );
     });
