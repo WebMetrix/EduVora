@@ -611,6 +611,22 @@
           "Password"
         ],
         "description": "",
+        "parameters": [
+          {
+            "name": "x-forwarded-for",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "user-agent",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
         "responses": {
           "200": {
             "description": "OK"
@@ -862,6 +878,23 @@
         ]
       }
     },
+    "/kyc/dropdowns/identity-types": {
+      "get": {
+        "tags": [
+          "KYC"
+        ],
+        "summary": "Get Identity Proof Types",
+        "description": "Fetches all active identity document types for the dropdown.",
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
     "/kyc/submit": {
       "post": {
         "tags": [
@@ -896,7 +929,7 @@
                 "type": "object",
                 "required": [
                   "panNumber",
-                  "identityProofType",
+                  "identityTypeId",
                   "identityProofNumber",
                   "IdentityProofFrontPath",
                   "IdentityProofBackPath",
@@ -907,9 +940,9 @@
                     "type": "string",
                     "description": "User PAN Number"
                   },
-                  "identityProofType": {
-                    "type": "string",
-                    "description": "E.g., Aadhar Card, Passport"
+                  "identityTypeId": {
+                    "type": "integer",
+                    "description": "Identity Type ID (e.g. 1 for Aadhar)"
                   },
                   "identityProofNumber": {
                     "type": "string",
@@ -988,12 +1021,31 @@
                   "status": {
                     "example": "any"
                   },
-                  "reason": {
+                  "reasonId": {
                     "example": "any"
                   }
                 }
               }
             }
+          }
+        }
+      }
+    },
+    "/earnings/": {
+      "get": {
+        "tags": [
+          "Earnings"
+        ],
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "500": {
+            "description": "Internal Server Error"
           }
         }
       }

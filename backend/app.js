@@ -17,6 +17,7 @@ import networkRoutes from './routes/networkRoutes.js';
 import packageRoutes from './routes/packageRoutes.js';
 import paymentRoutes from './routes/paymentRoutes.js';
 import kycRoutes from './routes/kycRoutes.js';
+import earningsRoutes from './routes/earningsRoutes.js';
 
 
 
@@ -61,6 +62,7 @@ app.use('/network', networkRoutes);
 app.use('/packages', packageRoutes);
 app.use('/payment', paymentRoutes);
 app.use('/kyc', kycRoutes);
+app.use('/earnings', earningsRoutes);
 
 
 const userDataPath = process.env.USER_DATA_PATH;

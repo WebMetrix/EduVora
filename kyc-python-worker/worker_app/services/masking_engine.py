@@ -30,12 +30,12 @@ def mask_aadhaar(image_path):
     
     if not os.path.exists(image_path):
         logger.error(f"File does not exist: {image_path}")
-        return False, 5
+        return False, "File does not exist."
 
     img = cv2.imread(image_path)
     if img is None:
         logger.error(f"Failed to load image for masking: {image_path}")
-        return False, 5
+        return False, "Failed to load image."
 
     gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
     rules = load_masking_rules()
@@ -57,7 +57,7 @@ def mask_aadhaar(image_path):
         data = pytesseract.image_to_data(gray, output_type=pytesseract.Output.DICT)
     except Exception as e:
         logger.error(f"Tesseract Error during masking: {e}")
-        return False, 5
+        return False, "OCR Engine failed to initialize. Please check Tesseract configuration."
 
     n_boxes = len(data['text'])
     digit_groups_found = 0
@@ -81,7 +81,7 @@ def mask_aadhaar(image_path):
     # 3. Validation: Check if we found the minimum required groups
     if digit_groups_found < rules['minDigitGroupsRequired']:
         logger.warning(f"Aadhaar scan failed for {image_path}: Found {digit_groups_found} digit groups, required {rules['minDigitGroupsRequired']}.")
-        return False, 4
+        return False, "We could not clearly read your Aadhaar card. Please upload a clearer, un-skewed, well-lit photo of your Aadhaar card and try again."
 
     # 4. Save the masked image, overwriting the original temp image
     cv2.imwrite(image_path, img)
