@@ -11,7 +11,7 @@ def load_masking_rules():
     try:
         with open(RULES_PATH, 'r') as f:
             rules = json.load(f)
-            return rules['documents']['Aadhar Card']['maskingRules']
+            return rules['documents']['1']['maskingRules']
     except Exception as e:
         logger.error(f"Failed to load rules.json for masking: {e}. Falling back to env vars.")
         return {
@@ -44,7 +44,16 @@ def mask_aadhaar(image_path):
     # 1. Find and Mask QR Code using OpenCV
     qr_detector = cv2.QRCodeDetector()
     retval, decoded_info, points, straight_qrcode = qr_detector.detectAndDecodeMulti(img)
-    if retval and points is not None:
+    
+    # Fallback to grayscale if BGR fails
+    if not retval or points is None:
+        retval, decoded_info, points, straight_qrcode = qr_detector.detectAndDecodeMulti(gray)
+        
+    # Fallback to just detect if decode fails
+    if not retval or points is None:
+        retval, points = qr_detector.detectMulti(gray)
+
+    if retval and points is not None and len(points) > 0:
         for qr_points in points:
             pts = qr_points.astype(int)
             cv2.fillPoly(img, [pts], color_bgr)

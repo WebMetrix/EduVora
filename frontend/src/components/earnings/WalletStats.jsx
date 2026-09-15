@@ -1,11 +1,19 @@
 import React from 'react';
 import { Wallet, Clock, TrendingUp, Receipt } from 'lucide-react';
 
-export default function WalletStats({ t }) {
+export default function WalletStats({ t, loading, summary, transactions }) {
+  const formatCurrency = (amount) => {
+    return new Intl.NumberFormat('en-IN', {
+      style: 'currency',
+      currency: 'INR',
+      minimumFractionDigits: 2,
+    }).format(amount || 0);
+  };
+
   const stats = [
     {
       title: t('earnings.wallet.stats.availableBalance'),
-      value: "₹ 5,230.00",
+      value: formatCurrency(summary?.CurrentBalance),
       subtitle: t('earnings.wallet.stats.inWallet'),
       icon: <Wallet className="w-7 h-7 text-blue-500" />,
       bg: "bg-blue-100",
@@ -14,7 +22,7 @@ export default function WalletStats({ t }) {
     },
     {
       title: t('earnings.wallet.stats.pendingWithdrawal'),
-      value: "₹ 3,450.00",
+      value: formatCurrency(summary?.PendingWithdrawal),
       subtitle: t('earnings.wallet.stats.underProcess'),
       icon: <Clock className="w-7 h-7 text-orange-500" />,
       bg: "bg-orange-100",
@@ -23,7 +31,7 @@ export default function WalletStats({ t }) {
     },
     {
       title: t('earnings.wallet.stats.totalWithdrawn'),
-      value: "₹ 24,680.00",
+      value: formatCurrency(summary?.TotalWithdrawn),
       subtitle: t('earnings.wallet.stats.allTime'),
       icon: <TrendingUp className="w-7 h-7 text-green-600" />,
       bg: "bg-green-100",
@@ -32,7 +40,7 @@ export default function WalletStats({ t }) {
     },
     {
       title: t('earnings.wallet.stats.totalTransactions'),
-      value: "156",
+      value: (transactions?.length || 0).toString(),
       subtitle: t('earnings.wallet.stats.allTime'),
       icon: <Receipt className="w-7 h-7 text-purple-600" />,
       bg: "bg-purple-100",
@@ -52,14 +60,24 @@ export default function WalletStats({ t }) {
             <div className={`w-16 h-16 rounded-2xl flex items-center justify-center shrink-0 transition-transform group-hover:scale-110 duration-300 ${stat.bg}`}>
               {stat.icon}
             </div>
-            <div className="flex flex-col">
-              <div className="text-[20px] xl:text-[24px] font-extrabold text-slate-900 leading-none mb-1 whitespace-nowrap">{stat.value}</div>
-              <div className="text-[13px] xl:text-[14px] font-bold text-slate-800 leading-tight mb-0.5 whitespace-nowrap">{stat.title}</div>
-              <div className="text-[11px] xl:text-[12px] font-medium text-slate-500 leading-tight whitespace-nowrap">
-                {stat.subtitle}
-              </div>
-              {stat.trend && (
-                <div className="text-[12px] text-emerald-500 font-extrabold mt-0.5">{stat.trend}</div>
+            <div className="flex flex-col w-full">
+              {loading ? (
+                <>
+                  <div className="h-6 lg:h-7 bg-slate-200 rounded-md w-3/4 mb-1 animate-pulse" />
+                  <div className="h-4 bg-slate-100 rounded-md w-1/2 mb-1 animate-pulse" />
+                  <div className="h-3 bg-slate-50 rounded-md w-2/3 animate-pulse" />
+                </>
+              ) : (
+                <>
+                  <div className="text-[20px] xl:text-[24px] font-extrabold text-slate-900 leading-none mb-1 whitespace-nowrap">{stat.value}</div>
+                  <div className="text-[13px] xl:text-[14px] font-bold text-slate-800 leading-tight mb-0.5 whitespace-nowrap">{stat.title}</div>
+                  <div className="text-[11px] xl:text-[12px] font-medium text-slate-500 leading-tight whitespace-nowrap">
+                    {stat.subtitle}
+                  </div>
+                  {stat.trend && (
+                    <div className="text-[12px] text-emerald-500 font-extrabold mt-0.5">{stat.trend}</div>
+                  )}
+                </>
               )}
             </div>
           </div>

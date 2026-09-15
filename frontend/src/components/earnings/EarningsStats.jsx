@@ -1,11 +1,23 @@
 import React from 'react';
 import { DollarSign, TrendingUp, Clock, Wallet } from 'lucide-react';
 
-export default function EarningsStats({ t }) {
+export default function EarningsStats({ t, loading, summary, periodStats }) {
+  const formatCurrency = (amount) => {
+    return new Intl.NumberFormat('en-IN', {
+      style: 'currency',
+      currency: 'INR',
+      minimumFractionDigits: 2,
+    }).format(amount || 0);
+  };
+
+  const monthlyStats = periodStats?.find(p => p.Timeframe === 'monthly') || {};
+  const monthlyAmount = monthlyStats.periodAmount || 0;
+  const monthlyGrowth = monthlyStats.periodGrowthPercentage || 0;
+
   const stats = [
     {
       title: t('earnings.stats.total'),
-      value: "₹ 48,750.00",
+      value: formatCurrency(summary?.TotalEarned),
       subtitle: t('earnings.stats.totalSub'),
       icon: <DollarSign className="w-7 h-7 text-indigo-600" />,
       bg: "bg-indigo-100",
@@ -14,17 +26,17 @@ export default function EarningsStats({ t }) {
     },
     {
       title: t('earnings.stats.thisMonth'),
-      value: "₹ 12,350.00",
+      value: formatCurrency(monthlyAmount),
       subtitle: t('earnings.stats.thisMonthSub'),
       icon: <TrendingUp className="w-7 h-7 text-green-600" />,
       bg: "bg-green-100",
       borderColor: "border-green-100",
       hoverShadow: "hover:shadow-lg hover:border-green-300",
-      trend: "↑ 18.6%"
+      trend: `${monthlyGrowth >= 0 ? '↑' : '↓'} ${Math.abs(monthlyGrowth)}%`
     },
     {
       title: t('earnings.stats.pending'),
-      value: "₹ 8,450.00",
+      value: formatCurrency(summary?.PendingCommission),
       subtitle: t('earnings.stats.pendingSub'),
       icon: <Clock className="w-7 h-7 text-orange-500" />,
       bg: "bg-orange-100",
@@ -33,7 +45,7 @@ export default function EarningsStats({ t }) {
     },
     {
       title: t('earnings.stats.available'),
-      value: "₹ 5,230.00",
+      value: formatCurrency(summary?.CurrentBalance),
       subtitle: t('earnings.stats.availableSub'),
       icon: <Wallet className="w-7 h-7 text-blue-500" />,
       bg: "bg-blue-100",
@@ -53,14 +65,24 @@ export default function EarningsStats({ t }) {
             <div className={`w-16 h-16 rounded-2xl flex items-center justify-center shrink-0 transition-transform group-hover:scale-110 duration-300 ${stat.bg}`}>
               {stat.icon}
             </div>
-            <div className="flex flex-col">
-              <div className="text-[20px] xl:text-[24px] font-extrabold text-slate-900 leading-none mb-1 whitespace-nowrap">{stat.value}</div>
-              <div className="text-[13px] xl:text-[14px] font-bold text-slate-800 leading-tight mb-0.5 whitespace-nowrap">{stat.title}</div>
-              <div className="text-[11px] xl:text-[12px] font-medium text-slate-500 leading-tight whitespace-nowrap">
-                {stat.subtitle}
-              </div>
-              {stat.trend && (
-                <div className="text-[12px] text-emerald-500 font-extrabold mt-0.5">{stat.trend}</div>
+            <div className="flex flex-col w-full">
+              {loading ? (
+                <>
+                  <div className="h-6 lg:h-7 bg-slate-200 rounded-md w-3/4 mb-1 animate-pulse" />
+                  <div className="h-4 bg-slate-100 rounded-md w-1/2 mb-1 animate-pulse" />
+                  <div className="h-3 bg-slate-50 rounded-md w-2/3 animate-pulse" />
+                </>
+              ) : (
+                <>
+                  <div className="text-[20px] xl:text-[24px] font-extrabold text-slate-900 leading-none mb-1 whitespace-nowrap">{stat.value}</div>
+                  <div className="text-[13px] xl:text-[14px] font-bold text-slate-800 leading-tight mb-0.5 whitespace-nowrap">{stat.title}</div>
+                  <div className="text-[11px] xl:text-[12px] font-medium text-slate-500 leading-tight whitespace-nowrap">
+                    {stat.subtitle}
+                  </div>
+                  {stat.trend && (
+                    <div className={`text-[12px] font-extrabold mt-0.5 ${stat.trend.includes('↓') ? 'text-red-500' : 'text-emerald-500'}`}>{stat.trend}</div>
+                  )}
+                </>
               )}
             </div>
           </div>

@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
 import { Send, Building2, Clock, HelpCircle, ChevronRight, ShieldCheck } from 'lucide-react';
+import { useSelector } from 'react-redux';
 import WithdrawFundsModal from './WithdrawFundsModal';
 
-export default function WalletDetailsSidebar({ t }) {
+export default function WalletDetailsSidebar({ t, loading, summary }) {
   const [isWithdrawModalOpen, setIsWithdrawModalOpen] = useState(false);
+  const user = useSelector((state) => state.auth.user);
 
   return (
     <>
@@ -16,31 +18,43 @@ export default function WalletDetailsSidebar({ t }) {
         <h3 className="text-[15px] font-extrabold text-[#1a1446] mb-5 relative z-10">{t('earnings.wallet.details.title')}</h3>
         
         <div className="flex flex-col gap-3 mb-6 relative z-10">
-          <div className="flex items-center justify-between">
-            <span className="text-[13px] font-semibold text-slate-500">{t('earnings.wallet.details.walletId')}</span>
-            <span className="text-[13px] font-bold text-slate-700">WALLET1254</span>
-          </div>
-          <div className="flex items-center justify-between">
-            <span className="text-[13px] font-semibold text-slate-500">{t('earnings.wallet.details.memberId')}</span>
-            <span className="text-[13px] font-bold text-slate-700">EV123456</span>
-          </div>
-          <div className="flex items-center justify-between">
-            <span className="text-[13px] font-semibold text-slate-500">{t('earnings.wallet.details.walletStatus')}</span>
-            <span className="text-[13px] font-extrabold text-emerald-600">Active</span>
-          </div>
-          <div className="flex items-center justify-between">
-            <span className="text-[13px] font-semibold text-slate-500">{t('earnings.wallet.details.dateCreated')}</span>
-            <span className="text-[13px] font-bold text-slate-700">15 Jan 2025</span>
-          </div>
-          <div className="flex items-center justify-between">
-            <span className="text-[13px] font-semibold text-slate-500">{t('earnings.wallet.details.lastUpdated')}</span>
-            <span className="text-[13px] font-bold text-slate-700">31 May 2025, 07:45 PM</span>
-          </div>
+          {loading ? (
+            Array.from({ length: 5 }).map((_, idx) => (
+              <div key={idx} className="flex items-center justify-between">
+                <div className="h-4 bg-slate-100 rounded animate-pulse w-1/3" />
+                <div className="h-4 bg-slate-200 rounded animate-pulse w-1/4" />
+              </div>
+            ))
+          ) : (
+            <>
+              <div className="flex items-center justify-between">
+                <span className="text-[13px] font-semibold text-slate-500">{t('earnings.wallet.details.walletId')}</span>
+                <span className="text-[13px] font-bold text-slate-700">WLT-{user?.UserID || 'N/A'}</span>
+              </div>
+              <div className="flex items-center justify-between">
+                <span className="text-[13px] font-semibold text-slate-500">{t('earnings.wallet.details.memberId')}</span>
+                <span className="text-[13px] font-bold text-slate-700">{user?.UserID || 'N/A'}</span>
+              </div>
+              <div className="flex items-center justify-between">
+                <span className="text-[13px] font-semibold text-slate-500">{t('earnings.wallet.details.walletStatus')}</span>
+                <span className="text-[13px] font-extrabold text-emerald-600">Active</span>
+              </div>
+              <div className="flex items-center justify-between">
+                <span className="text-[13px] font-semibold text-slate-500">{t('earnings.wallet.details.dateCreated')}</span>
+                <span className="text-[13px] font-bold text-slate-700">N/A</span>
+              </div>
+              <div className="flex items-center justify-between">
+                <span className="text-[13px] font-semibold text-slate-500">{t('earnings.wallet.details.lastUpdated')}</span>
+                <span className="text-[13px] font-bold text-slate-700">N/A</span>
+              </div>
+            </>
+          )}
         </div>
 
         <button 
+          disabled={loading || (summary?.CurrentBalance || 0) <= 0}
           onClick={() => setIsWithdrawModalOpen(true)}
-          className="relative z-10 w-full flex items-center justify-center gap-2 py-3 bg-[#4f3bf3] text-white rounded-xl text-[14px] font-bold hover:bg-indigo-700 hover:shadow-lg hover:-translate-y-0.5 transition-all active:scale-95"
+          className="relative z-10 w-full flex items-center justify-center gap-2 py-3 bg-[#4f3bf3] text-white rounded-xl text-[14px] font-bold hover:bg-indigo-700 hover:shadow-lg hover:-translate-y-0.5 transition-all active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:-translate-y-0 disabled:hover:shadow-none"
         >
           {t('earnings.wallet.details.withdrawNow')}
           <Send className="w-4 h-4 ml-1" />
@@ -116,6 +130,7 @@ export default function WalletDetailsSidebar({ t }) {
     <WithdrawFundsModal 
       isOpen={isWithdrawModalOpen} 
       onClose={() => setIsWithdrawModalOpen(false)} 
+      availableBalance={summary?.CurrentBalance}
     />
     </>
   );

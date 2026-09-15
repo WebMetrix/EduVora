@@ -604,3 +604,14 @@ Manages KYC operations including retrieving, submitting, and updating the status
 - **Updates**:
   - For SUBMIT: Inserts/Updates `Tb_UserKYC` and sets `IsKYCVerified = 1` in `Tb_User`. (Uses sequential `KYCId` generation).
   - For UPDATE_STATUS: Updates `KYCStatusId` in `Tb_UserKYC` and syncs `IsKYCVerified` in `Tb_User`.
+
+### `EV_GetMyEarnings`
+Retrieves Wallet Summary, Timeframe Dashboard Stats (Monthly/Quarterly/Yearly), Earnings Charts, Commission Ledger, and Wallet Transactions for the Earnings Page dynamically.
+- **Inputs**: `@UUID VARCHAR(36)`
+- **Outputs**:
+  1. **Result Set (Wallet & Summary Stats)**: `CurrentBalance`, `TotalEarned`, `TotalWithdrawn`, `TotalTransactions`, `PendingCommission`, `PendingWithdrawal`, `TotalPayouts`, `LastPayoutDate`
+  2. **Result Set (Dashboard Stats)**: Returns 3 rows (`Timeframe`: 'monthly', 'quarterly', 'yearly') containing `periodAmount`, `directAmount`, `level1Amount`, `level2Amount`, `periodGrowthPercentage`
+  3. **Result Set (Earnings Overview Chart)**: Returns grouped time-series data for the Area Chart (`Timeframe`, `dateLabel`, `amount`)
+  4. **Result Set (Earnings By Level)**: Doughnut chart aggregates for the current month (`LevelName`, `Amount`)
+  5. **Result Set (Commission History)**: Detailed commission list (`LedgerId`, `Date`, `FromUserName`, `FromUserId`, `FromUserProfilePic`, `Level`, `Type`, `Description`, `Amount`, `Status`)
+  6. **Result Set (Wallet Transactions)**: Complete transaction list (`TransactionId`, `Date`, `Type`, `Description`, `Amount`, `Status`)

@@ -1,7 +1,16 @@
 import React from 'react';
 import { Wallet, AlertCircle, DollarSign, Award } from 'lucide-react';
 
-export default function WalletSummary({ t }) {
+
+export default function WalletSummary({ t, loading, summary }) {
+  const formatCurrency = (amount) => {
+    return new Intl.NumberFormat('en-IN', {
+      style: 'currency',
+      currency: 'INR',
+      minimumFractionDigits: 2,
+    }).format(amount || 0);
+  };
+
   return (
     <div className="relative overflow-hidden bg-white border border-slate-200 rounded-3xl p-6 shadow-sm flex flex-col h-full group/card transition-all duration-300 hover:-translate-y-1 hover:shadow-md hover:border-indigo-200">
       <div className="absolute top-0 right-0 w-64 h-64 bg-indigo-400/10 rounded-full blur-[80px] -translate-y-1/2 translate-x-1/3 pointer-events-none group-hover/card:bg-indigo-400/20 transition-colors duration-700" />
@@ -20,7 +29,11 @@ export default function WalletSummary({ t }) {
             </div>
             <span className="text-[13px] font-bold text-slate-700">{t('earnings.wallet.available')}</span>
           </div>
-          <span className="text-[14px] font-extrabold text-green-600">₹ 5,230.00</span>
+          {loading ? (
+            <div className="h-4 w-20 bg-slate-200 rounded animate-pulse" />
+          ) : (
+            <span className="text-[14px] font-extrabold text-green-600">{formatCurrency(summary?.CurrentBalance)}</span>
+          )}
         </div>
 
         <div className="flex items-center justify-between pb-4 border-b border-slate-100">
@@ -30,7 +43,11 @@ export default function WalletSummary({ t }) {
             </div>
             <span className="text-[13px] font-bold text-slate-700">{t('earnings.wallet.pending')}</span>
           </div>
-          <span className="text-[14px] font-extrabold text-orange-500">₹ 8,450.00</span>
+          {loading ? (
+            <div className="h-4 w-20 bg-slate-200 rounded animate-pulse" />
+          ) : (
+            <span className="text-[14px] font-extrabold text-orange-500">{formatCurrency(summary?.PendingWithdrawal)}</span>
+          )}
         </div>
 
         <div className="flex items-center justify-between pb-4 border-b border-slate-100">
@@ -40,7 +57,11 @@ export default function WalletSummary({ t }) {
             </div>
             <span className="text-[13px] font-bold text-slate-700">{t('earnings.wallet.totalPayouts')}</span>
           </div>
-          <span className="text-[14px] font-extrabold text-indigo-700">₹ 35,070.00</span>
+          {loading ? (
+            <div className="h-4 w-20 bg-slate-200 rounded animate-pulse" />
+          ) : (
+            <span className="text-[14px] font-extrabold text-indigo-700">{formatCurrency(summary?.TotalWithdrawn)}</span>
+          )}
         </div>
 
         <div className="flex items-center justify-between pb-4">
@@ -51,7 +72,13 @@ export default function WalletSummary({ t }) {
             <span className="text-[13px] font-bold text-slate-700">{t('earnings.wallet.lastPayout')}</span>
           </div>
           <div className="flex items-center gap-1.5 text-slate-500">
-            <span className="text-[13px] font-semibold">20 May 2025</span>
+            {loading ? (
+              <div className="h-4 w-24 bg-slate-200 rounded animate-pulse" />
+            ) : (
+              <span className="text-[13px] font-semibold">
+                {summary?.LastPayoutDate ? new Intl.DateTimeFormat('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }).format(new Date(summary.LastPayoutDate)) : 'N/A'}
+              </span>
+            )}
           </div>
         </div>
       </div>

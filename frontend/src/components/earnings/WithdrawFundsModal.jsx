@@ -56,7 +56,13 @@ export default function WithdrawFundsModal({ isOpen, onClose, availableBalance =
             <div className="bg-indigo-50/50 border border-indigo-100 rounded-[16px] px-4 py-3.5 flex items-center justify-between">
               <div className="flex flex-col gap-1">
                 <span className="text-[13px] font-bold text-[#1a1446]">{t('earnings.withdraw.availableBalance')}</span>
-                <span className="text-[22px] md:text-[24px] font-extrabold text-[#4f3bf3]">₹ {availableBalance}</span>
+                <span className="text-[22px] md:text-[24px] font-extrabold text-[#4f3bf3]">
+                  {new Intl.NumberFormat('en-IN', {
+                    style: 'currency',
+                    currency: 'INR',
+                    minimumFractionDigits: 2,
+                  }).format(availableBalance || 0)}
+                </span>
               </div>
               <div className="w-12 h-12 rounded-full bg-indigo-100/80 flex items-center justify-center border border-indigo-200/50 shadow-sm shrink-0">
                 <Wallet className="w-6 h-6 text-[#4f3bf3]" />

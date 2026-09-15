@@ -1,9 +1,33 @@
 import { useTranslation } from '../../hooks/useTranslation';
 import { Eye, Wallet } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { useDispatch, useSelector } from 'react-redux';
+import { useEffect } from 'react';
+import { fetchEarnings } from '../../redux/slices/earningsSlice';
+import { useNavigate } from 'react-router-dom';
 
 export default function WalletCard() {
   const { t } = useTranslation();
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const { data, loading } = useSelector((state) => state.earnings);
+  
+  useEffect(() => {
+    if (!data) {
+      dispatch(fetchEarnings());
+    }
+  }, [dispatch, data]);
+
+  const summary = data?.summary || {};
+  const currentBalance = summary.CurrentBalance || 0;
+
+  const formatCurrency = (amount) => {
+    return new Intl.NumberFormat('en-IN', {
+      style: 'currency',
+      currency: 'INR',
+      minimumFractionDigits: 2,
+    }).format(amount);
+  };
 
   return (
     <motion.div 
@@ -27,9 +51,13 @@ export default function WalletCard() {
           </div>
           
           <div className="flex items-baseline gap-1 mb-1">
-            <span className="text-[26px] lg:text-[30px] font-extrabold text-white tracking-tight drop-shadow-sm">
-              ₹12,450.00
-            </span>
+            {loading && !data ? (
+              <div className="h-8 w-32 bg-indigo-400/30 rounded animate-pulse" />
+            ) : (
+              <span className="text-[26px] lg:text-[30px] font-extrabold text-white tracking-tight drop-shadow-sm">
+                {formatCurrency(currentBalance)}
+              </span>
+            )}
           </div>
           
           <p className="text-[12px] text-indigo-300 font-medium">
@@ -40,9 +68,10 @@ export default function WalletCard() {
         {/* Right Side: Withdraw Button */}
         <div className="flex items-center">
           <motion.button 
+            onClick={() => navigate('/earnings')}
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
-            className="flex items-center gap-1.5 sm:gap-2 px-3 sm:px-5 py-2 sm:py-2.5 bg-white/10 hover:bg-white/20 backdrop-blur-md border border-white/20 rounded-xl text-white text-[12px] sm:text-[13px] font-bold shadow-lg shadow-black/10 transition-colors"
+            className="flex items-center gap-1.5 sm:gap-2 px-3 sm:px-5 py-2 sm:py-2.5 bg-white/10 hover:bg-white/20 backdrop-blur-md border border-white/20 rounded-xl text-white text-[12px] sm:text-[13px] font-bold shadow-lg shadow-black/10 transition-colors cursor-pointer"
           >
             <Wallet className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
             <span className="hidden sm:inline">{t('dashboard.wallet.withdraw')}</span>

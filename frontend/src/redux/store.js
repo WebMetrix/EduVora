@@ -5,6 +5,7 @@ import networkReducer from './slices/networkSlice';
 import referralReducer from './slices/referralSlice';
 import paymentReducer from './slices/paymentSlice';
 import kycReducer from './slices/kycSlice';
+import earningsReducer from './slices/earningsSlice';
 
 export const store = configureStore({
     reducer: {
@@ -14,5 +15,6 @@ export const store = configureStore({
         referrals: referralReducer,
         payment: paymentReducer,
         kyc: kycReducer,
+        earnings: earningsReducer,
     },
 });

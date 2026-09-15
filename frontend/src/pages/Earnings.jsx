@@ -1,5 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
+import { fetchEarnings } from '../redux/slices/earningsSlice';
 import { useTranslation } from '../hooks/useTranslation';
 import { ChevronRight, LayoutDashboard, History, Wallet } from 'lucide-react';
 import EarningsStats from '../components/earnings/EarningsStats';
@@ -15,7 +17,13 @@ import WalletDetailsSidebar from '../components/earnings/WalletDetailsSidebar';
 
 export default function Earnings() {
   const { t } = useTranslation();
+  const dispatch = useDispatch();
+  const { data: earningsData, loading } = useSelector((state) => state.earnings);
   const [activeTab, setActiveTab] = useState('summary');
+
+  useEffect(() => {
+    dispatch(fetchEarnings());
+  }, [dispatch]);
 
   const tabs = [
     { id: 'summary', label: t('earnings.tabs.summary'), icon: LayoutDashboard },
@@ -46,11 +54,10 @@ export default function Earnings() {
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id)}
-              className={`flex items-center gap-2 px-6 py-2.5 rounded-lg text-[13px] font-bold transition-all whitespace-nowrap outline-none ${
-                isActive 
-                  ? 'bg-indigo-50/50 text-indigo-600 shadow-sm border border-indigo-100/50' 
+              className={`flex items-center gap-2 px-6 py-2.5 rounded-lg text-[13px] font-bold transition-all whitespace-nowrap outline-none ${isActive
+                  ? 'bg-indigo-50/50 text-indigo-600 shadow-sm border border-indigo-100/50'
                   : 'text-slate-500 hover:text-slate-700 hover:bg-slate-50 border border-transparent'
-              }`}
+                }`}
             >
               <Icon className={`w-4 h-4 ${isActive ? 'text-indigo-600' : 'text-slate-400'}`} />
               {tab.label}
@@ -61,15 +68,15 @@ export default function Earnings() {
 
       {activeTab === 'summary' && (
         <div className="flex flex-col gap-6">
-          <EarningsStats t={t} />
-          <EarningsCharts t={t} />
-          
+          <EarningsStats t={t} loading={loading} summary={earningsData?.summary} periodStats={earningsData?.periodStats} />
+          <EarningsCharts t={t} loading={loading} chartData={earningsData?.chartData} levelStats={earningsData?.levelStats} />
+
           <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
             <div className="xl:col-span-2">
-              <RecentCommission t={t} showPagination={true} />
+              <RecentCommission t={t} showPagination={true} loading={loading} commissions={earningsData?.commissions} />
             </div>
             <div className="xl:col-span-1">
-              <WalletSummary t={t} />
+              <WalletSummary t={t} loading={loading} summary={earningsData?.summary} />
             </div>
           </div>
         </div>
@@ -77,18 +84,18 @@ export default function Earnings() {
 
       {activeTab === 'history' && (
         <div className="flex flex-col">
-          <CommissionHistoryStats t={t} />
-          <CommissionHistoryFilters t={t} />
-          <CommissionHistoryTable t={t} />
+          <CommissionHistoryStats t={t} loading={loading} summary={earningsData?.summary} periodStats={earningsData?.periodStats} commissions={earningsData?.commissions} />
+          <CommissionHistoryFilters t={t} loading={loading} />
+          <CommissionHistoryTable t={t} loading={loading} commissions={earningsData?.commissions} />
         </div>
       )}
 
       {activeTab === 'wallet' && (
         <div className="flex flex-col gap-6">
-          <WalletStats t={t} />
+          <WalletStats t={t} loading={loading} summary={earningsData?.summary} transactions={earningsData?.transactions} />
           <div className="grid grid-cols-1 2xl:grid-cols-3 gap-6">
-            <WalletTransactions t={t} />
-            <WalletDetailsSidebar t={t} />
+            <WalletTransactions t={t} loading={loading} transactions={earningsData?.transactions} />
+            <WalletDetailsSidebar t={t} loading={loading} summary={earningsData?.summary} />
           </div>
         </div>
       )}
