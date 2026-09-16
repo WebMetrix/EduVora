@@ -10,15 +10,23 @@ RULES_PATH = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'services'
 def load_masking_rules():
     try:
         with open(RULES_PATH, 'r') as f:
-            rules = json.load(f)
-            return rules['documents']['1']['maskingRules']
+            full_rules = json.load(f)
+            doc_rules = full_rules['documents']['1']
+            
+            return {
+                "maskingRules": doc_rules['maskingRules'],
+                "errorMessage": doc_rules['serverSideProcessing']['failClosedBehavior']['userMessage']
+            }
     except Exception as e:
         logger.error(f"Failed to load rules.json for masking: {e}. Falling back to env vars.")
         return {
-            "digitPattern": os.getenv("MASKING_DIGIT_PATTERN", r'^\d{4}$'),
-            "minDigitGroupsRequired": int(os.getenv("MASKING_MIN_GROUPS", "2")),
-            "groupsToMask": int(os.getenv("MASKING_GROUPS_TO_MASK", "2")),
-            "maskColorRGB": [int(x) for x in os.getenv("MASKING_COLOR_RGB", "0,0,0").split(',')]
+            "maskingRules": {
+                "digitPattern": os.getenv("MASKING_DIGIT_PATTERN", r'^\d{4}$'),
+                "minDigitGroupsRequired": int(os.getenv("MASKING_MIN_GROUPS", "2")),
+                "groupsToMask": int(os.getenv("MASKING_GROUPS_TO_MASK", "2")),
+                "maskColorRGB": [int(x) for x in os.getenv("MASKING_COLOR_RGB", "0,0,0").split(',')]
+            },
+            "errorMessage": "We could not clearly read your Aadhaar card. Please upload a clearer, un-skewed, well-lit photo of your Aadhaar card and try again."
         }
 
 def mask_aadhaar(image_path):
@@ -30,43 +38,58 @@ def mask_aadhaar(image_path):
     
     if not os.path.exists(image_path):
         logger.error(f"File does not exist: {image_path}")
-        return False, "File does not exist."
+        return False, 4
 
     img = cv2.imread(image_path)
     if img is None:
         logger.error(f"Failed to load image for masking: {image_path}")
-        return False, "Failed to load image."
+        return False, 4
 
     gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-    rules = load_masking_rules()
+    loaded_config = load_masking_rules()
+    rules = loaded_config['maskingRules']
+    error_message = loaded_config['errorMessage']
     color_bgr = tuple(reversed(rules['maskColorRGB'])) # cv2 uses BGR instead of RGB
 
     # 1. Find and Mask QR Code using OpenCV
     qr_detector = cv2.QRCodeDetector()
-    retval, decoded_info, points, straight_qrcode = qr_detector.detectAndDecodeMulti(img)
-    
-    # Fallback to grayscale if BGR fails
-    if not retval or points is None:
-        retval, decoded_info, points, straight_qrcode = qr_detector.detectAndDecodeMulti(gray)
-        
-    # Fallback to just detect if decode fails
-    if not retval or points is None:
-        retval, points = qr_detector.detectMulti(gray)
+    found_qr = False
 
-    if retval and points is not None and len(points) > 0:
-        for qr_points in points:
-            pts = qr_points.astype(int)
-            cv2.fillPoly(img, [pts], color_bgr)
-            logger.info("QR code detected and successfully masked.")
-    else:
-        logger.info("No QR code detected to mask.")
+    # Try different scales to help OpenCV detect dense/high-res Aadhaar QR codes
+    for scale in [1.0, 0.5, 0.25]:
+        if scale == 1.0:
+            test_img = img
+            test_gray = gray
+        else:
+            test_img = cv2.resize(img, (0, 0), fx=scale, fy=scale)
+            test_gray = cv2.resize(gray, (0, 0), fx=scale, fy=scale)
+
+        retval, decoded_info, points, straight_qrcode = qr_detector.detectAndDecodeMulti(test_img)
+        
+        if not retval or points is None:
+            retval, decoded_info, points, straight_qrcode = qr_detector.detectAndDecodeMulti(test_gray)
+            
+        if not retval or points is None:
+            retval, points = qr_detector.detectMulti(test_gray)
+
+        if retval and points is not None and len(points) > 0:
+            found_qr = True
+            for qr_points in points:
+                # Scale points back up to original image resolution
+                pts = (qr_points / scale).astype(int)
+                cv2.fillPoly(img, [pts], color_bgr)
+            logger.info(f"QR code detected at scale {scale} and successfully masked.")
+            break
+
+    if not found_qr:
+        logger.info("No QR code detected to mask despite multiple scale attempts.")
 
     # 2. OCR text to find 4-digit groups
     try:
         data = pytesseract.image_to_data(gray, output_type=pytesseract.Output.DICT)
     except Exception as e:
         logger.error(f"Tesseract Error during masking: {e}")
-        return False, "OCR Engine failed to initialize. Please check Tesseract configuration."
+        return False, 4
 
     n_boxes = len(data['text'])
     digit_groups_found = 0
@@ -90,7 +113,8 @@ def mask_aadhaar(image_path):
     # 3. Validation: Check if we found the minimum required groups
     if digit_groups_found < rules['minDigitGroupsRequired']:
         logger.warning(f"Aadhaar scan failed for {image_path}: Found {digit_groups_found} digit groups, required {rules['minDigitGroupsRequired']}.")
-        return False, "We could not clearly read your Aadhaar card. Please upload a clearer, un-skewed, well-lit photo of your Aadhaar card and try again."
+        logger.warning(f"Error Message: {error_message}")
+        return False, 4
 
     # 4. Save the masked image, overwriting the original temp image
     cv2.imwrite(image_path, img)
