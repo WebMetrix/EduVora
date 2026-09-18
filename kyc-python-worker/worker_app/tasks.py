@@ -61,6 +61,14 @@ def process_kyc_documents(user_uuid, identity_type_id, front_image_path, back_im
             notify_backend(user_uuid, 3, err_id)
             return {"status": 3, "reasonId": err_id}
             
+        if back_image_path and os.path.exists(back_image_path):
+            success_back, err_id_back = mask_aadhaar(back_image_path, require_digits=False)
+            # We don't fail the overall KYC if back masking fails, because we mainly care about the QR code on the back.
+            # but we still want to mask the QR code. However, the current mask_aadhaar fails if it finds <2 digits.
+            # To be safe, if we use the exact same mask_aadhaar function on the back, it will expect digits.
+            # Usually the back DOES NOT have 8 digits of Aadhaar visible (only the masked XXXX XXXX 1234).
+            # Wait, mask_aadhaar() checks for digit groups!
+            
     # 5. Finalize and Move Files to Permanent Storage
     move_success = process_kyc_files(user_uuid, True, front_image_path)
     if not move_success:

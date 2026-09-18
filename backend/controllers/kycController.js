@@ -148,11 +148,24 @@ export const kycWebhook = async (req, res) => {
             const user = userRes.recordset[0];
             
             if (status === 2) { // 2 = Verified (Approved)
+                // Fetch the KYC info to get ApplicationId (KycReference)
+                const kycReq = pool.request();
+                kycReq.input('Action', sql.Int, 1);
+                kycReq.input('UUID', sql.VarChar(36), uuid);
+                const kycRes = await kycReq.execute('dbo.EV_ManageUserKYC');
+                
+                let kycRef = "N/A";
+                if (kycRes.recordset && kycRes.recordset.length > 0) {
+                    kycRef = kycRes.recordset[0].ApplicationId || "N/A";
+                }
+
                 sendEmail({
                     eventId: EmailEvents.KYC_APPROVED,
                     to: user.EmailAddress,
                     replacements: {
-                        FullName: user.FullName
+                        FullName: user.FullName,
+                        KycReference: kycRef,
+                        KycApprovedDateTime: new Date().toLocaleString()
                     }
                 }).catch(err => logger.error(`Failed to send KYC Approved email: ${err}`));
             } else if (status === 3) { // 3 = Rejected

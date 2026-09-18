@@ -150,6 +150,14 @@ const storage = multer.diskStorage({
       const userUuid = req.user.id;
       const finalUploadPath = path.join(baseUploadPath, userUuid);
 
+      // If this is the first file being processed in this request, wipe the old folder
+      if (!req.kycFolderCleared) {
+        if (fs.existsSync(finalUploadPath)) {
+          fs.rmSync(finalUploadPath, { recursive: true, force: true });
+        }
+        req.kycFolderCleared = true;
+      }
+
       if (!fs.existsSync(finalUploadPath)) {
         try {
           // Direct mkdir avoids Node.js UNC path bugs with recursive: true
@@ -157,14 +165,6 @@ const storage = multer.diskStorage({
         } catch (err) {
           logger.warn("Direct mkdir failed, attempting recursive:", err.message);
           fs.mkdirSync(finalUploadPath, { recursive: true });
-        }
-      } else {
-        const standardName = getStandardName(file.fieldname, req.body.identityTypeId);
-        const existingFiles = fs.readdirSync(finalUploadPath);
-        for (const existingFile of existingFiles) {
-          if (existingFile.startsWith(standardName)) {
-            fs.unlinkSync(path.join(finalUploadPath, existingFile));
-          }
         }
       }
       

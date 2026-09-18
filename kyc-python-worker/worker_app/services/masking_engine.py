@@ -122,7 +122,7 @@ def load_masking_rules():
     
 #     return True, None
 
-def mask_aadhaar(image_path):
+def mask_aadhaar(image_path, require_digits=True):
     """
     OCR (Tesseract) and black-out masking for Aadhaar.
     Returns (True, None) if successful, (False, error_msg) if it fails.
@@ -241,14 +241,19 @@ def mask_aadhaar(image_path):
     n_boxes = len(data['text'])
     digit_groups_found = 0
     masked_groups = 0
+    
+    max_groups_to_mask = rules['groupsToMask']
 
     for i in range(n_boxes):
         word = data['text'][i].strip()
         
-        if re.fullmatch(rules['digitPattern'], word):
+        # Clean any stray punctuation that Tesseract appended (e.g. "6393." -> "6393")
+        clean_word = re.sub(r'^[^0-9]+|[^0-9]+$', '', word)
+        
+        if re.fullmatch(rules['digitPattern'], clean_word):
             digit_groups_found += 1
             
-            if masked_groups < rules['groupsToMask']:
+            if masked_groups < max_groups_to_mask:
                 x, y = data['left'][i], data['top'][i]
                 w, h = data['width'][i], data['height'][i]
                 
@@ -260,14 +265,25 @@ def mask_aadhaar(image_path):
                 masked_groups += 1
 
     # ==========================================
-    # 3. Validation and Save
+    # 3. Save the masked image
     # ==========================================
-    if digit_groups_found < rules['minDigitGroupsRequired']:
+    # We save it now so that if validation fails, the masked image is still on disk.
+    cv2.imwrite(image_path, img)
+    logger.info(f"Successfully applied masking and saved to {image_path}")
+
+    # ==========================================
+    # 4. Validation: Check if we successfully processed the card
+    # ==========================================
+    if require_digits and digit_groups_found < rules['minDigitGroupsRequired']:
         logger.warning(f"Scan failed for {image_path}: Found {digit_groups_found} digit groups, required {rules['minDigitGroupsRequired']}.")
         logger.warning(f"Error Message: {error_message}")
         return False, 4
+        
+    if not require_digits and digit_groups_found == 0 and not found_qr:
+        # For back image, we must find AT LEAST the QR code or the VID digits. 
+        # If both failed, the image is unreadable or not an Aadhaar card.
+        logger.warning(f"Back scan failed for {image_path}: No QR code or VID digits found.")
+        logger.warning(f"Error Message: {error_message}")
+        return False, 4
 
-    cv2.imwrite(image_path, img)
-    logger.info(f"Successfully masked Aadhaar card and saved to {image_path}")
-    
     return True, None

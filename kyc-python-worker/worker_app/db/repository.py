@@ -40,19 +40,13 @@ def process_kyc_files(user_uuid, is_passed, front_image_path=None):
         final_user_folder = os.path.join(user_kyc_base, user_uuid)
         
         try:
-            # Move files from TempKYC to UserKYC
-            os.makedirs(final_user_folder, exist_ok=True)
+            # If the final user KYC folder already exists, delete it first
+            if os.path.exists(final_user_folder):
+                shutil.rmtree(final_user_folder)
                 
-            for filename in os.listdir(temp_user_folder):
-                source_file = os.path.join(temp_user_folder, filename)
-                dest_file = os.path.join(final_user_folder, filename)
+            # Rename/Move the entire TempKYC folder to the UserKYC folder
+            shutil.move(temp_user_folder, final_user_folder)
                 
-                if os.path.exists(dest_file):
-                    os.remove(dest_file)
-                    
-                shutil.move(source_file, dest_file)
-                
-            shutil.rmtree(temp_user_folder)
             print(f"Successfully moved KYC documents for user {user_uuid} to {final_user_folder}")
             return True
         except Exception as e:
