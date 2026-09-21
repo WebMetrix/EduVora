@@ -75,11 +75,11 @@ export default function KycDocumentUploadForm({ formData, updateFormData, onNext
             <label className="text-[13px] font-bold text-slate-800 mb-2 flex items-center gap-2">
               <FileText className="w-4 h-4 text-slate-500" />
               {formData.identityTypeId 
-                ? `${identityProofTypes?.find(o => o.value == formData.identityTypeId)?.label || 'Identity Proof'} Number` 
-                : 'Identity Proof Number'}
+                ? `${identityProofTypes?.find(o => o.value == formData.identityTypeId)?.label || t('kyc.documentUpload.identityProofFallback')} Number` 
+                : t('kyc.documentUpload.identityProofNumberFallback')}
             </label>
             <DelayedMaskInput
-              placeholder={`E.G. ENTER DOCUMENT NUMBER`}
+              placeholder={t('kyc.documentUpload.enterDocNumberPlaceholder')}
               value={formData.identityProofNumber || ''}
               onChange={(val) => updateFormData('identityProofNumber', val)}
               disabled={!formData.identityTypeId}
@@ -152,13 +152,13 @@ export default function KycDocumentUploadForm({ formData, updateFormData, onNext
           <div className="mb-5">
             <label className="text-[13px] font-bold text-slate-800 mb-2 flex items-center gap-2">
               <CreditCard className="w-4 h-4 text-slate-500" />
-              PAN Number
+              {t('kyc.personalInfo.panNumber')}
             </label>
             <input 
               type="text"
               value={formData.panNumber || ''}
               onChange={(e) => updateFormData('panNumber', e.target.value.toUpperCase().replace(/[^A-Z0-9]/ig, '').slice(0, 10))}
-              placeholder="ABCDE1234F"
+              placeholder={t('kyc.personalInfo.panPlaceholder')}
               maxLength={10}
               className="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl text-[14px] text-slate-900 font-medium focus:outline-none focus:border-[#4f3bf3] focus:ring-1 focus:ring-[#4f3bf3] transition-all placeholder:text-slate-400"
             />
@@ -200,7 +200,7 @@ export default function KycDocumentUploadForm({ formData, updateFormData, onNext
         <div className="hidden sm:block w-1 h-1 rounded-full bg-slate-300"></div>
         <div className="flex items-center gap-2 text-[13px] font-semibold text-slate-700">
           <Info className="w-4 h-4 text-[#4f3bf3]" />
-          <span>{t('kyc.documentUpload.maxFileSize')} <span className="text-indigo-600">5MB per document</span></span>
+          <span>{t('kyc.documentUpload.maxFileSize')} <span className="text-indigo-600">{t('kyc.documentUpload.maxSizeLimit')}</span></span>
         </div>
       </div>
 

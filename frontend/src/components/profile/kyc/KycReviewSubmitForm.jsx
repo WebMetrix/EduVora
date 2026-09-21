@@ -120,12 +120,12 @@ export default function KycReviewSubmitForm({ formData, onPrev, onEditStep, onSu
             </div>
             <div className="flex flex-col sm:flex-row sm:items-center py-4 border-b border-slate-100">
               <span className="text-[14px] text-slate-500 font-medium w-full sm:w-[250px] shrink-0 mb-1 sm:mb-0">
-                {identityProofTypes?.find(o => o.value == formData.identityTypeId)?.label ? `${identityProofTypes.find(o => o.value == formData.identityTypeId).label} Number` : 'Identity Proof Number'}
+                {identityProofTypes?.find(o => o.value == formData.identityTypeId)?.label ? `${identityProofTypes.find(o => o.value == formData.identityTypeId).label} Number` : t('kyc.documentUpload.identityProofNumberFallback')}
               </span>
               <span className="text-[14px] font-bold text-slate-900">{formData.identityProofNumber ? staticMask(formData.identityProofNumber) : t('kyc.reviewSubmit.emptyFallback')}</span>
             </div>
             <div className="flex flex-col sm:flex-row sm:items-center py-4 border-b border-slate-100">
-              <span className="text-[14px] text-slate-500 font-medium w-full sm:w-[250px] shrink-0 mb-1 sm:mb-0">PAN Number</span>
+              <span className="text-[14px] text-slate-500 font-medium w-full sm:w-[250px] shrink-0 mb-1 sm:mb-0">{t('kyc.personalInfo.panNumber')}</span>
               <span className="text-[14px] font-bold text-slate-900">{formData.panNumber || t('kyc.reviewSubmit.emptyFallback')}</span>
             </div>
             <div className="flex flex-col sm:flex-row sm:items-start py-4">
@@ -164,7 +164,7 @@ export default function KycReviewSubmitForm({ formData, onPrev, onEditStep, onSu
                 <div className="min-w-0">
                   <h5 className="text-[14px] font-bold text-[#1a1446] truncate">{t('kyc.documentUpload.identityProof')}</h5>
                   <p className="text-[12px] text-slate-500 font-medium mt-0.5 truncate">
-                    {identityProofTypes?.find(o => o.value == formData.identityTypeId)?.label || 'Document Provided'}
+                    {identityProofTypes?.find(o => o.value == formData.identityTypeId)?.label || t('kyc.reviewSubmit.documentProvided')}
                   </p>
                 </div>
               </div>
