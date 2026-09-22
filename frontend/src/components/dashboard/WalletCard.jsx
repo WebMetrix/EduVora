@@ -11,7 +11,7 @@ export default function WalletCard() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { data, loading } = useSelector((state) => state.earnings);
-  
+
   useEffect(() => {
     if (!data) {
       dispatch(fetchEarnings());
@@ -30,26 +30,26 @@ export default function WalletCard() {
   };
 
   return (
-    <motion.div 
+    <motion.div
       whileHover={{ y: -4 }}
       className="relative w-full h-full rounded-3xl bg-linear-to-br from-indigo-700 via-indigo-800 to-indigo-900 p-4 shadow-xl shadow-indigo-900/20 overflow-hidden group"
     >
       {/* Decorative background elements */}
       <div className="absolute top-0 right-0 w-[400px] h-[400px] bg-indigo-500/20 rounded-full blur-[80px] -translate-y-1/2 translate-x-1/3 group-hover:bg-indigo-400/20 transition-colors duration-700" />
       <div className="absolute bottom-0 left-0 w-64 h-64 bg-purple-500/20 rounded-full blur-[60px] translate-y-1/3 -translate-x-1/4" />
-      
+
       {/* Wave pattern overlay */}
       <div className="absolute inset-0 opacity-10 bg-[radial-gradient(ellipse_at_top,var(--tw-gradient-stops))] from-white via-transparent to-transparent pointer-events-none" />
 
       <div className="relative z-10 flex flex-row items-center justify-between gap-4 h-full">
-        
+
         {/* Left Side: Balance Info */}
         <div className="flex flex-col justify-start">
           <div className="flex items-center gap-2 text-indigo-200 mb-2 mt-1">
             <span className="text-[14px] font-medium">{t('dashboard.wallet.title')}</span>
             <Eye className="w-3 h-3 cursor-pointer hover:text-white transition-colors" />
           </div>
-          
+
           <div className="flex items-baseline gap-1 mb-1">
             {loading && !data ? (
               <div className="h-8 w-32 bg-indigo-400/30 rounded animate-pulse" />
@@ -59,7 +59,7 @@ export default function WalletCard() {
               </span>
             )}
           </div>
-          
+
           <p className="text-[12px] text-indigo-300 font-medium">
             {t('dashboard.wallet.subtitle')}
           </p>
@@ -67,8 +67,8 @@ export default function WalletCard() {
 
         {/* Right Side: Withdraw Button */}
         <div className="flex items-center">
-          <motion.button 
-            onClick={() => navigate('/earnings')}
+          <motion.button
+            onClick={() => navigate('/earnings', { state: { tab: 'wallet' } })}
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
             className="flex items-center gap-1.5 sm:gap-2 px-3 sm:px-5 py-2 sm:py-2.5 bg-white/10 hover:bg-white/20 backdrop-blur-md border border-white/20 rounded-xl text-white text-[12px] sm:text-[13px] font-bold shadow-lg shadow-black/10 transition-colors cursor-pointer"

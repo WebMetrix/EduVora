@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { fetchEarnings } from '../redux/slices/earningsSlice';
+import { fetchKycDetails } from '../redux/slices/kycSlice';
 import { useTranslation } from '../hooks/useTranslation';
 import { ChevronRight, LayoutDashboard, History, Wallet } from 'lucide-react';
 import EarningsStats from '../components/earnings/EarningsStats';
@@ -18,11 +19,20 @@ import WalletDetailsSidebar from '../components/earnings/WalletDetailsSidebar';
 export default function Earnings() {
   const { t } = useTranslation();
   const dispatch = useDispatch();
+  const location = useLocation();
   const { data: earningsData, loading } = useSelector((state) => state.earnings);
-  const [activeTab, setActiveTab] = useState('summary');
+  const [activeTab, setActiveTab] = useState(location.state?.tab || 'summary');
+
+  useEffect(() => {
+    // If the location state changes, update the tab
+    if (location.state?.tab) {
+      setActiveTab(location.state.tab);
+    }
+  }, [location.state]);
 
   useEffect(() => {
     dispatch(fetchEarnings());
+    dispatch(fetchKycDetails());
   }, [dispatch]);
 
   const tabs = [

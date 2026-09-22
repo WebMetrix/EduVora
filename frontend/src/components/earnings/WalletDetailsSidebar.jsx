@@ -1,11 +1,15 @@
 import React, { useState } from 'react';
-import { Send, Building2, Clock, HelpCircle, ChevronRight, ShieldCheck } from 'lucide-react';
+import { Send, Building2, Clock, HelpCircle, ChevronRight, ShieldCheck, FileWarning } from 'lucide-react';
 import { useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 import WithdrawFundsModal from './WithdrawFundsModal';
 
 export default function WalletDetailsSidebar({ t, loading, summary }) {
   const [isWithdrawModalOpen, setIsWithdrawModalOpen] = useState(false);
+  const navigate = useNavigate();
   const user = useSelector((state) => state.auth.user);
+  const kycData = useSelector((state) => state.kyc?.data);
+  const isKycVerified = kycData?.KYCStatusId === 2;
 
   return (
     <>
@@ -51,14 +55,29 @@ export default function WalletDetailsSidebar({ t, loading, summary }) {
           )}
         </div>
 
-        <button 
-          disabled={loading || (summary?.CurrentBalance || 0) <= 0}
-          onClick={() => setIsWithdrawModalOpen(true)}
-          className="relative z-10 w-full flex items-center justify-center gap-2 py-3 bg-[#4f3bf3] text-white rounded-xl text-[14px] font-bold hover:bg-indigo-700 hover:shadow-lg hover:-translate-y-0.5 transition-all active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:-translate-y-0 disabled:hover:shadow-none"
-        >
-          {t('earnings.wallet.details.withdrawNow')}
-          <Send className="w-4 h-4 ml-1" />
-        </button>
+        {!isKycVerified ? (
+          <div className="flex flex-col gap-2 relative z-10 w-full">
+            <div className="flex items-center justify-center gap-2 py-2 text-amber-600 bg-amber-50 rounded-xl text-[12px] font-bold border border-amber-200">
+              <FileWarning className="w-4 h-4" />
+              {t('earnings.wallet.details.verifyKycFirst')}
+            </div>
+            <button 
+              onClick={() => navigate('/kyc')}
+              className="w-full flex items-center justify-center gap-2 py-3 bg-amber-500 text-white rounded-xl text-[14px] font-bold hover:bg-amber-600 hover:shadow-lg hover:-translate-y-0.5 transition-all active:scale-95"
+            >
+              {t('earnings.wallet.details.verifyKycBtn')}
+            </button>
+          </div>
+        ) : (
+          <button 
+            disabled={loading || (summary?.CurrentBalance || 0) <= 0}
+            onClick={() => setIsWithdrawModalOpen(true)}
+            className="relative z-10 w-full flex items-center justify-center gap-2 py-3 bg-[#4f3bf3] text-white rounded-xl text-[14px] font-bold hover:bg-indigo-700 hover:shadow-lg hover:-translate-y-0.5 transition-all active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:-translate-y-0 disabled:hover:shadow-none"
+          >
+            {t('earnings.wallet.details.withdrawNow')}
+            <Send className="w-4 h-4 ml-1" />
+          </button>
+        )}
       </div>
 
       {/* Quick Actions Card */}

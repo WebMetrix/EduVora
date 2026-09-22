@@ -1,8 +1,10 @@
 import React from 'react';
 import { Wallet, AlertCircle, DollarSign, Award } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
 
 export default function WalletSummary({ t, loading, summary }) {
+  const navigate = useNavigate();
   const formatCurrency = (amount) => {
     return new Intl.NumberFormat('en-IN', {
       style: 'currency',
@@ -16,9 +18,9 @@ export default function WalletSummary({ t, loading, summary }) {
       <div className="absolute top-0 right-0 w-64 h-64 bg-indigo-400/10 rounded-full blur-[80px] -translate-y-1/2 translate-x-1/3 pointer-events-none group-hover/card:bg-indigo-400/20 transition-colors duration-700" />
       <div className="flex justify-between items-center mb-6 relative z-10">
         <h2 className="text-[17px] font-extrabold text-slate-900">{t('earnings.wallet.summary')}</h2>
-        <button className="flex items-center px-4 py-2 rounded-lg border border-indigo-200 text-[12px] font-bold text-indigo-600 hover:bg-indigo-50 transition-colors shadow-sm">
+        {/* <button className="flex items-center px-4 py-2 rounded-lg border border-indigo-200 text-[12px] font-bold text-indigo-600 hover:bg-indigo-50 transition-colors shadow-sm">
           {t('earnings.wallet.view')}
-        </button>
+        </button> */}
       </div>
 
       <div className="flex flex-col gap-4 flex-1 relative z-10">
@@ -83,7 +85,10 @@ export default function WalletSummary({ t, loading, summary }) {
         </div>
       </div>
 
-      <button className="relative z-10 w-full mt-4 flex items-center justify-center gap-2 py-3 px-4 rounded-xl border-2 border-indigo-600 text-indigo-600 font-bold text-[13px] hover:bg-indigo-50 transition-all duration-300 hover:-translate-y-1 hover:shadow-md">
+      <button 
+        onClick={() => navigate('/earnings', { state: { tab: 'wallet' }, replace: true })}
+        className="relative z-10 w-full mt-4 flex items-center justify-center gap-2 py-3 px-4 rounded-xl border-2 border-indigo-600 text-indigo-600 font-bold text-[13px] hover:bg-indigo-50 transition-all duration-300 hover:-translate-y-1 hover:shadow-md"
+      >
         <Wallet className="w-4 h-4" />
         {t('earnings.wallet.goToWallet')}
       </button>

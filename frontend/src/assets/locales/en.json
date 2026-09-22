@@ -939,7 +939,9 @@
         "walletStatus": "Wallet Status",
         "dateCreated": "Date Created",
         "lastUpdated": "Last Updated",
-        "withdrawNow": "Withdraw Now"
+        "withdrawNow": "Withdraw Now",
+        "verifyKycFirst": "Please verify KYC first",
+        "verifyKycBtn": "Verify KYC"
       },
       "actions": {
         "title": "Quick Actions",
