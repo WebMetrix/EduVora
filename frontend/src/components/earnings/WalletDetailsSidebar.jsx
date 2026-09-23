@@ -57,13 +57,13 @@ export default function WalletDetailsSidebar({ t, loading, summary }) {
 
         {!isKycVerified ? (
           <div className="flex flex-col gap-2 relative z-10 w-full">
-            <div className="flex items-center justify-center gap-2 py-2 text-blue-700 bg-blue-50 rounded-xl text-[12px] font-bold border border-blue-200">
+            <div className="flex items-center justify-center gap-2 py-2 text-amber-600 bg-amber-50 rounded-xl text-[12px] font-bold border border-amber-200">
               <FileWarning className="w-4 h-4" />
               {t('earnings.wallet.details.verifyKycFirst')}
             </div>
             <button 
               onClick={() => navigate('/kyc')}
-              className="w-full flex items-center justify-center gap-2 py-3 bg-blue-600 text-white rounded-xl text-[14px] font-bold hover:bg-blue-700 hover:shadow-lg hover:-translate-y-0.5 transition-all active:scale-95"
+              className="w-full flex items-center justify-center gap-2 py-3 bg-amber-500 text-white rounded-xl text-[14px] font-bold hover:bg-amber-600 hover:shadow-lg hover:-translate-y-0.5 transition-all active:scale-95"
             >
               {t('earnings.wallet.details.verifyKycBtn')}
             </button>

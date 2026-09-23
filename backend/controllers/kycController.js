@@ -132,61 +132,6 @@ export const submitKyc = async (req, res) => {
     }
 };
 
-export const adminVerifyKyc = async (req, res) => {
-    // #swagger.tags = ['KYC Admin']
-    // Admin manually verifies the KYC and triggers the email
-    try {
-        const { uuid } = req.body;
-        if (!uuid) return res.status(400).json({ message: 'UUID is required' });
-
-        // Update only the Tb_User table since Python worker already updated Tb_UserKYC
-        const updateReq = pool.request();
-        updateReq.input('UUID', sql.VarChar(36), uuid);
-        await updateReq.query(`
-            UPDATE [dbo].[Tb_User] SET IsKYCVerified = 2 WHERE UUID = @UUID;
-        `);
-
-        // Get User Profile to send email
-        const userReq = pool.request();
-        userReq.input('UUID', sql.VarChar(36), uuid);
-        const userRes = await userReq.execute('dbo.EV_GetUserProfile');
-        
-        if (userRes.recordset && userRes.recordset.length > 0) {
-            const user = userRes.recordset[0];
-            
-            // Get ApplicationId
-            const kycReq = pool.request();
-            kycReq.input('Action', sql.Int, 1);
-            kycReq.input('UUID', sql.VarChar(36), uuid);
-            const kycRes = await kycReq.execute('dbo.EV_ManageUserKYC');
-            
-            let kycRef = "N/A";
-            if (kycRes.recordset && kycRes.recordset.length > 0) {
-                kycRef = kycRes.recordset[0].ApplicationId || "N/A";
-            }
-
-            // Trigger Email
-            await sendEmail({
-                eventId: EmailEvents.KYC_APPROVED,
-                to: user.EmailAddress,
-                replacements: {
-                    FullName: user.FullName,
-                    KycReference: kycRef,
-                    KycApprovedDateTime: new Date().toLocaleString()
-                }
-            });
-            
-            logger.info(`[ADMIN KYC VERIFIED] UUID: ${uuid} verified manually.`);
-            res.status(200).json({ message: 'User KYC manually verified and email triggered successfully.' });
-        } else {
-            res.status(404).json({ message: 'User not found' });
-        }
-    } catch (error) {
-        logger.error('Error in adminVerifyKyc:', error);
-        res.status(500).json({ message: 'Failed to verify KYC' });
-    }
-};
-
 export const kycWebhook = async (req, res) => {
     // #swagger.tags = ['KYC']
     // Receives updates from the Python Celery Worker when processing finishes
@@ -203,10 +148,26 @@ export const kycWebhook = async (req, res) => {
             const user = userRes.recordset[0];
             
             if (status === 2) { // 2 = Verified (Approved)
-                // Python worker has verified the documents.
-                // The admin will now review the file path manually and trigger adminVerifyKyc
-                // No email is sent here; it is deferred until admin review.
-                logger.info(`[KYC WEBHOOK] UUID: ${uuid} verified by Python. Awaiting Admin manual review.`);
+                // Fetch the KYC info to get ApplicationId (KycReference)
+                const kycReq = pool.request();
+                kycReq.input('Action', sql.Int, 1);
+                kycReq.input('UUID', sql.VarChar(36), uuid);
+                const kycRes = await kycReq.execute('dbo.EV_ManageUserKYC');
+                
+                let kycRef = "N/A";
+                if (kycRes.recordset && kycRes.recordset.length > 0) {
+                    kycRef = kycRes.recordset[0].ApplicationId || "N/A";
+                }
+
+                sendEmail({
+                    eventId: EmailEvents.KYC_APPROVED,
+                    to: user.EmailAddress,
+                    replacements: {
+                        FullName: user.FullName,
+                        KycReference: kycRef,
+                        KycApprovedDateTime: new Date().toLocaleString()
+                    }
+                }).catch(err => logger.error(`Failed to send KYC Approved email: ${err}`));
             } else if (status === 3) { // 3 = Rejected
                 // Fetch the reason text
                 const kycReq = pool.request();
