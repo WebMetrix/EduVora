@@ -602,8 +602,8 @@ Manages KYC operations including retrieving, submitting, and updating the status
   - For GET: Returns Result Set containing KYC details.
   - For SUBMIT / UPDATE_STATUS: Returns `@Success INT`, `Message VARCHAR`.
 - **Updates**:
-  - For SUBMIT: Inserts/Updates `Tb_UserKYC` and sets `IsKYCVerified = 1` in `Tb_User`. (Uses sequential `KYCId` generation).
-  - For UPDATE_STATUS: Updates `KYCStatusId` in `Tb_UserKYC` and syncs `IsKYCVerified` in `Tb_User`.
+  - For SUBMIT: Inserts/Updates `Tb_UserKYC` and syncs `IsKYCVerified = 1` (Pending) in `Tb_User`. (Uses sequential `KYCId` generation).
+  - For UPDATE_STATUS: Updates `KYCStatusId` in `Tb_UserKYC`. If Rejected (3), syncs `IsKYCVerified = 3` in `Tb_User` (Note: Does not sync Verified status yet).
 
 ### `EV_GetMyEarnings`
 Retrieves Wallet Summary, Timeframe Dashboard Stats (Monthly/Quarterly/Yearly), Earnings Charts, Commission Ledger, and Wallet Transactions for the Earnings Page dynamically.

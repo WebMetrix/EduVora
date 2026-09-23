@@ -112,7 +112,7 @@ import path from 'path';
 import fs from 'fs';
 import { isLoggedIn } from '../middlewares/authMiddleware.js';
 import pool, { sql } from '../config/db.js';
-import { getKycDetails, submitKyc, kycWebhook, getIdentityProofTypes } from '../controllers/kycController.js';
+import { getKycDetails, submitKyc, kycWebhook, getIdentityProofTypes, adminVerifyKyc } from '../controllers/kycController.js';
 import logger from '../utils/logger.js';
 
 const router = express.Router();
@@ -267,6 +267,22 @@ router.post('/webhook', (req, res, next) => {
     }
   */
   kycWebhook(req, res, next);
+});
+
+router.post('/admin/verify', (req, res, next) => {
+  /* 
+    #swagger.tags = ['KYC Admin']
+    #swagger.summary = 'Admin Manual KYC Verification'
+    #swagger.description = 'Endpoint used by admins to manually verify a user.'
+    #swagger.parameters['body'] = {
+        in: 'body',
+        required: true,
+        schema: {
+            uuid: "string"
+        }
+    }
+  */
+  adminVerifyKyc(req, res, next);
 });
 
 export default router;
