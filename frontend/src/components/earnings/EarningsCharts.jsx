@@ -125,7 +125,7 @@ export default function EarningsCharts({ t, loading, chartData, levelStats }) {
             </ResponsiveContainer>
           ) : (
             <div className="w-full h-full flex items-center justify-center text-slate-400 text-[13px] font-medium">
-              No data available for this timeframe
+              No data to show
             </div>
           )}
         </div>
