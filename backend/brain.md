@@ -402,6 +402,7 @@ Stores wallet balance and summary for users.
 |----------------|----------------|-------------|-------------|
 | Id             | int            | No          | Primary Key |
 | UUID           | varchar(36)    | No          |             |
+| WalletNumber   | varchar(100)   | Yes         | e.g. EV_WLT_01_DDMMYYYY |
 | CurrentBalance | decimal(18, 2) | No          |             |
 | TotalEarned    | decimal(18, 2) | No          |             |
 | TotalWithdrawn | decimal(18, 2) | No          |             |
@@ -602,14 +603,14 @@ Manages KYC operations including retrieving, submitting, and updating the status
   - For GET: Returns Result Set containing KYC details.
   - For SUBMIT / UPDATE_STATUS: Returns `@Success INT`, `Message VARCHAR`.
 - **Updates**:
-  - For SUBMIT: Inserts/Updates `Tb_UserKYC` and sets `IsKYCVerified = 1` in `Tb_User`. (Uses sequential `KYCId` generation).
-  - For UPDATE_STATUS: Updates `KYCStatusId` in `Tb_UserKYC` and syncs `IsKYCVerified` in `Tb_User`.
+  - For SUBMIT: Inserts/Updates `Tb_UserKYC` and syncs `IsKYCVerified = 1` (Pending) in `Tb_User`. (Uses sequential `KYCId` generation).
+  - For UPDATE_STATUS: Updates `KYCStatusId` in `Tb_UserKYC`. Syncs `IsKYCVerified` to 2 or 3 in `Tb_User`. If Verified (2), also initializes a new wallet record in `Tb_Wallet` and generates the `WalletNumber`.
 
 ### `EV_GetMyEarnings`
 Retrieves Wallet Summary, Timeframe Dashboard Stats (Monthly/Quarterly/Yearly), Earnings Charts, Commission Ledger, and Wallet Transactions for the Earnings Page dynamically.
 - **Inputs**: `@UUID VARCHAR(36)`
 - **Outputs**:
-  1. **Result Set (Wallet & Summary Stats)**: `CurrentBalance`, `TotalEarned`, `TotalWithdrawn`, `TotalTransactions`, `PendingCommission`, `PendingWithdrawal`, `TotalPayouts`, `LastPayoutDate`
+  1. **Result Set (Wallet & Summary Stats)**: `CurrentBalance`, `TotalEarned`, `TotalWithdrawn`, `TotalTransactions`, `PendingCommission`, `PendingWithdrawal`, `TotalPayouts`, `LastPayoutDate`, `WalletId` (Mapped from `WalletNumber`), `MemberId`, `WalletStatus`, `CreatedDate`, `ModifiedDate`
   2. **Result Set (Dashboard Stats)**: Returns 3 rows (`Timeframe`: 'monthly', 'quarterly', 'yearly') containing `periodAmount`, `directAmount`, `level1Amount`, `level2Amount`, `periodGrowthPercentage`
   3. **Result Set (Earnings Overview Chart)**: Returns grouped time-series data for the Area Chart (`Timeframe`, `dateLabel`, `amount`)
   4. **Result Set (Earnings By Level)**: Doughnut chart aggregates for the current month (`LevelName`, `Amount`)

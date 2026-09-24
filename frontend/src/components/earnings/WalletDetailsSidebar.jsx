@@ -33,23 +33,29 @@ export default function WalletDetailsSidebar({ t, loading, summary }) {
             <>
               <div className="flex items-center justify-between">
                 <span className="text-[13px] font-semibold text-slate-500">{t('earnings.wallet.details.walletId')}</span>
-                <span className="text-[13px] font-bold text-slate-700">WLT-{user?.UserID || 'N/A'}</span>
+                <span className="text-[13px] font-bold text-slate-700">{summary?.WalletId || 'N/A'}</span>
               </div>
               <div className="flex items-center justify-between">
                 <span className="text-[13px] font-semibold text-slate-500">{t('earnings.wallet.details.memberId')}</span>
-                <span className="text-[13px] font-bold text-slate-700">{user?.UserID || 'N/A'}</span>
+                <span className="text-[13px] font-bold text-slate-700">{summary?.MemberId || user?.UserID || 'N/A'}</span>
               </div>
               <div className="flex items-center justify-between">
                 <span className="text-[13px] font-semibold text-slate-500">{t('earnings.wallet.details.walletStatus')}</span>
-                <span className="text-[13px] font-extrabold text-emerald-600">Active</span>
+                <span className={`text-[13px] font-extrabold ${summary && summary.WalletStatus !== false ? 'text-emerald-600' : 'text-slate-500'}`}>
+                  {summary ? (summary.WalletStatus !== false ? 'Active' : 'Inactive') : 'N/A'}
+                </span>
               </div>
               <div className="flex items-center justify-between">
                 <span className="text-[13px] font-semibold text-slate-500">{t('earnings.wallet.details.dateCreated')}</span>
-                <span className="text-[13px] font-bold text-slate-700">N/A</span>
+                <span className="text-[13px] font-bold text-slate-700">
+                  {summary?.CreatedDate ? new Date(summary.CreatedDate).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' }) : 'N/A'}
+                </span>
               </div>
               <div className="flex items-center justify-between">
                 <span className="text-[13px] font-semibold text-slate-500">{t('earnings.wallet.details.lastUpdated')}</span>
-                <span className="text-[13px] font-bold text-slate-700">N/A</span>
+                <span className="text-[13px] font-bold text-slate-700">
+                  {summary?.ModifiedDate ? new Date(summary.ModifiedDate).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' }) : 'N/A'}
+                </span>
               </div>
             </>
           )}
