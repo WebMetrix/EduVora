@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Send, Building2, Clock, HelpCircle, ChevronRight, ShieldCheck, FileWarning } from 'lucide-react';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 import WithdrawFundsModal from './WithdrawFundsModal';
 
 export default function WalletDetailsSidebar({ t, loading, summary }) {
@@ -33,29 +34,49 @@ export default function WalletDetailsSidebar({ t, loading, summary }) {
             <>
               <div className="flex items-center justify-between">
                 <span className="text-[13px] font-semibold text-slate-500">{t('earnings.wallet.details.walletId')}</span>
-                <span className="text-[13px] font-bold text-slate-700">{summary?.WalletId || 'N/A'}</span>
+                {summary?.WalletId ? (
+                  <span className="text-[13px] font-bold text-slate-700">{summary.WalletId}</span>
+                ) : (
+                  <span className="text-[18px] font-extrabold text-slate-400 px-2 leading-none">{t('earnings.notAvailable')}</span>
+                )}
               </div>
               <div className="flex items-center justify-between">
                 <span className="text-[13px] font-semibold text-slate-500">{t('earnings.wallet.details.memberId')}</span>
-                <span className="text-[13px] font-bold text-slate-700">{summary?.MemberId || user?.UserID || 'N/A'}</span>
+                {summary?.MemberId || user?.UserID ? (
+                  <span className="text-[13px] font-bold text-slate-700">{summary?.MemberId || user?.UserID}</span>
+                ) : (
+                  <span className="text-[18px] font-extrabold text-slate-400 px-2 leading-none">{t('earnings.notAvailable')}</span>
+                )}
               </div>
               <div className="flex items-center justify-between">
                 <span className="text-[13px] font-semibold text-slate-500">{t('earnings.wallet.details.walletStatus')}</span>
-                <span className={`text-[13px] font-extrabold ${summary && summary.WalletStatus !== false ? 'text-emerald-600' : 'text-slate-500'}`}>
-                  {summary ? (summary.WalletStatus !== false ? 'Active' : 'Inactive') : 'N/A'}
-                </span>
+                {summary ? (
+                  <span className={`text-[13px] font-extrabold ${summary.WalletStatus !== false ? 'text-emerald-600' : 'text-slate-500'}`}>
+                    {summary.WalletStatus !== false ? 'Active' : 'Inactive'}
+                  </span>
+                ) : (
+                  <span className="text-[18px] font-extrabold text-slate-400 px-2 leading-none">{t('earnings.notAvailable')}</span>
+                )}
               </div>
               <div className="flex items-center justify-between">
                 <span className="text-[13px] font-semibold text-slate-500">{t('earnings.wallet.details.dateCreated')}</span>
-                <span className="text-[13px] font-bold text-slate-700">
-                  {summary?.CreatedDate ? new Date(summary.CreatedDate).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' }) : 'N/A'}
-                </span>
+                {summary?.CreatedDate ? (
+                  <span className="text-[13px] font-bold text-slate-700">
+                    {new Date(summary.CreatedDate).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' })}
+                  </span>
+                ) : (
+                  <span className="text-[18px] font-extrabold text-slate-400 px-2 leading-none">{t('earnings.notAvailable')}</span>
+                )}
               </div>
               <div className="flex items-center justify-between">
                 <span className="text-[13px] font-semibold text-slate-500">{t('earnings.wallet.details.lastUpdated')}</span>
-                <span className="text-[13px] font-bold text-slate-700">
-                  {summary?.ModifiedDate ? new Date(summary.ModifiedDate).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' }) : 'N/A'}
-                </span>
+                {summary?.ModifiedDate ? (
+                  <span className="text-[13px] font-bold text-slate-700">
+                    {new Date(summary.ModifiedDate).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' })}
+                  </span>
+                ) : (
+                  <span className="text-[18px] font-extrabold text-slate-400 px-2 leading-none">{t('earnings.notAvailable')}</span>
+                )}
               </div>
             </>
           )}
@@ -94,7 +115,13 @@ export default function WalletDetailsSidebar({ t, loading, summary }) {
         
         <div className="flex flex-col gap-2 relative z-10">
           {/* Payment Methods */}
-          <div className="flex items-center justify-between p-3 rounded-2xl hover:bg-indigo-50/50 hover:shadow-sm hover:-translate-y-0.5 transition-all cursor-pointer group border border-transparent hover:border-indigo-100">
+          <div 
+            onClick={() => {
+              toast.info(t('toast.wallet.redirectingToProfile') || 'Redirecting to Profile settings...');
+              navigate('/profile');
+            }}
+            className="flex items-center justify-between p-3 rounded-2xl hover:bg-indigo-50/50 hover:shadow-sm hover:-translate-y-0.5 transition-all cursor-pointer group border border-transparent hover:border-indigo-100"
+          >
             <div className="flex items-center gap-4">
               <div className="w-10 h-10 rounded-full bg-purple-100 flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform duration-300">
                 <Building2 className="w-5 h-5 text-purple-600" />
@@ -108,7 +135,18 @@ export default function WalletDetailsSidebar({ t, loading, summary }) {
           </div>
 
           {/* Withdrawal History */}
-          <div className="flex items-center justify-between p-3 rounded-2xl hover:bg-indigo-50/50 hover:shadow-sm hover:-translate-y-0.5 transition-all cursor-pointer group border border-transparent hover:border-indigo-100">
+          <div 
+            onClick={() => {
+              const el = document.getElementById('recent-transactions');
+              if (el) {
+                el.scrollIntoView({ behavior: 'smooth' });
+                toast.info(t('toast.wallet.viewBelow') || 'Please view your withdrawals in the Recent Transactions table below.');
+              } else {
+                navigate('/earnings', { state: { tab: 'history' } });
+              }
+            }}
+            className="flex items-center justify-between p-3 rounded-2xl hover:bg-indigo-50/50 hover:shadow-sm hover:-translate-y-0.5 transition-all cursor-pointer group border border-transparent hover:border-indigo-100"
+          >
             <div className="flex items-center gap-4">
               <div className="w-10 h-10 rounded-full bg-orange-100 flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform duration-300">
                 <Clock className="w-5 h-5 text-orange-500" />
@@ -122,7 +160,12 @@ export default function WalletDetailsSidebar({ t, loading, summary }) {
           </div>
 
           {/* Help Center */}
-          <div className="flex items-center justify-between p-3 rounded-2xl hover:bg-indigo-50/50 hover:shadow-sm hover:-translate-y-0.5 transition-all cursor-pointer group border border-transparent hover:border-indigo-100">
+          <div 
+            onClick={() => {
+              window.location.href = 'mailto:support@eduvora.com';
+            }}
+            className="flex items-center justify-between p-3 rounded-2xl hover:bg-indigo-50/50 hover:shadow-sm hover:-translate-y-0.5 transition-all cursor-pointer group border border-transparent hover:border-indigo-100"
+          >
             <div className="flex items-center gap-4">
               <div className="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform duration-300">
                 <HelpCircle className="w-5 h-5 text-blue-500" />

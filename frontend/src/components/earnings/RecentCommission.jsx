@@ -69,7 +69,7 @@ export default function RecentCommission({ t, showPagination = false, loading, c
             ) : (
               <tr>
                 <td colSpan="6" className="px-3 py-8 text-center text-[13px] font-semibold text-slate-400">
-                  No recent commissions found.
+                  {t('earnings.table.noRecentCommissions')}
                 </td>
               </tr>
             )}
@@ -117,7 +117,7 @@ export default function RecentCommission({ t, showPagination = false, loading, c
           ))
         ) : (
           <div className="text-center py-6 text-[13px] font-semibold text-slate-400">
-            No recent commissions found.
+            {t('earnings.table.noRecentCommissions')}
           </div>
         )}
       </div>

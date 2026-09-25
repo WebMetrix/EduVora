@@ -862,6 +862,7 @@
   "earnings": {
     "title": "Earnings",
     "subtitle": "Track your earnings, commissions and wallet details.",
+    "notAvailable": "-",
     "breadcrumb1": "Home",
     "breadcrumb2": "Earnings",
     "tabs": {
@@ -882,6 +883,10 @@
     "charts": {
       "overview": "Earnings Overview",
       "thisMonthFilter": "This Month",
+      "thisQuarterFilter": "This Quarter",
+      "thisYearFilter": "This Year",
+      "noData": "No data to show",
+      "noDataAvailable": "No data available",
       "byLevel": "Earnings by Level",
       "direct": "Direct Commission",
       "levelCommission": "Level Commission",
@@ -902,7 +907,9 @@
       "from": "From",
       "amount": "Amount",
       "status": "Status",
-      "showing": "Showing {{start}} to {{end}} of {{total}} entries"
+      "showing": "Showing {{start}} to {{end}} of {{total}} entries",
+      "noRecentCommissions": "No recent commissions found.",
+      "noCommissionHistory": "No commission history found."
     },
     "wallet": {
       "summary": "Wallet Summary",
@@ -965,6 +972,10 @@
         "pendingCommission": "Pending Commission"
       },
       "filters": {
+        "allTime": "All Time",
+        "today": "Today",
+        "thisWeek": "This Week",
+        "thisMonth": "This Month",
         "allLevels": "All Levels",
         "allTypes": "All Types",
         "export": "Export",
@@ -992,7 +1003,9 @@
     },
     "transactions": {
       "action": "Action",
-      "details": "Details"
+      "details": "Details",
+      "noTransactions": "No transactions found.",
+      "viewDetailsAction": "View Details"
     }
   },
   "kyc": {

@@ -95,7 +95,6 @@ export default function Earnings() {
       {activeTab === 'history' && (
         <div className="flex flex-col">
           <CommissionHistoryStats t={t} loading={loading} summary={earningsData?.summary} periodStats={earningsData?.periodStats} commissions={earningsData?.commissions} />
-          <CommissionHistoryFilters t={t} loading={loading} />
           <CommissionHistoryTable t={t} loading={loading} commissions={earningsData?.commissions} />
         </div>
       )}

@@ -2,21 +2,6 @@ import React, { useState } from 'react';
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
 import { ChevronDown } from 'lucide-react';
 
-const areaData = [
-  { name: '01 May', value: 2000 },
-  { name: '06 May', value: 3500 },
-  { name: '11 May', value: 5000 },
-  { name: '16 May', value: 7500 },
-  { name: '21 May', value: 6000 },
-  { name: '26 May', value: 4500 },
-  { name: '31 May', value: 8000 },
-];
-
-const pieData = [
-  { name: 'Direct', value: 6250, color: '#4611E1' },
-  { name: 'Level 1', value: 4850, color: '#8b5cf6' },
-  { name: 'Level 2', value: 1250, color: '#a78bfa' },
-];
 
 const CustomTooltip = ({ active, payload, label }) => {
   if (active && payload && payload.length) {
@@ -80,9 +65,9 @@ export default function EarningsCharts({ t, loading, chartData, levelStats }) {
             onChange={(e) => setFilter(e.target.value)}
             disabled={loading}
           >
-            <option value="monthly">{t('earnings.charts.thisMonthFilter', 'This Month')}</option>
-            <option value="quarterly">This Quarter</option>
-            <option value="yearly">This Year</option>
+            <option value="monthly">{t('earnings.charts.thisMonthFilter')}</option>
+            <option value="quarterly">{t('earnings.charts.thisQuarterFilter')}</option>
+            <option value="yearly">{t('earnings.charts.thisYearFilter')}</option>
           </select>
         </div>
 
@@ -125,7 +110,7 @@ export default function EarningsCharts({ t, loading, chartData, levelStats }) {
             </ResponsiveContainer>
           ) : (
             <div className="w-full h-full flex items-center justify-center text-slate-400 text-[13px] font-medium">
-              No data to show
+              {t('earnings.charts.noData')}
             </div>
           )}
         </div>
@@ -195,7 +180,7 @@ export default function EarningsCharts({ t, loading, chartData, levelStats }) {
               </>
             ) : (
               <div className="w-full h-full flex items-center justify-center text-slate-400 text-[13px] font-medium">
-                No data available
+                {t('earnings.charts.noDataAvailable')}
               </div>
             )}
           </div>

@@ -4,11 +4,63 @@ import { Calendar, ChevronDown, Download, Filter, ChevronLeft, ChevronRight, Mor
 
 export default function WalletTransactions({ t, loading, transactions }) {
   const [page, setPage] = useState(1);
+  const [dateFilter, setDateFilter] = useState('');
+  const [typeFilter, setTypeFilter] = useState('');
+  const [isTypeDropdownOpen, setIsTypeDropdownOpen] = useState(false);
   const itemsPerPage = 7;
   
   const allTransactions = transactions || [];
-  const totalPages = Math.ceil(allTransactions.length / itemsPerPage) || 1;
-  const currentData = allTransactions.slice((page - 1) * itemsPerPage, page * itemsPerPage);
+
+  const getFilteredData = () => {
+    let filtered = [...allTransactions];
+    
+    // Type Filter
+    if (typeFilter) {
+       if (typeFilter === 'Received') {
+         filtered = filtered.filter(row => {
+            const lowerType = row.Type?.toLowerCase() || '';
+            return lowerType.includes('commission') || lowerType.includes('received') || lowerType.includes('credit');
+         });
+       } else if (typeFilter === 'Withdrawal') {
+         filtered = filtered.filter(row => {
+            const lowerType = row.Type?.toLowerCase() || '';
+            return lowerType.includes('withdraw') || lowerType.includes('debit') || lowerType.includes('payout');
+         });
+       }
+    }
+
+    // Date Filter
+    if (dateFilter) {
+      const now = new Date();
+      filtered = filtered.filter(row => {
+        const rowDate = new Date(row.Date);
+        if (dateFilter === 'today') {
+          return rowDate.toDateString() === now.toDateString();
+        }
+        if (dateFilter === 'week') {
+          const oneWeekAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
+          return rowDate >= oneWeekAgo;
+        }
+        if (dateFilter === 'month') {
+          const oneMonthAgo = new Date();
+          oneMonthAgo.setMonth(oneMonthAgo.getMonth() - 1);
+          return rowDate >= oneMonthAgo;
+        }
+        return true;
+      });
+    }
+
+    return filtered;
+  };
+
+  const filteredTransactions = getFilteredData();
+  const totalPages = Math.ceil(filteredTransactions.length / itemsPerPage) || 1;
+  const currentData = filteredTransactions.slice((page - 1) * itemsPerPage, page * itemsPerPage);
+
+  // Reset page when filters change
+  React.useEffect(() => {
+    setPage(1);
+  }, [dateFilter, typeFilter]);
 
   const getTypeRender = (type) => {
     const lowerType = type?.toLowerCase() || '';
@@ -77,32 +129,62 @@ export default function WalletTransactions({ t, loading, transactions }) {
   };
 
   return (
-    <div className="relative overflow-hidden bg-white border border-slate-200 rounded-3xl shadow-sm flex flex-col h-full 2xl:col-span-2 group/card transition-all duration-300 hover:-translate-y-1 hover:shadow-md hover:border-indigo-200">
+    <div id="recent-transactions" className="relative overflow-hidden bg-white border border-slate-200 rounded-3xl shadow-sm flex flex-col h-full 2xl:col-span-2 group/card transition-all duration-300 hover:-translate-y-1 hover:shadow-md hover:border-indigo-200">
       <div className="absolute top-0 right-0 w-64 h-64 bg-indigo-400/10 rounded-full blur-[80px] -translate-y-1/2 translate-x-1/3 pointer-events-none group-hover/card:bg-indigo-400/20 transition-colors duration-700" />
       
       <div className="p-5 pb-0 mb-5">
         <h2 className="text-[18px] font-extrabold text-[#1a1446] mb-5 relative z-10">{t('earnings.wallet.transactions.title')}</h2>
 
         {/* Filters */}
-        <div className="flex flex-col xl:flex-row xl:items-center justify-between gap-4 relative z-10">
+        <div className="flex flex-col xl:flex-row xl:items-center justify-between gap-4 relative z-50">
           <div className="flex flex-col sm:flex-row items-center gap-4 w-full xl:w-auto">
-          {/* Date Range */}
-          <div className="relative w-full sm:w-auto">
-            <div className={`flex items-center justify-between gap-3 px-4 py-2.5 bg-white border border-slate-200 rounded-xl transition-colors ${loading ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer hover:border-indigo-300'}`}>
-              <div className="flex items-center gap-2 text-[13px] font-bold text-slate-700">
-                <Calendar className="w-4 h-4 text-slate-500" />
-                01 May 2025 - 31 May 2025
-              </div>
-              <ChevronDown className="w-4 h-4 text-slate-500" />
-            </div>
+          {/* Time Filters (Pill Style) */}
+          <div className="flex items-center p-1.5 bg-white/60 backdrop-blur-md border border-slate-200 rounded-xl w-full lg:w-auto overflow-x-auto shrink-0 shadow-sm [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] scrollbar-none">
+            <button
+              onClick={() => setDateFilter('')}
+              className={`px-4 py-1.5 rounded-lg text-[13px] font-bold whitespace-nowrap transition-all duration-300 ${dateFilter === '' ? 'bg-[#4f3bf3] text-white shadow-md' : 'text-slate-500 hover:text-[#4f3bf3] hover:bg-white'}`}
+            >
+              {t('earnings.history.filters.allTime')}
+            </button>
+            {['today', 'week', 'month'].map(f => (
+              <button
+                key={f}
+                onClick={() => setDateFilter(f)}
+                className={`px-4 py-1.5 rounded-lg text-[13px] font-bold whitespace-nowrap transition-all duration-300 ${dateFilter === f ? 'bg-[#4f3bf3] text-white shadow-md hover:shadow-lg hover:-translate-y-0.5' : 'text-slate-500 hover:text-[#4f3bf3] hover:bg-white hover:shadow-sm hover:-translate-y-0.5'}`}
+              >
+                {f === 'today' ? t('earnings.history.filters.today') : f === 'week' ? t('earnings.history.filters.thisWeek') : t('earnings.history.filters.thisMonth')}
+              </button>
+            ))}
           </div>
 
           {/* Type Dropdown */}
           <div className="relative w-full sm:w-auto">
-            <div className={`flex items-center justify-between gap-3 px-4 py-2.5 bg-white border border-slate-200 rounded-xl transition-colors sm:min-w-[140px] ${loading ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer hover:border-indigo-300'}`}>
-              <span className="text-[13px] font-bold text-slate-700">{t('earnings.history.filters.allTypes')}</span>
-              <ChevronDown className="w-4 h-4 text-slate-500" />
+            <div 
+              onClick={() => !loading && setIsTypeDropdownOpen(!isTypeDropdownOpen)}
+              className={`flex items-center justify-between gap-3 px-4 py-2.5 bg-white border border-slate-200 rounded-xl transition-colors sm:min-w-[140px] ${loading ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer hover:border-indigo-300'}`}
+            >
+              <span className="text-[13px] font-bold text-slate-700">
+                {typeFilter ? typeFilter : t('earnings.history.filters.allTypes')}
+              </span>
+              <ChevronDown className={`w-4 h-4 text-slate-500 transition-transform ${isTypeDropdownOpen ? 'rotate-180' : ''}`} />
             </div>
+            
+            {isTypeDropdownOpen && (
+              <div className="absolute top-full mt-1 w-full bg-white border border-slate-200 rounded-xl shadow-lg overflow-hidden z-50">
+                {['', 'Received', 'Withdrawal'].map(type => (
+                  <div
+                    key={type}
+                    onClick={() => {
+                      setTypeFilter(type);
+                      setIsTypeDropdownOpen(false);
+                    }}
+                    className={`px-4 py-2 text-[13px] font-bold cursor-pointer hover:bg-indigo-50 transition-colors ${typeFilter === type ? 'text-indigo-600 bg-indigo-50' : 'text-slate-600'}`}
+                  >
+                    {type ? type : t('earnings.history.filters.allTypes')}
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
         </div>
 
@@ -110,10 +192,6 @@ export default function WalletTransactions({ t, loading, transactions }) {
           <button disabled={loading} className="flex items-center gap-2 px-4 py-2 text-[13px] font-bold text-indigo-600 bg-indigo-50 border border-indigo-100 rounded-lg hover:bg-indigo-100 hover:shadow-md hover:-translate-y-0.5 transition-all disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:-translate-y-0">
             <Download className="w-4 h-4" />
             {t('earnings.history.filters.export')}
-          </button>
-          <button disabled={loading} className="flex items-center gap-2 px-4 py-2 text-[13px] font-bold text-white bg-[#4f3bf3] rounded-lg hover:bg-indigo-700 hover:shadow-md hover:-translate-y-0.5 transition-all disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:-translate-y-0">
-            <Filter className="w-4 h-4" />
-            {t('earnings.history.filters.filter')}
           </button>
         </div>
       </div>
@@ -181,7 +259,7 @@ export default function WalletTransactions({ t, loading, transactions }) {
             ) : (
               <tr>
                 <td colSpan="6" className="px-3 py-10 text-center text-[13px] font-semibold text-slate-400">
-                  No transactions found.
+                  {t('earnings.transactions.noTransactions')}
                 </td>
               </tr>
             )}
@@ -226,7 +304,7 @@ export default function WalletTransactions({ t, loading, transactions }) {
                 <div className="flex justify-center mt-2">
                   <button className="flex items-center justify-center gap-1.5 w-full py-2 bg-slate-50 border border-slate-200 rounded-xl text-[12px] font-bold text-slate-600 hover:bg-indigo-50 hover:text-indigo-600 hover:border-indigo-200 transition-all">
                     <Eye className="w-3.5 h-3.5" />
-                    View Details
+                    {t('earnings.transactions.viewDetailsAction')}
                   </button>
                 </div>
               </div>
@@ -234,16 +312,16 @@ export default function WalletTransactions({ t, loading, transactions }) {
           ))
         ) : (
           <div className="text-center py-6 text-[13px] font-semibold text-slate-400">
-            No transactions found.
+            {t('earnings.transactions.noTransactions')}
           </div>
         )}
       </div>
 
       {/* Pagination */}
-      {!loading && allTransactions.length > 0 && (
+      {!loading && filteredTransactions.length > 0 && (
         <div className="flex flex-col sm:flex-row items-center justify-between gap-4 p-4 lg:p-6 border-t border-slate-100 relative z-10 bg-slate-50/50 mt-auto">
           <p className="text-[13px] font-medium text-slate-500">
-            Showing {(page - 1) * itemsPerPage + 1} to {Math.min(page * itemsPerPage, allTransactions.length)} of {allTransactions.length} entries
+            Showing {(page - 1) * itemsPerPage + 1} to {Math.min(page * itemsPerPage, filteredTransactions.length)} of {filteredTransactions.length} entries
           </p>
           <div className="flex items-center gap-1.5">
             <button

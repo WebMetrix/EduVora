@@ -78,14 +78,18 @@ export default function WalletSummary({ t, loading, summary }) {
               <div className="h-4 w-24 bg-slate-200 rounded animate-pulse" />
             ) : (
               <span className="text-[13px] font-semibold">
-                {summary?.LastPayoutDate ? new Intl.DateTimeFormat('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }).format(new Date(summary.LastPayoutDate)) : 'N/A'}
+                {summary?.LastPayoutDate ? (
+                  new Intl.DateTimeFormat('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }).format(new Date(summary.LastPayoutDate))
+                ) : (
+                  <span className="text-[18px] font-extrabold text-slate-400 px-2 leading-none">{t('earnings.notAvailable')}</span>
+                )}
               </span>
             )}
           </div>
         </div>
       </div>
 
-      <button 
+      <button
         onClick={() => navigate('/earnings', { state: { tab: 'wallet' }, replace: true })}
         className="relative z-10 w-full mt-4 flex items-center justify-center gap-2 py-3 px-4 rounded-xl border-2 border-indigo-600 text-indigo-600 font-bold text-[13px] hover:bg-indigo-50 transition-all duration-300 hover:-translate-y-1 hover:shadow-md"
       >

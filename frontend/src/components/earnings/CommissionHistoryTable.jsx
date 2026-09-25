@@ -1,14 +1,59 @@
 import React, { useState } from 'react';
-import { ChevronLeft, ChevronRight, MoreHorizontal } from 'lucide-react';
+import { ChevronLeft, ChevronRight, MoreHorizontal, Calendar, ChevronDown, Download, Filter } from 'lucide-react';
 
 
 export default function CommissionHistoryTable({ t, loading, commissions }) {
   const [page, setPage] = useState(1);
+  const [dateFilter, setDateFilter] = useState('');
+  const [typeFilter, setTypeFilter] = useState('');
+  const [levelFilter, setLevelFilter] = useState('');
+  const [isTypeDropdownOpen, setIsTypeDropdownOpen] = useState(false);
+  const [isLevelDropdownOpen, setIsLevelDropdownOpen] = useState(false);
   const itemsPerPage = 10;
   
   const allCommissions = commissions || [];
-  const totalPages = Math.ceil(allCommissions.length / itemsPerPage) || 1;
-  const currentData = allCommissions.slice((page - 1) * itemsPerPage, page * itemsPerPage);
+
+  const getFilteredData = () => {
+    let filtered = [...allCommissions];
+    
+    // Type Filter
+    if (typeFilter) {
+       filtered = filtered.filter(row => row.Type === typeFilter);
+    }
+    
+    // Level Filter
+    if (levelFilter) {
+       filtered = filtered.filter(row => row.Level === levelFilter);
+    }
+
+    // Date Filter
+    if (dateFilter) {
+      const now = new Date();
+      filtered = filtered.filter(row => {
+        const rowDate = new Date(row.Date);
+        if (dateFilter === 'today') return rowDate.toDateString() === now.toDateString();
+        if (dateFilter === 'week') {
+          const oneWeekAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
+          return rowDate >= oneWeekAgo;
+        }
+        if (dateFilter === 'month') {
+          const oneMonthAgo = new Date();
+          oneMonthAgo.setMonth(oneMonthAgo.getMonth() - 1);
+          return rowDate >= oneMonthAgo;
+        }
+        return true;
+      });
+    }
+    return filtered;
+  };
+
+  const filteredCommissions = getFilteredData();
+  const totalPages = Math.ceil(filteredCommissions.length / itemsPerPage) || 1;
+  const currentData = filteredCommissions.slice((page - 1) * itemsPerPage, page * itemsPerPage);
+
+  React.useEffect(() => {
+    setPage(1);
+  }, [dateFilter, typeFilter, levelFilter]);
 
   const getLevelStyle = (level) => {
     switch(level) {
@@ -42,6 +87,103 @@ export default function CommissionHistoryTable({ t, loading, commissions }) {
   return (
     <div className="relative overflow-hidden bg-white border border-slate-200 rounded-3xl shadow-sm flex flex-col h-full mt-6 group/card transition-all duration-300 hover:-translate-y-1 hover:shadow-md hover:border-indigo-200">
       <div className="absolute top-0 right-0 w-64 h-64 bg-indigo-400/10 rounded-full blur-[80px] -translate-y-1/2 translate-x-1/3 pointer-events-none group-hover/card:bg-indigo-400/20 transition-colors duration-700" />
+      
+      {/* Filters UI */}
+      <div className="p-5 pb-0 mb-5 border-b border-slate-100 relative z-50">
+        <div className="flex flex-col xl:flex-row xl:items-center justify-between gap-4 mb-5">
+          <div className="flex flex-col sm:flex-row items-center gap-4 w-full xl:w-auto">
+            {/* Time Filters (Pill Style) */}
+            <div className="flex items-center p-1.5 bg-white/60 backdrop-blur-md border border-slate-200 rounded-xl w-full lg:w-auto overflow-x-auto shrink-0 shadow-sm [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] scrollbar-none">
+              <button
+                onClick={() => setDateFilter('')}
+                className={`px-4 py-1.5 rounded-lg text-[13px] font-bold whitespace-nowrap transition-all duration-300 ${dateFilter === '' ? 'bg-[#4f3bf3] text-white shadow-md' : 'text-slate-500 hover:text-[#4f3bf3] hover:bg-white'}`}
+              >
+                {t('earnings.history.filters.allTime')}
+              </button>
+              {['today', 'week', 'month'].map(f => (
+                <button
+                  key={f}
+                  onClick={() => setDateFilter(f)}
+                  className={`px-4 py-1.5 rounded-lg text-[13px] font-bold whitespace-nowrap transition-all duration-300 ${dateFilter === f ? 'bg-[#4f3bf3] text-white shadow-md hover:shadow-lg hover:-translate-y-0.5' : 'text-slate-500 hover:text-[#4f3bf3] hover:bg-white hover:shadow-sm hover:-translate-y-0.5'}`}
+                >
+                  {f === 'today' ? t('earnings.history.filters.today') : f === 'week' ? t('earnings.history.filters.thisWeek') : t('earnings.history.filters.thisMonth')}
+                </button>
+              ))}
+            </div>
+
+            <div className="flex flex-row items-center gap-4 w-full sm:w-auto">
+              {/* Level Dropdown */}
+              <div className="relative flex-1 sm:flex-none">
+                <div 
+                  onClick={() => !loading && setIsLevelDropdownOpen(!isLevelDropdownOpen)}
+                  className={`flex items-center justify-between gap-2 px-3 sm:px-4 py-2.5 bg-white border border-slate-200 rounded-xl transition-colors sm:min-w-[140px] ${loading ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer hover:border-indigo-300'}`}
+                >
+                  <span className="text-[12px] sm:text-[13px] font-bold text-slate-700 whitespace-nowrap overflow-hidden text-ellipsis">
+                    {levelFilter ? levelFilter : t('earnings.history.filters.allLevels')}
+                  </span>
+                  <ChevronDown className={`w-4 h-4 text-slate-500 shrink-0 transition-transform ${isLevelDropdownOpen ? 'rotate-180' : ''}`} />
+                </div>
+                {isLevelDropdownOpen && (
+                  <div className="absolute top-full mt-1 w-full bg-white border border-slate-200 rounded-xl shadow-lg overflow-hidden z-50">
+                    {['', 'Direct', 'Level 1', 'Level 2'].map(level => (
+                      <div
+                        key={level}
+                        onClick={() => {
+                          setLevelFilter(level);
+                          setIsLevelDropdownOpen(false);
+                        }}
+                        className={`px-4 py-2 text-[13px] font-bold cursor-pointer hover:bg-indigo-50 transition-colors ${levelFilter === level ? 'text-indigo-600 bg-indigo-50' : 'text-slate-600'}`}
+                      >
+                        {level ? level : t('earnings.history.filters.allLevels')}
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+
+              {/* Type Dropdown */}
+              <div className="relative flex-1 sm:flex-none">
+                <div 
+                  onClick={() => !loading && setIsTypeDropdownOpen(!isTypeDropdownOpen)}
+                  className={`flex items-center justify-between gap-2 px-3 sm:px-4 py-2.5 bg-white border border-slate-200 rounded-xl transition-colors sm:min-w-[140px] ${loading ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer hover:border-indigo-300'}`}
+                >
+                  <span className="text-[12px] sm:text-[13px] font-bold text-slate-700 whitespace-nowrap overflow-hidden text-ellipsis">
+                    {typeFilter ? typeFilter : t('earnings.history.filters.allTypes')}
+                  </span>
+                  <ChevronDown className={`w-4 h-4 text-slate-500 shrink-0 transition-transform ${isTypeDropdownOpen ? 'rotate-180' : ''}`} />
+                </div>
+                {isTypeDropdownOpen && (
+                  <div className="absolute top-full mt-1 w-full bg-white border border-slate-200 rounded-xl shadow-lg overflow-hidden z-50">
+                    {['', 'Package Purchase', 'Package Upgrade'].map(type => (
+                      <div
+                        key={type}
+                        onClick={() => {
+                          setTypeFilter(type);
+                          setIsTypeDropdownOpen(false);
+                        }}
+                        className={`px-4 py-2 text-[13px] font-bold cursor-pointer hover:bg-indigo-50 transition-colors ${typeFilter === type ? 'text-indigo-600 bg-indigo-50' : 'text-slate-600'}`}
+                      >
+                        {type ? type : t('earnings.history.filters.allTypes')}
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+
+          <div className="flex items-center gap-3 w-full xl:w-auto">
+            {/* Export Button */}
+            <button 
+              disabled={loading}
+              className="flex-1 sm:flex-none flex items-center justify-center gap-2 px-5 py-2.5 bg-white border border-indigo-200 text-indigo-600 rounded-xl text-[13px] font-bold hover:bg-indigo-50 hover:shadow-sm transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              <Download className="w-4 h-4" />
+              {t('earnings.history.filters.export')}
+            </button>
+          </div>
+        </div>
+      </div>
       
       {/* Desktop Table */}
       <div className="hidden lg:block overflow-x-auto w-full relative z-10 min-h-[300px]">
@@ -114,7 +256,7 @@ export default function CommissionHistoryTable({ t, loading, commissions }) {
             ) : (
               <tr>
                 <td colSpan="7" className="px-3 py-10 text-center text-[13px] font-semibold text-slate-400">
-                  No commission history found.
+                  {t('earnings.table.noCommissionHistory')}
                 </td>
               </tr>
             )}
@@ -174,16 +316,16 @@ export default function CommissionHistoryTable({ t, loading, commissions }) {
           ))
         ) : (
           <div className="text-center py-6 text-[13px] font-semibold text-slate-400">
-            No commission history found.
+            {t('earnings.table.noCommissionHistory')}
           </div>
         )}
       </div>
 
       {/* Pagination */}
-      {!loading && allCommissions.length > 0 && (
+      {!loading && filteredCommissions.length > 0 && (
         <div className="flex flex-col sm:flex-row items-center justify-between gap-4 p-4 lg:p-6 border-t border-slate-100 relative z-10 bg-slate-50/50 mt-auto">
           <p className="text-[13px] font-medium text-slate-500">
-            Showing {(page - 1) * itemsPerPage + 1} to {Math.min(page * itemsPerPage, allCommissions.length)} of {allCommissions.length} entries
+            {t('earnings.table.showing').replace('{{start}}', ((page - 1) * itemsPerPage + 1).toString()).replace('{{end}}', Math.min(page * itemsPerPage, filteredCommissions.length).toString()).replace('{{total}}', filteredCommissions.length.toString())}
           </p>
           <div className="flex items-center gap-1.5">
             <button 
