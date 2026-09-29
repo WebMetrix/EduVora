@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Calendar, ChevronDown, Download, Filter, ChevronLeft, ChevronRight, MoreHorizontal, ArrowDownToLine, ArrowUpFromLine, Clock, Eye } from 'lucide-react';
+import { exportToExcel } from '../../utils/excelExport';
 
 
 export default function WalletTransactions({ t, loading, transactions }) {
@@ -9,6 +10,18 @@ export default function WalletTransactions({ t, loading, transactions }) {
   const [isTypeDropdownOpen, setIsTypeDropdownOpen] = useState(false);
   const itemsPerPage = 7;
   
+  const typeRef = useRef(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (typeRef.current && !typeRef.current.contains(event.target)) {
+        setIsTypeDropdownOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
   const allTransactions = transactions || [];
 
   const getFilteredData = () => {
@@ -54,6 +67,24 @@ export default function WalletTransactions({ t, loading, transactions }) {
   };
 
   const filteredTransactions = getFilteredData();
+
+  const handleExport = () => {
+    const columns = [
+      { header: 'Transaction ID', key: 'TransactionId', width: 15 },
+      { header: 'Date', key: 'Date', width: 25, format: (item) => new Intl.DateTimeFormat('en-GB', { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit', hour12: true }).format(new Date(item.Date)) },
+      { header: 'Type', key: 'Type', width: 20 },
+      { header: 'Description', key: 'Description', width: 40 },
+      { header: 'Amount', key: 'Amount', width: 15, format: (item) => `Rs. ${item.Amount}` },
+      { header: 'Status', key: 'Status', width: 15 }
+    ];
+
+    exportToExcel({
+      data: filteredTransactions,
+      columns: columns,
+      filename: 'Wallet_Transactions'
+    });
+  };
+
   const totalPages = Math.ceil(filteredTransactions.length / itemsPerPage) || 1;
   const currentData = filteredTransactions.slice((page - 1) * itemsPerPage, page * itemsPerPage);
 
@@ -158,7 +189,7 @@ export default function WalletTransactions({ t, loading, transactions }) {
           </div>
 
           {/* Type Dropdown */}
-          <div className="relative w-full sm:w-auto">
+          <div className="relative w-full sm:w-auto" ref={typeRef}>
             <div 
               onClick={() => !loading && setIsTypeDropdownOpen(!isTypeDropdownOpen)}
               className={`flex items-center justify-between gap-3 px-4 py-2.5 bg-white border border-slate-200 rounded-xl transition-colors sm:min-w-[140px] ${loading ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer hover:border-indigo-300'}`}
@@ -189,7 +220,11 @@ export default function WalletTransactions({ t, loading, transactions }) {
         </div>
 
         <div className="flex items-center gap-3 w-full xl:w-auto">
-          <button disabled={loading} className="flex items-center gap-2 px-4 py-2 text-[13px] font-bold text-indigo-600 bg-indigo-50 border border-indigo-100 rounded-lg hover:bg-indigo-100 hover:shadow-md hover:-translate-y-0.5 transition-all disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:-translate-y-0">
+          <button 
+            onClick={handleExport}
+            disabled={loading || filteredTransactions.length === 0} 
+            className="flex items-center gap-2 px-4 py-2 text-[13px] font-bold text-indigo-600 bg-indigo-50 border border-indigo-100 rounded-lg hover:bg-indigo-100 hover:shadow-md hover:-translate-y-0.5 transition-all disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:-translate-y-0"
+          >
             <Download className="w-4 h-4" />
             {t('earnings.history.filters.export')}
           </button>

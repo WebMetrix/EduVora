@@ -8,6 +8,10 @@
     "processing": "Saving"
   },
   "toast": {
+    "wallet": {
+      "redirectingToProfile": "Redirecting to Profile settings...",
+      "viewBelow": "Please view your withdrawals in the Recent Transactions table below."
+    },
     "auth": {
       "loginSuccess": "Login successful",
       "registerSuccess": "Registration successful! Please log in.",

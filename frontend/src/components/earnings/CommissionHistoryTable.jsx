@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { ChevronLeft, ChevronRight, MoreHorizontal, Calendar, ChevronDown, Download, Filter } from 'lucide-react';
+import { exportToExcel } from '../../utils/excelExport';
 
 
 export default function CommissionHistoryTable({ t, loading, commissions }) {
@@ -11,6 +12,22 @@ export default function CommissionHistoryTable({ t, loading, commissions }) {
   const [isLevelDropdownOpen, setIsLevelDropdownOpen] = useState(false);
   const itemsPerPage = 10;
   
+  const levelRef = useRef(null);
+  const typeRef = useRef(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (levelRef.current && !levelRef.current.contains(event.target)) {
+        setIsLevelDropdownOpen(false);
+      }
+      if (typeRef.current && !typeRef.current.contains(event.target)) {
+        setIsTypeDropdownOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
   const allCommissions = commissions || [];
 
   const getFilteredData = () => {
@@ -23,7 +40,11 @@ export default function CommissionHistoryTable({ t, loading, commissions }) {
     
     // Level Filter
     if (levelFilter) {
-       filtered = filtered.filter(row => row.Level === levelFilter);
+       filtered = filtered.filter(row => {
+         const rowLevelStr = String(row.Level).toLowerCase();
+         const filterLevelStr = String(levelFilter).toLowerCase();
+         return rowLevelStr === filterLevelStr || `level ${rowLevelStr}` === filterLevelStr;
+       });
     }
 
     // Date Filter
@@ -47,6 +68,26 @@ export default function CommissionHistoryTable({ t, loading, commissions }) {
     return filtered;
   };
 
+  const handleExport = () => {
+    const columns = [
+      { header: 'Ledger ID', key: 'LedgerId', width: 15 },
+      { header: 'Date', key: 'Date', width: 25, format: (item) => new Intl.DateTimeFormat('en-GB', { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit', hour12: true }).format(new Date(item.Date)) },
+      { header: 'From User ID', key: 'FromUserId', width: 20 },
+      { header: 'From User Name', key: 'FromUserName', width: 25 },
+      { header: 'Level', key: 'Level', width: 15 },
+      { header: 'Type', key: 'Type', width: 25 },
+      { header: 'Description', key: 'Description', width: 40 },
+      { header: 'Amount', key: 'Amount', width: 15, format: (item) => `Rs. ${item.Amount}` },
+      { header: 'Status', key: 'Status', width: 15 }
+    ];
+
+    exportToExcel({
+      data: filteredCommissions,
+      columns: columns,
+      filename: 'Commission_History'
+    });
+  };
+
   const filteredCommissions = getFilteredData();
   const totalPages = Math.ceil(filteredCommissions.length / itemsPerPage) || 1;
   const currentData = filteredCommissions.slice((page - 1) * itemsPerPage, page * itemsPerPage);
@@ -56,12 +97,14 @@ export default function CommissionHistoryTable({ t, loading, commissions }) {
   }, [dateFilter, typeFilter, levelFilter]);
 
   const getLevelStyle = (level) => {
-    switch(level) {
-      case 'Direct': return 'bg-purple-100/80 text-purple-700 border-purple-200/50';
-      case 'Level 1': return 'bg-emerald-100/80 text-emerald-700 border-emerald-200/50';
-      case 'Level 2': return 'bg-orange-100/80 text-orange-700 border-orange-200/50';
-      default: return 'bg-slate-100 text-slate-700 border-slate-200';
+    const levelStr = String(level).toLowerCase();
+    if (levelStr === 'level 1' || levelStr === '1') {
+      return 'bg-purple-100/80 text-purple-700 border-purple-200/50';
     }
+    if (levelStr === 'level 2' || levelStr === '2') {
+      return 'bg-emerald-100/80 text-emerald-700 border-emerald-200/50';
+    }
+    return 'bg-slate-100 text-slate-700 border-slate-200';
   };
 
   const getStatusStyle = (status) => {
@@ -113,9 +156,14 @@ export default function CommissionHistoryTable({ t, loading, commissions }) {
 
             <div className="flex flex-row items-center gap-4 w-full sm:w-auto">
               {/* Level Dropdown */}
-              <div className="relative flex-1 sm:flex-none">
+              <div className="relative flex-1 sm:flex-none" ref={levelRef}>
                 <div 
-                  onClick={() => !loading && setIsLevelDropdownOpen(!isLevelDropdownOpen)}
+                  onClick={() => {
+                    if (!loading) {
+                      setIsLevelDropdownOpen(!isLevelDropdownOpen);
+                      setIsTypeDropdownOpen(false);
+                    }
+                  }}
                   className={`flex items-center justify-between gap-2 px-3 sm:px-4 py-2.5 bg-white border border-slate-200 rounded-xl transition-colors sm:min-w-[140px] ${loading ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer hover:border-indigo-300'}`}
                 >
                   <span className="text-[12px] sm:text-[13px] font-bold text-slate-700 whitespace-nowrap overflow-hidden text-ellipsis">
@@ -125,7 +173,7 @@ export default function CommissionHistoryTable({ t, loading, commissions }) {
                 </div>
                 {isLevelDropdownOpen && (
                   <div className="absolute top-full mt-1 w-full bg-white border border-slate-200 rounded-xl shadow-lg overflow-hidden z-50">
-                    {['', 'Direct', 'Level 1', 'Level 2'].map(level => (
+                    {['', 'Level 1', 'Level 2'].map(level => (
                       <div
                         key={level}
                         onClick={() => {
@@ -142,9 +190,14 @@ export default function CommissionHistoryTable({ t, loading, commissions }) {
               </div>
 
               {/* Type Dropdown */}
-              <div className="relative flex-1 sm:flex-none">
+              <div className="relative flex-1 sm:flex-none" ref={typeRef}>
                 <div 
-                  onClick={() => !loading && setIsTypeDropdownOpen(!isTypeDropdownOpen)}
+                  onClick={() => {
+                    if (!loading) {
+                      setIsTypeDropdownOpen(!isTypeDropdownOpen);
+                      setIsLevelDropdownOpen(false);
+                    }
+                  }}
                   className={`flex items-center justify-between gap-2 px-3 sm:px-4 py-2.5 bg-white border border-slate-200 rounded-xl transition-colors sm:min-w-[140px] ${loading ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer hover:border-indigo-300'}`}
                 >
                   <span className="text-[12px] sm:text-[13px] font-bold text-slate-700 whitespace-nowrap overflow-hidden text-ellipsis">
@@ -175,7 +228,8 @@ export default function CommissionHistoryTable({ t, loading, commissions }) {
           <div className="flex items-center gap-3 w-full xl:w-auto">
             {/* Export Button */}
             <button 
-              disabled={loading}
+              onClick={handleExport}
+              disabled={loading || filteredCommissions.length === 0}
               className="flex-1 sm:flex-none flex items-center justify-center gap-2 px-5 py-2.5 bg-white border border-indigo-200 text-indigo-600 rounded-xl text-[13px] font-bold hover:bg-indigo-50 hover:shadow-sm transition-all disabled:opacity-50 disabled:cursor-not-allowed"
             >
               <Download className="w-4 h-4" />
@@ -234,7 +288,7 @@ export default function CommissionHistoryTable({ t, loading, commissions }) {
                   </td>
                   <td className="px-3 2xl:px-4 py-4 whitespace-nowrap">
                     <span className={`inline-flex items-center px-2.5 py-1 rounded-md text-[11px] font-extrabold border ${getLevelStyle(row.Level)}`}>
-                      {row.Level}
+                      {String(row.Level).toLowerCase().startsWith('level') ? row.Level : `Level ${row.Level}`}
                     </span>
                   </td>
                   <td className="px-3 2xl:px-4 py-4 whitespace-nowrap text-[13px] font-bold text-slate-700">

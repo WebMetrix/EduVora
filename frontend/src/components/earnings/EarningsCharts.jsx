@@ -26,9 +26,10 @@ export default function EarningsCharts({ t, loading, chartData, levelStats }) {
     .map(d => ({ name: d.dateLabel, value: d.amount }));
 
   const pieColors = {
-    'Direct': '#4611E1',
-    'Level 1': '#8b5cf6',
-    'Level 2': '#a78bfa',
+    'Level 1': '#4611E1',
+    '1': '#4611E1',
+    'Level 2': '#8b5cf6',
+    '2': '#8b5cf6',
     'Other': '#cbd5e1'
   };
 
@@ -40,12 +41,12 @@ export default function EarningsCharts({ t, loading, chartData, levelStats }) {
 
   const totalPie = pieData.reduce((acc, curr) => acc + curr.value, 0);
 
-  const getDirectTotal = () => {
-    return pieData.find(p => p.name === 'Direct')?.value || 0;
+  const getLevel1Total = () => {
+    return pieData.find(p => String(p.name).toLowerCase() === 'level 1' || p.name === 1)?.value || 0;
   };
 
-  const getLevelTotal = () => {
-    return pieData.filter(p => p.name === 'Level 1' || p.name === 'Level 2').reduce((a, b) => a + b.value, 0);
+  const getLevel2Total = () => {
+    return pieData.find(p => String(p.name).toLowerCase() === 'level 2' || p.name === 2)?.value || 0;
   };
 
   const getOtherTotal = () => {
@@ -118,15 +119,15 @@ export default function EarningsCharts({ t, loading, chartData, levelStats }) {
         {/* Small Stat Blocks */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-6">
           <div className="bg-indigo-50/50 rounded-xl p-3 flex flex-col items-center justify-center border border-indigo-100/50">
-            <span className="text-[11px] font-bold text-slate-500 mb-1">{t('earnings.charts.direct')}</span>
+            <span className="text-[11px] font-bold text-slate-500 mb-1">{t('earnings.charts.level1')}</span>
             <span className="text-[15px] font-extrabold text-indigo-700">
-              {loading ? '...' : `₹ ${getDirectTotal().toLocaleString('en-IN', { minimumFractionDigits: 2 })}`}
+              {loading ? '...' : `₹ ${getLevel1Total().toLocaleString('en-IN', { minimumFractionDigits: 2 })}`}
             </span>
           </div>
-          <div className="bg-green-50/50 rounded-xl p-3 flex flex-col items-center justify-center border border-green-100/50">
-            <span className="text-[11px] font-bold text-slate-500 mb-1">{t('earnings.charts.levelCommission')}</span>
+          <div className="bg-purple-50/50 rounded-xl p-3 flex flex-col items-center justify-center border border-purple-100/50">
+            <span className="text-[11px] font-bold text-slate-500 mb-1">{t('earnings.charts.level2')}</span>
             <span className="text-[15px] font-extrabold text-slate-900">
-              {loading ? '...' : `₹ ${getLevelTotal().toLocaleString('en-IN', { minimumFractionDigits: 2 })}`}
+              {loading ? '...' : `₹ ${getLevel2Total().toLocaleString('en-IN', { minimumFractionDigits: 2 })}`}
             </span>
           </div>
           <div className="bg-orange-50/50 rounded-xl p-3 flex flex-col items-center justify-center border border-orange-100/50">
@@ -188,8 +189,7 @@ export default function EarningsCharts({ t, loading, chartData, levelStats }) {
           {/* Legends */}
           <div className="flex flex-col gap-4 w-full px-4">
             {!loading && pieData.map((item, idx) => {
-              // Convert 'Level 1' to 'level1Percent' style keys
-              const tKey = item.name === 'Direct' ? 'directPercent' : (item.name === 'Level 1' ? 'level1Percent' : (item.name === 'Level 2' ? 'level2Percent' : 'otherPercent'));
+              const tKey = (String(item.name).toLowerCase() === 'level 1' || item.name === 1) ? 'level1Percent' : ((String(item.name).toLowerCase() === 'level 2' || item.name === 2) ? 'level2Percent' : 'otherPercent');
               return (
                 <div key={idx} className="flex items-center justify-between w-full">
                   <div className="flex items-center gap-2">
