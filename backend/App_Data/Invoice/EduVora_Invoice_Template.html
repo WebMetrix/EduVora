@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Invoice - <%= invoice.invoiceNumber %></title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;padding:0;background:#f3f4f6;font-family:Arial,Helvetica,sans-serif;color:#1f2937;font-size:13px}
+.invoice-wrapper{width:210mm;min-height:297mm;margin:20px auto;background:#fff;padding:35px 40px}
+.header{display:flex;justify-content:space-between;align-items:flex-start;padding-bottom:25px;border-bottom:2px solid <%= company.primaryColor %>}
+.company-section{display:flex;align-items:flex-start;gap:15px}
+.company-logo{max-width:180px;max-height:70px;object-fit:contain}
+.company-name{font-size:22px;font-weight:700;color:<%= company.primaryColor %>;margin-bottom:5px}
+.company-tagline{font-size:11px;color:#6b7280;margin-bottom:8px}
+.company-address{font-size:11px;line-height:1.5;color:#4b5563}
+.invoice-title{text-align:right}
+.invoice-title h1{margin:0;font-size:30px;letter-spacing:1px;color:#111827}
+.invoice-meta{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;margin-top:25px;margin-bottom:30px}
+.meta-title{font-size:10px;font-weight:bold;text-transform:uppercase;color:#6b7280;margin-bottom:6px;letter-spacing:.5px}
+.meta-value{font-size:12px;line-height:1.5}
+.billing-section{display:flex;justify-content:space-between;gap:25px;margin-bottom:30px}
+.billing-box{width:50%;padding:18px;background:#f1f7ff;border-radius:8px}
+.section-heading{font-size:12px;font-weight:700;text-transform:uppercase;color:<%= company.primaryColor %>;margin-bottom:10px}
+.billing-content{line-height:1.65}
+.items-table{width:100%;border-collapse:collapse;margin-top:10px}
+.items-table thead{background:<%= company.primaryColor %>;color:#fff}
+.items-table th{padding:11px 9px;text-align:left;font-size:10px;font-weight:600;text-transform:uppercase}
+.items-table th.right,.items-table td.right{text-align:right}
+.items-table th.center,.items-table td.center{text-align:center}
+.items-table td{padding:12px 9px;border-bottom:1px solid #dbe3ed;vertical-align:top}
+.item-name{font-weight:600;color:#111827}
+.item-description{font-size:10px;color:#6b7280;margin-top:3px;line-height:1.5}
+.item-image{width:55px;height:70px;object-fit:cover;margin-right:10px;vertical-align:middle}
+.item-content{display:flex;align-items:center}
+.summary-section{display:flex;justify-content:flex-end}
+.summary{width:330px;border:1px solid #dbe3ed;border-top:0}
+.summary-row{display:flex;justify-content:space-between;padding:8px 12px;color:#4b5563}
+.summary-row.total{padding:13px 12px;font-size:17px;font-weight:700;color:#111827;background:#eaf3ff}
+.summary-row.total .amount{color:<%= company.primaryColor %>}
+.payment-section,.terms-section{margin-top:25px;padding:18px;background:#f1f7ff;border-radius:8px}
+.payment-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:12px}
+.payment-label{font-size:9px;color:#6b7280;text-transform:uppercase;margin-bottom:4px}
+.payment-value{font-size:12px;font-weight:600}
+.terms-content{font-size:10px;line-height:1.6;color:#6b7280}
+.footer{margin-top:30px;padding-top:15px;border-top:1px solid #dbe3ed;text-align:center}
+.footer-message{font-size:12px;font-weight:600;color:<%= company.primaryColor %>}
+.footer-contact{margin-top:7px;font-size:10px;color:#6b7280}
+.footer-links{margin-top:7px;font-size:10px}
+.footer-links a{color:<%= company.primaryColor %>;text-decoration:underline}
+.bottom-stripe{height:5px;margin:15px -40px -35px;background:linear-gradient(90deg,#1769e0 0%,#1769e0 35%,#f59e0b 65%,#16a34a 100%)}
+@media print{
+ body{background:#fff}
+ .invoice-wrapper{margin:0;width:100%;min-height:auto;padding:25px 30px}
+ .bottom-stripe{margin-left:-30px;margin-right:-30px;margin-bottom:-25px}
+ @page{size:A4;margin:0}
+}
+</style>
+</head>
+<body>
+<div class="invoice-wrapper">
+
+<div class="header">
+<div class="company-section">
+<% if (company.logoUrl) { %>
+<img src="<%= company.logoUrl %>" class="company-logo" alt="<%= company.name %>">
+<% } %>
+<div>
+<div class="company-name"><%= company.name %></div>
+<% if (company.tagline) { %><div class="company-tagline"><%= company.tagline %></div><% } %>
+<div class="company-address">
+<%= company.addressLine1 %><br>
+<% if (company.addressLine2) { %><%= company.addressLine2 %><br><% } %>
+<%= company.city %>, <%= company.state %> <%= company.postalCode %><br>
+<%= company.country %>
+<% if (company.phone) { %><br><%= company.phone %><% } %>
+<% if (company.email) { %><br><%= company.email %><% } %>
+<% if (company.website) { %><br><%= company.website %><% } %>
+</div>
+</div>
+</div>
+<div class="invoice-title"><h1><%= invoice.title %></h1></div>
+</div>
+
+<div class="invoice-meta">
+<div><div class="meta-title">Invoice Number</div><div class="meta-value"><strong><%= invoice.invoiceNumber %></strong></div></div>
+<div><div class="meta-title">Order Number</div><div class="meta-value"><strong><%= invoice.orderNumber %></strong></div></div>
+<div><div class="meta-title">Invoice Date</div><div class="meta-value"><%= invoice.invoiceDate %></div></div>
+<% if (invoice.dueDate) { %><div><div class="meta-title">Due Date</div><div class="meta-value"><%= invoice.dueDate %></div></div><% } %>
+</div>
+
+<div class="billing-section">
+<div class="billing-box">
+<div class="section-heading">Bill To</div>
+<div class="billing-content">
+<strong><%= customer.name %></strong><br>
+<% if (customer.email) { %><%= customer.email %><br><% } %>
+<% if (customer.phone) { %><%= customer.phone %><br><% } %>
+<% if (customer.address) { %><%= customer.address %><br><% } %>
+<% if (customer.city) { %><%= customer.city %>, <%= customer.state %> <%= customer.postalCode %><% } %>
+<% if (customer.country) { %><br><%= customer.country %><% } %>
+<% if (customer.taxNumber) { %><br>Tax ID: <%= customer.taxNumber %><% } %>
+</div>
+</div>
+<div class="billing-box">
+<div class="section-heading">Seller Details</div>
+<div class="billing-content">
+<strong><%= company.legalName %></strong><br>
+<% if (company.taxNumber) { %>GSTIN: <%= company.taxNumber %><br><% } %>
+<% if (company.pan) { %>PAN: <%= company.pan %><br><% } %>
+<% if (company.registrationNumber) { %>Registration No: <%= company.registrationNumber %><br><% } %>
+<%= company.email %><br>
+<% if (company.phone) { %><%= company.phone %><% } %>
+</div>
+</div>
+</div>
+
+<table class="items-table">
+<thead><tr>
+<th style="width:5%">#</th><th style="width:40%">Description</th><th class="center" style="width:10%">Qty</th>
+<th class="right" style="width:15%">Unit Price</th><th class="right" style="width:15%">Tax</th><th class="right" style="width:15%">Amount</th>
+</tr></thead>
+<tbody>
+<% items.forEach(function(item,index){ %>
+<tr>
+<td><%= index+1 %></td>
+<td>
+<div class="item-content">
+<% if(item.imageUrl){ %><img src="<%= item.imageUrl %>" class="item-image" alt=""><% } %>
+<div>
+<div class="item-name"><%= item.name %></div>
+<% if(item.description){ %><div class="item-description"><%= item.description %></div><% } %>
+<% if(item.details){ %><div class="item-description"><%= item.details %></div><% } %>
+</div>
+</div>
+</td>
+<td class="center"><%= item.quantity %></td>
+<td class="right"><%= item.unitPriceFormatted %></td>
+<td class="right"><%= item.taxFormatted %></td>
+<td class="right"><%= item.amountFormatted %></td>
+</tr>
+<% }); %>
+</tbody>
+</table>
+
+<div class="summary-section"><div class="summary">
+<div class="summary-row"><span>Subtotal</span><span><%= totals.subtotalFormatted %></span></div>
+<% if(totals.discount>0){ %><div class="summary-row"><span>Discount</span><span>- <%= totals.discountFormatted %></span></div><% } %>
+<% if(totals.tax>0){ %><div class="summary-row"><span><%= totals.taxLabel %></span><span><%= totals.taxFormatted %></span></div><% } %>
+<div class="summary-row total"><span>Total</span><span class="amount"><%= totals.totalFormatted %></span></div>
+</div></div>
+
+<div class="payment-section">
+<div class="section-heading">Payment Details</div>
+<div class="payment-grid">
+<div><div class="payment-label">Payment Date</div><div class="payment-value"><%= payment.paymentDate %></div></div>
+<div><div class="payment-label">Payment Method</div><div class="payment-value"><%= payment.method %></div></div>
+<div><div class="payment-label">Transaction ID</div><div class="payment-value"><%= payment.transactionId %></div></div>
+<div><div class="payment-label">Payment Status</div><div class="payment-value"><%= payment.status %></div></div>
+</div>
+</div>
+
+<div class="terms-section">
+<div class="section-heading">Terms &amp; Conditions</div>
+<div class="terms-content"><%= termsAndConditions %></div>
+</div>
+
+<div class="footer">
+<div class="footer-message"><%= footer.message %></div>
+<div class="footer-contact">
+<%= footer.email %>
+<% if(footer.phone){ %>&nbsp; | &nbsp;<%= footer.phone %><% } %>
+<% if(footer.website){ %>&nbsp; | &nbsp;<%= footer.website %><% } %>
+</div>
+<div class="footer-links">
+<% if(footer.termsUrl){ %><a href="<%= footer.termsUrl %>">Terms &amp; Conditions</a><% } %>
+<% if(footer.privacyUrl){ %>&nbsp; | &nbsp;<a href="<%= footer.privacyUrl %>">Privacy Policy</a><% } %>
+</div>
+</div>
+
+<div class="bottom-stripe"></div>
+</div>
+</body>
+</html>
