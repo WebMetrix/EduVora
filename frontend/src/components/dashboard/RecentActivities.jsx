@@ -61,9 +61,9 @@ export default function RecentActivities() {
         
         <div className="relative z-10 flex items-center justify-between mb-3">
           <h3 className="text-[14px] lg:text-[16px] font-bold text-slate-900">{t('dashboard.activities.title')}</h3>
-          <a href="#" className="text-[13px] lg:text-[14px] font-bold text-indigo-600 hover:text-indigo-700 hover:underline underline-offset-4 transition-all">
+          {/* <a href="#" className="text-[13px] lg:text-[14px] font-bold text-indigo-600 hover:text-indigo-700 hover:underline underline-offset-4 transition-all">
             {t('dashboard.activities.viewAll')}
-          </a>
+          </a> */}
         </div>
 
         <div className="relative z-10 mb-2">

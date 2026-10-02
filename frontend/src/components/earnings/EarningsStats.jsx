@@ -1,5 +1,5 @@
 import React from 'react';
-import { DollarSign, TrendingUp, Clock, Wallet } from 'lucide-react';
+import { IndianRupee, TrendingUp, Clock, Wallet } from 'lucide-react';
 
 export default function EarningsStats({ t, loading, summary, periodStats }) {
   const formatCurrency = (amount) => {
@@ -19,7 +19,7 @@ export default function EarningsStats({ t, loading, summary, periodStats }) {
       title: t('earnings.stats.total'),
       value: formatCurrency(summary?.TotalEarned),
       subtitle: t('earnings.stats.totalSub'),
-      icon: <DollarSign className="w-7 h-7 text-indigo-600" />,
+      icon: <IndianRupee className="w-7 h-7 text-indigo-600" />,
       bg: "bg-indigo-100",
       borderColor: "border-indigo-100",
       hoverShadow: "hover:shadow-lg hover:border-indigo-300"

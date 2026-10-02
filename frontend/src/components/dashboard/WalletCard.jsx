@@ -1,8 +1,8 @@
 import { useTranslation } from '../../hooks/useTranslation';
-import { Eye, Wallet } from 'lucide-react';
+import { Eye, EyeOff, Wallet } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { useDispatch, useSelector } from 'react-redux';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { fetchEarnings } from '../../redux/slices/earningsSlice';
 import { useNavigate } from 'react-router-dom';
 
@@ -11,6 +11,7 @@ export default function WalletCard() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { data, loading } = useSelector((state) => state.earnings);
+  const [isVisible, setIsVisible] = useState(true);
 
   useEffect(() => {
     if (!data) {
@@ -47,15 +48,21 @@ export default function WalletCard() {
         <div className="flex flex-col justify-start">
           <div className="flex items-center gap-2 text-indigo-200 mb-2 mt-1">
             <span className="text-[14px] font-medium">{t('dashboard.wallet.title')}</span>
-            <Eye className="w-3 h-3 cursor-pointer hover:text-white transition-colors" />
+            <button onClick={() => setIsVisible(!isVisible)} className="focus:outline-none">
+              {isVisible ? (
+                <Eye className="w-4 h-4 cursor-pointer hover:text-white transition-colors" />
+              ) : (
+                <EyeOff className="w-4 h-4 cursor-pointer hover:text-white transition-colors" />
+              )}
+            </button>
           </div>
 
           <div className="flex items-baseline gap-1 mb-1">
             {loading && !data ? (
               <div className="h-8 w-32 bg-indigo-400/30 rounded animate-pulse" />
             ) : (
-              <span className="text-[26px] lg:text-[30px] font-extrabold text-white tracking-tight drop-shadow-sm">
-                {formatCurrency(currentBalance)}
+              <span className="text-[26px] lg:text-[30px] font-extrabold text-white tracking-tight drop-shadow-sm min-h-[45px] flex items-center">
+                {isVisible ? formatCurrency(currentBalance) : '₹ ******'}
               </span>
             )}
           </div>

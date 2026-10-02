@@ -59,7 +59,7 @@ export default function ComparePackagesModal({ isOpen, onClose, packages, onSele
         bronze: { text: "", included: false }
       }
     },
-    {
+    /* {
       title: "Certificate of Completion",
       values: {
         diamond: { text: "Included", included: true },
@@ -67,7 +67,7 @@ export default function ComparePackagesModal({ isOpen, onClose, packages, onSele
         silver: { text: "Included", included: true },
         bronze: { text: "", included: false }
       }
-    },
+    }, */
     {
       title: "Priority Member Support",
       values: {
@@ -104,7 +104,7 @@ export default function ComparePackagesModal({ isOpen, onClose, packages, onSele
         bronze: { text: "", included: false }
       }
     },
-    {
+    /* {
       title: "Downloadable Resources",
       values: {
         diamond: { text: "Yes", included: true },
@@ -112,7 +112,7 @@ export default function ComparePackagesModal({ isOpen, onClose, packages, onSele
         silver: { text: "Limited", included: true },
         bronze: { text: "Limited", included: true }
       }
-    }
+    } */
   ];
 
   // Helper to extract package info from dynamic packages

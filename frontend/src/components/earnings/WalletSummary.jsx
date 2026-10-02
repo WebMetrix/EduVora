@@ -1,5 +1,5 @@
 import React from 'react';
-import { Wallet, AlertCircle, DollarSign, Award } from 'lucide-react';
+import { Wallet, AlertCircle, IndianRupee, Award } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
 
@@ -55,7 +55,7 @@ export default function WalletSummary({ t, loading, summary }) {
         <div className="flex items-center justify-between pb-4 border-b border-slate-100">
           <div className="flex items-center gap-3">
             <div className="w-8 h-8 rounded-full bg-slate-50 flex items-center justify-center shrink-0 border border-slate-200/60">
-              <DollarSign className="w-4 h-4 text-slate-500" />
+              <IndianRupee className="w-4 h-4 text-slate-500" />
             </div>
             <span className="text-[13px] font-bold text-slate-700">{t('earnings.wallet.totalPayouts')}</span>
           </div>

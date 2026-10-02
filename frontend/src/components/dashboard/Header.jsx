@@ -16,7 +16,7 @@ export default function Header({ toggleSidebar, isSuperAdmin }) {
   const { user } = useSelector((state) => state.auth);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const profileRef = useRef(null);
-  
+
   const { data: profileData } = useSelector((state) => state.profile || {});
 
   const rawName = profileData?.FullName || user?.name || user?.fullName || t('dashboard.mock.userName');
@@ -34,12 +34,12 @@ export default function Header({ toggleSidebar, isSuperAdmin }) {
   // const fallbackAvatar = `${baseFallbackUrl}${encodeURIComponent(rawName)}&background=random`;
 
   // let avatarUrl = fallbackAvatar;
-  
+
   // if (profileData?.ProfilePicturePath) {
   //   const baseUrl = (import.meta.env.VITE_API_URL || '').replace(/\/+$/, '');
   //   const normalizedPath = profileData.ProfilePicturePath.replace(/\\/g, '/');
   //   const folderStartIndex = normalizedPath.indexOf('UserData'); 
-    
+
   //   if (folderStartIndex !== -1) {
   //     const relativePath = normalizedPath.substring(folderStartIndex);
   //     avatarUrl = `${baseUrl}/${relativePath}`;
@@ -54,7 +54,7 @@ export default function Header({ toggleSidebar, isSuperAdmin }) {
   const fallbackAvatar = `${defaultUiAvatarUrl}${encodeURIComponent(rawName)}&background=random`;
 
   let avatarUrl = fallbackAvatar;
-  
+
   // 1. Safely parse the session storage backup so the image survives a page refresh
   let sessionProfile = {};
   try {
@@ -65,11 +65,11 @@ export default function Header({ toggleSidebar, isSuperAdmin }) {
   }
 
   // 2. Check Profile Redux, then Auth Redux, then Session Storage
-  const actualPicturePath = 
-    profileData?.ProfilePicturePath || 
-    user?.ProfilePicturePath || 
+  const actualPicturePath =
+    profileData?.ProfilePicturePath ||
+    user?.ProfilePicturePath ||
     sessionProfile?.ProfilePicturePath;
-  
+
   if (actualPicturePath) {
     // 3. Force your Elastic IP if Vite tries to use localhost on the deployed server
     let baseUrl = import.meta.env.VITE_API_URL;
@@ -77,8 +77,8 @@ export default function Header({ toggleSidebar, isSuperAdmin }) {
 
     // 4. Format the Windows path into a valid web URL
     const normalizedPath = actualPicturePath.replace(/\\/g, '/');
-    const folderStartIndex = normalizedPath.toLowerCase().indexOf('userdata'); 
-    
+    const folderStartIndex = normalizedPath.toLowerCase().indexOf('userdata');
+
     if (folderStartIndex !== -1) {
       const relativePath = normalizedPath.substring(folderStartIndex);
       avatarUrl = `${baseUrl}/${relativePath}`;
@@ -100,11 +100,11 @@ export default function Header({ toggleSidebar, isSuperAdmin }) {
   }, []);
 
   const dropdownItems = [
-    { id: 1, icon: User, label: t('dashboard.nav.myProfile') },
-    { id: 2, icon: Settings, label: t('dashboard.nav.settings') },
-    { id: 3, icon: Wallet, label: t('dashboard.nav.wallet') },
-    { id: 4, icon: BarChart2, label: t('dashboard.nav.payouts') },
-    { id: 5, icon: HelpCircle, label: t('dashboard.nav.helpSupport') }
+    { id: 1, icon: User, label: t('dashboard.nav.myProfile'), route: '/profile' },
+    // { id: 2, icon: Settings, label: t('dashboard.nav.settings'), route: '#' },
+    { id: 3, icon: Wallet, label: t('dashboard.nav.wallet'), route: '/earnings', state: { tab: 'wallet' } },
+    { id: 4, icon: BarChart2, label: t('dashboard.nav.payouts'), route: '/earnings', state: { tab: 'history' } },
+    { id: 5, icon: HelpCircle, label: t('dashboard.nav.helpSupport'), route: '#' }
   ];
 
   // Handle user logout action
@@ -168,10 +168,10 @@ export default function Header({ toggleSidebar, isSuperAdmin }) {
                 </div>
               ) : (
                 <div className="w-8 h-8 lg:w-9 lg:h-9 rounded-full bg-slate-100 overflow-hidden shrink-0 border border-slate-200">
-                  <img 
-                    src={avatarUrl} 
-                    alt={rawName} 
-                    className="w-full h-full object-cover" 
+                  <img
+                    src={avatarUrl}
+                    alt={rawName}
+                    className="w-full h-full object-cover"
                     onError={(e) => {
                       e.currentTarget.onerror = null;
                       e.currentTarget.src = fallbackAvatar;
@@ -222,8 +222,8 @@ export default function Header({ toggleSidebar, isSuperAdmin }) {
                     <button
                       key={idx}
                       onClick={() => {
-                        if (item.id === 1) { // 1 = profile
-                          navigate('/profile');
+                        if (item.route && item.route !== '#') {
+                          navigate(item.route, { state: item.state });
                         }
                         setIsProfileOpen(false);
                       }}

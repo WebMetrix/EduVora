@@ -1,10 +1,13 @@
 import { Edit2, MapPin, Building, Globe, Map, MapPinned, Navigation } from 'lucide-react';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 
 export default function AddressInformationCard({ t, profileData }) {
     const navigate = useNavigate();
     const [isNavigating, setIsNavigating] = useState(false);
+    const { data: kycData } = useSelector((state) => state.kyc || {});
+    const kycStatus = kycData?.KYCStatusId || profileData?.IsKYCVerified;
 
     return (
         <div className="bg-white/60 backdrop-blur-xl border border-white/60 rounded-2xl p-5 sm:p-6 shadow-[0_4px_24px_rgba(0,0,0,0.02)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_8px_30px_rgba(79,70,229,0.15)] hover:border-indigo-200/50 flex flex-col overflow-hidden group">
@@ -19,18 +22,20 @@ export default function AddressInformationCard({ t, profileData }) {
                     </div>
                 </div>
 
-                <button 
-                    onClick={() => {
-                        setIsNavigating(true);
-                        setTimeout(() => navigate('/completeprofile'), 400);
-                    }}
-                    disabled={isNavigating}
-                    className={`shrink-0 flex items-center gap-1 sm:gap-2 px-3 sm:px-4 py-1.5 rounded-lg border border-indigo-200 text-indigo-600 font-bold shadow-sm text-[12px] transition-all ${isNavigating ? 'opacity-50 cursor-not-allowed bg-indigo-50' : 'hover:bg-indigo-50'}`}
-                >
-                    <Edit2 className={`w-3.5 h-3.5 ${isNavigating ? 'animate-spin' : ''}`} />
-                    <span className="hidden sm:inline">{isNavigating ? t('common.editing') : t('profile.address.edit')}</span>
-                    <span className="sm:hidden">{isNavigating ? t('common.loadingDots') : t('profile.address.edit')}</span>
-                </button>
+                {kycStatus !== 2 && (
+                    <button 
+                        onClick={() => {
+                            setIsNavigating(true);
+                            setTimeout(() => navigate('/completeprofile'), 400);
+                        }}
+                        disabled={isNavigating}
+                        className={`shrink-0 flex items-center gap-1 sm:gap-2 px-3 sm:px-4 py-1.5 rounded-lg border border-indigo-200 text-indigo-600 font-bold shadow-sm text-[12px] transition-all ${isNavigating ? 'opacity-50 cursor-not-allowed bg-indigo-50' : 'hover:bg-indigo-50'}`}
+                    >
+                        <Edit2 className={`w-3.5 h-3.5 ${isNavigating ? 'animate-spin' : ''}`} />
+                        <span className="hidden sm:inline">{isNavigating ? t('common.editing') : t('profile.address.edit')}</span>
+                        <span className="sm:hidden">{isNavigating ? t('common.loadingDots') : t('profile.address.edit')}</span>
+                    </button>
+                )}
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-3">

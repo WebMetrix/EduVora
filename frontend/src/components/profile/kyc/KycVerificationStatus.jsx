@@ -1,8 +1,8 @@
 import React, { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { fetchKycDetails } from '../../../redux/slices/kycSlice';
-import { 
-  ShieldCheck, CheckCircle2, Clock, Hourglass, 
+import {
+  ShieldCheck, CheckCircle2, Clock, Hourglass,
   Info, CheckCircle, Edit2, User, XCircle
 } from 'lucide-react';
 import { useTranslation } from '../../../hooks/useTranslation';
@@ -14,14 +14,14 @@ export default function KycVerificationStatus({ kycData, onEdit }) {
 
   useEffect(() => {
     let intervalId;
-    
+
     // If KYC is in PENDING state (1), poll the backend every 3 seconds to check for updates from the Python worker
     if (statusId === 1) {
       intervalId = setInterval(() => {
         dispatch(fetchKycDetails());
       }, 3000);
     }
-    
+
     // Cleanup interval on unmount or when status changes from PENDING
     return () => {
       if (intervalId) {
@@ -32,25 +32,25 @@ export default function KycVerificationStatus({ kycData, onEdit }) {
 
   const dateToUse = kycData?.ModifiedDate || kycData?.SubmittedDate;
   let submittedDate = t('kyc.verificationStatus.recently');
-  
+
   if (dateToUse) {
     // Remove the 'Z' from the end of the date string if it exists.
     // The DB stores local time (IST), but the backend sends it with a 'Z' (UTC marker).
     // This causes the browser to add +5:30 again. Removing 'Z' forces it to be treated as local time.
-    const localDateStr = typeof dateToUse === 'string' && dateToUse.endsWith('Z') 
-        ? dateToUse.slice(0, -1) 
-        : dateToUse;
-        
-    submittedDate = new Date(localDateStr).toLocaleString('en-US', { 
-        day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute:'2-digit' 
+    const localDateStr = typeof dateToUse === 'string' && dateToUse.endsWith('Z')
+      ? dateToUse.slice(0, -1)
+      : dateToUse;
+
+    submittedDate = new Date(localDateStr).toLocaleString('en-US', {
+      day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit'
     });
   }
   return (
     <div className="flex flex-col gap-6 w-full relative z-20">
-      
+
       {/* Main Status Container */}
       <div className="bg-white rounded-3xl p-6 md:p-8 shadow-[0_8px_30px_rgba(0,0,0,0.04)] border border-slate-100 flex flex-col w-full">
-        
+
         {/* Header */}
         <div className="flex items-start gap-4 mb-10">
           <div className="w-12 h-12 rounded-xl bg-indigo-50 flex shrink-0 items-center justify-center text-[#4f3bf3]">
@@ -61,11 +61,11 @@ export default function KycVerificationStatus({ kycData, onEdit }) {
               {statusId === 1 ? t('kyc.verificationStatus.inProgress') : statusId === 2 ? t('kyc.verificationStatus.completed') : t('kyc.verificationStatus.rejected')}
             </h3>
             <p className="text-[13px] text-slate-500 font-medium leading-relaxed">
-              {statusId === 1 
-                ? <>{t('kyc.verificationStatus.inProgressDesc1')}<br className="hidden sm:block"/>{t('kyc.verificationStatus.inProgressDesc2')}</>
+              {statusId === 1
+                ? <>{t('kyc.verificationStatus.inProgressDesc1')}<br className="hidden sm:block" />{t('kyc.verificationStatus.inProgressDesc2')}</>
                 : statusId === 2
-                ? t('kyc.verificationStatus.completedDesc')
-                : t('kyc.verificationStatus.rejectedDesc')
+                  ? t('kyc.verificationStatus.completedDesc')
+                  : t('kyc.verificationStatus.rejectedDesc')
               }
             </p>
           </div>
@@ -133,7 +133,7 @@ export default function KycVerificationStatus({ kycData, onEdit }) {
 
         {/* What happens next box */}
         <div className="bg-[#f5f3ff]/60 rounded-2xl p-6 border border-indigo-50 flex flex-col md:flex-row items-center md:items-start justify-between gap-6 relative overflow-hidden">
-          
+
           <div className="flex-1 z-10">
             <div className="flex items-center gap-2 mb-4">
               <Info className="w-5 h-5 text-[#4f3bf3]" />
@@ -157,28 +157,28 @@ export default function KycVerificationStatus({ kycData, onEdit }) {
 
           {/* Illustration approximation */}
           <div className="w-32 h-24 shrink-0 relative z-10 hidden sm:flex items-center justify-center mr-4">
-             <div className="absolute inset-0 bg-white rounded-lg shadow-sm border border-slate-200 p-2.5 flex flex-col gap-2.5">
-               <div className="w-8 h-2 bg-indigo-200 rounded-full absolute -top-1 left-1/2 -translate-x-1/2" />
-               <div className="flex gap-2 items-center mt-2">
-                 <div className="w-8 h-8 bg-indigo-50 rounded-full flex shrink-0 items-center justify-center text-indigo-300">
-                    <User className="w-5 h-5" />
-                 </div>
-                 <div className="flex-1 flex flex-col gap-1.5">
-                   <div className="w-full h-1.5 bg-slate-200 rounded-full" />
-                   <div className="w-3/4 h-1.5 bg-slate-200 rounded-full" />
-                 </div>
-               </div>
-               <div className="w-full h-1.5 bg-slate-100 rounded-full" />
-               <div className="w-4/5 h-1.5 bg-slate-100 rounded-full" />
-             </div>
-             <div className="absolute -bottom-2 -right-2 bg-green-500 rounded-xl p-1.5 border-[3px] border-white shadow-md">
-               <ShieldCheck className="w-6 h-6 text-white" />
-             </div>
-             {/* Decorative stars */}
-             <div className="absolute top-2 -left-4 text-indigo-400 opacity-60 text-lg">✦</div>
-             <div className="absolute -top-1 right-2 text-green-400 opacity-60 text-sm">✦</div>
-             <div className="absolute bottom-2 -left-6 text-green-400 opacity-60 text-sm">✦</div>
-             <div className="absolute bottom-1 right-16 text-indigo-400 opacity-60 text-xs">✦</div>
+            <div className="absolute inset-0 bg-white rounded-lg shadow-sm border border-slate-200 p-2.5 flex flex-col gap-2.5">
+              <div className="w-8 h-2 bg-indigo-200 rounded-full absolute -top-1 left-1/2 -translate-x-1/2" />
+              <div className="flex gap-2 items-center mt-2">
+                <div className="w-8 h-8 bg-indigo-50 rounded-full flex shrink-0 items-center justify-center text-indigo-300">
+                  <User className="w-5 h-5" />
+                </div>
+                <div className="flex-1 flex flex-col gap-1.5">
+                  <div className="w-full h-1.5 bg-slate-200 rounded-full" />
+                  <div className="w-3/4 h-1.5 bg-slate-200 rounded-full" />
+                </div>
+              </div>
+              <div className="w-full h-1.5 bg-slate-100 rounded-full" />
+              <div className="w-4/5 h-1.5 bg-slate-100 rounded-full" />
+            </div>
+            <div className="absolute -bottom-2 -right-2 bg-green-500 rounded-xl p-1.5 border-[3px] border-white shadow-md">
+              <ShieldCheck className="w-6 h-6 text-white" />
+            </div>
+            {/* Decorative stars */}
+            <div className="absolute top-2 -left-4 text-indigo-400 opacity-60 text-lg">✦</div>
+            <div className="absolute -top-1 right-2 text-green-400 opacity-60 text-sm">✦</div>
+            <div className="absolute bottom-2 -left-6 text-green-400 opacity-60 text-sm">✦</div>
+            <div className="absolute bottom-1 right-16 text-indigo-400 opacity-60 text-xs">✦</div>
           </div>
         </div>
 
@@ -190,7 +190,7 @@ export default function KycVerificationStatus({ kycData, onEdit }) {
           <h4 className="text-[15px] font-bold text-[#1a1446] mb-1">{t('kyc.verificationStatus.updateTitle')}</h4>
           <p className="text-[13px] text-slate-500 font-medium">{t('kyc.verificationStatus.updateDesc')}</p>
         </div>
-        <button 
+        <button
           onClick={onEdit}
           className="shrink-0 flex items-center justify-center gap-1 sm:gap-2 px-3 sm:px-4 py-1.5 rounded-lg border border-indigo-200 text-indigo-600 font-bold shadow-sm text-[12px] transition-all hover:bg-indigo-50 w-full sm:w-auto"
         >

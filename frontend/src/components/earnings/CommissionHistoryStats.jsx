@@ -1,5 +1,5 @@
 import React from 'react';
-import { DollarSign, TrendingUp, FileText, Clock } from 'lucide-react';
+import { IndianRupee, TrendingUp, FileText, Clock } from 'lucide-react';
 
 export default function CommissionHistoryStats({ t, loading, summary, periodStats, commissions }) {
   const formatCurrency = (amount) => {
@@ -19,7 +19,7 @@ export default function CommissionHistoryStats({ t, loading, summary, periodStat
       title: t('earnings.history.stats.totalCommission'),
       value: formatCurrency(summary?.TotalEarned),
       subtitle: t('earnings.stats.totalSub'),
-      icon: <DollarSign className="w-7 h-7 text-indigo-600" />,
+      icon: <IndianRupee className="w-7 h-7 text-indigo-600" />,
       bg: "bg-indigo-100",
       borderColor: "border-indigo-100",
       hoverShadow: "hover:shadow-lg hover:border-indigo-300"

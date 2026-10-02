@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 import { useTranslation } from '../../hooks/useTranslation';
 import { CheckCircle2 } from 'lucide-react';
 import goldIcon from '../../assets/icons/Gold.svg';
@@ -40,6 +41,9 @@ export default function PackageCards() {
     };
     fetchPackages();
   }, []);
+
+  const location = useLocation();
+
 
   const getPackageStyles = (packageId, packageName) => {
     const name = (packageName || '').toLowerCase();
@@ -101,6 +105,18 @@ export default function PackageCards() {
       };
     });
 
+  useEffect(() => {
+    if (!loading && packages.length > 0 && location.state?.upgradePackage) {
+      const upgradePackageName = location.state.upgradePackage.toLowerCase();
+      const targetPackage = packages.find(p => p.name.toLowerCase().includes(upgradePackageName));
+      if (targetPackage) {
+        setSelectedPackage(targetPackage);
+        // Clean up state to prevent reopening on subsequent renders
+        window.history.replaceState({}, document.title);
+      }
+    }
+  }, [loading, packages.length, location.state]);
+
   // Preserve the skeleton loading animation by showing temporary cards while fetching
   if (loading && packages.length === 0) {
     packages = [4, 3, 2, 1].map(id => ({
@@ -115,7 +131,7 @@ export default function PackageCards() {
   }
 
   return (
-    <div className="flex flex-col xl:col-span-7">
+    <div id="packages-section" className="flex flex-col xl:col-span-7">
       <div className="relative overflow-hidden rounded-3xl bg-linear-to-br from-white/90 to-indigo-50/40 backdrop-blur-xl p-4 lg:p-5 border border-indigo-100/60 shadow-sm group/card transition-all duration-300 hover:shadow-none hover:border-indigo-200 flex flex-col">
         {/* Decorative background flare */}
         <div className="absolute top-0 right-0 w-64 h-64 bg-indigo-400/10 rounded-full blur-[80px] -translate-y-1/2 translate-x-1/3 pointer-events-none group-hover/card:bg-indigo-400/20 transition-colors duration-700" />

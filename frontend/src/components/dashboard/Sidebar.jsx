@@ -293,6 +293,12 @@ export default function Sidebar({ isOpen, setIsOpen, isSuperAdmin }) {
             </div>
           ) : nextPackageInfo ? (
             <div
+              onClick={() => {
+                navigate('/dashboard', { state: { upgradePackage: nextPackageInfo.name } });
+                setTimeout(() => {
+                  document.getElementById('packages-section')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }, 100);
+              }}
               className="relative overflow-hidden rounded-2xl bg-linear-to-br from-slate-50 to-indigo-50/30 border border-slate-200/60 p-3 shadow-sm hover:shadow-md hover:-translate-y-1 group cursor-pointer transition-all duration-300"
             >
               {/* Background animated blob */}
