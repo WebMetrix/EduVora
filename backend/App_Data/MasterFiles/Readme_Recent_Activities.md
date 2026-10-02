@@ -5,7 +5,7 @@ This document outlines the metadata-driven architecture for the Recent Activitie
 ## 1. Architecture Overview
 
 1.  **Database (SQL Server):** The `EV_GetRecentActivities` stored procedure aggregates events across multiple tables (`Tb_Referral`, `Tb_CommissionLedger`, etc.). It returns a standardized `ActivityCode`, a dynamic variable (`Param1`), and a pre-calculated `TimeAgoText`.
-2.  **Configuration (XML):** The `activities.xml` file maps each `ActivityCode` to its UI representation (Template text, Badge label, and CSS Theme).
+2.  **Configuration (XML):** The `RecentActivitiesMaster.xml` file maps each `ActivityCode` to its UI representation (Template text, Badge label, and CSS Theme).
 3.  **Application Layer (Node.js):** The backend executes the stored procedure, reads the XML file, injects `Param1` into the Template, and serves a fully formatted JSON array.
 4.  **Presentation (React):** The frontend receives clean, ready-to-render objects.
 
