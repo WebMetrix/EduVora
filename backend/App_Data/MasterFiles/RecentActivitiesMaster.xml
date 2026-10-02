@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Activities>
+    <!-- Network & Sales -->
+    <Activity code="NETWORK_JOIN">
+        <Template>{0} joined your network</Template>
+        <BadgeText>New Signup</BadgeText>
+        <BadgeTheme>Success</BadgeTheme>
+    </Activity>
+    
+    <Activity code="SALE">
+        <Template>Package "{0}" sold</Template>
+        <BadgeText>Sale</BadgeText>
+        <BadgeTheme>Primary</BadgeTheme>
+    </Activity>
+    
+    <Activity code="COMM_CREDIT">
+        <Template>Commission of ₹{0} credited</Template>
+        <BadgeText>Completed</BadgeText>
+        <BadgeTheme>Success</BadgeTheme>
+    </Activity>
+
+    <!-- Upgrades & Achievements -->
+    <Activity code="RANK_UPGRADE">
+        <Template>You achieved {0} Rank!</Template>
+        <BadgeText>Rank Up</BadgeText>
+        <BadgeTheme>Warning</BadgeTheme>
+    </Activity>
+    
+    <Activity code="PACKAGE_UPGRADE">
+        <Template>Upgraded to {0}</Template>
+        <BadgeText>Upgrade</BadgeText>
+        <BadgeTheme>Primary</BadgeTheme>
+    </Activity>
+    
+    <Activity code="COURSE_COMPLETED">
+        <Template>Completed course: {0}</Template>
+        <BadgeText>Course</BadgeText>
+        <BadgeTheme>Success</BadgeTheme>
+    </Activity>
+
+    <!-- Financial & Compliance -->
+    <Activity code="WITHDRAWAL_SUCCESS">
+        <Template>₹{0} transferred to your bank</Template>
+        <BadgeText>Payout</BadgeText>
+        <BadgeTheme>Primary</BadgeTheme>
+    </Activity>
+    
+    <Activity code="KYC_APPROVED">
+        <Template>Your KYC documents are verified</Template>
+        <BadgeText>Verified</BadgeText>
+        <BadgeTheme>Success</BadgeTheme>
+    </Activity>
+</Activities>
