@@ -1,57 +1,106 @@
+import React, { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchRecentActivities } from '../../redux/slices/dashboardSlice';
 import { useTranslation } from '../../hooks/useTranslation';
 import ActivityItem from './ActivityItem';
-import { UserPlus, ShoppingCart, User, IndianRupee, ChevronLeft, ChevronRight, Clock } from 'lucide-react';
+import { UserPlus, ShoppingCart, User, IndianRupee, ChevronLeft, ChevronRight, Clock, Award, Package, CheckCircle, ArrowUpRight } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 export default function RecentActivities() {
   const { t } = useTranslation();
+  const dispatch = useDispatch();
+  const { activities, loading } = useSelector((state) => state.dashboard || { activities: [] });
+  const [page, setPage] = useState(1);
+  const limit = 5;
 
-  const activities = [
-    {
-      id: 1,
-      title: "Rahul Verma joined your network",
-      time: "2 hours ago",
-      icon: UserPlus,
-      iconColor: "text-emerald-600",
-      iconBg: "bg-emerald-100",
-      badgeText: "New Signup",
-      badgeColor: "text-emerald-700",
-      badgeBg: "bg-emerald-50"
-    },
-    {
-      id: 2,
-      title: "Course \"Social Media Marketing\" sold",
-      time: "5 hours ago",
-      icon: ShoppingCart,
-      iconColor: "text-blue-600",
-      iconBg: "bg-blue-100",
-      badgeText: "Sale",
-      badgeColor: "text-blue-700",
-      badgeBg: "bg-blue-50"
-    },
-    {
-      id: 3,
-      title: "Anita Kumari joined your network",
-      time: "1 day ago",
-      icon: User,
-      iconColor: "text-indigo-600",
-      iconBg: "bg-indigo-100",
-      badgeText: "New Signup",
-      badgeColor: "text-emerald-700",
-      badgeBg: "bg-emerald-50"
-    },
-    {
-      id: 4,
-      title: "Commission of ₹750 credited",
-      time: "1 day ago",
-      icon: IndianRupee,
-      iconColor: "text-orange-600",
-      iconBg: "bg-orange-100",
-      badgeText: "Completed",
-      badgeColor: "text-emerald-700",
-      badgeBg: "bg-emerald-50"
+  useEffect(() => {
+    dispatch(fetchRecentActivities({ page, limit }));
+  }, [dispatch, page]);
+
+  const getActivityConfig = (activity) => {
+    switch (activity.ActivityCode) {
+      case 'NETWORK_JOIN':
+        return {
+          title: `${activity.Param1} joined your network`,
+          icon: UserPlus,
+          iconColor: "text-indigo-600",
+          iconBg: "bg-indigo-100",
+          badgeText: "New Signup",
+          badgeColor: "text-indigo-700",
+          badgeBg: "bg-indigo-50"
+        };
+      case 'SALE':
+        return {
+          title: `Package "${activity.Param1}" sold`,
+          icon: ShoppingCart,
+          iconColor: "text-blue-600",
+          iconBg: "bg-blue-100",
+          badgeText: "Sale",
+          badgeColor: "text-blue-700",
+          badgeBg: "bg-blue-50"
+        };
+      case 'COMM_CREDIT':
+        return {
+          title: `Commission of ₹${activity.Param1} credited`,
+          icon: IndianRupee,
+          iconColor: "text-emerald-600",
+          iconBg: "bg-emerald-100",
+          badgeText: "Credited",
+          badgeColor: "text-emerald-700",
+          badgeBg: "bg-emerald-50"
+        };
+      case 'RANK_UPGRADE':
+        return {
+          title: `Rank upgraded to ${activity.Param1}`,
+          icon: Award,
+          iconColor: "text-amber-600",
+          iconBg: "bg-amber-100",
+          badgeText: "Achievement",
+          badgeColor: "text-amber-700",
+          badgeBg: "bg-amber-50"
+        };
+      case 'PACKAGE_UPGRADE':
+        return {
+          title: `Upgraded to ${activity.Param1}`,
+          icon: Package,
+          iconColor: "text-purple-600",
+          iconBg: "bg-purple-100",
+          badgeText: "Upgrade",
+          badgeColor: "text-purple-700",
+          badgeBg: "bg-purple-50"
+        };
+      case 'WITHDRAWAL_SUCCESS':
+        return {
+          title: `Withdrawal of ₹${activity.Param1} successful`,
+          icon: ArrowUpRight,
+          iconColor: "text-orange-600",
+          iconBg: "bg-orange-100",
+          badgeText: "Payout",
+          badgeColor: "text-orange-700",
+          badgeBg: "bg-orange-50"
+        };
+      case 'KYC_APPROVED':
+        return {
+          title: `KYC Application Approved`,
+          icon: CheckCircle,
+          iconColor: "text-emerald-600",
+          iconBg: "bg-emerald-100",
+          badgeText: "Verified",
+          badgeColor: "text-emerald-700",
+          badgeBg: "bg-emerald-50"
+        };
+      default:
+        return {
+          title: activity.Param1 || 'Activity',
+          icon: Clock,
+          iconColor: "text-slate-600",
+          iconBg: "bg-slate-100",
+          badgeText: "Info",
+          badgeColor: "text-slate-700",
+          badgeBg: "bg-slate-50"
+        };
     }
-  ];
+  };
 
   return (
     <div className="flex flex-col h-full">
@@ -67,30 +116,55 @@ export default function RecentActivities() {
         </div>
 
         <div className="relative z-10 mb-2">
-          {activities.map(activity => (
-            <ActivityItem key={activity.id} {...activity} />
-          ))}
+          {loading ? (
+            <div className="flex justify-center items-center py-6">
+              <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-indigo-600"></div>
+            </div>
+          ) : activities?.length > 0 ? (
+            activities.map((activity, index) => {
+              const config = getActivityConfig(activity);
+              return (
+                <ActivityItem
+                  key={index}
+                  title={config.title}
+                  time={activity.TimeAgoText}
+                  icon={config.icon}
+                  iconColor={config.iconColor}
+                  iconBg={config.iconBg}
+                  badgeText={config.badgeText}
+                  badgeColor={config.badgeColor}
+                  badgeBg={config.badgeBg}
+                />
+              );
+            })
+          ) : (
+            <div className="text-center py-6 text-sm text-slate-500">
+              {t('dashboard.activities.noActivities') || 'No recent activities'}
+            </div>
+          )}
         </div>
 
         {/* Pagination */}
         <div className="relative z-10 flex items-center justify-center gap-1.5 mt-auto">
-          <button className="w-8 h-8 rounded-full flex items-center justify-center text-slate-400 hover:bg-slate-100 transition-colors">
+          <button 
+            onClick={() => setPage(p => Math.max(1, p - 1))}
+            disabled={page === 1}
+            className="w-8 h-8 rounded-full flex items-center justify-center text-slate-400 hover:bg-slate-100 transition-colors disabled:opacity-50"
+          >
             <ChevronLeft className="w-4 h-4" />
           </button>
 
-          {[1, 2, 3, 4, 5].map((page) => (
-            <button
-              key={page}
-              className={`w-8 h-8 rounded-full flex items-center justify-center text-[13px] font-bold transition-all ${page === 1
-                  ? 'bg-indigo-600 text-white shadow-md shadow-indigo-600/20'
-                  : 'text-slate-600 hover:bg-indigo-50 hover:text-indigo-600'
-                }`}
-            >
-              {page}
-            </button>
-          ))}
+          <button
+            className="w-8 h-8 rounded-full flex items-center justify-center text-[13px] font-bold transition-all bg-indigo-600 text-white shadow-md shadow-indigo-600/20"
+          >
+            {page}
+          </button>
 
-          <button className="w-8 h-8 rounded-full flex items-center justify-center text-slate-600 hover:bg-slate-100 transition-colors">
+          <button 
+            onClick={() => setPage(p => p + 1)}
+            disabled={activities?.length < limit}
+            className="w-8 h-8 rounded-full flex items-center justify-center text-slate-600 hover:bg-slate-100 transition-colors disabled:opacity-50"
+          >
             <ChevronRight className="w-4 h-4" />
           </button>
         </div>

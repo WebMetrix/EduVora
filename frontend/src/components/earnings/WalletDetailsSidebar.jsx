@@ -97,7 +97,7 @@ export default function WalletDetailsSidebar({ t, loading, summary }) {
           </div>
         ) : (
           <button 
-            disabled={loading || (summary?.CurrentBalance || 0) <= 0}
+            disabled={loading}
             onClick={() => setIsWithdrawModalOpen(true)}
             className="relative z-10 w-full flex items-center justify-center gap-2 py-3 bg-[#4f3bf3] text-white rounded-xl text-[14px] font-bold hover:bg-indigo-700 hover:shadow-lg hover:-translate-y-0.5 transition-all active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:-translate-y-0 disabled:hover:shadow-none"
           >

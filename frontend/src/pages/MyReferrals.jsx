@@ -14,6 +14,7 @@ import ReferralsDataTable from '../components/referrals/ReferralsDataTable';
 export default function MyReferrals() {
   const { t } = useTranslation();
   const { data: profile } = useSelector((state) => state.profile || {});
+  const { stats: referralStats } = useSelector((state) => state.referrals || { stats: null });
 
   return (
     <>
@@ -34,10 +35,10 @@ export default function MyReferrals() {
         <div className="w-full min-w-0 h-full lg:col-span-12 xl:col-span-3"><ReferralQRCodeCard t={t} profile={profile} /></div>
       </div>
 
-      <ReferralStats t={t} />
+      <ReferralStats t={t} referralStats={referralStats} />
 
       <div className="flex flex-col lg:flex-row justify-center items-stretch gap-4 lg:gap-6 mt-4">
-        <div className="w-full lg:w-[45%] xl:w-[40%]"><ReferralRewards t={t} /></div>
+        <div className="w-full lg:w-[45%] xl:w-[40%]"><ReferralRewards t={t} referralStats={referralStats} /></div>
         <div className="w-full lg:w-[35%] xl:w-[30%]"><ReferralSharingTips t={t} profile={profile} /></div>
       </div>
 

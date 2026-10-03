@@ -20,6 +20,7 @@ export const fetchReferralsList = createAsyncThunk(
 
 const initialState = {
     listData: [],
+    stats: null,
     isLoading: false,
     error: null,
 };
@@ -30,6 +31,7 @@ const referralSlice = createSlice({
     reducers: {
         clearReferralsData: (state) => {
             state.listData = [];
+            state.stats = null;
             state.error = null;
         }
     },
@@ -42,6 +44,7 @@ const referralSlice = createSlice({
             .addCase(fetchReferralsList.fulfilled, (state, action) => {
                 state.isLoading = false;
                 state.listData = action.payload?.data || [];
+                state.stats = action.payload?.stats || null;
             })
             .addCase(fetchReferralsList.rejected, (state, action) => {
                 state.isLoading = false;

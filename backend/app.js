@@ -18,6 +18,7 @@ import packageRoutes from './routes/packageRoutes.js';
 import paymentRoutes from './routes/paymentRoutes.js';
 import kycRoutes from './routes/kycRoutes.js';
 import earningsRoutes from './routes/earningsRoutes.js';
+import dashboardRoutes from './routes/dashboardRoutes.js';
 
 
 
@@ -63,6 +64,7 @@ app.use('/packages', packageRoutes);
 app.use('/payment', paymentRoutes);
 app.use('/kyc', kycRoutes);
 app.use('/earnings', earningsRoutes);
+app.use('/dashboard', dashboardRoutes);
 
 
 const userDataPath = process.env.USER_DATA_PATH;

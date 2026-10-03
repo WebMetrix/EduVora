@@ -75,7 +75,8 @@ export const getReferralsList = async (req, res) => {
         
         return res.status(200).send({
             message: t('api.referral.listSuccess'),
-            data: result.recordset || []
+            data: result.recordsets[0] || [],
+            stats: result.recordsets[1] ? result.recordsets[1][0] : null
         });
 
     } catch (err) {

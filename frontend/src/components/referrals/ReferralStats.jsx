@@ -1,7 +1,22 @@
 import React from 'react';
-import { Users, UserCheck, Package, TrendingUp } from 'lucide-react';
+import { Users, UserCheck, Package, TrendingUp, TrendingDown } from 'lucide-react';
 
-export default function ReferralStats({ t }) {
+export default function ReferralStats({ t, referralStats }) {
+  const activeReferrals = referralStats?.ActiveReferrals || 0;
+  const purchasedPackages = referralStats?.PurchasedPackages || 0;
+  const level1 = referralStats?.Level1Referrals || 0;
+  const level2 = referralStats?.Level2Referrals || 0;
+
+  const getTrendData = (growthPercentage) => {
+    const val = growthPercentage || 0;
+    const isPositive = val >= 0;
+    return {
+      trend: `${isPositive ? '+' : ''}${val}%`,
+      trendColor: isPositive ? "text-emerald-500" : "text-red-500",
+      TrendIcon: isPositive ? TrendingUp : TrendingDown
+    };
+  };
+
   const stats = [
     /*
     {
@@ -17,43 +32,39 @@ export default function ReferralStats({ t }) {
     */
     {
       title: t('myReferrals.activeReferrals'),
-      value: "96",
-      trend: "+ 15.4%",
+      value: activeReferrals.toString(),
       icon: <UserCheck className="w-7 h-7 text-emerald-600" />,
       bg: "bg-emerald-100",
       borderColor: "border-emerald-200",
-      trendColor: "text-emerald-500",
-      hoverShadow: "hover:shadow-lg hover:border-emerald-300"
+      hoverShadow: "hover:shadow-lg hover:border-emerald-300",
+      ...getTrendData(referralStats?.ActiveGrowth)
     },
     {
       title: t('myReferrals.purchasedPackage'),
-      value: "32",
-      trend: "+ 8.2%",
+      value: purchasedPackages.toString(),
       icon: <Package className="w-7 h-7 text-amber-500" />,
       bg: "bg-amber-100",
       borderColor: "border-amber-200",
-      trendColor: "text-emerald-500",
-      hoverShadow: "hover:shadow-lg hover:border-amber-300"
+      hoverShadow: "hover:shadow-lg hover:border-amber-300",
+      ...getTrendData(referralStats?.PurchasedGrowth)
     },
     {
       title: t('myReferrals.level1Referrals'),
-      value: "102",
-      trend: "+ 17.2%",
+      value: level1.toString(),
       icon: <span className="text-blue-600 font-extrabold text-[20px]">L1</span>,
       bg: "bg-blue-100",
       borderColor: "border-blue-200",
-      trendColor: "text-emerald-500",
-      hoverShadow: "hover:shadow-lg hover:border-blue-300"
+      hoverShadow: "hover:shadow-lg hover:border-blue-300",
+      ...getTrendData(referralStats?.Level1Growth)
     },
     {
       title: t('myReferrals.level2Referrals'),
-      value: "26",
-      trend: "+ 12.5%",
+      value: level2.toString(),
       icon: <span className="text-purple-600 font-extrabold text-[20px]">L2</span>,
       bg: "bg-purple-100",
       borderColor: "border-purple-200",
-      trendColor: "text-emerald-500",
-      hoverShadow: "hover:shadow-lg hover:border-purple-300"
+      hoverShadow: "hover:shadow-lg hover:border-purple-300",
+      ...getTrendData(referralStats?.Level2Growth)
     }
   ];
 
@@ -74,7 +85,7 @@ export default function ReferralStats({ t }) {
               <div className="text-[24px] font-extrabold text-slate-900 leading-none mb-1">{stat.value}</div>
               <div className="text-[14px] font-bold text-slate-800 leading-tight mb-0.5">{stat.title}</div>
               <div className="flex items-center gap-1 text-[11px] font-bold mt-1">
-                <TrendingUp className={`w-3.5 h-3.5 ${stat.trendColor}`} />
+                <stat.TrendIcon className={`w-3.5 h-3.5 ${stat.trendColor}`} />
                 <span className={stat.trendColor}>{stat.trend}</span>
                 <span className="text-slate-500 font-medium ml-0.5">{t('myReferrals.vsLastMonth')}</span>
               </div>

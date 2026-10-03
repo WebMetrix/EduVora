@@ -572,10 +572,12 @@ Fetches a flattened hierarchy of the user's downline (up to Level 2) and all Das
   4. **Result Set (Registration Trend)**: `Timeframe` (Monthly = Current Month daily, Quarterly = Last 3 Months, Yearly = Current Year monthly), `date`, `value`
 
 ### `EV_GetMyReferralsList`
-Fetches a searchable and filterable list of the user's direct (Level 1) and indirect (Level 2) referrals for the Referrals Table UI.
+Fetches a searchable and filterable list of the user's direct (Level 1) and indirect (Level 2) referrals for the Referrals Table UI. Also retrieves a secondary result set containing global statistics for the Dashboard and Referral Rewards modules.
 Includes dynamic search matching for UserID, FullName, and Registration Date (adjusted for +5:30 IST timezone).
 - **Inputs**: `@UserID VARCHAR(100)`, `@DateFilter VARCHAR(20) = NULL`, `@SearchQuery VARCHAR(100) = NULL`
-- **Outputs**: Result Set containing `ProfilePicturePath`, `UserID`, `Name`, `PackageId`, `PackageName`, `RegistrationDate`, `StatusId`, `Status`, `ReferralLevel`
+- **Outputs**: 
+  1. **Result Set (Filtered Referrals List)**: `ProfilePicturePath`, `UserID`, `Name`, `PackageId`, `PackageName`, `RegistrationDate`, `StatusId`, `Status`, `ReferralLevel`
+  2. **Result Set (Global Unfiltered Stats)**: `Level1Referrals`, `Level2Referrals`, `ActiveReferrals`, `PurchasedPackages`, `Level1Growth`, `Level2Growth`, `ActiveGrowth`, `PurchasedGrowth`
 
 ### `EV_GetPackages`
 Fetches all active packages from `Tb_Package`.
@@ -616,3 +618,18 @@ Retrieves Wallet Summary, Timeframe Dashboard Stats (Monthly/Quarterly/Yearly), 
   4. **Result Set (Earnings By Level)**: Doughnut chart aggregates for the current month (`LevelName`, `Amount`)
   5. **Result Set (Commission History)**: Detailed commission list (`LedgerId`, `Date`, `FromUserName`, `FromUserId`, `FromUserProfilePic`, `Level`, `Type`, `Description`, `Amount`, `Status`)
   6. **Result Set (Wallet Transactions)**: Complete transaction list (`TransactionId`, `Date`, `Type`, `Description`, `Amount`, `Status`)
+
+### `EV_GetRecentActivities`
+Fetches a chronological, paginated feed of all recent activities (signups, sales, commissions, rank upgrades, package upgrades, withdrawals, KYC approvals) related to a specific user across the platform.
+- **Inputs**: `@UUID VARCHAR(36)`, `@PageNumber INT = 1`, `@PageSize INT = 5`
+- **Outputs**: Result Set containing `ActivityCode`, `Param1`, `TimeAgoText`
+
+### `EV_ProcessWalletWithdrawal`
+Manages wallet withdrawals including balance deduction, transaction logging, and retrieving user bank details for Cashfree Payouts. Also handles success/failure updates from the payment gateway to finalize or refund the transaction.
+- **Inputs**: `@Action INT` (1 = Initiate, 2 = Update Status), `@UUID VARCHAR(36)`, `@Amount DECIMAL(18,2)`, `@TransactionId INT`, `@StatusId INT` (2 = Success, 3 = Failed), `@GatewayRef VARCHAR(100)`
+- **Outputs**: 
+  - For Initiate (1): Result Set containing `Success`, `Message`, `TransactionId`, `EmailAddress`, `MobileNumber`, `FullName`, `AccountHolderName`, `AccountNumber`, `BankName`, `IFSCCode`. (Returns `-1` if insufficient balance).
+  - For Update Status (2): Result Set containing `Success`, `Message`.
+- **Updates**:
+  - For Initiate (1): Deducts `CurrentBalance` in `Tb_Wallet` and inserts a Pending (Type 2) record in `Tb_WalletTransaction`.
+  - For Update Status (2): If Success, increments `TotalWithdrawn`. If Failed, refunds `CurrentBalance` and updates transaction description.

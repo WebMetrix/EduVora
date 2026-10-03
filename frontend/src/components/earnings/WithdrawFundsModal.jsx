@@ -1,10 +1,17 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
-import { X, Wallet, ChevronDown, Landmark, Info } from 'lucide-react';
+import { X, Wallet, ChevronDown, Landmark, Info, Loader2 } from 'lucide-react';
 import { useTranslation } from '../../hooks/useTranslation';
+import { useDispatch, useSelector } from 'react-redux';
+import { withdrawFunds, fetchEarnings } from '../../redux/slices/earningsSlice';
+import { toast } from 'react-toastify';
 
-export default function WithdrawFundsModal({ isOpen, onClose, availableBalance = "5,230.00" }) {
+export default function WithdrawFundsModal({ isOpen, onClose, availableBalance = 0 }) {
   const { t } = useTranslation();
+  const dispatch = useDispatch();
+  const [amount, setAmount] = useState('');
+  const { loading } = useSelector((state) => state.earnings);
+  const user = useSelector((state) => state.auth.user);
 
   // Prevent scrolling when modal is open and fix layout shift
   useEffect(() => {
@@ -24,8 +31,33 @@ export default function WithdrawFundsModal({ isOpen, onClose, availableBalance =
 
   if (!isOpen) return null;
 
+  const handleWithdraw = async () => {
+    const withdrawAmount = Number(amount);
+    
+    if (!withdrawAmount || withdrawAmount < 500) {
+      toast.error('Minimum withdrawal amount is ₹500');
+      return;
+    }
+    
+    if (withdrawAmount > availableBalance) {
+      toast.error('Insufficient wallet balance');
+      return;
+    }
+
+    try {
+      await dispatch(withdrawFunds({ amount: withdrawAmount })).unwrap();
+      toast.success('Withdrawal request successfully processed!');
+      setAmount('');
+      onClose();
+      // Refresh earnings data
+      dispatch(fetchEarnings());
+    } catch (err) {
+      // Error handled by thunk
+    }
+  };
+
   return createPortal(
-    <div className="fixed inset-0 z-[9999] flex items-center justify-center p-0 md:p-4 bg-slate-900/60 backdrop-blur-sm transition-opacity">
+    <div className="fixed inset-0 z-[999] flex items-center justify-center p-0 md:p-4 bg-slate-900/60 backdrop-blur-sm transition-opacity">
       {/* Modal Container */}
       <div className="w-full h-[90vh] md:h-auto md:max-h-[90vh] md:max-w-[560px] bg-white rounded-t-3xl md:rounded-[24px] flex flex-col shadow-2xl relative mt-auto md:mt-0 overflow-hidden animate-slide-up md:animate-fade-in">
         
@@ -79,8 +111,10 @@ export default function WithdrawFundsModal({ isOpen, onClose, availableBalance =
                     <span className="text-slate-500 font-bold text-[14px]">₹</span>
                   </div>
                   <input 
-                    type="text" 
-                    placeholder="Enter amount" 
+                    type="number" 
+                    placeholder="Enter amount"
+                    value={amount}
+                    onChange={(e) => setAmount(e.target.value)}
                     className="w-full pl-8 pr-4 py-2.5 bg-white border border-slate-200 rounded-xl text-[14px] font-bold text-slate-900 placeholder:text-slate-400 placeholder:font-semibold focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 transition-all shadow-sm"
                   />
                 </div>
@@ -110,8 +144,8 @@ export default function WithdrawFundsModal({ isOpen, onClose, availableBalance =
                     <Landmark className="w-5 h-5 text-indigo-600" />
                   </div>
                   <div className="flex flex-col">
-                    <span className="text-[14px] font-extrabold text-[#1a1446]">HDFC Bank - 1234</span>
-                    <span className="text-[12px] font-semibold text-slate-500 mt-0.5">A/c No. **** **** 1234 | IFSC: HDFC0001234</span>
+                    <span className="text-[14px] font-extrabold text-[#1a1446]">Registered Bank Account</span>
+                    <span className="text-[12px] font-semibold text-slate-500 mt-0.5">Funds will be sent to your primary profile bank</span>
                   </div>
                 </div>
                 <div className="absolute inset-y-0 right-0 pr-4 flex items-center pointer-events-none">
@@ -130,18 +164,27 @@ export default function WithdrawFundsModal({ isOpen, onClose, availableBalance =
           </div>
         </div>
 
-        {/* Action Buttons */}
         <div className="px-6 py-4 border-t border-slate-100 flex gap-3 shrink-0 bg-white">
           <button
             onClick={onClose}
-            className="flex-1 py-3 bg-slate-50 border border-slate-200 rounded-xl text-[14px] font-bold text-slate-600 hover:bg-slate-100 transition-colors"
+            disabled={loading}
+            className="flex-1 py-3 bg-slate-50 border border-slate-200 rounded-xl text-[14px] font-bold text-slate-600 hover:bg-slate-100 transition-colors disabled:opacity-50"
           >
             Cancel
           </button>
           <button
-            className="flex-[2] py-3 bg-[#4f3bf3] text-white rounded-xl text-[14px] font-bold hover:bg-indigo-700 shadow-md shadow-indigo-500/20 hover:shadow-lg hover:-translate-y-0.5 transition-all"
+            onClick={handleWithdraw}
+            disabled={loading || !amount || Number(amount) < 500}
+            className="flex-[2] py-3 bg-[#4f3bf3] text-white rounded-xl text-[14px] font-bold hover:bg-indigo-700 shadow-md shadow-indigo-500/20 hover:shadow-lg hover:-translate-y-0.5 transition-all disabled:opacity-50 flex items-center justify-center gap-2"
           >
-            Confirm Withdrawal
+            {loading ? (
+              <>
+                <Loader2 className="w-5 h-5 animate-spin" />
+                Processing...
+              </>
+            ) : (
+              'Confirm Withdrawal'
+            )}
           </button>
         </div>
 

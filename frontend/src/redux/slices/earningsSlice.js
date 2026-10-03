@@ -16,6 +16,20 @@ export const fetchEarnings = createAsyncThunk(
     }
 );
 
+export const withdrawFunds = createAsyncThunk(
+    'earnings/withdrawFunds',
+    async ({ amount }, { rejectWithValue }) => {
+        try {
+            const response = await api.post('/earnings/withdraw', { amount });
+            return response.data;
+        } catch (error) {
+            const message = error.response?.data?.message || 'Failed to process withdrawal';
+            toast.error(message);
+            return rejectWithValue(message);
+        }
+    }
+);
+
 const earningsSlice = createSlice({
     name: 'earnings',
     initialState: {

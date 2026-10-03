@@ -185,19 +185,21 @@ export default function KycVerificationStatus({ kycData, onEdit }) {
       </div>
 
       {/* Edit Container */}
-      <div className="bg-white rounded-3xl p-6 shadow-[0_8px_30px_rgba(0,0,0,0.04)] border border-slate-100 flex flex-col sm:flex-row items-center justify-between gap-4">
-        <div>
-          <h4 className="text-[15px] font-bold text-[#1a1446] mb-1">{t('kyc.verificationStatus.updateTitle')}</h4>
-          <p className="text-[13px] text-slate-500 font-medium">{t('kyc.verificationStatus.updateDesc')}</p>
+      {statusId !== 2 && (
+        <div className="bg-white rounded-3xl p-6 shadow-[0_8px_30px_rgba(0,0,0,0.04)] border border-slate-100 flex flex-col sm:flex-row items-center justify-between gap-4">
+          <div>
+            <h4 className="text-[15px] font-bold text-[#1a1446] mb-1">{t('kyc.verificationStatus.updateTitle')}</h4>
+            <p className="text-[13px] text-slate-500 font-medium">{t('kyc.verificationStatus.updateDesc')}</p>
+          </div>
+          <button
+            onClick={onEdit}
+            className="shrink-0 flex items-center justify-center gap-1 sm:gap-2 px-3 sm:px-4 py-1.5 rounded-lg border border-indigo-200 text-indigo-600 font-bold shadow-sm text-[12px] transition-all hover:bg-indigo-50 w-full sm:w-auto"
+          >
+            <Edit2 className="w-3.5 h-3.5" />
+            {t('kyc.verificationStatus.editBtn')}
+          </button>
         </div>
-        <button
-          onClick={onEdit}
-          className="shrink-0 flex items-center justify-center gap-1 sm:gap-2 px-3 sm:px-4 py-1.5 rounded-lg border border-indigo-200 text-indigo-600 font-bold shadow-sm text-[12px] transition-all hover:bg-indigo-50 w-full sm:w-auto"
-        >
-          <Edit2 className="w-3.5 h-3.5" />
-          {t('kyc.verificationStatus.editBtn')}
-        </button>
-      </div>
+      )}
 
     </div>
   );

@@ -1,35 +1,59 @@
 import React from 'react';
 import { Award, Check, Lock } from 'lucide-react';
 
-export default function ReferralRewards({ t }) {
+export default function ReferralRewards({ t, referralStats }) {
+  const refCount = referralStats?.Level1Referrals || 0;
+
+  const targets = [10, 25, 50];
+  let inProgressTargetFound = false;
+
+  const getRewardData = (target) => {
+    if (refCount >= target) {
+      return {
+        status: t('myReferrals.completed'),
+        progress: `${target}/${target}`,
+        type: 'completed',
+        iconColor: 'text-emerald-500',
+        iconBg: 'bg-emerald-100',
+        bg: 'bg-white border border-emerald-200 shadow-sm',
+        hoverShadow: "hover:shadow-lg hover:border-emerald-300"
+      };
+    } else if (!inProgressTargetFound) {
+      inProgressTargetFound = true;
+      return {
+        status: t('myReferrals.inProgress'),
+        progress: `${refCount}/${target}`,
+        type: 'progress',
+        iconColor: 'text-amber-500',
+        iconBg: 'bg-amber-100',
+        bg: 'bg-white border border-amber-200 shadow-sm',
+        hoverShadow: "hover:shadow-lg hover:border-amber-300"
+      };
+    } else {
+      return {
+        status: t('myReferrals.locked'),
+        progress: `${refCount}/${target}`, // Show actual count even if locked, or 0/target? 0/target is fine, or refCount/target. Let's use refCount.
+        type: 'locked',
+        iconColor: 'text-slate-400',
+        iconBg: 'bg-slate-100',
+        bg: 'bg-white border border-slate-200 shadow-sm',
+        hoverShadow: "hover:shadow-lg hover:border-slate-300"
+      };
+    }
+  };
+
   const rewards = [
     {
       title: t('myReferrals.referrals10'),
-      status: t('myReferrals.completed'),
-      type: 'completed',
-      iconColor: 'text-emerald-500',
-      iconBg: 'bg-emerald-100',
-      bg: 'bg-white border border-emerald-200 shadow-sm',
-      hoverShadow: "hover:shadow-lg hover:border-emerald-300"
+      ...getRewardData(10)
     },
     {
       title: t('myReferrals.referrals25'),
-      status: t('myReferrals.inProgress'),
-      progress: "11/25",
-      type: 'progress',
-      iconColor: 'text-amber-500',
-      iconBg: 'bg-amber-100',
-      bg: 'bg-white border border-amber-200 shadow-sm',
-      hoverShadow: "hover:shadow-lg hover:border-amber-300"
+      ...getRewardData(25)
     },
     {
       title: t('myReferrals.referrals50'),
-      status: t('myReferrals.locked'),
-      type: 'locked',
-      iconColor: 'text-slate-400',
-      iconBg: 'bg-slate-100',
-      bg: 'bg-white border border-slate-200 shadow-sm',
-      hoverShadow: "hover:shadow-lg hover:border-slate-300"
+      ...getRewardData(50)
     }
   ];
 
