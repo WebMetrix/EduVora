@@ -140,7 +140,8 @@ export default function Sidebar({ isOpen, setIsOpen, isSuperAdmin }) {
                 referrals: '/myreferrals',
                 courses: '/courses',
                 orders: '/orders',
-                earnings: '/earnings'
+                earnings: '/earnings',
+                rank: '/ranks'
               };
               const isActive = routeMap[item.id] ? location.pathname === routeMap[item.id] : item.active;
 

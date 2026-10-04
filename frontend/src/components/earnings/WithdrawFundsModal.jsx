@@ -13,6 +13,8 @@ export default function WithdrawFundsModal({ isOpen, onClose, availableBalance =
   const { loading } = useSelector((state) => state.earnings);
   const user = useSelector((state) => state.auth.user);
 
+  const MIN_WITHDRAWAL_AMOUNT = Number(import.meta.env.VITE_MIN_WITHDRAWAL_AMOUNT);
+
   // Prevent scrolling when modal is open and fix layout shift
   useEffect(() => {
     if (isOpen) {
@@ -34,8 +36,8 @@ export default function WithdrawFundsModal({ isOpen, onClose, availableBalance =
   const handleWithdraw = async () => {
     const withdrawAmount = Number(amount);
     
-    if (!withdrawAmount || withdrawAmount < 500) {
-      toast.error('Minimum withdrawal amount is ₹500');
+    if (!withdrawAmount || withdrawAmount < MIN_WITHDRAWAL_AMOUNT) {
+      toast.error(`Minimum withdrawal amount is ₹${MIN_WITHDRAWAL_AMOUNT}`);
       return;
     }
     
@@ -118,7 +120,7 @@ export default function WithdrawFundsModal({ isOpen, onClose, availableBalance =
                     className="w-full pl-8 pr-4 py-2.5 bg-white border border-slate-200 rounded-xl text-[14px] font-bold text-slate-900 placeholder:text-slate-400 placeholder:font-semibold focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 transition-all shadow-sm"
                   />
                 </div>
-                <span className="text-[11px] font-semibold text-slate-500 mt-0.5">Minimum withdrawal amount: ₹ 500.00</span>
+                <span className="text-[11px] font-semibold text-slate-500 mt-0.5">Minimum withdrawal amount: ₹ {MIN_WITHDRAWAL_AMOUNT.toFixed(2)}</span>
               </div>
 
               {/* Withdrawal Method */}
@@ -174,7 +176,7 @@ export default function WithdrawFundsModal({ isOpen, onClose, availableBalance =
           </button>
           <button
             onClick={handleWithdraw}
-            disabled={loading || !amount || Number(amount) < 500}
+            disabled={loading || !amount || Number(amount) < MIN_WITHDRAWAL_AMOUNT}
             className="flex-[2] py-3 bg-[#4f3bf3] text-white rounded-xl text-[14px] font-bold hover:bg-indigo-700 shadow-md shadow-indigo-500/20 hover:shadow-lg hover:-translate-y-0.5 transition-all disabled:opacity-50 flex items-center justify-center gap-2"
           >
             {loading ? (

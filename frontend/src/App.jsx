@@ -17,6 +17,7 @@ import PaymentSuccess from './pages/payment/PaymentSuccess';
 import PaymentFailed from './pages/payment/PaymentFailed';
 import Earnings from './pages/Earnings';
 import KycVerification from './pages/KycVerification';
+import RankAchievements from './pages/RankAchievements';
 
 import ProtectedRoute from './components/common/ProtectedRoute';
 import GlobalLayout from './components/layout/GlobalLayout';
@@ -46,6 +47,7 @@ function App() {
           <Route path="/payment/success" element={<PaymentSuccess />} />
           <Route path="/payment/failed" element={<PaymentFailed />} />
           <Route path="/kyc" element={<KycVerification />} />
+          <Route path="/ranks" element={<RankAchievements />} />
         </Route>
       </Route>
 
