@@ -322,7 +322,8 @@
       "viewAll": "View All",
       "newSignup": "New Signup",
       "sale": "Sale",
-      "completed": "Completed"
+      "completed": "Completed",
+      "noActivities": "No recent activities"
     },
     "info": {
       "secureTitle": "Secure & Safe",

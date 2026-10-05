@@ -255,8 +255,8 @@ export default function WalletTransactions({ t, loading, transactions }) {
                 </tr>
               ))
             ) : currentData.length > 0 ? (
-              currentData.map((row) => (
-                <tr key={row.LedgerId} className="group border-b last:border-b-0 border-indigo-100/30 hover:bg-slate-50/50 hover:shadow-sm hover:-translate-y-0.5 relative transition-all duration-300 cursor-pointer">
+              currentData.map((row, idx) => (
+                <tr key={row.TransactionId || idx} className="group border-b last:border-b-0 border-indigo-100/30 hover:bg-slate-50/50 hover:shadow-sm hover:-translate-y-0.5 relative transition-all duration-300 cursor-pointer">
                   <td className="px-3 2xl:px-4 py-4 whitespace-nowrap">
                     <div className="flex flex-col">
                       <span className="text-[13px] font-extrabold text-[#1a1446] group-hover:text-[#4f3bf3] transition-colors">{new Intl.DateTimeFormat('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }).format(new Date(row.Date))}</span>
@@ -309,8 +309,8 @@ export default function WalletTransactions({ t, loading, transactions }) {
             <div key={idx} className="h-40 bg-slate-100 rounded-2xl animate-pulse" />
           ))
         ) : currentData.length > 0 ? (
-          currentData.map((row) => (
-            <div key={row.LedgerId} className="group p-4 flex flex-col gap-3 bg-slate-50/50 border border-indigo-100/30 rounded-2xl hover:bg-white hover:shadow-md hover:border-indigo-200 transition-all duration-300 cursor-pointer">
+          currentData.map((row, idx) => (
+            <div key={row.TransactionId || idx} className="group p-4 flex flex-col gap-3 bg-slate-50/50 border border-indigo-100/30 rounded-2xl hover:bg-white hover:shadow-md hover:border-indigo-200 transition-all duration-300 cursor-pointer">
               <div className="flex justify-between items-start mb-1">
                 <div className="flex flex-col">
                   <span className={`text-[15px] font-extrabold ${getAmountStyle(row.Type)}`}>{getAmountPrefix(row.Type)} {formatCurrency(row.Amount)}</span>
