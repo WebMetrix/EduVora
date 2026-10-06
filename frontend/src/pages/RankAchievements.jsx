@@ -7,10 +7,12 @@ import NextRankProgress from '../components/ranks/NextRankProgress';
 import AchievementsList from '../components/ranks/AchievementsList';
 import RecentAchievements from '../components/ranks/RecentAchievements';
 import ViewAllAchievementsModal from '../components/ranks/ViewAllAchievementsModal';
+import AchievementHistoryModal from '../components/ranks/AchievementHistoryModal';
 
 export default function RankAchievements() {
   const { t } = useTranslation();
   const [isModalOpen, setIsModalOpen] = React.useState(false);
+  const [isHistoryModalOpen, setIsHistoryModalOpen] = React.useState(false);
 
   return (
     <div className="w-full flex flex-col gap-6 max-w-[1400px] mx-auto pb-6">
@@ -45,7 +47,7 @@ export default function RankAchievements() {
       {/* Bottom Grid: Recent Achievements & Illustration */}
       <div className="grid grid-cols-1 xl:grid-cols-12 gap-6">
         <div className="xl:col-span-8 flex h-full">
-          <RecentAchievements onOpenModal={() => setIsModalOpen(true)} />
+          <RecentAchievements onOpenModal={() => setIsHistoryModalOpen(true)} />
         </div>
         <div className="xl:col-span-4 bg-indigo-50/50 border border-indigo-100/50 rounded-3xl p-6 flex flex-col items-center justify-center relative overflow-hidden hidden xl:flex">
           {/* Trophy Illustration Approximation */}
@@ -88,10 +90,14 @@ export default function RankAchievements() {
         </div>
       </div>
       
-      {/* Modal */}
+      {/* Modals */}
       <ViewAllAchievementsModal 
         isOpen={isModalOpen} 
         onClose={() => setIsModalOpen(false)} 
+      />
+      <AchievementHistoryModal 
+        isOpen={isHistoryModalOpen} 
+        onClose={() => setIsHistoryModalOpen(false)} 
       />
     </div>
   );
