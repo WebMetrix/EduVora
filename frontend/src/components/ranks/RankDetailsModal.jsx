@@ -13,7 +13,7 @@ export default function RankDetailsModal({ isOpen, onClose }) {
       document.body.style.paddingRight = '';
       document.body.style.overflow = 'unset';
     }
-    
+
     return () => {
       document.body.style.paddingRight = '';
       document.body.style.overflow = 'unset';
@@ -25,7 +25,7 @@ export default function RankDetailsModal({ isOpen, onClose }) {
   return createPortal(
     <div className="fixed inset-0 z-[10000] flex items-center justify-center p-0 md:p-4 bg-slate-900/60 backdrop-blur-sm transition-opacity">
       <div className="w-full h-[90vh] md:h-auto md:max-h-[90vh] md:max-w-[850px] xl:max-w-[1000px] bg-white md:rounded-[24px] rounded-t-3xl md:rounded-t-[24px] flex flex-col shadow-2xl relative mt-auto md:mt-0 animate-slide-up md:animate-fade-in overflow-hidden">
-        
+
         {/* Mobile Drag Handle */}
         <div className="w-full flex justify-center pt-3 pb-1 md:hidden bg-white shrink-0">
           <div className="w-12 h-1.5 bg-slate-200 rounded-full" />
@@ -39,7 +39,7 @@ export default function RankDetailsModal({ isOpen, onClose }) {
               Detailed information about your current rank and progress.
             </p>
           </div>
-          <button 
+          <button
             onClick={onClose}
             className="p-2 -mr-2 rounded-xl text-slate-400 hover:text-slate-600 hover:bg-slate-50 transition-colors"
           >
@@ -49,23 +49,23 @@ export default function RankDetailsModal({ isOpen, onClose }) {
 
         {/* Content Area */}
         <div className="flex-1 flex flex-col md:flex-row overflow-y-auto md:overflow-hidden min-h-0 bg-white custom-scrollbar p-4 md:p-5 gap-4 md:gap-5">
-          
+
           {/* Left Column (Gold Background Box) */}
           <div className="w-full md:w-[280px] lg:w-[320px] xl:w-[360px] shrink-0 bg-gradient-to-b from-[#FFFDF2] to-[#FFF4C7] rounded-[24px] border border-yellow-200/50 p-4 xl:p-5 flex flex-col relative overflow-hidden">
             {/* Background elements */}
             <div className="absolute top-0 right-0 w-full h-full opacity-40 pointer-events-none" style={{
               backgroundImage: 'radial-gradient(circle at 50% 30%, #FDE047 0%, transparent 60%)'
             }} />
-            
+
             <div className="relative z-10 flex flex-col items-center">
               <div className="flex flex-col items-center">
                 {/* Trophy */}
                 <div className="w-24 h-24 md:w-28 md:h-28 relative flex items-center justify-center shrink-0 mb-3">
-                   <div className="absolute inset-0 bg-yellow-400/20 blur-2xl rounded-full" />
-                   <div className="relative w-16 h-16 md:w-20 md:h-20 rounded-full bg-gradient-to-b from-yellow-100 to-yellow-50 border-2 border-white shadow-[0_10px_30px_rgba(234,179,8,0.3)] flex flex-col items-center justify-center">
-                     <Trophy className="w-7 h-7 md:w-8 md:h-8 text-yellow-600 mb-0.5" />
-                     <div className="px-1.5 py-0.5 bg-gradient-to-r from-yellow-400 via-yellow-300 to-yellow-500 text-yellow-900 text-[8px] md:text-[9px] font-black tracking-widest rounded text-center border border-yellow-200 shadow-sm uppercase">GOLD</div>
-                   </div>
+                  <div className="absolute inset-0 bg-yellow-400/20 blur-2xl rounded-full" />
+                  <div className="relative w-16 h-16 md:w-20 md:h-20 rounded-full bg-gradient-to-b from-yellow-100 to-yellow-50 border-2 border-white shadow-[0_10px_30px_rgba(234,179,8,0.3)] flex flex-col items-center justify-center">
+                    <Trophy className="w-7 h-7 md:w-8 md:h-8 text-yellow-600 mb-0.5" />
+                    <div className="px-1.5 py-0.5 bg-gradient-to-r from-yellow-400 via-yellow-300 to-yellow-500 text-yellow-900 text-[8px] md:text-[9px] font-black tracking-widest rounded text-center border border-yellow-200 shadow-sm uppercase">GOLD</div>
+                  </div>
                 </div>
 
                 <span className="text-[10px] md:text-[11px] font-bold tracking-widest text-[#1a1446]/60 uppercase mb-0.5">Current Rank</span>
@@ -82,7 +82,7 @@ export default function RankDetailsModal({ isOpen, onClose }) {
 
               <div className="w-full flex flex-col gap-2.5">
                 <h4 className="text-[13px] md:text-[14px] font-extrabold text-[#1a1446] mb-1">Rank Benefits</h4>
-                
+
                 <div className="flex items-start gap-2">
                   <div className="w-4 h-4 rounded-full bg-slate-700 text-white flex items-center justify-center shrink-0 mt-0.5">
                     <Check className="w-2.5 h-2.5 stroke-[3]" />
@@ -114,12 +114,12 @@ export default function RankDetailsModal({ isOpen, onClose }) {
 
           {/* Right Column (Qualification Details) */}
           <div className="flex-1 flex flex-col gap-4 md:gap-5 md:overflow-y-auto custom-scrollbar md:pr-2">
-            
+
             <h3 className="text-[18px] md:text-[20px] font-extrabold text-[#1a1446]">Rank Qualification Details</h3>
 
             {/* Next Rank Progress Section (Unified Card) */}
             <div className="bg-white border border-slate-200 rounded-[16px] md:rounded-[20px] p-3 md:p-4 flex flex-col gap-3 md:gap-4 mt-2 shadow-[0_2px_10px_rgba(0,0,0,0.02)]">
-              
+
               {/* Rank Transition Area (No internal border) */}
               <div className="flex items-center justify-between px-2 md:px-4 pt-2">
                 {/* Current Rank */}
@@ -150,20 +150,20 @@ export default function RankDetailsModal({ isOpen, onClose }) {
 
               {/* Progress Bar Area */}
               <div className="bg-[#f5f4ff] rounded-[12px] md:rounded-[16px] p-4 flex items-center gap-4">
-                
+
                 {/* Icon Wrapper */}
                 <div className="w-10 h-10 md:w-12 md:h-12 rounded-full bg-[#e3dfff] flex items-center justify-center shrink-0">
                   <div className="w-6 h-6 md:w-7 md:h-7 rounded-full bg-[#4f3ff0] flex items-center justify-center shadow-md">
                     <span className="text-white font-black text-[12px] md:text-[14px] leading-none mb-[1px]">0</span>
                   </div>
                 </div>
-                
+
                 {/* Progress Content */}
                 <div className="flex-1 flex flex-col gap-2">
                   <span className="text-[13px] md:text-[15px] font-bold text-[#4f3ff0]">
                     You're 80% towards <span className="font-black text-[#1a1446]">Platinum Rank!</span>
                   </span>
-                  
+
                   <div className="flex items-center gap-3">
                     <div className="flex-1 h-2 md:h-2.5 bg-[#e3dfff] rounded-full overflow-hidden shadow-inner">
                       <div className="h-full bg-[#4f3ff0] rounded-full" style={{ width: '80%' }} />
@@ -201,7 +201,7 @@ export default function RankDetailsModal({ isOpen, onClose }) {
                 </div>
                 <div className="sm:w-[120px] sm:border-l border-slate-100 sm:pl-4 pt-3 sm:pt-0 border-t sm:border-t-0 flex flex-col justify-center">
                   <span className="text-[12px] md:text-[13px] font-medium text-slate-500 leading-tight">
-                    <span className="font-extrabold text-slate-700">10 more</span><br/>required
+                    <span className="font-extrabold text-slate-700">10 more</span><br />required
                   </span>
                 </div>
               </div>
@@ -225,7 +225,7 @@ export default function RankDetailsModal({ isOpen, onClose }) {
                 </div>
                 <div className="sm:w-[120px] sm:border-l border-slate-100 sm:pl-4 pt-3 sm:pt-0 border-t sm:border-t-0 flex flex-col justify-center">
                   <span className="text-[12px] md:text-[13px] font-medium text-slate-500 leading-tight">
-                    <span className="font-extrabold text-slate-700">₹25,000 more</span><br/>required
+                    <span className="font-extrabold text-slate-700">₹25,000 more</span><br />required
                   </span>
                 </div>
               </div>
@@ -249,7 +249,7 @@ export default function RankDetailsModal({ isOpen, onClose }) {
                 </div>
                 <div className="sm:w-[120px] sm:border-l border-slate-100 sm:pl-4 pt-3 sm:pt-0 border-t sm:border-t-0 flex flex-col justify-center">
                   <span className="text-[12px] md:text-[13px] font-medium text-slate-500 leading-tight">
-                    <span className="font-extrabold text-slate-700">8 more</span><br/>required
+                    <span className="font-extrabold text-slate-700">8 more</span><br />required
                   </span>
                 </div>
               </div>
@@ -273,7 +273,7 @@ export default function RankDetailsModal({ isOpen, onClose }) {
                 </div>
                 <div className="sm:w-[120px] sm:border-l border-slate-100 sm:pl-4 pt-3 sm:pt-0 border-t sm:border-t-0 flex flex-col justify-center">
                   <span className="text-[12px] md:text-[13px] font-medium text-slate-500 leading-tight">
-                    <span className="font-extrabold text-slate-700">2 more</span><br/>required
+                    <span className="font-extrabold text-slate-700">2 more</span><br />required
                   </span>
                 </div>
               </div>

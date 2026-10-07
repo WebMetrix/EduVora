@@ -35,7 +35,7 @@ export const createOrder = async (req, res) => {
 
         // 2. Initialize Order in Database to get OrderNumber
         const initReq = pool.request();
-        initReq.input('ActionTypeId', sql.Int, 1); // 1 = INITIATE
+        initReq.input('ActionType', sql.Int, 1); // 1 = INITIATE
         initReq.input('UUID', sql.VarChar(36), uuid);
         initReq.input('PackageId', sql.Int, parseInt(packageId) || 1);
         initReq.input('Amount', sql.Decimal(18, 2), orderAmount);
@@ -117,7 +117,7 @@ export const processWebhook = async (req, res) => {
 
             // Update Database with Webhook data
             const hookReq = pool.request();
-            hookReq.input('ActionTypeId', sql.Int, 2); // 2 = WEBHOOK
+            hookReq.input('ActionType', sql.Int, 2); // 2 = WEBHOOK
             hookReq.input('OrderNumber', sql.VarChar(50), orderNumber);
             hookReq.input('GatewayOrderId', sql.VarChar(100), String(gatewayOrderId));
             hookReq.input('PaymentStatus', sql.VarChar(50), paymentStatus);

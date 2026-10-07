@@ -65,7 +65,7 @@ export default function Footer() {
     {
       id: 'platform',
       title: t('dashboard.footer.platform.title'),
-      items: ['courses', 'network', 'earnings', 'wallet', 'reports'].map(k => ({
+      items: ['courses', 'network', 'earnings', 'wallet'].map(k => ({
         label: t(`dashboard.footer.platform.${k}`)
       }))
     },

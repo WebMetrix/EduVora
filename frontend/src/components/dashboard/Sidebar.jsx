@@ -22,7 +22,7 @@ const menuItems = [
   { id: 'courses', icon: BookOpen, labelKey: 'nav.courses' },
   { id: 'orders', icon: ShoppingBag, labelKey: 'nav.orders' },
   { id: 'earnings', icon: IndianRupee, labelKey: 'nav.earnings' },
-  { id: 'reports', icon: FileText, labelKey: 'nav.reports' },
+  // { id: 'reports', icon: FileText, labelKey: 'nav.reports' },
   { id: 'rank', icon: Award, labelKey: 'nav.rank' }
 ];
 
