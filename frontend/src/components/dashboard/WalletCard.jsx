@@ -14,7 +14,7 @@ export default function WalletCard() {
   const [isVisible, setIsVisible] = useState(true);
 
   useEffect(() => {
-    if (!data) {
+    if (!data?.summary) {
       dispatch(fetchEarnings());
     }
   }, [dispatch, data]);
@@ -58,7 +58,7 @@ export default function WalletCard() {
           </div>
 
           <div className="flex items-baseline gap-1 mb-1">
-            {loading && !data ? (
+            {loading && !data?.summary ? (
               <div className="h-8 w-32 bg-indigo-400/30 rounded animate-pulse" />
             ) : (
               <span className="text-[26px] lg:text-[30px] font-extrabold text-white tracking-tight drop-shadow-sm min-h-[45px] flex items-center">
