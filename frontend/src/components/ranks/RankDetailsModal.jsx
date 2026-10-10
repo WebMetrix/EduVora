@@ -51,13 +51,13 @@ export default function RankDetailsModal({ isOpen, onClose }) {
         <div className="flex-1 flex flex-col md:flex-row overflow-y-auto md:overflow-hidden min-h-0 bg-white custom-scrollbar p-4 md:p-5 gap-4 md:gap-5">
 
           {/* Left Column (Gold Background Box) */}
-          <div className="w-full md:w-[280px] lg:w-[320px] xl:w-[360px] shrink-0 bg-gradient-to-b from-[#FFFDF2] to-[#FFF4C7] rounded-[24px] border border-yellow-200/50 p-4 xl:p-5 flex flex-col relative overflow-hidden">
+          <div className="w-full md:w-[280px] lg:w-[320px] xl:w-[360px] shrink-0 bg-gradient-to-b from-[#FFFDF2] to-[#FFF4C7] rounded-[24px] border border-yellow-200/50 flex flex-col relative overflow-hidden">
             {/* Background elements */}
             <div className="absolute top-0 right-0 w-full h-full opacity-40 pointer-events-none" style={{
               backgroundImage: 'radial-gradient(circle at 50% 30%, #FDE047 0%, transparent 60%)'
             }} />
 
-            <div className="relative z-10 flex flex-col items-center">
+            <div className="relative z-10 flex flex-col items-center p-4 xl:p-5 overflow-y-auto custom-scrollbar h-full">
               <div className="flex flex-col items-center">
                 {/* Trophy */}
                 <div className="w-24 h-24 md:w-28 md:h-28 relative flex items-center justify-center shrink-0 mb-3">

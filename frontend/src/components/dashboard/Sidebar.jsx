@@ -236,8 +236,8 @@ export default function Sidebar({ isOpen, setIsOpen, isSuperAdmin }) {
               {[
                 { id: 'profile', icon: User, label: t('dashboard.nav.myProfile'), route: '/profile' },
                 { id: 'settings', icon: Settings, label: t('dashboard.nav.settings'), route: '#' },
-                { id: 'wallet', icon: Wallet, label: t('dashboard.nav.wallet'), route: '#' },
-                { id: 'payouts', icon: BarChart2, label: t('dashboard.nav.payouts'), route: '#' },
+                { id: 'wallet', icon: Wallet, label: t('dashboard.nav.wallet'), route: '/earnings', state: { tab: 'wallet' } },
+                { id: 'payouts', icon: BarChart2, label: t('dashboard.nav.payouts'), route: '/earnings', state: { tab: 'history' } },
                 { id: 'help', icon: HelpCircle, label: t('dashboard.nav.helpSupport'), route: '#' }
               ].map((item) => {
                 const Icon = item.icon;
@@ -248,7 +248,9 @@ export default function Sidebar({ isOpen, setIsOpen, isSuperAdmin }) {
                     href="#"
                     onClick={(e) => {
                       e.preventDefault();
-                      if (item.route !== '#') navigate(item.route);
+                      if (item.route !== '#') {
+                        navigate(item.route, { state: item.state });
+                      }
                       setIsOpen(false);
                     }}
                     className={`group relative flex items-center gap-3.5 px-3.5 py-2.5 rounded-xl text-[13px] font-semibold transition-all duration-300 hover:-translate-y-0.5 hover:shadow-sm ${isActive

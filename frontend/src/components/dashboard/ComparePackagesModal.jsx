@@ -145,6 +145,16 @@ export default function ComparePackagesModal({ isOpen, onClose, packages, onSele
     return <XCircle className="w-[18px] h-[18px] shrink-0" fill="#ef4444" stroke="white" />;
   };
 
+  const availableTiers = ['diamond', 'gold', 'silver', 'bronze'].filter(tier => getTierData(tier));
+  
+  const gridColsClass = availableTiers.length === 4 
+    ? 'grid-cols-[220px_1fr_1fr_1fr_1fr]' 
+    : availableTiers.length === 3 
+    ? 'grid-cols-[220px_1fr_1fr_1fr]' 
+    : availableTiers.length === 2
+    ? 'grid-cols-[220px_1fr_1fr]'
+    : 'grid-cols-[220px_1fr]';
+
   return createPortal(
     <div className="fixed inset-0 z-[9999] flex items-center justify-center p-0 md:p-6 bg-slate-900/60 backdrop-blur-sm transition-opacity">
       <div className="w-full h-[90vh] md:h-auto md:max-h-[95vh] md:max-w-[1100px] bg-white rounded-t-3xl md:rounded-3xl flex flex-col shadow-2xl relative mt-auto md:mt-0 overflow-hidden animate-slide-up md:animate-fade-in">
@@ -170,18 +180,17 @@ export default function ComparePackagesModal({ isOpen, onClose, packages, onSele
 
         {/* Content Scrollable Area */}
         <div className="flex-1 overflow-x-auto overflow-y-auto custom-scrollbar p-6 md:p-8 bg-white">
-          <div className="min-w-[900px] flex flex-col">
+          <div className="min-w-[700px] md:min-w-[900px] flex flex-col">
             
             {/* Table Header Row (Cards) */}
-            <div className="grid grid-cols-[220px_1fr_1fr_1fr_1fr] w-full mb-6">
+            <div className={`grid ${gridColsClass} w-full mb-6`}>
               <div className="flex items-center px-4">
                 <h3 className="text-[15px] font-bold text-[#1a1446]">Package Features</h3>
               </div>
               
               {/* Package Header Cards */}
-              {['diamond', 'gold', 'silver', 'bronze'].map(tier => {
+              {availableTiers.map(tier => {
                 const pkg = getTierData(tier);
-                if (!pkg) return <div key={tier} />;
                 return (
                   <div key={tier} className="px-2.5 flex flex-col h-full">
                     <div className="flex-1 flex flex-col border border-slate-200 rounded-[14px] overflow-hidden bg-white shadow-[0_4px_20px_rgba(0,0,0,0.03)] hover:shadow-md transition-shadow">
@@ -215,11 +224,11 @@ export default function ComparePackagesModal({ isOpen, onClose, packages, onSele
             {/* Features Rows Container */}
             <div className="bg-white border border-slate-200 rounded-[16px] shadow-[0_4px_20px_rgba(0,0,0,0.02)] overflow-hidden mb-6 flex flex-col">
               {featuresList.map((feature, idx) => (
-                <div key={idx} className={`grid grid-cols-[220px_1fr_1fr_1fr_1fr] w-full ${idx !== featuresList.length - 1 ? 'border-b border-slate-100' : ''}`}>
+                <div key={idx} className={`grid ${gridColsClass} w-full ${idx !== featuresList.length - 1 ? 'border-b border-slate-100' : ''}`}>
                   <div className="py-4 px-6 flex items-center text-[13px] font-bold text-slate-700">
                     {feature.title}
                   </div>
-                  {['diamond', 'gold', 'silver', 'bronze'].map(tier => {
+                  {availableTiers.map(tier => {
                     const value = feature.values[tier];
                     return (
                       <div key={tier} className="py-4 px-3 flex items-center justify-center gap-2 border-l border-slate-100">
@@ -232,11 +241,10 @@ export default function ComparePackagesModal({ isOpen, onClose, packages, onSele
               ))}
               
               {/* Action Row */}
-              <div className="grid grid-cols-[220px_1fr_1fr_1fr_1fr] w-full border-t border-slate-100 bg-white">
+              <div className={`grid ${gridColsClass} w-full border-t border-slate-100 bg-white`}>
                 <div className="py-5 px-6" />
-                {['diamond', 'gold', 'silver', 'bronze'].map(tier => {
+                {availableTiers.map(tier => {
                   const pkg = getTierData(tier);
-                  if (!pkg) return <div key={tier} />;
                   return (
                     <div key={tier} className="py-5 px-4 flex items-center justify-center border-l border-slate-100">
                       <button 

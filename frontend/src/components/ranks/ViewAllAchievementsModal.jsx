@@ -5,6 +5,7 @@ import {
   Trophy, Star, Users, DollarSign, Target, ArrowUpCircle,
   Calendar, FileText, List, Gift, ChevronLeft
 } from 'lucide-react';
+import CustomSelect from '../common/CustomSelect';
 
 const ALL_ACHIEVEMENTS_DATA = [
   {
@@ -160,6 +161,7 @@ export default function ViewAllAchievementsModal({ isOpen, onClose }) {
   ];
 
   const categories = ['All Categories', 'Sales', 'Network', 'Earnings', 'Rank'];
+  const categoryOptions = categories.map(cat => ({ value: cat, label: cat }));
 
   const filteredAchievements = ALL_ACHIEVEMENTS_DATA.filter(a => {
     const matchesTab = activeTab === 'All' || a.status === activeTab;
@@ -227,14 +229,14 @@ export default function ViewAllAchievementsModal({ isOpen, onClose }) {
             </div>
 
             <div className="relative w-full sm:w-[150px]">
-              <select
+              <CustomSelect
+                options={categoryOptions}
                 value={selectedCategory}
-                onChange={(e) => setSelectedCategory(e.target.value)}
-                className="w-full pl-3 pr-8 py-2 bg-white border border-slate-200 rounded-xl text-[12px] font-bold text-slate-700 appearance-none focus:outline-none focus:ring-2 focus:ring-indigo-600/20 focus:border-indigo-600 transition-all cursor-pointer"
-              >
-                {categories.map(cat => <option key={cat} value={cat}>{cat}</option>)}
-              </select>
-              <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 pointer-events-none" />
+                onChange={setSelectedCategory}
+                buttonClassName="w-full pl-3 pr-2 py-2 bg-white border border-slate-200 rounded-xl flex items-center justify-between text-[12px] font-bold text-slate-700 hover:bg-slate-50 transition-colors"
+                dropdownClassName="w-full right-0 min-w-[150px]"
+                iconClassName="w-4 h-4"
+              />
             </div>
           </div>
         </div>

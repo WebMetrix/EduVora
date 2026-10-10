@@ -84,7 +84,7 @@ export default function CommissionHistoryTable({ t, loading, commissions }) {
     exportToExcel({
       data: filteredCommissions,
       columns: columns,
-      filename: 'Commission_History'
+      fileName: 'Commission_History'
     });
   };
 

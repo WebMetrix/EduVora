@@ -41,10 +41,7 @@ export default function NextRankProgress() {
 
         {/* Header Right */}
         <div className="flex flex-col sm:items-end w-full sm:w-auto">
-           <button className="text-[13px] font-bold text-indigo-600 hover:text-indigo-800 flex items-center mb-1 sm:mb-2 w-fit sm:w-auto">
-             View All Ranks <ChevronRight className="w-4 h-4 ml-0.5" />
-           </button>
-           
+
            <div className="bg-indigo-50/80 border border-indigo-100 rounded-xl px-4 py-2 flex flex-col items-center justify-center min-w-[100px]">
              <span className="text-[18px] font-black text-indigo-700 leading-tight">80%</span>
              <span className="text-[11px] font-bold text-indigo-500/80">Complete</span>

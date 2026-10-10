@@ -170,7 +170,7 @@ export default function AchievementDetailsModal({ isOpen, onClose, achievement }
             </div>
 
             {/* Right Column (Sidebar Details) - FIXED on Desktop */}
-            <div className="w-full lg:w-[280px] xl:w-[320px] shrink-0 flex flex-col gap-4 p-4 md:p-5 lg:border-l lg:border-slate-100 bg-white lg:overflow-hidden">
+            <div className="w-full lg:w-[280px] xl:w-[320px] shrink-0 flex flex-col gap-4 p-4 md:p-5 lg:border-l lg:border-slate-100 bg-white lg:overflow-y-auto custom-scrollbar">
               
               {isEarned && (
                 <div className="bg-indigo-50/70 border border-indigo-100 rounded-[16px] p-4 flex items-center gap-4">

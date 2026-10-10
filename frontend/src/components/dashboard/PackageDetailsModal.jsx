@@ -64,7 +64,7 @@ export default function PackageDetailsModal({ packageData, onClose }) {
       cashfree.checkout(checkoutOptions).then((result) => {
         if (result.error) {
           console.error("Payment failed", result.error);
-          navigate('/payment/failed');
+          navigate('/payment/failed', { replace: true });
           setTimeout(() => onClose(), 100);
         }
         if (result.redirect) {
@@ -72,7 +72,7 @@ export default function PackageDetailsModal({ packageData, onClose }) {
         }
         if (result.paymentDetails) {
           console.log("Payment completed successfully!", result.paymentDetails);
-          navigate('/payment/success');
+          navigate('/payment/success', { replace: true });
           setTimeout(() => onClose(), 100);
         }
       });
@@ -80,7 +80,7 @@ export default function PackageDetailsModal({ packageData, onClose }) {
       console.error("Error initiating payment:", error);
       alert("Failed to initiate payment. Check console and ensure backend is running.");
       onClose();
-      navigate('/payment/failed');
+      navigate('/payment/failed', { replace: true });
     } finally {
       setIsProcessing(false);
     }

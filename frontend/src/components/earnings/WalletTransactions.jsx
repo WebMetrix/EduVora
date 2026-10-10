@@ -9,7 +9,7 @@ export default function WalletTransactions({ t, loading, transactions }) {
   const [typeFilter, setTypeFilter] = useState('');
   const [isTypeDropdownOpen, setIsTypeDropdownOpen] = useState(false);
   const itemsPerPage = 7;
-  
+
   const typeRef = useRef(null);
 
   useEffect(() => {
@@ -26,20 +26,20 @@ export default function WalletTransactions({ t, loading, transactions }) {
 
   const getFilteredData = () => {
     let filtered = [...allTransactions];
-    
+
     // Type Filter
     if (typeFilter) {
-       if (typeFilter === 'Received') {
-         filtered = filtered.filter(row => {
-            const lowerType = row.Type?.toLowerCase() || '';
-            return lowerType.includes('commission') || lowerType.includes('received') || lowerType.includes('credit');
-         });
-       } else if (typeFilter === 'Withdrawal') {
-         filtered = filtered.filter(row => {
-            const lowerType = row.Type?.toLowerCase() || '';
-            return lowerType.includes('withdraw') || lowerType.includes('debit') || lowerType.includes('payout');
-         });
-       }
+      if (typeFilter === 'Received') {
+        filtered = filtered.filter(row => {
+          const lowerType = row.Type?.toLowerCase() || '';
+          return lowerType.includes('commission') || lowerType.includes('received') || lowerType.includes('credit');
+        });
+      } else if (typeFilter === 'Withdrawal') {
+        filtered = filtered.filter(row => {
+          const lowerType = row.Type?.toLowerCase() || '';
+          return lowerType.includes('withdraw') || lowerType.includes('debit') || lowerType.includes('payout');
+        });
+      }
     }
 
     // Date Filter
@@ -81,7 +81,7 @@ export default function WalletTransactions({ t, loading, transactions }) {
     exportToExcel({
       data: filteredTransactions,
       columns: columns,
-      filename: 'Wallet_Transactions'
+      fileName: 'Wallet_Transactions'
     });
   };
 
@@ -162,74 +162,74 @@ export default function WalletTransactions({ t, loading, transactions }) {
   return (
     <div id="recent-transactions" className="relative overflow-hidden bg-white border border-slate-200 rounded-3xl shadow-sm flex flex-col h-full 2xl:col-span-2 group/card transition-all duration-300 hover:-translate-y-1 hover:shadow-md hover:border-indigo-200">
       <div className="absolute top-0 right-0 w-64 h-64 bg-indigo-400/10 rounded-full blur-[80px] -translate-y-1/2 translate-x-1/3 pointer-events-none group-hover/card:bg-indigo-400/20 transition-colors duration-700" />
-      
+
       <div className="p-5 pb-0 mb-5">
         <h2 className="text-[18px] font-extrabold text-[#1a1446] mb-5 relative z-10">{t('earnings.wallet.transactions.title')}</h2>
 
         {/* Filters */}
         <div className="flex flex-col xl:flex-row xl:items-center justify-between gap-4 relative z-50">
           <div className="flex flex-col sm:flex-row items-center gap-4 w-full xl:w-auto">
-          {/* Time Filters (Pill Style) */}
-          <div className="flex items-center p-1.5 bg-white/60 backdrop-blur-md border border-slate-200 rounded-xl w-full lg:w-auto overflow-x-auto shrink-0 shadow-sm [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] scrollbar-none">
-            <button
-              onClick={() => setDateFilter('')}
-              className={`px-4 py-1.5 rounded-lg text-[13px] font-bold whitespace-nowrap transition-all duration-300 ${dateFilter === '' ? 'bg-[#4f3bf3] text-white shadow-md' : 'text-slate-500 hover:text-[#4f3bf3] hover:bg-white'}`}
-            >
-              {t('earnings.history.filters.allTime')}
-            </button>
-            {['today', 'week', 'month'].map(f => (
+            {/* Time Filters (Pill Style) */}
+            <div className="flex items-center p-1.5 bg-white/60 backdrop-blur-md border border-slate-200 rounded-xl w-full lg:w-auto overflow-x-auto shrink-0 shadow-sm [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] scrollbar-none">
               <button
-                key={f}
-                onClick={() => setDateFilter(f)}
-                className={`px-4 py-1.5 rounded-lg text-[13px] font-bold whitespace-nowrap transition-all duration-300 ${dateFilter === f ? 'bg-[#4f3bf3] text-white shadow-md hover:shadow-lg hover:-translate-y-0.5' : 'text-slate-500 hover:text-[#4f3bf3] hover:bg-white hover:shadow-sm hover:-translate-y-0.5'}`}
+                onClick={() => setDateFilter('')}
+                className={`px-4 py-1.5 rounded-lg text-[13px] font-bold whitespace-nowrap transition-all duration-300 ${dateFilter === '' ? 'bg-[#4f3bf3] text-white shadow-md' : 'text-slate-500 hover:text-[#4f3bf3] hover:bg-white'}`}
               >
-                {f === 'today' ? t('earnings.history.filters.today') : f === 'week' ? t('earnings.history.filters.thisWeek') : t('earnings.history.filters.thisMonth')}
+                {t('earnings.history.filters.allTime')}
               </button>
-            ))}
-          </div>
-
-          {/* Type Dropdown */}
-          <div className="relative w-full sm:w-auto" ref={typeRef}>
-            <div 
-              onClick={() => !loading && setIsTypeDropdownOpen(!isTypeDropdownOpen)}
-              className={`flex items-center justify-between gap-3 px-4 py-2.5 bg-white border border-slate-200 rounded-xl transition-colors sm:min-w-[140px] ${loading ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer hover:border-indigo-300'}`}
-            >
-              <span className="text-[13px] font-bold text-slate-700">
-                {typeFilter ? typeFilter : t('earnings.history.filters.allTypes')}
-              </span>
-              <ChevronDown className={`w-4 h-4 text-slate-500 transition-transform ${isTypeDropdownOpen ? 'rotate-180' : ''}`} />
+              {['today', 'week', 'month'].map(f => (
+                <button
+                  key={f}
+                  onClick={() => setDateFilter(f)}
+                  className={`px-4 py-1.5 rounded-lg text-[13px] font-bold whitespace-nowrap transition-all duration-300 ${dateFilter === f ? 'bg-[#4f3bf3] text-white shadow-md hover:shadow-lg hover:-translate-y-0.5' : 'text-slate-500 hover:text-[#4f3bf3] hover:bg-white hover:shadow-sm hover:-translate-y-0.5'}`}
+                >
+                  {f === 'today' ? t('earnings.history.filters.today') : f === 'week' ? t('earnings.history.filters.thisWeek') : t('earnings.history.filters.thisMonth')}
+                </button>
+              ))}
             </div>
-            
-            {isTypeDropdownOpen && (
-              <div className="absolute top-full mt-1 w-full bg-white border border-slate-200 rounded-xl shadow-lg overflow-hidden z-50">
-                {['', 'Received', 'Withdrawal'].map(type => (
-                  <div
-                    key={type}
-                    onClick={() => {
-                      setTypeFilter(type);
-                      setIsTypeDropdownOpen(false);
-                    }}
-                    className={`px-4 py-2 text-[13px] font-bold cursor-pointer hover:bg-indigo-50 transition-colors ${typeFilter === type ? 'text-indigo-600 bg-indigo-50' : 'text-slate-600'}`}
-                  >
-                    {type ? type : t('earnings.history.filters.allTypes')}
-                  </div>
-                ))}
+
+            {/* Type Dropdown */}
+            <div className="relative w-full sm:w-auto" ref={typeRef}>
+              <div
+                onClick={() => !loading && setIsTypeDropdownOpen(!isTypeDropdownOpen)}
+                className={`flex items-center justify-between gap-3 px-4 py-2.5 bg-white border border-slate-200 rounded-xl transition-colors sm:min-w-[140px] ${loading ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer hover:border-indigo-300'}`}
+              >
+                <span className="text-[13px] font-bold text-slate-700">
+                  {typeFilter ? typeFilter : t('earnings.history.filters.allTypes')}
+                </span>
+                <ChevronDown className={`w-4 h-4 text-slate-500 transition-transform ${isTypeDropdownOpen ? 'rotate-180' : ''}`} />
               </div>
-            )}
+
+              {isTypeDropdownOpen && (
+                <div className="absolute top-full mt-1 w-full bg-white border border-slate-200 rounded-xl shadow-lg overflow-hidden z-50">
+                  {['', 'Received', 'Withdrawal'].map(type => (
+                    <div
+                      key={type}
+                      onClick={() => {
+                        setTypeFilter(type);
+                        setIsTypeDropdownOpen(false);
+                      }}
+                      className={`px-4 py-2 text-[13px] font-bold cursor-pointer hover:bg-indigo-50 transition-colors ${typeFilter === type ? 'text-indigo-600 bg-indigo-50' : 'text-slate-600'}`}
+                    >
+                      {type ? type : t('earnings.history.filters.allTypes')}
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          </div>
+
+          <div className="flex items-center gap-3 w-full xl:w-auto">
+            <button
+              onClick={handleExport}
+              disabled={loading || filteredTransactions.length === 0}
+              className="flex items-center gap-2 px-4 py-2 text-[13px] font-bold text-indigo-600 bg-indigo-50 border border-indigo-100 rounded-lg hover:bg-indigo-100 hover:shadow-md hover:-translate-y-0.5 transition-all disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:-translate-y-0"
+            >
+              <Download className="w-4 h-4" />
+              {t('earnings.history.filters.export')}
+            </button>
           </div>
         </div>
-
-        <div className="flex items-center gap-3 w-full xl:w-auto">
-          <button 
-            onClick={handleExport}
-            disabled={loading || filteredTransactions.length === 0} 
-            className="flex items-center gap-2 px-4 py-2 text-[13px] font-bold text-indigo-600 bg-indigo-50 border border-indigo-100 rounded-lg hover:bg-indigo-100 hover:shadow-md hover:-translate-y-0.5 transition-all disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:-translate-y-0"
-          >
-            <Download className="w-4 h-4" />
-            {t('earnings.history.filters.export')}
-          </button>
-        </div>
-      </div>
       </div>
 
       {/* Desktop Table */}
@@ -242,14 +242,14 @@ export default function WalletTransactions({ t, loading, transactions }) {
               <th className="px-3 2xl:px-4 py-4 text-[13px] font-extrabold text-slate-600 uppercase tracking-wider whitespace-nowrap">{t('earnings.wallet.transactions.table.description')}</th>
               <th className="px-3 2xl:px-4 py-4 text-[13px] font-extrabold text-slate-600 uppercase tracking-wider whitespace-nowrap">{t('earnings.wallet.transactions.table.amount')}</th>
               <th className="px-3 2xl:px-4 py-4 text-[13px] font-extrabold text-slate-600 uppercase tracking-wider whitespace-nowrap">{t('earnings.wallet.transactions.table.status')}</th>
-              <th className="px-3 2xl:px-4 py-4 text-[13px] font-extrabold text-slate-600 uppercase tracking-wider whitespace-nowrap text-center">{t('earnings.transactions.action')}</th>
+              {/* <th className="px-3 2xl:px-4 py-4 text-[13px] font-extrabold text-slate-600 uppercase tracking-wider whitespace-nowrap text-center">{t('earnings.transactions.action')}</th> */}
             </tr>
           </thead>
           <tbody>
             {loading ? (
               Array.from({ length: 5 }).map((_, idx) => (
                 <tr key={idx} className="border-b border-indigo-100/30">
-                  <td colSpan="6" className="px-3 py-4">
+                  <td colSpan="5" className="px-3 py-4">
                     <div className="h-6 bg-slate-100 rounded animate-pulse w-full" />
                   </td>
                 </tr>
@@ -282,6 +282,7 @@ export default function WalletTransactions({ t, loading, transactions }) {
                       {row.Status}
                     </span>
                   </td>
+                  {/* Action column hidden for now 
                   <td className="px-3 2xl:px-4 py-4 align-middle whitespace-nowrap">
                     <div className="flex justify-center">
                       <button className="flex items-center justify-center p-1.5 border border-slate-200 rounded-lg text-slate-400 hover:text-indigo-600 hover:border-indigo-600 hover:bg-indigo-50 transition-all">
@@ -289,11 +290,12 @@ export default function WalletTransactions({ t, loading, transactions }) {
                       </button>
                     </div>
                   </td>
+                  */}
                 </tr>
               ))
             ) : (
               <tr>
-                <td colSpan="6" className="px-3 py-10 text-center text-[13px] font-semibold text-slate-400">
+                <td colSpan="5" className="px-3 py-10 text-center text-[13px] font-semibold text-slate-400">
                   {t('earnings.transactions.noTransactions')}
                 </td>
               </tr>
@@ -336,12 +338,14 @@ export default function WalletTransactions({ t, loading, transactions }) {
                   <span className="text-[12px] font-semibold text-slate-500">{t('earnings.wallet.transactions.table.dateTime')}</span>
                   <span className="text-[12px] font-extrabold text-[#1a1446]">{new Intl.DateTimeFormat('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }).format(new Date(row.Date))}, {new Intl.DateTimeFormat('en-US', { hour: '2-digit', minute: '2-digit', hour12: true }).format(new Date(row.Date))}</span>
                 </div>
+                {/* View Details hidden for now
                 <div className="flex justify-center mt-2">
                   <button className="flex items-center justify-center gap-1.5 w-full py-2 bg-slate-50 border border-slate-200 rounded-xl text-[12px] font-bold text-slate-600 hover:bg-indigo-50 hover:text-indigo-600 hover:border-indigo-200 transition-all">
                     <Eye className="w-3.5 h-3.5" />
                     {t('earnings.transactions.viewDetailsAction')}
                   </button>
                 </div>
+                */}
               </div>
             </div>
           ))

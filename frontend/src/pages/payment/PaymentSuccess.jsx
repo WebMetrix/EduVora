@@ -23,15 +23,15 @@ export default function PaymentSuccess() {
         paymentData={paymentData} 
         onClose={() => {
             dispatch(clearPaymentData());
-            navigate('/dashboard');
+            navigate('/dashboard', { replace: true });
         }}
         onDashboard={() => {
             dispatch(clearPaymentData());
-            navigate('/dashboard');
+            navigate('/dashboard', { replace: true });
         }}
         onViewCourses={() => {
             dispatch(clearPaymentData());
-            navigate('/courses');
+            navigate('/courses', { replace: true });
         }}
       />
     </div>

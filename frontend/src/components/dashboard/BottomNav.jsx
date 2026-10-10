@@ -12,7 +12,7 @@ export default function BottomNav() {
     { id: 'dashboard', route: '/dashboard', icon: Home, label: t('dashboard.nav.dashboard'), active: true },
     { id: 'courses', route: '/courses', icon: BookOpen, label: t('dashboard.nav.courses') },
     { id: 'network', route: '/mynetwork', icon: Users, label: t('dashboard.nav.network') },
-    { id: 'wallet', route: '/wallet', icon: Wallet, label: t('dashboard.nav.wallet') },
+    { id: 'wallet', route: '/earnings', icon: Wallet, label: t('dashboard.nav.wallet') },
     { id: 'profile', route: '/profile', icon: User, label: t('dashboard.nav.profile') }
   ];
 

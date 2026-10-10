@@ -30,10 +30,18 @@ const dashboardSlice = createSlice({
       })
       .addCase(fetchRecentActivities.fulfilled, (state, action) => {
         state.loading = false;
-        // If it's a new page, append to activities (unless page=1 where we should replace)
         const data = action.payload.data || [];
-        state.activities = data;
-        state.hasMore = data.length > 0; // simplistic, usually checking if data.length === limit
+        
+        // Filter out activities that are older than 24 hours
+        // We exclude any TimeAgoText containing "day", "month", or "year"
+        const filteredData = data.filter(activity => {
+          if (!activity.TimeAgoText) return true;
+          const text = activity.TimeAgoText.toLowerCase();
+          return !text.includes('day') && !text.includes('month') && !text.includes('year');
+        });
+
+        state.activities = filteredData;
+        state.hasMore = data.length > 0; // Check original data for pagination logic
       })
       .addCase(fetchRecentActivities.rejected, (state, action) => {
         state.loading = false;

@@ -22,15 +22,15 @@ export default function PaymentFailed() {
         paymentData={paymentData} 
         onClose={() => {
             dispatch(clearPaymentData());
-            navigate('/dashboard');
+            navigate('/dashboard', { replace: true });
         }}
         onDashboard={() => {
             dispatch(clearPaymentData());
-            navigate('/dashboard');
+            navigate('/dashboard', { replace: true });
         }}
         onRetry={() => {
             dispatch(clearPaymentData());
-            navigate('/dashboard'); // or redirect to cart/packages page
+            navigate('/dashboard', { replace: true }); // or redirect to cart/packages page
         }}
       />
     </div>
