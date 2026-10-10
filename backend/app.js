@@ -26,7 +26,8 @@ import dashboardRoutes from './routes/dashboardRoutes.js';
 app.use(cors({
     origin: [
         "http://localhost:5173",
-        "http://15.252.27.77:2000"
+        "http://15.252.27.77:2000",
+        "https://eduvoraqa.eduvora.co.in"
     ],
     credentials: true, // This allows the cookies to be sent back and forth
     origin: true, // Automatically reflects the requesting origin

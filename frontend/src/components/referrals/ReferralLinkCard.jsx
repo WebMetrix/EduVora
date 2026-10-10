@@ -4,7 +4,9 @@ import { toast } from 'react-toastify';
 
 export default function ReferralLinkCard({ t, profile }) {
   const referralCode = profile?.ReferralCode || '';
-  const baseUrl = import.meta.env.VITE_REFERRAL_URL;
+  const baseUrl = window.location.origin + '/register'; // Use the current origin for the referral link
+  
+  //import.meta.env.VITE_REFERRAL_URL;
   const link = referralCode ? `${baseUrl}?ref=${referralCode}` : baseUrl;
 
   const handleCopy = () => {
