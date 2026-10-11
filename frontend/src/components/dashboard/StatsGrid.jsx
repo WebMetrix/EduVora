@@ -1,11 +1,13 @@
-import { Users, UserPlus, ShoppingCart, IndianRupee, ChevronDown } from 'lucide-react';
+import React, { useState } from 'react';
+import { Users, UserPlus, ShoppingCart, IndianRupee } from 'lucide-react';
 import { useTranslation } from '../../hooks/useTranslation';
 import StatCard from './StatCard';
 import { motion } from 'framer-motion';
+import CustomSelect from '../common/CustomSelect';
 
 const containerVariants = {
   hidden: { opacity: 0 },
-  visible: { 
+  visible: {
     opacity: 1,
     transition: { staggerChildren: 0.1 }
   }
@@ -18,6 +20,7 @@ const itemVariants = {
 
 export default function StatsGrid() {
   const { t } = useTranslation();
+  const [period, setPeriod] = useState('monthly');
 
   const stats = [
     {
@@ -67,12 +70,20 @@ export default function StatsGrid() {
     <div className="mt-3">
       <div className="flex items-center justify-between mb-2">
         <h3 className="text-[16px] font-bold text-slate-900">{t('dashboard.stats.title')}</h3>
-        
+
         {/* Dropdown styling */}
-        <button className="flex items-center gap-2 px-3 py-1.5 bg-white border border-slate-200 rounded-lg text-[13px] font-medium text-slate-600 hover:bg-slate-50 transition-colors shadow-sm focus:ring-2 focus:ring-indigo-500/20">
-          {t('dashboard.stats.thisMonth')}
-          <ChevronDown className="w-4 h-4 text-slate-400" />
-        </button>
+        <CustomSelect
+          options={[
+            { label: t('dashboard.stats.thisMonth') || 'This Month', value: 'monthly' },
+            { label: 'This Quarter', value: 'quarterly' },
+            { label: 'This Year', value: 'yearly' },
+          ]}
+          value={period}
+          onChange={(val) => setPeriod(val)}
+          buttonClassName="flex items-center justify-between gap-1.5 px-3 py-1.5 rounded-lg bg-white border border-slate-200 hover:bg-slate-50 transition-colors shadow-sm w-auto min-w-[125px]"
+          textClassName="text-[12px] font-bold text-slate-600"
+          iconClassName="w-3.5 h-3.5 text-slate-500"
+        />
       </div>
 
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 lg:gap-6">

@@ -25,7 +25,52 @@ export const getUserProfile = async (req, res) => {
             userProfile.ReferralCode = encryptUserId(userProfile.UserID);
         }
 
-        // Return the first record (since UUID is unique)
+        // Initialize dynamic account overview fields with lean primitive defaults
+        userProfile.WalletBalance = 0;
+        userProfile.TotalEarnings = 0;
+        userProfile.SponsorID = null;
+        userProfile.SponsorName = null;
+        userProfile.TotalReferrals = 0;
+
+        // Fetch earnings and network stats concurrently; slice strictly only the needed scalar fields
+        try {
+            const earningsPromise = (async () => {
+                const reqPool = pool.request();
+                reqPool.input('UUID', sql.VarChar(36), req.user.id);
+                return await reqPool.execute('dbo.EV_GetMyEarnings');
+            })();
+
+            const networkPromise = (async () => {
+                if (!userProfile.UserID) return null;
+                const reqPool = pool.request();
+                reqPool.input('RootUserID', sql.NVarChar(100), userProfile.UserID);
+                return await reqPool.execute('dbo.EV_GetMyNetwork');
+            })();
+
+            const [earningsResult, networkResult] = await Promise.allSettled([earningsPromise, networkPromise]);
+
+            // Slice only WalletBalance and TotalEarnings from earnings summary (no transactions/charts attached)
+            if (earningsResult.status === 'fulfilled' && earningsResult.value?.recordsets?.[0]?.length > 0) {
+                const summary = earningsResult.value.recordsets[0][0];
+                userProfile.WalletBalance = summary.CurrentBalance ?? 0;
+                userProfile.TotalEarnings = summary.TotalEarned ?? 0;
+            }
+
+            // Slice only Sponsor and direct ChildrenCount from network hierarchy (no tree nodes/downline attached)
+            if (networkResult.status === 'fulfilled' && networkResult.value?.recordsets?.[0]?.length > 0) {
+                const flatData = networkResult.value.recordsets[0];
+                const rootRow = flatData.find(r => r.UserID === userProfile.UserID) || flatData[0];
+                if (rootRow) {
+                    userProfile.SponsorID = rootRow.SponsorID || null;
+                    userProfile.SponsorName = rootRow.SponsorName || null;
+                    userProfile.TotalReferrals = rootRow.ChildrenCount ?? 0;
+                }
+            }
+        } catch (overviewErr) {
+            logger.warn(`Could not slice overview data for user profile: ${overviewErr.message}`);
+        }
+
+        // Return the first record (since UUID is unique) with dynamic account overview data
         res.status(200).send(userProfile);
     } catch (err) {
         logger.error(`GET PROFILE ERROR: ${err.message}`, { stack: err.stack });

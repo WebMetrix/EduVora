@@ -1,7 +1,8 @@
-import { useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useState, useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 import { useTranslation } from '../../hooks/useTranslation';
+import { fetchUserProfile } from '../../redux/slices/profileSlice';
 import ProfileHeader from './ProfileHeader';
 import ProfileTabs from './ProfileTabs';
 import PersonalInformationCard from './PersonalInformationCard';
@@ -17,10 +18,15 @@ import ChangePasswordCard from './ChangePasswordCard';
 import { User as UserIcon, MapPin, Building, CreditCard, Key } from 'lucide-react';
 
 export default function MyProfile() {
+  const dispatch = useDispatch();
   const { t } = useTranslation();
   const [activeTab, setActiveTab] = useState('personalInfo');
   
   const { data: profileData, loading } = useSelector((state) => state.profile || {});
+
+  useEffect(() => {
+    dispatch(fetchUserProfile());
+  }, [dispatch]);
 
   const tabs = [
     { id: 'personalInfo', icon: UserIcon, label: t('profile.tabs.personalInfo') },

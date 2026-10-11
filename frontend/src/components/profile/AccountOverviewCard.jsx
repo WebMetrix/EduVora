@@ -3,9 +3,16 @@ import { User as UserIcon } from 'lucide-react';
 export default function AccountOverviewCard({ t, profileData }) {
     // Add logic to format numbers safely
     const formatCurrency = (value) => {
-        if (!value || isNaN(value)) return '₹ 0.00';
+        if (value === null || value === undefined || isNaN(Number(value))) return '₹ 0.00';
         return `₹ ${Number(value).toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
     };
+
+    const userId = profileData?.UserID || '-';
+    const sponsor = profileData?.SponsorName || profileData?.SponsorID || '-';
+    const rankName = profileData?.CurrentRankName;
+    const totalReferrals = profileData?.TotalReferrals ?? 0;
+    const totalEarnings = profileData?.TotalEarnings ?? 0;
+    const walletBalance = profileData?.WalletBalance ?? 0;
 
     return (
         <div className="bg-white/60 backdrop-blur-xl border border-white/60 rounded-2xl p-6 shadow-[0_4px_24px_rgba(0,0,0,0.02)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_8px_30px_rgba(79,70,229,0.15)] hover:border-indigo-200/50">
@@ -19,30 +26,30 @@ export default function AccountOverviewCard({ t, profileData }) {
             <div className="flex flex-col gap-4">
                 <div className="flex items-center justify-between">
                     <span className="text-[13px] font-semibold text-slate-500">{t('profile.overview.userId')}</span>
-                    <span className="text-[13px] font-extrabold text-slate-900">{profileData?.UserID || '-'}</span>
+                    <span className="text-[13px] font-extrabold text-slate-900">{userId}</span>
                 </div>
                 <div className="flex items-center justify-between">
                     <span className="text-[13px] font-semibold text-slate-500">{t('profile.overview.sponsor')}</span>
-                    <span className="text-[13px] font-extrabold text-slate-900">{profileData?.SponsorName || profileData?.SponsorID || '-'}</span>
+                    <span className="text-[13px] font-extrabold text-slate-900">{sponsor}</span>
                 </div>
-                {profileData?.CurrentRankName && (
+                {rankName && (
                     <div className="flex items-center justify-between">
                         <span className="text-[13px] font-semibold text-slate-500">{t('profile.overview.rank')}</span>
-                        <span className="text-[13px] font-extrabold text-amber-500">{profileData.CurrentRankName}</span>
+                        <span className="text-[13px] font-extrabold text-amber-500">{rankName}</span>
                     </div>
                 )}
                 <div className="h-px bg-slate-200/60 my-1" />
                 <div className="flex items-center justify-between">
                     <span className="text-[13px] font-semibold text-slate-500">{t('profile.overview.totalReferrals')}</span>
-                    <span className="text-[13px] font-extrabold text-slate-900">{profileData?.TotalReferrals || 0}</span>
+                    <span className="text-[13px] font-extrabold text-slate-900">{totalReferrals}</span>
                 </div>
                 <div className="flex items-center justify-between">
                     <span className="text-[13px] font-semibold text-slate-500">{t('profile.overview.totalEarnings')}</span>
-                    <span className="text-[13px] font-extrabold text-slate-900">{formatCurrency(profileData?.TotalEarnings)}</span>
+                    <span className="text-[13px] font-extrabold text-slate-900">{formatCurrency(totalEarnings)}</span>
                 </div>
                 <div className="flex items-center justify-between">
                     <span className="text-[13px] font-semibold text-slate-500">{t('profile.overview.walletBalance')}</span>
-                    <span className="text-[13px] font-extrabold text-slate-900">{formatCurrency(profileData?.WalletBalance)}</span>
+                    <span className="text-[13px] font-extrabold text-slate-900">{formatCurrency(walletBalance)}</span>
                 </div>
             </div>
         </div>

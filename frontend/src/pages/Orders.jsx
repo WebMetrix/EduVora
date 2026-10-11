@@ -10,6 +10,8 @@ import { exportToExcel } from '../utils/excelExport';
 export default function Orders() {
   const { t } = useTranslation();
   const [searchTerm, setSearchTerm] = useState('');
+  const [timeFilter, setTimeFilter] = useState('');
+  const [statusFilter, setStatusFilter] = useState('');
 
   const orders = [
     {
@@ -86,6 +88,14 @@ export default function Orders() {
     }
   ];
 
+  const filteredOrders = orders.filter(order => {
+    const matchesSearch = !searchTerm || 
+      order.name.toLowerCase().includes(searchTerm.toLowerCase()) || 
+      order.id.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesStatus = !statusFilter || order.status === statusFilter;
+    return matchesSearch && matchesStatus;
+  });
+
   const handleExport = () => {
     const columns = [
       { header: 'Order ID', key: 'id', width: 20 },
@@ -99,7 +109,7 @@ export default function Orders() {
     ];
 
     exportToExcel({
-      data: orders,
+      data: filteredOrders,
       fileName: 'Orders_Report',
       columns,
       sheetName: 'Orders'
@@ -122,9 +132,18 @@ export default function Orders() {
 
       <OrderStats t={t} />
       
-      <OrderFilters t={t} searchTerm={searchTerm} setSearchTerm={setSearchTerm} onExport={handleExport} />
+      <OrderFilters 
+        t={t} 
+        searchTerm={searchTerm} 
+        setSearchTerm={setSearchTerm} 
+        timeFilter={timeFilter}
+        setTimeFilter={setTimeFilter}
+        statusFilter={statusFilter}
+        setStatusFilter={setStatusFilter}
+        onExport={handleExport} 
+      />
 
-      <OrdersDataTable t={t} orders={orders} />
+      <OrdersDataTable t={t} orders={filteredOrders} />
     </div>
   );
 }

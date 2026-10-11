@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
-import { ChevronDown } from 'lucide-react';
+import CustomSelect from '../common/CustomSelect';
 
 
 const CustomTooltip = ({ active, payload, label }) => {
@@ -60,16 +60,19 @@ export default function EarningsCharts({ t, loading, chartData, levelStats }) {
         <div className="absolute top-0 right-0 w-64 h-64 bg-indigo-400/10 rounded-full blur-[80px] -translate-y-1/2 translate-x-1/3 pointer-events-none group-hover/card:bg-indigo-400/20 transition-colors duration-700" />
         <div className="flex justify-between items-center mb-6 relative z-10">
           <h2 className="text-[17px] font-extrabold text-slate-900">{t('earnings.charts.overview')}</h2>
-          <select 
-            className="flex items-center gap-2 px-3 py-1.5 rounded-lg border border-slate-200 text-[12px] font-bold text-slate-600 hover:bg-slate-50 transition-colors outline-none cursor-pointer"
+          <CustomSelect
+            options={[
+              { label: t('earnings.charts.thisMonthFilter'), value: 'monthly' },
+              { label: t('earnings.charts.thisQuarterFilter'), value: 'quarterly' },
+              { label: t('earnings.charts.thisYearFilter'), value: 'yearly' }
+            ]}
             value={filter}
-            onChange={(e) => setFilter(e.target.value)}
+            onChange={(val) => setFilter(val)}
             disabled={loading}
-          >
-            <option value="monthly">{t('earnings.charts.thisMonthFilter')}</option>
-            <option value="quarterly">{t('earnings.charts.thisQuarterFilter')}</option>
-            <option value="yearly">{t('earnings.charts.thisYearFilter')}</option>
-          </select>
+            buttonClassName="flex items-center justify-between gap-1.5 px-3 py-1.5 rounded-lg bg-white border border-slate-200 hover:bg-slate-50 transition-colors shadow-sm w-auto min-w-[125px]"
+            textClassName="text-[12px] font-bold text-slate-600"
+            iconClassName="w-3.5 h-3.5 text-slate-500"
+          />
         </div>
 
         <div className="h-[240px] w-full">
@@ -85,27 +88,27 @@ export default function EarningsCharts({ t, loading, chartData, levelStats }) {
                   </linearGradient>
                 </defs>
                 <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
-                <XAxis 
-                  dataKey="name" 
-                  axisLine={false} 
-                  tickLine={false} 
+                <XAxis
+                  dataKey="name"
+                  axisLine={false}
+                  tickLine={false}
                   tick={{ fontSize: 11, fill: '#64748b', fontWeight: 600 }}
                   dy={10}
                 />
-                <YAxis 
-                  axisLine={false} 
-                  tickLine={false} 
+                <YAxis
+                  axisLine={false}
+                  tickLine={false}
                   tick={{ fontSize: 11, fill: '#64748b', fontWeight: 600 }}
                   tickFormatter={(value) => `${value / 1000}K`}
                 />
                 <Tooltip content={<CustomTooltip />} />
-                <Area 
-                  type="monotone" 
-                  dataKey="value" 
-                  stroke="#4611E1" 
+                <Area
+                  type="monotone"
+                  dataKey="value"
+                  stroke="#4611E1"
                   strokeWidth={3}
-                  fillOpacity={1} 
-                  fill="url(#colorValue)" 
+                  fillOpacity={1}
+                  fill="url(#colorValue)"
                 />
               </AreaChart>
             </ResponsiveContainer>
@@ -143,7 +146,7 @@ export default function EarningsCharts({ t, loading, chartData, levelStats }) {
       <div className="relative overflow-hidden bg-white border border-slate-200 rounded-3xl p-6 shadow-sm flex flex-col group/card transition-all duration-300 hover:-translate-y-1 hover:shadow-md hover:border-indigo-200">
         <div className="absolute top-0 right-0 w-64 h-64 bg-indigo-400/10 rounded-full blur-[80px] -translate-y-1/2 translate-x-1/3 pointer-events-none group-hover/card:bg-indigo-400/20 transition-colors duration-700" />
         <h2 className="text-[17px] font-extrabold text-slate-900 mb-6 relative z-10">{t('earnings.charts.byLevel')}</h2>
-        
+
         <div className="flex-1 flex flex-col items-center justify-center relative z-10">
           <div className="h-[200px] w-full relative mb-6">
             {loading ? (
@@ -166,7 +169,7 @@ export default function EarningsCharts({ t, loading, chartData, levelStats }) {
                         <Cell key={`cell-${index}`} fill={entry.color} />
                       ))}
                     </Pie>
-                    <Tooltip 
+                    <Tooltip
                       formatter={(value) => [`₹ ${value.toLocaleString('en-IN', { minimumFractionDigits: 2 })}`, 'Amount']}
                       contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 10px 25px rgba(0,0,0,0.1)' }}
                       itemStyle={{ color: '#4611E1', fontWeight: 'bold' }}

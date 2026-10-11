@@ -2,7 +2,7 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { MoreVertical, FileText, Clock, Play } from 'lucide-react';
 
-export default function PurchasedCourses({ t, searchQuery }) {
+export default function PurchasedCourses({ t, searchQuery, statusFilter = '' }) {
   const navigate = useNavigate();
   const courses = [
     {
@@ -41,7 +41,8 @@ export default function PurchasedCourses({ t, searchQuery }) {
   ];
 
   const filteredCourses = courses.filter(course =>
-    course.title.toLowerCase().includes(searchQuery.toLowerCase())
+    course.title.toLowerCase().includes((searchQuery || '').toLowerCase()) &&
+    (!statusFilter || course.status === statusFilter)
   );
 
   const getLevelStyles = (level) => {

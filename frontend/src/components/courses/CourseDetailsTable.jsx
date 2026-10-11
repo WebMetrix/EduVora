@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Eye, ChevronLeft, ChevronRight } from 'lucide-react';
 import CourseDetailsModal from './CourseDetailsModal';
 
-export default function CourseDetailsTable({ t, searchQuery }) {
+export default function CourseDetailsTable({ t, searchQuery, statusFilter = '' }) {
   const [page, setPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [selectedCourse, setSelectedCourse] = useState(null);
@@ -41,7 +41,8 @@ export default function CourseDetailsTable({ t, searchQuery }) {
   ];
 
   const filteredCourses = courses.filter(course => 
-    course.title.toLowerCase().includes(searchQuery.toLowerCase())
+    course.title.toLowerCase().includes((searchQuery || '').toLowerCase()) &&
+    (!statusFilter || course.status === statusFilter)
   );
 
   // Pagination logic

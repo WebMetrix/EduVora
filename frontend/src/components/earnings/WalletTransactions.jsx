@@ -1,26 +1,13 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { Calendar, ChevronDown, Download, Filter, ChevronLeft, ChevronRight, MoreHorizontal, ArrowDownToLine, ArrowUpFromLine, Clock, Eye } from 'lucide-react';
+import React, { useState } from 'react';
+import { Calendar, Download, Filter, ChevronLeft, ChevronRight, MoreHorizontal, ArrowDownToLine, ArrowUpFromLine, Clock, Eye } from 'lucide-react';
 import { exportToExcel } from '../../utils/excelExport';
-
+import CustomSelect from '../common/CustomSelect';
 
 export default function WalletTransactions({ t, loading, transactions }) {
   const [page, setPage] = useState(1);
   const [dateFilter, setDateFilter] = useState('');
   const [typeFilter, setTypeFilter] = useState('');
-  const [isTypeDropdownOpen, setIsTypeDropdownOpen] = useState(false);
   const itemsPerPage = 7;
-
-  const typeRef = useRef(null);
-
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (typeRef.current && !typeRef.current.contains(event.target)) {
-        setIsTypeDropdownOpen(false);
-      }
-    };
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, []);
 
   const allTransactions = transactions || [];
 
@@ -189,33 +176,20 @@ export default function WalletTransactions({ t, loading, transactions }) {
             </div>
 
             {/* Type Dropdown */}
-            <div className="relative w-full sm:w-auto" ref={typeRef}>
-              <div
-                onClick={() => !loading && setIsTypeDropdownOpen(!isTypeDropdownOpen)}
-                className={`flex items-center justify-between gap-3 px-4 py-2.5 bg-white border border-slate-200 rounded-xl transition-colors sm:min-w-[140px] ${loading ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer hover:border-indigo-300'}`}
-              >
-                <span className="text-[13px] font-bold text-slate-700">
-                  {typeFilter ? typeFilter : t('earnings.history.filters.allTypes')}
-                </span>
-                <ChevronDown className={`w-4 h-4 text-slate-500 transition-transform ${isTypeDropdownOpen ? 'rotate-180' : ''}`} />
-              </div>
-
-              {isTypeDropdownOpen && (
-                <div className="absolute top-full mt-1 w-full bg-white border border-slate-200 rounded-xl shadow-lg overflow-hidden z-50">
-                  {['', 'Received', 'Withdrawal'].map(type => (
-                    <div
-                      key={type}
-                      onClick={() => {
-                        setTypeFilter(type);
-                        setIsTypeDropdownOpen(false);
-                      }}
-                      className={`px-4 py-2 text-[13px] font-bold cursor-pointer hover:bg-indigo-50 transition-colors ${typeFilter === type ? 'text-indigo-600 bg-indigo-50' : 'text-slate-600'}`}
-                    >
-                      {type ? type : t('earnings.history.filters.allTypes')}
-                    </div>
-                  ))}
-                </div>
-              )}
+            <div className="w-full sm:w-auto">
+              <CustomSelect
+                options={[
+                  { label: t('earnings.history.filters.allTypes'), value: '' },
+                  { label: 'Received', value: 'Received' },
+                  { label: 'Withdrawal', value: 'Withdrawal' },
+                ]}
+                value={typeFilter}
+                onChange={(val) => { setTypeFilter(val); setPage(1); }}
+                disabled={loading}
+                buttonClassName="flex items-center justify-between gap-3 px-4 py-2.5 bg-white border border-slate-200 rounded-xl hover:bg-slate-50 transition-colors shadow-sm w-full sm:w-auto min-w-[140px]"
+                textClassName="text-[13px] font-bold text-slate-700"
+                iconClassName="w-4 h-4 text-slate-500"
+              />
             </div>
           </div>
 

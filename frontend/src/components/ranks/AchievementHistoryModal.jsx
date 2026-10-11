@@ -4,6 +4,7 @@ import {
   X, Search, Calendar, ChevronDown, CheckCircle2, Clock, Lock, 
   Trophy, Star, Users, DollarSign, Target, ArrowUpCircle, ChevronLeft, ChevronRight
 } from 'lucide-react';
+import CustomSelect from '../common/CustomSelect';
 
 const HISTORY_DATA = [
   {
@@ -129,6 +130,7 @@ export default function AchievementHistoryModal({ isOpen, onClose }) {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedAchievement, setSelectedAchievement] = useState(null);
   const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false);
+  const [dateRange, setDateRange] = useState('');
 
   // Prevent scrolling when modal is open
   useEffect(() => {
@@ -219,15 +221,21 @@ export default function AchievementHistoryModal({ isOpen, onClose }) {
           {/* Right Filters */}
           <div className="flex flex-col sm:flex-row items-center gap-3 w-full xl:w-auto">
             {/* Date Range Select */}
-            <div className="relative w-full sm:w-[200px] border border-slate-200 rounded-xl px-3 py-1.5 flex items-center justify-between bg-white cursor-pointer hover:bg-slate-50 transition-colors">
-              <div className="flex items-center gap-2">
-                <Calendar className="w-4 h-4 text-slate-400" />
-                <div className="flex flex-col">
-                  <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider leading-none">Date Range</span>
-                  <span className="text-[12px] font-bold text-slate-700 leading-tight">Select date range</span>
-                </div>
-              </div>
-              <ChevronDown className="w-4 h-4 text-slate-400" />
+            <div className="w-full sm:w-[180px]">
+              <CustomSelect
+                options={[
+                  { label: 'All Time', value: '' },
+                  { label: 'Last 30 Days', value: '30' },
+                  { label: 'Last 90 Days', value: '90' },
+                  { label: 'This Year', value: 'year' },
+                ]}
+                value={dateRange}
+                onChange={(val) => setDateRange(val)}
+                leftIcon={<Calendar className="w-4 h-4 text-slate-400" />}
+                buttonClassName="w-full px-3 py-2 bg-white border border-slate-200 rounded-xl flex items-center justify-between hover:bg-slate-50 transition-colors shadow-sm"
+                textClassName="text-[12px] font-bold text-slate-700"
+                iconClassName="w-4 h-4 text-slate-400"
+              />
             </div>
 
             {/* Search Input */}

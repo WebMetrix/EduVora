@@ -1,8 +1,28 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { createPortal } from 'react-dom';
-import { X, Calendar, CheckCircle2, ArrowRight, Info, Users, Coins, Crown, Check, Trophy } from 'lucide-react';
+import { X, Calendar, CheckCircle2, ArrowRight, Info, Users, Coins, Crown, Check, Trophy, Sparkles } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
 
 export default function RankDetailsModal({ isOpen, onClose }) {
+  const [showCriteriaHelp, setShowCriteriaHelp] = useState(false);
+  const helpRef = useRef(null);
+
+  // Click outside to close criteria popover
+  useEffect(() => {
+    function handleClickOutside(event) {
+      if (helpRef.current && !helpRef.current.contains(event.target)) {
+        setShowCriteriaHelp(false);
+      }
+    }
+    if (showCriteriaHelp) {
+      document.addEventListener('mousedown', handleClickOutside);
+      document.addEventListener('touchstart', handleClickOutside);
+    }
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener('touchstart', handleClickOutside);
+    };
+  }, [showCriteriaHelp]);
   // Prevent scrolling when modal is open
   useEffect(() => {
     if (isOpen) {
@@ -175,9 +195,55 @@ export default function RankDetailsModal({ isOpen, onClose }) {
               </div>
             </div>
 
-            <div className="flex items-center gap-1.5 mt-1">
+            <div className="relative flex items-center gap-1.5 mt-1" ref={helpRef}>
               <h4 className="text-[15px] font-extrabold text-[#1a1446]">Qualification Criteria for Platinum</h4>
-              <Info className="w-4 h-4 text-slate-400 cursor-pointer hover:text-slate-600" />
+              <button
+                type="button"
+                onClick={() => setShowCriteriaHelp((prev) => !prev)}
+                aria-label="View criteria guide"
+                className={`w-6 h-6 rounded-full flex items-center justify-center transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-indigo-300 ${
+                  showCriteriaHelp
+                    ? 'bg-indigo-600 text-white shadow-sm ring-2 ring-indigo-200'
+                    : 'text-slate-400 hover:text-indigo-600 hover:bg-indigo-50'
+                }`}
+              >
+                <Info className="w-3.5 h-3.5 transition-transform hover:scale-110" />
+              </button>
+
+              {/* Criteria Popover */}
+              <AnimatePresence>
+                {showCriteriaHelp && (
+                  <motion.div
+                    initial={{ opacity: 0, y: -4, scale: 0.95 }}
+                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                    exit={{ opacity: 0, y: -4, scale: 0.95 }}
+                    transition={{ duration: 0.15 }}
+                    className="absolute bottom-full mb-2.5 left-0 z-50 w-[275px] bg-slate-900/95 backdrop-blur-md text-white rounded-xl p-3 shadow-xl border border-slate-700/60 text-left pointer-events-auto"
+                  >
+                    <div className="absolute -bottom-1 left-6 w-2.5 h-2.5 bg-slate-900 rotate-45 border-r border-b border-slate-700/60" />
+                    <div className="flex items-center justify-between pb-1 border-b border-slate-800">
+                      <div className="flex items-center gap-1.5 text-[12px] font-bold text-white">
+                        <Sparkles className="w-3.5 h-3.5 text-amber-400" />
+                        <span>Advancement Rules</span>
+                      </div>
+                      <button
+                        type="button"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setShowCriteriaHelp(false);
+                        }}
+                        className="p-0.5 rounded text-slate-400 hover:text-white"
+                        aria-label="Close"
+                      >
+                        <X className="w-3 h-3" />
+                      </button>
+                    </div>
+                    <p className="text-[11px] text-slate-300 leading-relaxed font-normal pt-0.5">
+                      All 3 milestones must be reached concurrently. Once targets are completed, your Platinum rank and privileges upgrade automatically.
+                    </p>
+                  </motion.div>
+                )}
+              </AnimatePresence>
             </div>
 
             {/* Criteria List */}

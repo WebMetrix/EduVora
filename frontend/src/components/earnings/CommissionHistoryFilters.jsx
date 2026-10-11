@@ -1,7 +1,11 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Calendar, ChevronDown, Download, Filter } from 'lucide-react';
+import CustomSelect from '../common/CustomSelect';
 
 export default function CommissionHistoryFilters({ t, loading }) {
+  const [levelFilter, setLevelFilter] = useState('');
+  const [typeFilter, setTypeFilter] = useState('');
+
   return (
     <div className="flex flex-col xl:flex-row xl:items-center justify-between gap-4 mt-6">
       <div className="flex flex-col sm:flex-row items-center gap-4 w-full xl:w-auto">
@@ -18,19 +22,37 @@ export default function CommissionHistoryFilters({ t, loading }) {
 
         <div className="flex flex-row items-center gap-4 w-full sm:w-auto">
           {/* Level Dropdown */}
-          <div className="relative flex-1 sm:flex-none">
-            <div className={`flex items-center justify-between gap-2 px-3 sm:px-4 py-2.5 bg-white border border-slate-200 rounded-xl transition-colors sm:min-w-[140px] ${loading ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer hover:border-indigo-300'}`}>
-              <span className="text-[12px] sm:text-[13px] font-bold text-slate-700 whitespace-nowrap overflow-hidden text-ellipsis">{t('earnings.history.filters.allLevels')}</span>
-              <ChevronDown className="w-4 h-4 text-slate-500 shrink-0" />
-            </div>
+          <div className="flex-1 sm:flex-none">
+            <CustomSelect
+              options={[
+                { label: t('earnings.history.filters.allLevels'), value: '' },
+                { label: 'Level 1', value: 'Level 1' },
+                { label: 'Level 2', value: 'Level 2' },
+              ]}
+              value={levelFilter}
+              onChange={(val) => setLevelFilter(val)}
+              disabled={loading}
+              buttonClassName="flex items-center justify-between gap-2 px-3 sm:px-4 py-2.5 bg-white border border-slate-200 rounded-xl hover:bg-slate-50 transition-colors sm:min-w-[140px]"
+              textClassName="text-[12px] sm:text-[13px] font-bold text-slate-700"
+              iconClassName="w-4 h-4 text-slate-500"
+            />
           </div>
 
           {/* Type Dropdown */}
-          <div className="relative flex-1 sm:flex-none">
-            <div className={`flex items-center justify-between gap-2 px-3 sm:px-4 py-2.5 bg-white border border-slate-200 rounded-xl transition-colors sm:min-w-[140px] ${loading ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer hover:border-indigo-300'}`}>
-              <span className="text-[12px] sm:text-[13px] font-bold text-slate-700 whitespace-nowrap overflow-hidden text-ellipsis">{t('earnings.history.filters.allTypes')}</span>
-              <ChevronDown className="w-4 h-4 text-slate-500 shrink-0" />
-            </div>
+          <div className="flex-1 sm:flex-none">
+            <CustomSelect
+              options={[
+                { label: t('earnings.history.filters.allTypes'), value: '' },
+                { label: 'Package Purchase', value: 'Package Purchase' },
+                { label: 'Package Upgrade', value: 'Package Upgrade' },
+              ]}
+              value={typeFilter}
+              onChange={(val) => setTypeFilter(val)}
+              disabled={loading}
+              buttonClassName="flex items-center justify-between gap-2 px-3 sm:px-4 py-2.5 bg-white border border-slate-200 rounded-xl hover:bg-slate-50 transition-colors sm:min-w-[140px]"
+              textClassName="text-[12px] sm:text-[13px] font-bold text-slate-700"
+              iconClassName="w-4 h-4 text-slate-500"
+            />
           </div>
         </div>
       </div>

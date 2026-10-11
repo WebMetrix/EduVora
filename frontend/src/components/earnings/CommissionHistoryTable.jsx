@@ -1,32 +1,14 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { ChevronLeft, ChevronRight, MoreHorizontal, Calendar, ChevronDown, Download, Filter } from 'lucide-react';
+import React, { useState } from 'react';
+import { ChevronLeft, ChevronRight, MoreHorizontal, Calendar, Download, Filter } from 'lucide-react';
 import { exportToExcel } from '../../utils/excelExport';
-
+import CustomSelect from '../common/CustomSelect';
 
 export default function CommissionHistoryTable({ t, loading, commissions }) {
   const [page, setPage] = useState(1);
   const [dateFilter, setDateFilter] = useState('');
   const [typeFilter, setTypeFilter] = useState('');
   const [levelFilter, setLevelFilter] = useState('');
-  const [isTypeDropdownOpen, setIsTypeDropdownOpen] = useState(false);
-  const [isLevelDropdownOpen, setIsLevelDropdownOpen] = useState(false);
   const itemsPerPage = 10;
-  
-  const levelRef = useRef(null);
-  const typeRef = useRef(null);
-
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (levelRef.current && !levelRef.current.contains(event.target)) {
-        setIsLevelDropdownOpen(false);
-      }
-      if (typeRef.current && !typeRef.current.contains(event.target)) {
-        setIsTypeDropdownOpen(false);
-      }
-    };
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, []);
 
   const allCommissions = commissions || [];
 
@@ -154,73 +136,39 @@ export default function CommissionHistoryTable({ t, loading, commissions }) {
               ))}
             </div>
 
-            <div className="flex flex-row items-center gap-4 w-full sm:w-auto">
+            <div className="flex flex-row items-center gap-2 sm:gap-4 w-full sm:w-auto">
               {/* Level Dropdown */}
-              <div className="relative flex-1 sm:flex-none" ref={levelRef}>
-                <div 
-                  onClick={() => {
-                    if (!loading) {
-                      setIsLevelDropdownOpen(!isLevelDropdownOpen);
-                      setIsTypeDropdownOpen(false);
-                    }
-                  }}
-                  className={`flex items-center justify-between gap-2 px-3 sm:px-4 py-2.5 bg-white border border-slate-200 rounded-xl transition-colors sm:min-w-[140px] ${loading ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer hover:border-indigo-300'}`}
-                >
-                  <span className="text-[12px] sm:text-[13px] font-bold text-slate-700 whitespace-nowrap overflow-hidden text-ellipsis">
-                    {levelFilter ? levelFilter : t('earnings.history.filters.allLevels')}
-                  </span>
-                  <ChevronDown className={`w-4 h-4 text-slate-500 shrink-0 transition-transform ${isLevelDropdownOpen ? 'rotate-180' : ''}`} />
-                </div>
-                {isLevelDropdownOpen && (
-                  <div className="absolute top-full mt-1 w-full bg-white border border-slate-200 rounded-xl shadow-lg overflow-hidden z-50">
-                    {['', 'Level 1', 'Level 2'].map(level => (
-                      <div
-                        key={level}
-                        onClick={() => {
-                          setLevelFilter(level);
-                          setIsLevelDropdownOpen(false);
-                        }}
-                        className={`px-4 py-2 text-[13px] font-bold cursor-pointer hover:bg-indigo-50 transition-colors ${levelFilter === level ? 'text-indigo-600 bg-indigo-50' : 'text-slate-600'}`}
-                      >
-                        {level ? level : t('earnings.history.filters.allLevels')}
-                      </div>
-                    ))}
-                  </div>
-                )}
+              <div className="flex-1 sm:flex-none">
+                <CustomSelect
+                  options={[
+                    { label: t('earnings.history.filters.allLevels'), value: '' },
+                    { label: 'Level 1', value: 'Level 1' },
+                    { label: 'Level 2', value: 'Level 2' },
+                  ]}
+                  value={levelFilter}
+                  onChange={(val) => { setLevelFilter(val); setPage(1); }}
+                  disabled={loading}
+                  buttonClassName="flex items-center justify-between gap-1.5 sm:gap-2 px-3 sm:px-4 py-2 sm:py-2.5 bg-white border border-slate-200 rounded-xl hover:bg-slate-50 transition-colors shadow-sm w-full sm:w-auto min-w-[120px] sm:min-w-[135px]"
+                  textClassName="text-[12px] sm:text-[13px] font-bold text-slate-700"
+                  iconClassName="w-4 h-4 text-slate-500"
+                />
               </div>
 
               {/* Type Dropdown */}
-              <div className="relative flex-1 sm:flex-none" ref={typeRef}>
-                <div 
-                  onClick={() => {
-                    if (!loading) {
-                      setIsTypeDropdownOpen(!isTypeDropdownOpen);
-                      setIsLevelDropdownOpen(false);
-                    }
-                  }}
-                  className={`flex items-center justify-between gap-2 px-3 sm:px-4 py-2.5 bg-white border border-slate-200 rounded-xl transition-colors sm:min-w-[140px] ${loading ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer hover:border-indigo-300'}`}
-                >
-                  <span className="text-[12px] sm:text-[13px] font-bold text-slate-700 whitespace-nowrap overflow-hidden text-ellipsis">
-                    {typeFilter ? typeFilter : t('earnings.history.filters.allTypes')}
-                  </span>
-                  <ChevronDown className={`w-4 h-4 text-slate-500 shrink-0 transition-transform ${isTypeDropdownOpen ? 'rotate-180' : ''}`} />
-                </div>
-                {isTypeDropdownOpen && (
-                  <div className="absolute top-full mt-1 w-full bg-white border border-slate-200 rounded-xl shadow-lg overflow-hidden z-50">
-                    {['', 'Package Purchase', 'Package Upgrade'].map(type => (
-                      <div
-                        key={type}
-                        onClick={() => {
-                          setTypeFilter(type);
-                          setIsTypeDropdownOpen(false);
-                        }}
-                        className={`px-4 py-2 text-[13px] font-bold cursor-pointer hover:bg-indigo-50 transition-colors ${typeFilter === type ? 'text-indigo-600 bg-indigo-50' : 'text-slate-600'}`}
-                      >
-                        {type ? type : t('earnings.history.filters.allTypes')}
-                      </div>
-                    ))}
-                  </div>
-                )}
+              <div className="flex-1 sm:flex-none">
+                <CustomSelect
+                  options={[
+                    { label: t('earnings.history.filters.allTypes'), value: '' },
+                    { label: 'Package Purchase', value: 'Package Purchase' },
+                    { label: 'Package Upgrade', value: 'Package Upgrade' },
+                  ]}
+                  value={typeFilter}
+                  onChange={(val) => { setTypeFilter(val); setPage(1); }}
+                  disabled={loading}
+                  buttonClassName="flex items-center justify-between gap-1.5 sm:gap-2 px-3 sm:px-4 py-2 sm:py-2.5 bg-white border border-slate-200 rounded-xl hover:bg-slate-50 transition-colors shadow-sm w-full sm:w-auto min-w-[120px] sm:min-w-[135px]"
+                  textClassName="text-[12px] sm:text-[13px] font-bold text-slate-700"
+                  iconClassName="w-4 h-4 text-slate-500"
+                />
               </div>
             </div>
           </div>
