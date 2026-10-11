@@ -1,5 +1,5 @@
 import React from 'react';
-import { Wallet, Clock, TrendingUp, Receipt } from 'lucide-react';
+import { Wallet, Clock, TrendingUp, Receipt, IndianRupee } from 'lucide-react';
 
 export default function WalletStats({ t, loading, summary, transactions }) {
   const formatCurrency = (amount) => {
@@ -42,7 +42,8 @@ export default function WalletStats({ t, loading, summary, transactions }) {
       title: t('earnings.wallet.stats.totalTransactions'),
       value: (transactions?.length || 0).toString(),
       subtitle: t('earnings.wallet.stats.allTime'),
-      icon: <Receipt className="w-7 h-7 text-purple-600" />,
+      // icon: <Receipt className="w-7 h-7 text-purple-600" />,
+      icon: <IndianRupee className="w-7 h-7 text-purple-600" />,
       bg: "bg-purple-100",
       borderColor: "border-purple-100",
       hoverShadow: "hover:shadow-lg hover:border-purple-300"
