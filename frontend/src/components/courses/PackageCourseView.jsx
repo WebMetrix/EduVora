@@ -8,6 +8,7 @@ import financialFreedomImg from '../../assets/images/financial_freedom.jpg';
 import successMindsetImg from '../../assets/images/success_mindset.jpg';
 import EBookReaderModal from './EBookReaderModal';
 import AudioPlayerModal from './AudioPlayerModal';
+import ListenToAudioModal from './ListenToAudioModal';
 
 export const PACKAGES_DATA = [
   {
@@ -133,8 +134,15 @@ export const PACKAGES_DATA = [
   }
 ];
 
-export default function PackageCourseView() {
-  const [selectedPackageId, setSelectedPackageId] = useState(1);
+export default function PackageCourseView({
+  onOpenReader,
+  selectedPackageId: propPackageId,
+  onSelectPackage: propOnSelectPackage
+}) {
+  const [internalSelectedPackageId, setInternalSelectedPackageId] = useState(1);
+  const selectedPackageId = propPackageId !== undefined ? propPackageId : internalSelectedPackageId;
+  const setSelectedPackageId = propOnSelectPackage || setInternalSelectedPackageId;
+
   const [expandedItems, setExpandedItems] = useState({});
   const [allExpanded, setAllExpanded] = useState(false);
   const [mobileTab, setMobileTab] = useState('detail'); // 'list' or 'detail'
@@ -142,6 +150,7 @@ export default function PackageCourseView() {
   // Modals state
   const [activeEBook, setActiveEBook] = useState(null);
   const [activeAudio, setActiveAudio] = useState(null);
+  const [activeAudioModalItem, setActiveAudioModalItem] = useState(null);
 
   const activePackage = PACKAGES_DATA.find((p) => p.id === selectedPackageId) || PACKAGES_DATA[0];
 
@@ -184,8 +193,8 @@ export default function PackageCourseView() {
         <button
           onClick={() => setMobileTab('list')}
           className={`flex-1 py-2.5 text-[13px] font-bold rounded-xl transition-all flex items-center justify-center gap-1.5 ${mobileTab === 'list'
-              ? 'bg-white text-indigo-700 shadow-sm'
-              : 'text-slate-600 hover:text-slate-900'
+            ? 'bg-white text-indigo-700 shadow-sm'
+            : 'text-slate-600 hover:text-slate-900'
             }`}
         >
           <span>📦 Packages</span>
@@ -196,8 +205,8 @@ export default function PackageCourseView() {
         <button
           onClick={() => setMobileTab('detail')}
           className={`flex-1 py-2.5 text-[13px] font-bold rounded-xl transition-all flex items-center justify-center gap-1.5 ${mobileTab === 'detail'
-              ? 'bg-white text-indigo-700 shadow-sm'
-              : 'text-slate-600 hover:text-slate-900'
+            ? 'bg-white text-indigo-700 shadow-sm'
+            : 'text-slate-600 hover:text-slate-900'
             }`}
         >
           <span>📖 {activePackage.tag} Content</span>
@@ -230,8 +239,8 @@ export default function PackageCourseView() {
                   key={pkg.id}
                   onClick={() => handleSelectPackage(pkg.id)}
                   className={`bg-white rounded-[22px] p-4 sm:p-5 flex items-center justify-between gap-3.5 sm:gap-4 cursor-pointer relative overflow-hidden transition-all duration-300 group ${isSelected
-                      ? 'border-2 border-indigo-400 shadow-md shadow-indigo-100/70 ring-2 ring-indigo-100/50'
-                      : 'border border-slate-200/90 shadow-sm hover:border-indigo-200 hover:shadow-md'
+                    ? 'border-2 border-indigo-400 shadow-md shadow-indigo-100/70 ring-2 ring-indigo-100/50'
+                    : 'border border-slate-200/90 shadow-sm hover:border-indigo-200 hover:shadow-md'
                     }`}
                 >
                   {/* Subtle active background glow */}
@@ -286,8 +295,8 @@ export default function PackageCourseView() {
                   <div className="shrink-0 z-10">
                     <div
                       className={`w-8 h-8 sm:w-9 sm:h-9 rounded-full flex items-center justify-center transition-all ${isSelected
-                          ? 'bg-indigo-600 text-white shadow-sm shadow-indigo-400'
-                          : 'bg-slate-100 text-slate-400 group-hover:bg-indigo-50 group-hover:text-indigo-600'
+                        ? 'bg-indigo-600 text-white shadow-sm shadow-indigo-400'
+                        : 'bg-slate-100 text-slate-400 group-hover:bg-indigo-50 group-hover:text-indigo-600'
                         }`}
                     >
                       <ChevronRight className="w-4 h-4 sm:w-5 sm:h-5" />
@@ -321,8 +330,8 @@ export default function PackageCourseView() {
                   key={p.id}
                   onClick={() => setSelectedPackageId(p.id)}
                   className={`px-2.5 py-1 rounded-lg text-[11px] font-bold transition-all ${p.id === selectedPackageId
-                      ? 'bg-indigo-600 text-white shadow-sm'
-                      : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+                    ? 'bg-indigo-600 text-white shadow-sm'
+                    : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
                     }`}
                 >
                   {p.tag}
@@ -453,16 +462,22 @@ export default function PackageCourseView() {
                       <div className="flex items-center justify-between sm:justify-end gap-2 sm:gap-2.5 w-full sm:w-auto pt-2 sm:pt-0 border-t sm:border-t-0 border-slate-100">
                         {/* Read EBook Button */}
                         <button
-                          onClick={() => setActiveEBook(item)}
+                          onClick={() => {
+                            if (onOpenReader) {
+                              onOpenReader(item, false);
+                            } else {
+                              setActiveEBook(item);
+                            }
+                          }}
                           className="flex-1 sm:flex-initial flex items-center justify-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-2 border border-indigo-200 text-indigo-600 hover:bg-indigo-50 hover:border-indigo-300 rounded-xl text-[12px] sm:text-[13px] font-bold transition-all shadow-sm active:scale-95"
                         >
                           <BookOpen className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                           <span>Read EBook</span>
                         </button>
 
-                        {/* Play Audio Button */}
+                        {/* Play Audio Button - Opens directly on courses page without changing view */}
                         <button
-                          onClick={() => setActiveAudio(item)}
+                          onClick={() => setActiveAudioModalItem(item)}
                           className="flex-1 sm:flex-initial flex items-center justify-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-2 border border-emerald-200 text-emerald-600 hover:bg-emerald-50 hover:border-emerald-300 rounded-xl text-[12px] sm:text-[13px] font-bold transition-all shadow-sm active:scale-95"
                         >
                           <Headphones className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
@@ -552,12 +567,13 @@ export default function PackageCourseView() {
         packageData={activePackage}
       />
 
-      {/* Interactive Audio Player Modal */}
-      <AudioPlayerModal
-        isOpen={!!activeAudio}
-        onClose={() => setActiveAudio(null)}
-        item={activeAudio}
-        packageData={activePackage}
+      {/* Interactive Listen to Audio Modal (Image 1) */}
+      <ListenToAudioModal
+        isOpen={!!activeAudioModalItem}
+        onClose={() => setActiveAudioModalItem(null)}
+        chapterNumber={activeAudioModalItem?.number ? activeAudioModalItem.number.replace(/\D/g, '').padStart(2, '0') : "01"}
+        chapterTitle={activeAudioModalItem?.chapters?.[0]?.replace(/^\d+\.\s*/, '') || activeAudioModalItem?.title || "What is Financial Freedom?"}
+        chapterDesc={activeAudioModalItem?.summary || "Listen to the audio version of this chapter and learn on the go."}
       />
 
     </div>

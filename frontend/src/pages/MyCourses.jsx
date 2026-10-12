@@ -1,32 +1,101 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from '../hooks/useTranslation';
-import { ChevronRight } from 'lucide-react';
-import PackageCourseView from '../components/courses/PackageCourseView';
+import { ChevronRight, ArrowLeft } from 'lucide-react';
+import PackageCourseView, { PACKAGES_DATA } from '../components/courses/PackageCourseView';
+import EBookReaderView from '../components/courses/EBookReaderView';
 
 export default function MyCourses() {
   const { t } = useTranslation();
+  const [selectedPackageId, setSelectedPackageId] = useState(1);
+  const [readerState, setReaderState] = useState(null); // { ebook: item, initialShowAudio: boolean }
+
+  const activePackage = PACKAGES_DATA.find((p) => p.id === selectedPackageId) || PACKAGES_DATA[0];
 
   return (
     <div className="flex flex-col min-h-full pb-10">
-      {/* Header Section */}
-      <div className="flex flex-col gap-1 mb-6 lg:mb-8">
-        <h1 className="text-[24px] lg:text-[28px] font-bold text-slate-900 mb-1">
-          {t('myCourses.title') || 'My Courses'}
-        </h1>
-        <div className="hidden md:flex items-center text-[13px] font-medium text-slate-500 gap-1.5">
-          <Link to="/dashboard" className="hover:text-indigo-600 transition-colors">
-            {t('myCourses.breadcrumb1') || 'Home'}
-          </Link>
-          <ChevronRight className="w-3.5 h-3.5" />
-          <span className="text-slate-900 font-semibold">
-            {t('myCourses.breadcrumb2') || 'My Courses'}
-          </span>
-        </div>
+      {/* Header & Breadcrumbs Section */}
+      <div className="flex flex-col gap-1 mb-6">
+        {readerState ? (
+          <div>
+            {/* Standard EduVora Breadcrumbs */}
+            <div className="flex items-center text-[13px] font-medium text-slate-500 gap-1.5 mb-2 overflow-x-auto custom-scrollbar">
+              <Link to="/dashboard" className="hover:text-indigo-600 transition-colors">
+                Home
+              </Link>
+              <ChevronRight className="w-3.5 h-3.5 text-slate-400" />
+              <button
+                onClick={() => setReaderState(null)}
+                className="hover:text-indigo-600 transition-colors"
+              >
+                My Courses
+              </button>
+              <ChevronRight className="w-3.5 h-3.5 text-slate-400" />
+              <button
+                onClick={() => setReaderState(null)}
+                className="hover:text-indigo-600 transition-colors"
+              >
+                {activePackage?.tag || 'Package 1'}
+              </button>
+              <ChevronRight className="w-3.5 h-3.5 text-slate-400" />
+              <span className="text-slate-900 font-semibold">
+                {readerState.ebook?.number || 'EBook 1'}
+              </span>
+            </div>
+
+            {/* Title & Back to Package button (Image 3) */}
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mt-1">
+              <h1 className="text-[22px] sm:text-[26px] font-black text-[#1a1446] tracking-tight">
+                {readerState.ebook?.number || 'EBook 1'}: {readerState.ebook?.title || 'Introduction to Financial Freedom'}
+              </h1>
+              <button
+                onClick={() => setReaderState(null)}
+                className="flex items-center gap-2 px-4 py-2 bg-white border border-indigo-200 text-indigo-600 hover:bg-indigo-50 rounded-xl text-[13px] font-bold shadow-sm transition-all active:scale-95 shrink-0 w-fit"
+              >
+                <ArrowLeft className="w-4 h-4" />
+                <span>Back to Package</span>
+              </button>
+            </div>
+          </div>
+        ) : (
+          <div>
+            <div className="flex items-center text-[13px] font-medium text-slate-500 gap-1.5 mb-2">
+              <Link to="/dashboard" className="hover:text-indigo-600 transition-colors">
+                Home
+              </Link>
+              <ChevronRight className="w-3.5 h-3.5 text-slate-400" />
+              <span className="text-slate-900 font-semibold">
+                My Courses
+              </span>
+            </div>
+            <h1 className="text-[24px] lg:text-[28px] font-bold text-[#1a1446] mb-1">
+              My Courses
+            </h1>
+            <p className="text-[14px] text-slate-500 font-medium">
+              Track your packages, read eBooks, and listen to audio masterclasses.
+            </p>
+          </div>
+        )}
       </div>
 
-      {/* New Course & Packages UI (Image 1) */}
-      <PackageCourseView />
+      {/* Main Views */}
+      {readerState ? (
+        <EBookReaderView
+          packageData={activePackage}
+          ebookData={readerState.ebook}
+          initialShowAudio={readerState.initialShowAudio}
+          onBack={() => setReaderState(null)}
+        />
+      ) : (
+        <PackageCourseView
+          selectedPackageId={selectedPackageId}
+          onSelectPackage={setSelectedPackageId}
+          onOpenReader={(ebook, initialShowAudio) => {
+            setReaderState({ ebook, initialShowAudio });
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+          }}
+        />
+      )}
     </div>
   );
 }
