@@ -18,6 +18,7 @@ import PaymentFailed from './pages/payment/PaymentFailed';
 import Earnings from './pages/Earnings';
 import KycVerification from './pages/KycVerification';
 import RankAchievements from './pages/RankAchievements';
+import Payouts from './pages/Payouts';
 
 import ProtectedRoute from './components/common/ProtectedRoute';
 import GlobalLayout from './components/layout/GlobalLayout';
@@ -43,6 +44,7 @@ function App() {
           <Route path="/courses/:courseId" element={<CoursePlayer />} />
           <Route path="/orders" element={<Orders />} />
           <Route path="/earnings" element={<Earnings />} />
+          <Route path="/payouts" element={<Payouts />} />
           <Route path="/courseaccessdenied" element={<CourseAccessDenied />} />
           <Route path="/payment/success" element={<PaymentSuccess />} />
           <Route path="/payment/failed" element={<PaymentFailed />} />

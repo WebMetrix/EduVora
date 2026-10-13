@@ -103,7 +103,7 @@ export default function Header({ toggleSidebar, isSuperAdmin }) {
     { id: 1, icon: User, label: t('dashboard.nav.myProfile'), route: '/profile' },
     // { id: 2, icon: Settings, label: t('dashboard.nav.settings'), route: '#' },
     { id: 3, icon: Wallet, label: t('dashboard.nav.wallet'), route: '/earnings', state: { tab: 'wallet' } },
-    { id: 4, icon: BarChart2, label: t('dashboard.nav.payouts'), route: '/earnings', state: { tab: 'history' } },
+    { id: 4, icon: BarChart2, label: t('dashboard.nav.payouts'), route: '/payouts' },
     { id: 5, icon: HelpCircle, label: t('dashboard.nav.helpSupport'), route: '#' }
   ];
 

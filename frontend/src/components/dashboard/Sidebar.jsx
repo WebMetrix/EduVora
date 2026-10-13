@@ -22,6 +22,7 @@ const menuItems = [
   { id: 'courses', icon: BookOpen, labelKey: 'nav.courses' },
   { id: 'orders', icon: ShoppingBag, labelKey: 'nav.orders' },
   { id: 'earnings', icon: IndianRupee, labelKey: 'nav.earnings' },
+  { id: 'payouts', icon: BarChart2, labelKey: 'nav.payouts' },
   // { id: 'reports', icon: FileText, labelKey: 'nav.reports' },
   { id: 'rank', icon: Award, labelKey: 'nav.rank' }
 ];
@@ -141,6 +142,7 @@ export default function Sidebar({ isOpen, setIsOpen, isSuperAdmin }) {
                 courses: '/courses',
                 orders: '/orders',
                 earnings: '/earnings',
+                payouts: '/payouts',
                 rank: '/ranks'
               };
               const isActive = routeMap[item.id] ? location.pathname === routeMap[item.id] : item.active;
@@ -237,7 +239,7 @@ export default function Sidebar({ isOpen, setIsOpen, isSuperAdmin }) {
                 { id: 'profile', icon: User, label: t('dashboard.nav.myProfile'), route: '/profile' },
                 { id: 'settings', icon: Settings, label: t('dashboard.nav.settings'), route: '#' },
                 { id: 'wallet', icon: Wallet, label: t('dashboard.nav.wallet'), route: '/earnings', state: { tab: 'wallet' } },
-                { id: 'payouts', icon: BarChart2, label: t('dashboard.nav.payouts'), route: '/earnings', state: { tab: 'history' } },
+                { id: 'payouts', icon: BarChart2, label: t('dashboard.nav.payouts'), route: '/payouts' },
                 { id: 'help', icon: HelpCircle, label: t('dashboard.nav.helpSupport'), route: '#' }
               ].map((item) => {
                 const Icon = item.icon;
