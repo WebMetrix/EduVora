@@ -719,29 +719,21 @@ export default function Payouts() {
 
   return (
     <div className="w-full flex flex-col gap-5 sm:gap-6">
-      {/* 1. Header & Breadcrumbs matching reference UI */}
+      {/* 1. Header & Breadcrumbs matching Network & Orders UI */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          {/* Breadcrumbs: Dashboard > Payouts */}
-          <div className="flex items-center text-[12px] sm:text-[13px] font-medium text-slate-500 gap-1.5 mb-1 sm:mb-1.5">
+          <h1 className="text-[24px] lg:text-[28px] font-bold text-slate-900 mb-1">
+            {activeTab === 'requests' ? 'Payout Requests' : 'Payouts'}
+          </h1>
+          <div className="flex items-center text-[13px] font-medium text-slate-500 gap-1.5">
             <Link to="/dashboard" className="hover:text-indigo-600 transition-colors">
-              Dashboard
+              Home
             </Link>
             <ChevronRight className="w-3.5 h-3.5 text-slate-400" />
-            <span className="text-slate-900 font-bold">
+            <span className="text-slate-900 font-medium">
               {activeTab === 'requests' ? 'Payout Requests' : 'Payouts'}
             </span>
           </div>
-
-          {/* Title & Subtitle dynamically updated by tab */}
-          <h1 className="text-[26px] sm:text-[28px] font-black text-slate-900 tracking-tight leading-tight">
-            {activeTab === 'requests' ? 'Payout Requests' : 'Payouts'}
-          </h1>
-          <p className="text-[13px] sm:text-[14px] text-slate-500 font-medium mt-1">
-            {activeTab === 'requests'
-              ? 'Track the status of your payout requests and view the complete history.'
-              : 'View your earning summary, request payouts and track payout history.'}
-          </p>
         </div>
 
         {/* Header Action Button: + Request Payout */}

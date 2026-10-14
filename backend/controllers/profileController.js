@@ -2,6 +2,8 @@ import pool, { sql } from "../config/db.js";
 import logger from '../utils/logger.js';
 import { t } from '../utils/translation.js';
 import { encryptUserId } from '../utils/encryption.js';
+import { sendEmail } from '../services/emailService.js';
+import EmailEvents from '../utils/emailEvents.js';
 
 // Get Complete User Profile
 export const getUserProfile = async (req, res) => {
@@ -138,6 +140,40 @@ export const editUser = async (req, res) => {
         if (procResult === 0) return res.status(500).send({ message: t('api.profile.systemError') });
 
         res.status(200).send({ message: t('api.profile.updateSuccess') });
+
+        // Asynchronously send PROFILE_UPDATED email
+        (async () => {
+            try {
+                let userEmail = req.user.email;
+                let userFullName = fullName;
+
+                if (!userEmail) {
+                    const uReq = pool.request();
+                    uReq.input('UUID', sql.VarChar(36), req.user.id);
+                    const uRes = await uReq.execute('dbo.EV_GetUserProfile');
+                    if (uRes.recordset && uRes.recordset.length > 0) {
+                        userEmail = uRes.recordset[0].EmailAddress;
+                        userFullName = userFullName || uRes.recordset[0].FullName;
+                    }
+                }
+
+                if (userEmail) {
+                    sendEmail({
+                        eventId: EmailEvents.PROFILE_UPDATED,
+                        to: userEmail,
+                        replacements: {
+                            FullName: userFullName || 'Valued Member',
+                            UpdatedDateTime: new Date().toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' }),
+                            UpdatedBy: 'You',
+                            IPAddress: req.headers['x-forwarded-for'] || req.socket.remoteAddress || 'Unknown IP',
+                            Location: 'Local/Web'
+                        }
+                    }).catch(err => logger.error(`Failed to send Profile Updated email to ${userEmail}: ${err.message}`));
+                }
+            } catch (pMailErr) {
+                logger.warn(`Could not trigger profile updated email: ${pMailErr.message}`);
+            }
+        })();
 
     } catch (err) {
         logger.error(`EDIT PROFILE ERROR: ${err.message}`, { stack: err.stack });

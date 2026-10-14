@@ -121,6 +121,31 @@ export const submitKyc = async (req, res) => {
             // ── Trigger Celery Worker via RabbitMQ HTTP API ──
             await publishKycTask(uuid, parseInt(identityTypeId), identityProofFrontPath, identityProofBackPath, panCardPath);
 
+            // Send KYC Submission Confirmation Email (EventId: 8)
+            (async () => {
+                try {
+                    const userReq = pool.request();
+                    userReq.input('UUID', sql.VarChar(36), uuid);
+                    const userRes = await userReq.execute('dbo.EV_GetUserProfile');
+                    if (userRes.recordset && userRes.recordset.length > 0) {
+                        const user = userRes.recordset[0];
+                        const docTypes = parseInt(identityTypeId) === 1 ? 'Aadhaar Card & PAN Card' : 'Identity Proof & PAN Card';
+                        sendEmail({
+                            eventId: EmailEvents.KYC_SUBMITTED,
+                            to: user.EmailAddress,
+                            replacements: {
+                                FullName: user.FullName,
+                                KycReference: applicationId,
+                                KycSubmittedDateTime: new Date().toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' }),
+                                DocumentsSubmitted: docTypes
+                            }
+                        }).catch(err => logger.error(`Failed to send KYC Submitted email: ${err}`));
+                    }
+                } catch (e) {
+                    logger.error(`Error sending KYC_SUBMITTED email: ${e.message}`);
+                }
+            })();
+
             res.status(200).json({ message: result.recordset[0].Message });
         } else {
             res.status(400).json({ message: 'Failed to submit KYC.' });
@@ -139,59 +164,71 @@ export const kycWebhook = async (req, res) => {
         const { uuid, status, reasonId } = req.body;
         logger.info(`[KYC WEBHOOK RECEIVED] UUID: ${uuid} | Status: ${status} | ReasonID: ${reasonId || 'N/A'}`);
 
-        // Here you can emit a Socket.io event to the frontend, send an email, etc.
+        // Fetch User and KYC details to send dynamic emails
         const userReq = pool.request();
         userReq.input('UUID', sql.VarChar(36), uuid);
         const userRes = await userReq.execute('dbo.EV_GetUserProfile');
         
         if (userRes.recordset && userRes.recordset.length > 0) {
             const user = userRes.recordset[0];
-            
-            if (status === 2) { // 2 = Verified (Approved)
-                // Fetch the KYC info to get ApplicationId (KycReference)
-                const kycReq = pool.request();
-                kycReq.input('Action', sql.Int, 1);
-                kycReq.input('UUID', sql.VarChar(36), uuid);
-                const kycRes = await kycReq.execute('dbo.EV_ManageUserKYC');
-                
-                let kycRef = "N/A";
-                if (kycRes.recordset && kycRes.recordset.length > 0) {
-                    kycRef = kycRes.recordset[0].ApplicationId || "N/A";
-                }
 
+            // Fetch the KYC info to get ApplicationId (KycReference)
+            const kycReq = pool.request();
+            kycReq.input('Action', sql.Int, 1);
+            kycReq.input('UUID', sql.VarChar(36), uuid);
+            const kycRes = await kycReq.execute('dbo.EV_ManageUserKYC');
+            
+            let kycRef = "N/A";
+            let reasonText = "Quality checks failed.";
+            if (kycRes.recordset && kycRes.recordset.length > 0) {
+                kycRef = kycRes.recordset[0].ApplicationId || "N/A";
+                reasonText = kycRes.recordset[0].RejectionReason || reasonText;
+            }
+            
+            if (status === 1) { // 1 = Under Review
+                sendEmail({
+                    eventId: EmailEvents.KYC_UNDER_REVIEW,
+                    to: user.EmailAddress,
+                    replacements: {
+                        FullName: user.FullName,
+                        KycReference: kycRef,
+                        KycReviewStartedDateTime: new Date().toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' }),
+                        ExpectedReviewDate: 'Within 24-48 business hours'
+                    }
+                }).catch(err => logger.error(`Failed to send KYC Under Review email: ${err}`));
+            } else if (status === 2) { // 2 = Verified (Approved)
                 sendEmail({
                     eventId: EmailEvents.KYC_APPROVED,
                     to: user.EmailAddress,
                     replacements: {
                         FullName: user.FullName,
                         KycReference: kycRef,
-                        KycApprovedDateTime: new Date().toLocaleString()
+                        KycApprovedDateTime: new Date().toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' })
                     }
                 }).catch(err => logger.error(`Failed to send KYC Approved email: ${err}`));
             } else if (status === 3) { // 3 = Rejected
-                // Fetch the reason text
-                const kycReq = pool.request();
-                kycReq.input('Action', sql.Int, 1);
-                kycReq.input('UUID', sql.VarChar(36), uuid);
-                const kycRes = await kycReq.execute('dbo.EV_ManageUserKYC');
-                
-                let reasonText = "Quality checks failed.";
-                let kycRef = "N/A";
-                if (kycRes.recordset && kycRes.recordset.length > 0) {
-                    reasonText = kycRes.recordset[0].RejectionReason || reasonText;
-                    kycRef = kycRes.recordset[0].ApplicationId || "N/A";
-                }
-                
                 sendEmail({
                     eventId: EmailEvents.KYC_REJECTED,
                     to: user.EmailAddress,
                     replacements: {
                         FullName: user.FullName,
                         KycReference: kycRef,
-                        KycRejectedDateTime: new Date().toLocaleString(),
+                        KycRejectedDateTime: new Date().toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' }),
                         KycRejectionReason: reasonText
                     }
                 }).catch(err => logger.error(`Failed to send KYC Rejected email: ${err}`));
+            } else if (status === 4) { // 4 = Resubmission Required
+                sendEmail({
+                    eventId: EmailEvents.KYC_RESUBMISSION_REQUIRED,
+                    to: user.EmailAddress,
+                    replacements: {
+                        FullName: user.FullName,
+                        KycReference: kycRef,
+                        DocumentsRequiringResubmission: 'Identity Document / PAN',
+                        KycResubmissionReason: reasonText,
+                        KycResubmissionDeadline: 'Within 7 business days'
+                    }
+                }).catch(err => logger.error(`Failed to send KYC Resubmission Required email: ${err}`));
             }
         }
 

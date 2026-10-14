@@ -1,16 +1,57 @@
+/**
+ * EmailEvents Enum mapped to dbo.Tb_EventMaster (EventId)
+ * Total 35 events configured in database
+ */
 const EmailEvents = {
+    // 1-7: Authentication & Account Management
     REGISTER_OTP: 1,
+    EMAIL_VERIFICATION_OTP: 1,
     FORGOT_PASSWORD_OTP: 2,
     WELCOME: 3,
     PASSWORD_RESET_SUCCESS: 4,
     PASSWORD_CHANGED_BY_ADMIN: 5,
     ACCOUNT_LOCKED: 6,
     ACCOUNT_REACTIVATED: 7,
+
+    // 8-15: KYC Verification Lifecycle
     KYC_SUBMITTED: 8,
     KYC_UNDER_REVIEW: 9,
     KYC_APPROVED: 10,
     KYC_REJECTED: 11,
-    KYC_RESUBMISSION_REQUIRED: 12
+    KYC_RESUBMISSION_REQUIRED: 12,
+    KYC_UPDATED: 13,
+    KYC_PENDING_REMINDER: 14,
+    KYC_VERIFICATION_DELAYED: 15,
+
+    // 16-23: Orders, Payments & Packages
+    ORDER_CONFIRMATION: 16,
+    PAYMENT_SUCCESSFUL: 17,
+    PAYMENT_FAILED: 18,
+    INVOICE_GENERATED: 19,
+    PACKAGE_ACTIVATED: 20,
+    PACKAGE_UPGRADED: 21,
+    PAYMENT_PENDING: 22,
+    PAYMENT_FAILURE_NOTICE: 23,
+
+    // 24-27: Commissions & Wallet
+    COMMISSION_CREDITED: 24,
+    MONTHLY_COMMISSION_STATEMENT: 25,
+    WALLET_CREDITED: 26,
+    WALLET_DEBITED: 27,
+
+    // 28-31: Withdrawals & Payouts
+    WITHDRAWAL_REQUESTED: 28,
+    WITHDRAWAL_APPROVED: 29,
+    WITHDRAWAL_REJECTED: 30,
+    WITHDRAWAL_PROCESSED: 31,
+
+    // 32: User Profile
+    PROFILE_UPDATED: 32,
+
+    // 33-35: Referrals & MLM Network
+    REFERRAL_REGISTERED: 33,
+    REFERRAL_PURCHASED_PACKAGE: 34,
+    REFERRAL_TREE_UPDATE: 35
 };
 
 export default EmailEvents;

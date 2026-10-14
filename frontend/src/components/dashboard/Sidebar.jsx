@@ -22,7 +22,7 @@ const menuItems = [
   { id: 'courses', icon: BookOpen, labelKey: 'nav.courses' },
   { id: 'orders', icon: ShoppingBag, labelKey: 'nav.orders' },
   { id: 'earnings', icon: IndianRupee, labelKey: 'nav.earnings' },
-  { id: 'payouts', icon: BarChart2, labelKey: 'nav.payouts' },
+  // { id: 'payouts', icon: BarChart2, labelKey: 'nav.payouts' },
   // { id: 'reports', icon: FileText, labelKey: 'nav.reports' },
   { id: 'rank', icon: Award, labelKey: 'nav.rank' }
 ];
@@ -67,14 +67,14 @@ export default function Sidebar({ isOpen, setIsOpen, isSuperAdmin }) {
 
     if (!currentPackage) return packageLevels[0]; // Default to Bronze
 
-    const currentIndex = packageLevels.findIndex(p => 
+    const currentIndex = packageLevels.findIndex(p =>
       currentPackage.toLowerCase().includes(p.name.toLowerCase())
     );
 
     if (currentIndex !== -1 && currentIndex < packageLevels.length - 1) {
       return packageLevels[currentIndex + 1];
     }
-    
+
     if (currentIndex === packageLevels.length - 1) {
       return null; // Highest package reached
     }
@@ -123,114 +123,114 @@ export default function Sidebar({ isOpen, setIsOpen, isSuperAdmin }) {
 
         {/* Navigation Menu */}
         <div className="flex-1 flex flex-col px-4 pt-3 overflow-y-auto custom-scrollbar">
-          
+
           {/* Mobile Tabs */}
           <div className="lg:hidden flex p-1 mb-4 bg-slate-100/80 backdrop-blur-sm rounded-xl">
-             <button onClick={() => setMobileTab('pages')} className={`flex-1 py-1.5 text-[13px] font-semibold rounded-lg transition-all ${mobileTab === 'pages' ? 'bg-white text-indigo-600 shadow-sm' : 'text-slate-500 hover:text-slate-700'}`}>Pages</button>
-             <button onClick={() => setMobileTab('user')} className={`flex-1 py-1.5 text-[13px] font-semibold rounded-lg transition-all ${mobileTab === 'user' ? 'bg-white text-indigo-600 shadow-sm' : 'text-slate-500 hover:text-slate-700'}`}>User</button>
+            <button onClick={() => setMobileTab('pages')} className={`flex-1 py-1.5 text-[13px] font-semibold rounded-lg transition-all ${mobileTab === 'pages' ? 'bg-white text-indigo-600 shadow-sm' : 'text-slate-500 hover:text-slate-700'}`}>Pages</button>
+            <button onClick={() => setMobileTab('user')} className={`flex-1 py-1.5 text-[13px] font-semibold rounded-lg transition-all ${mobileTab === 'user' ? 'bg-white text-indigo-600 shadow-sm' : 'text-slate-500 hover:text-slate-700'}`}>User</button>
           </div>
 
           <nav className="space-y-2">
             {/* Desktop always shows pages. Mobile shows pages only when tab is 'pages' */}
             <div className={`space-y-2 ${mobileTab === 'pages' ? 'block' : 'hidden lg:block'}`}>
               {menuItems.map((item) => {
-              const Icon = item.icon;
-              const routeMap = {
-                dashboard: '/dashboard',
-                network: '/mynetwork',
-                referrals: '/myreferrals',
-                courses: '/courses',
-                orders: '/orders',
-                earnings: '/earnings',
-                payouts: '/payouts',
-                rank: '/ranks'
-              };
-              const isActive = routeMap[item.id] ? location.pathname === routeMap[item.id] : item.active;
+                const Icon = item.icon;
+                const routeMap = {
+                  dashboard: '/dashboard',
+                  network: '/mynetwork',
+                  referrals: '/myreferrals',
+                  courses: '/courses',
+                  orders: '/orders',
+                  earnings: '/earnings',
+                  payouts: '/payouts',
+                  rank: '/ranks'
+                };
+                const isActive = routeMap[item.id] ? location.pathname === routeMap[item.id] : item.active;
 
-              return (
-                <a
-                  key={item.id}
-                  href="#"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    if (routeMap[item.id]) {
-                      navigate(routeMap[item.id]);
-                    }
-                    if (window.innerWidth < 1024 && typeof setIsOpen === 'function') setIsOpen(false);
-                  }}
-                  className={`group relative flex items-center gap-3.5 px-3.5 py-2.5 rounded-xl text-[13px] font-semibold transition-all duration-300 hover:-translate-y-0.5 hover:shadow-sm ${isActive
-                    ? 'text-white bg-indigo-600 shadow-md shadow-indigo-600/20'
-                    : 'text-slate-600 hover:text-indigo-600 hover:bg-indigo-50/50'
-                    }`}
-                >
-                  <Icon className={`w-[18px] h-[18px] transition-transform duration-300 ${!isActive ? 'group-hover:rotate-6' : ''}`} />
-                  {t(`dashboard.${item.labelKey}`)}
-
-                  {/* Subtle active glow */}
-                  {isActive && (
-                    <div className="absolute inset-0 rounded-xl ring-2 ring-indigo-600/20 ring-offset-2 ring-offset-white animate-pulse" />
-                  )}
-                </a>
-              );
-            })}
-
-            {isSuperAdmin && (
-              <>
-
-                {/* User Management Accordion */}
-                <div>
-                  <button
-                    onClick={() => setIsUserManagementOpen(!isUserManagementOpen)}
-                    className={`w-full group relative flex items-center justify-between px-3.5 py-2.5 rounded-xl text-[13px] font-semibold transition-all duration-300 hover:-translate-y-0.5 hover:shadow-sm ${isUserManagementOpen || location.pathname.includes('/superadmin/users')
+                return (
+                  <a
+                    key={item.id}
+                    href="#"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      if (routeMap[item.id]) {
+                        navigate(routeMap[item.id]);
+                      }
+                      if (window.innerWidth < 1024 && typeof setIsOpen === 'function') setIsOpen(false);
+                    }}
+                    className={`group relative flex items-center gap-3.5 px-3.5 py-2.5 rounded-xl text-[13px] font-semibold transition-all duration-300 hover:-translate-y-0.5 hover:shadow-sm ${isActive
                       ? 'text-white bg-indigo-600 shadow-md shadow-indigo-600/20'
                       : 'text-slate-600 hover:text-indigo-600 hover:bg-indigo-50/50'
                       }`}
                   >
-                    <div className="flex items-center gap-3.5">
-                      <UserCog className="w-[18px] h-[18px] transition-transform duration-300 group-hover:rotate-6" />
-                      {t('dashboard.superadmin.userManagement')}
-                    </div>
-                    <motion.div animate={{ rotate: isUserManagementOpen ? 180 : 0 }}>
-                      <ChevronDown className={`w-4 h-4 transition-colors ${isUserManagementOpen || location.pathname.includes('/superadmin/users') ? 'text-white' : 'text-slate-400 group-hover:text-indigo-600'}`} />
-                    </motion.div>
-                  </button>
+                    <Icon className={`w-[18px] h-[18px] transition-transform duration-300 ${!isActive ? 'group-hover:rotate-6' : ''}`} />
+                    {t(`dashboard.${item.labelKey}`)}
 
-                  <AnimatePresence>
-                    {isUserManagementOpen && (
-                      <motion.div
-                        initial={{ opacity: 0, height: 0 }}
-                        animate={{ opacity: 1, height: 'auto' }}
-                        exit={{ opacity: 0, height: 0 }}
-                        className="overflow-hidden"
-                      >
-                        <div className="flex flex-col gap-1 pl-[42px] pr-2 pt-2 pb-1">
-                          <a
-                            href="#"
-                            className="px-3 py-2 text-[13px] font-medium text-slate-500 rounded-lg hover:text-indigo-600 hover:bg-indigo-50/50 transition-colors"
-                          >
-                            {t('dashboard.superadmin.allUsers')}
-                          </a>
-                          <a
-                            href="#"
-                            onClick={(e) => {
-                              e.preventDefault();
-                              navigate('/superadmin/users/create');
-                              if (window.innerWidth < 1024) setIsOpen(false);
-                            }}
-                            className={`px-3 py-2 text-[13px] font-medium rounded-lg transition-colors ${location.pathname.includes('/superadmin/users/create')
-                              ? 'text-white bg-indigo-600 shadow-md shadow-indigo-600/20'
-                              : 'text-slate-500 hover:text-indigo-600 hover:bg-indigo-50/50'
-                              }`}
-                          >
-                            {t('dashboard.superadmin.createUser')}
-                          </a>
-                        </div>
-                      </motion.div>
+                    {/* Subtle active glow */}
+                    {isActive && (
+                      <div className="absolute inset-0 rounded-xl ring-2 ring-indigo-600/20 ring-offset-2 ring-offset-white animate-pulse" />
                     )}
-                  </AnimatePresence>
-                </div>
-              </>
-            )}
+                  </a>
+                );
+              })}
+
+              {isSuperAdmin && (
+                <>
+
+                  {/* User Management Accordion */}
+                  <div>
+                    <button
+                      onClick={() => setIsUserManagementOpen(!isUserManagementOpen)}
+                      className={`w-full group relative flex items-center justify-between px-3.5 py-2.5 rounded-xl text-[13px] font-semibold transition-all duration-300 hover:-translate-y-0.5 hover:shadow-sm ${isUserManagementOpen || location.pathname.includes('/superadmin/users')
+                        ? 'text-white bg-indigo-600 shadow-md shadow-indigo-600/20'
+                        : 'text-slate-600 hover:text-indigo-600 hover:bg-indigo-50/50'
+                        }`}
+                    >
+                      <div className="flex items-center gap-3.5">
+                        <UserCog className="w-[18px] h-[18px] transition-transform duration-300 group-hover:rotate-6" />
+                        {t('dashboard.superadmin.userManagement')}
+                      </div>
+                      <motion.div animate={{ rotate: isUserManagementOpen ? 180 : 0 }}>
+                        <ChevronDown className={`w-4 h-4 transition-colors ${isUserManagementOpen || location.pathname.includes('/superadmin/users') ? 'text-white' : 'text-slate-400 group-hover:text-indigo-600'}`} />
+                      </motion.div>
+                    </button>
+
+                    <AnimatePresence>
+                      {isUserManagementOpen && (
+                        <motion.div
+                          initial={{ opacity: 0, height: 0 }}
+                          animate={{ opacity: 1, height: 'auto' }}
+                          exit={{ opacity: 0, height: 0 }}
+                          className="overflow-hidden"
+                        >
+                          <div className="flex flex-col gap-1 pl-[42px] pr-2 pt-2 pb-1">
+                            <a
+                              href="#"
+                              className="px-3 py-2 text-[13px] font-medium text-slate-500 rounded-lg hover:text-indigo-600 hover:bg-indigo-50/50 transition-colors"
+                            >
+                              {t('dashboard.superadmin.allUsers')}
+                            </a>
+                            <a
+                              href="#"
+                              onClick={(e) => {
+                                e.preventDefault();
+                                navigate('/superadmin/users/create');
+                                if (window.innerWidth < 1024) setIsOpen(false);
+                              }}
+                              className={`px-3 py-2 text-[13px] font-medium rounded-lg transition-colors ${location.pathname.includes('/superadmin/users/create')
+                                ? 'text-white bg-indigo-600 shadow-md shadow-indigo-600/20'
+                                : 'text-slate-500 hover:text-indigo-600 hover:bg-indigo-50/50'
+                                }`}
+                            >
+                              {t('dashboard.superadmin.createUser')}
+                            </a>
+                          </div>
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+                  </div>
+                </>
+              )}
             </div>
 
             {/* Mobile-only User Links (Profile, Settings, Logout) */}
@@ -267,7 +267,7 @@ export default function Sidebar({ isOpen, setIsOpen, isSuperAdmin }) {
               })}
 
               <div className="h-px bg-slate-200/60 my-2 mx-2" />
-              
+
               <a
                 href="#"
                 onClick={async (e) => {

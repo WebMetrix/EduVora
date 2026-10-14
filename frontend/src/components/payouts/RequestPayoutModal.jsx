@@ -147,18 +147,18 @@ export default function RequestPayoutModal({
         </div>
 
         {/* Modal Header */}
-        <div className="flex items-start justify-between px-5 md:px-7 py-4 md:py-5 border-b border-slate-100 shrink-0">
+        <div className="flex items-start justify-between px-5 md:px-7 pt-3.5 pb-2 md:pt-4 md:pb-2.5 border-b border-slate-100 shrink-0">
           <div>
-            <h2 className="text-[20px] md:text-[22px] font-black text-[#1a1446] tracking-tight leading-tight">
+            <h2 className="text-[19px] md:text-[21px] font-black text-[#1a1446] tracking-tight leading-tight">
               Request Payout
             </h2>
-            <p className="text-[12.5px] md:text-[13px] text-slate-500 font-medium mt-1">
+            <p className="text-[12px] md:text-[12.5px] text-slate-500 font-medium mt-0.5">
               Submit a payout request to transfer your available balance to your preferred method.
             </p>
           </div>
           <button
             onClick={onClose}
-            className="p-1.5 -mr-1.5 rounded-full hover:bg-slate-100 text-slate-400 hover:text-slate-700 transition-colors cursor-pointer"
+            className="p-1.5 -mr-1.5 rounded-full hover:bg-slate-100 text-slate-400 hover:text-slate-700 transition-colors cursor-pointer -mt-0.5"
             aria-label="Close"
           >
             <X className="w-5 h-5" />
@@ -166,7 +166,7 @@ export default function RequestPayoutModal({
         </div>
 
         {/* Modal Scrollable Content: 2 Columns on Desktop, 1 Column on Mobile */}
-        <form onSubmit={handleSubmit} className="flex-1 overflow-y-auto custom-scrollbar px-5 md:px-7 py-5">
+        <form onSubmit={handleSubmit} className="flex-1 overflow-y-auto custom-scrollbar px-5 md:px-7 pt-3 md:pt-3.5 pb-5">
           <div className="grid grid-cols-1 md:grid-cols-12 gap-5 md:gap-7">
 
             {/* Left Column (7 cols): Amount, Method, Remarks */}

@@ -633,3 +633,8 @@ Manages wallet withdrawals including balance deduction, transaction logging, and
 - **Updates**:
   - For Initiate (1): Deducts `CurrentBalance` in `Tb_Wallet` and inserts a Pending (Type 2) record in `Tb_WalletTransaction`.
   - For Update Status (2): If Success, increments `TotalWithdrawn`. If Failed, refunds `CurrentBalance` and updates transaction description.
+
+### `EV_GetSponsorDetails`
+Fetches sponsor contact details (`SponsorUUID`, `SponsorUserId`, `SponsorName`, `SponsorEmail`, `SponsorMobile`) for dynamic referral email events.
+- **Inputs**: `@UserID VARCHAR(100) = NULL` (to lookup sponsor by their UserID), `@ChildUserId VARCHAR(100) = NULL` (to lookup direct Level 1 sponsor by child's UserID)
+- **Outputs**: Result Set containing `SponsorUUID`, `SponsorUserId`, `SponsorName`, `SponsorEmail`, `SponsorMobile`

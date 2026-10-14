@@ -1,5 +1,7 @@
 import pool, { sql } from '../config/db.js';
 import logger from '../utils/logger.js';
+import { sendEmail } from '../services/emailService.js';
+import EmailEvents from '../utils/emailEvents.js';
 
 export const getMyEarnings = async (req, res) => {
     // #swagger.tags = ['Earnings']
@@ -74,6 +76,26 @@ export const withdrawWallet = async (req, res) => {
         }
 
         const { TransactionId, AccountNumber, IFSCCode, AccountHolderName, EmailAddress, MobileNumber } = dbRes;
+        const userEmail = EmailAddress || req.user.email;
+        const recipientName = dbRes.FullName || AccountHolderName || req.user.name || 'Valued Member';
+        const formattedAmount = `₹${Number(amount).toLocaleString('en-IN')}`;
+        const withdrawalId = `WD_${TransactionId}`;
+        const currentDateTime = new Date().toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' });
+
+        // Trigger WITHDRAWAL_REQUESTED (Event 28)
+        if (userEmail) {
+            sendEmail({
+                eventId: EmailEvents.WITHDRAWAL_REQUESTED,
+                to: userEmail,
+                replacements: {
+                    FullName: recipientName,
+                    WithdrawalId: withdrawalId,
+                    WithdrawalAmount: formattedAmount,
+                    WithdrawalRequestedDateTime: currentDateTime,
+                    WithdrawalMethod: 'Bank Transfer (IMPS)'
+                }
+            }).catch(err => logger.error(`Failed to send Withdrawal Requested email: ${err.message}`));
+        }
 
         if (!AccountNumber || !IFSCCode) {
              // Refund because no bank details
@@ -83,6 +105,21 @@ export const withdrawWallet = async (req, res) => {
                 .input('TransactionId', sql.Int, TransactionId)
                 .input('StatusId', sql.Int, 3) // Failed
                 .execute('dbo.EV_ProcessWalletWithdrawal');
+
+            // Trigger WITHDRAWAL_REJECTED (Event 30)
+            if (userEmail) {
+                sendEmail({
+                    eventId: EmailEvents.WITHDRAWAL_REJECTED,
+                    to: userEmail,
+                    replacements: {
+                        FullName: recipientName,
+                        WithdrawalId: withdrawalId,
+                        WithdrawalAmount: formattedAmount,
+                        WithdrawalRejectedDateTime: new Date().toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' }),
+                        WithdrawalRejectionReason: 'Bank account details are missing or incomplete. Please update your profile with valid bank information.'
+                    }
+                }).catch(err => logger.error(`Failed to send Withdrawal Rejected email: ${err.message}`));
+            }
                 
             return res.status(400).json({ success: false, message: 'Bank details not found. Please update your profile.' });
         }
@@ -121,6 +158,23 @@ export const withdrawWallet = async (req, res) => {
             .input('StatusId', sql.Int, 2) // Success
             .input('GatewayRef', sql.VarChar(100), gatewayRef)
             .execute('dbo.EV_ProcessWalletWithdrawal');
+
+        // Trigger WITHDRAWAL_PROCESSED (Event 31)
+        if (userEmail) {
+            sendEmail({
+                eventId: EmailEvents.WITHDRAWAL_PROCESSED,
+                to: userEmail,
+                replacements: {
+                    FullName: recipientName,
+                    WithdrawalAmount: formattedAmount,
+                    WithdrawalId: withdrawalId,
+                    WithdrawalTransactionId: withdrawalId,
+                    WithdrawalProcessedDateTime: new Date().toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' }),
+                    WithdrawalMethod: 'Bank Transfer (IMPS)',
+                    PaymentReference: gatewayRef
+                }
+            }).catch(err => logger.error(`Failed to send Withdrawal Processed email: ${err.message}`));
+        }
 
         return res.status(200).json({ 
             success: true, 

@@ -8,6 +8,7 @@ import logger from '../utils/logger.js';
 import { t } from '../utils/translation.js';
 import { decryptUserId } from '../utils/encryption.js';
 import { sendEmail } from '../services/emailService.js';
+import EmailEvents from '../utils/emailEvents.js';
 
 // Initialize the Google Client
 const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
@@ -96,10 +97,41 @@ export const registerUser = async (req, res) => {
 
         // 7. Send Welcome Email asynchronously
         sendEmail({
-            eventId: 3, // Event ID for Welcome Email
+            eventId: EmailEvents.WELCOME,
             to: emailAddress,
             replacements: { FullName: fullName }
         }).catch(err => logger.error(`Failed to send Welcome Email to ${emailAddress}: ${err.message}`));
+
+        // 8. If registered under a sponsor, notify the sponsor
+        if (sponsorUserId) {
+            (async () => {
+                try {
+                    const spReq = pool.request();
+                    spReq.input('UserID', sql.VarChar(100), sponsorUserId);
+                    const spRes = await spReq.execute('dbo.EV_GetSponsorDetails');
+
+                    if (spRes.recordset && spRes.recordset.length > 0) {
+                        const sponsor = spRes.recordset[0];
+                        if (sponsor.EmailAddress) {
+                            sendEmail({
+                                eventId: EmailEvents.REFERRAL_REGISTERED,
+                                to: sponsor.EmailAddress,
+                                replacements: {
+                                    FullName: sponsor.FullName,
+                                    ReferralName: fullName,
+                                    ReferralUserId: derivedUserID,
+                                    ReferralRegistrationDate: new Date().toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' }),
+                                    ReferralLevel: 'Level 1 (Direct)',
+                                    ReferralStatus: 'Active'
+                                }
+                            }).catch(err => logger.error(`Failed to send Referral Registered email to sponsor ${sponsor.EmailAddress}: ${err.message}`));
+                        }
+                    }
+                } catch (spErr) {
+                    logger.warn(`Could not lookup sponsor to send referral notification: ${spErr.message}`);
+                }
+            })();
+        }
 
     } catch (err) {
         logger.error(`REGISTER ERROR: ${err.message}`, { stack: err.stack });
