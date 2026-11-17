@@ -15,7 +15,8 @@ const transporter = nodemailer.createTransport({
 export const sendEmail = async ({
     eventId,
     to,
-    replacements = {}
+    replacements = {},
+    attachments = []
 }) => {
     try {
         if (!to) {
@@ -98,12 +99,18 @@ export const sendEmail = async ({
             .replace(/\{\{[a-zA-Z0-9_]+\}\}/g, "")
             .replace(/\{[a-zA-Z0-9_]+\}/g, "");
 
-        const info = await transporter.sendMail({
+        const mailOptions = {
             from: `"${process.env.COMPANY_NAME || 'Eduvora'}" <${process.env.SMTP_USER}>`,
             to,
             subject,
             html
-        });
+        };
+
+        if (attachments && attachments.length > 0) {
+            mailOptions.attachments = attachments;
+        }
+
+        const info = await transporter.sendMail(mailOptions);
 
         logger.info(`[EMAIL SENT] EventId: ${eventId} | To: ${to} | Subject: "${subject}" | MessageId: ${info.messageId}`);
         return info;

@@ -89,6 +89,7 @@ Maps document types to their storage repository paths.
 | 1 | Profile | `\\EduVora-001\EduVora-001\UserData\Profile` | 1 | 2026-07-20 23:48:05.203 | NULL |
 | 2 | KYC | `\\EduVora-001\EduVora-001\KYCData\UserKYC` | 1 | 2026-07-20 23:48:05.203 | NULL |
 | 3 | TempKYC | `\\EduVora-001\EduVora-001\KYCData\TempKYC` | 1 | 2026-09-02 23:26:01.383 | NULL |
+| 4 | Invoice | `\\EDUVORA-001\EduVora-001\Invoices` | 1 | 2026-11-17 21:13:03.610 | NULL |
 
 ### 8. `Tb_Package`
 Stores the course packages and their prices.
@@ -296,6 +297,7 @@ Stores invoice details generated for orders.
 | GSTAmount      | decimal(18, 2) | No          |             |
 | TotalAmount    | decimal(18, 2) | No          |             |
 | InvoiceDate    | datetime       | No          |             |
+| InvoicePath    | nvarchar(500)  | Yes         |             |
 
 ### 25. `Tb_Order`
 Core table for tracking user orders.
@@ -638,3 +640,14 @@ Manages wallet withdrawals including balance deduction, transaction logging, and
 Fetches sponsor contact details (`SponsorUUID`, `SponsorUserId`, `SponsorName`, `SponsorEmail`, `SponsorMobile`) for dynamic referral email events.
 - **Inputs**: `@UserID VARCHAR(100) = NULL` (to lookup sponsor by their UserID), `@ChildUserId VARCHAR(100) = NULL` (to lookup direct Level 1 sponsor by child's UserID)
 - **Outputs**: Result Set containing `SponsorUUID`, `SponsorUserId`, `SponsorName`, `SponsorEmail`, `SponsorMobile`
+
+### `EV_GetNextInvoiceNumber`
+Generates incremental invoice numbers conforming to `#INV_EV-YYYYMMDD-0001` per day based on the highest existing record in `Tb_Invoice`.
+- **Inputs**: `@DatePrefix VARCHAR(8)` (e.g. `'20261117'`)
+- **Outputs**: Result Set containing `NextInvoiceNumber VARCHAR(50)`, `SequenceNumber INT`
+
+### `EV_CreateInvoice`
+Records generated invoice details into `Tb_Invoice`, resolves `OrderId` from `OrderNumber` if needed, prevents duplicate entries for the same order, and records the physical storage path in `InvoicePath`.
+- **Inputs**: `@InvoiceNumber NVARCHAR(50)`, `@OrderNumber VARCHAR(50) = NULL`, `@OrderId INT = NULL`, `@BillingName NVARCHAR(255)`, `@BillingAddress NVARCHAR(MAX) = NULL`, `@SubTotal DECIMAL(18,2)`, `@GSTAmount DECIMAL(18,2)`, `@TotalAmount DECIMAL(18,2)`, `@InvoiceDate DATETIME = NULL`, `@InvoicePath NVARCHAR(500) = NULL`
+- **Outputs**: Result Set containing `InvoiceId INT`, `InvoiceNumber NVARCHAR(50)`, `Success INT` (1 = Created, 0 = Already existed)
+- **Updates**: Inserts a new record into `Tb_Invoice`. If a record for the `OrderId` already exists, updates `InvoicePath`.

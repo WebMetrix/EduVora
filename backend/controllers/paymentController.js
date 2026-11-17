@@ -3,6 +3,9 @@ import pool, { sql } from "../config/db.js";
 import logger from "../utils/logger.js";
 import { sendEmail } from "../services/emailService.js";
 import EmailEvents from "../utils/emailEvents.js";
+import { generateAndSaveInvoice, getInvoicesRepositoryPath } from "../services/invoiceService.js";
+import fs from "fs";
+import path from "path";
 
 export const createOrder = async (req, res) => {
     // #swagger.tags = ['Payment']
@@ -151,6 +154,11 @@ export const processWebhook = async (req, res) => {
                 try {
                     let customerEmail = orderData.customer_details?.customer_email;
                     let customerName = orderData.customer_details?.customer_name;
+                    let customerPhone = orderData.customer_details?.customer_phone;
+                    let customerAddress = '';
+                    let customerCity = '';
+                    let customerState = '';
+                    let customerPincode = '';
                     let childUserId = null;
 
                     if (customerUid) {
@@ -161,6 +169,11 @@ export const processWebhook = async (req, res) => {
                             const u = uRes.recordset[0];
                             if (u.EmailAddress) customerEmail = u.EmailAddress;
                             if (u.FullName) customerName = u.FullName;
+                            if (u.PrimaryMobile || u.ContactMobile) customerPhone = u.PrimaryMobile || u.ContactMobile;
+                            customerAddress = [u.AddressLine1, u.AddressLine2].filter(Boolean).join(', ');
+                            customerCity = u.CityName || u.City || '';
+                            customerState = u.StateName || u.State || '';
+                            customerPincode = u.Pincode || '';
                             childUserId = u.UserID;
                         }
                     }
@@ -181,11 +194,52 @@ export const processWebhook = async (req, res) => {
                     const formattedAmount = `₹${orderAmount.toLocaleString('en-IN')}`;
                     const paymentDateStr = paymentData?.payment_completion_time || new Date().toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' });
                     const paymentMethodStr = String(paymentMethod || 'Online Payment').toUpperCase();
-                    const invoiceNumber = `INV-${orderNumber.replace(/[^0-9]/g, '').slice(-8) || Date.now()}`;
 
                     if (paymentStatus === 'SUCCESS') {
+                        // Generate PDF Invoice and save to \\EDUVORA-001\EduVora-001\Invoices\<UUID>\
+                        let invoiceNumber = `#INV_EV-${new Date().toISOString().slice(0, 10).replace(/-/g, '')}-0001`;
+                        let invoiceAttachment = null;
+
+                        try {
+                            const invoiceResult = await generateAndSaveInvoice({
+                                orderNumber,
+                                userUuid: customerUid,
+                                customerDetails: {
+                                    name: customerName,
+                                    email: customerEmail,
+                                    phone: customerPhone,
+                                    address: customerAddress,
+                                    city: customerCity,
+                                    state: customerState,
+                                    postalCode: customerPincode
+                                },
+                                packageDetails: {
+                                    packageId,
+                                    packageName,
+                                    price: orderAmount
+                                },
+                                paymentDetails: {
+                                    paymentDate: paymentDateStr,
+                                    paymentMethod: paymentMethodStr,
+                                    transactionId: String(gatewayOrderId),
+                                    amount: orderAmount
+                                }
+                            });
+
+                            if (invoiceResult && invoiceResult.filePath) {
+                                invoiceNumber = invoiceResult.invoiceNumber;
+                                invoiceAttachment = {
+                                    filename: `Invoice_${invoiceNumber}.pdf`,
+                                    path: invoiceResult.filePath,
+                                    contentType: 'application/pdf'
+                                };
+                            }
+                        } catch (invErr) {
+                            logger.error(`Error generating invoice PDF: ${invErr.message}`, { error: invErr });
+                        }
+
                         if (customerEmail) {
-                            // 1. Payment Successful (Event 17)
+                            // 1. Payment Successful (Event 17) - with invoice PDF attached
                             sendEmail({
                                 eventId: EmailEvents.PAYMENT_SUCCESSFUL,
                                 to: customerEmail,
@@ -196,8 +250,10 @@ export const processWebhook = async (req, res) => {
                                     TransactionId: String(gatewayOrderId),
                                     OrderId: orderNumber,
                                     PaymentDateTime: paymentDateStr,
-                                    PaymentMethod: paymentMethodStr
-                                }
+                                    PaymentMethod: paymentMethodStr,
+                                    InvoiceNumber: invoiceNumber
+                                },
+                                attachments: invoiceAttachment ? [invoiceAttachment] : []
                             }).catch(err => logger.error(`Failed to send Payment Successful email: ${err.message}`));
 
                             // 2. Order Confirmation (Event 16)
@@ -227,7 +283,7 @@ export const processWebhook = async (req, res) => {
                                 }
                             }).catch(err => logger.error(`Failed to send Package Activated email: ${err.message}`));
 
-                            // 4. Invoice Generated (Event 19)
+                            // 4. Invoice Generated (Event 19) - also with invoice PDF attached
                             sendEmail({
                                 eventId: EmailEvents.INVOICE_GENERATED,
                                 to: customerEmail,
@@ -238,7 +294,8 @@ export const processWebhook = async (req, res) => {
                                     InvoiceDate: new Date().toLocaleDateString('en-IN'),
                                     PackageName: packageName,
                                     InvoiceAmount: formattedAmount
-                                }
+                                },
+                                attachments: invoiceAttachment ? [invoiceAttachment] : []
                             }).catch(err => logger.error(`Failed to send Invoice Generated email: ${err.message}`));
                         }
 
@@ -312,5 +369,38 @@ export const processWebhook = async (req, res) => {
     } catch (error) {
         logger.error(`Error processing webhook: ${error.message || String(error)}`, { error });
         res.status(500).send("Webhook error");
+    }
+};
+
+export const downloadInvoice = async (req, res) => {
+    // #swagger.tags = ['Payment']
+    try {
+        const { orderNumber } = req.params;
+        const uuid = req.user.id;
+
+        const baseRepoPath = await getInvoicesRepositoryPath();
+        const userFolder = path.join(baseRepoPath, uuid);
+
+        if (!fs.existsSync(userFolder)) {
+            return res.status(404).json({ success: false, message: "Invoice folder not found for user" });
+        }
+
+        const files = fs.readdirSync(userFolder);
+        // Find pdf matching orderNumber or latest invoice
+        let matchedFile = files.find(f => f.endsWith('.pdf'));
+        if (orderNumber) {
+            const specific = files.find(f => f.includes(orderNumber) && f.endsWith('.pdf'));
+            if (specific) matchedFile = specific;
+        }
+
+        if (!matchedFile) {
+            return res.status(404).json({ success: false, message: "Invoice PDF not found" });
+        }
+
+        const filePath = path.join(userFolder, matchedFile);
+        res.download(filePath, matchedFile);
+    } catch (err) {
+        logger.error(`Error downloading invoice: ${err.message}`, { error: err });
+        res.status(500).json({ success: false, message: "Failed to download invoice" });
     }
 };
