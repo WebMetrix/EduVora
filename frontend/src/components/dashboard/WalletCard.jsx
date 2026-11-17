@@ -75,7 +75,7 @@ export default function WalletCard() {
         {/* Right Side: Withdraw Button */}
         <div className="flex items-center">
           <motion.button
-            onClick={() => navigate('/earnings', { state: { tab: 'wallet' } })}
+            onClick={() => navigate('/earnings?tab=wallet', { state: { tab: 'wallet' } })}
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
             className="flex items-center gap-1.5 sm:gap-2 px-3 sm:px-5 py-2 sm:py-2.5 bg-white/10 hover:bg-white/20 backdrop-blur-md border border-white/20 rounded-xl text-white text-[12px] sm:text-[13px] font-bold shadow-lg shadow-black/10 transition-colors cursor-pointer"

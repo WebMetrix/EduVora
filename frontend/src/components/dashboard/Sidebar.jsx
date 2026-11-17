@@ -238,7 +238,7 @@ export default function Sidebar({ isOpen, setIsOpen, isSuperAdmin }) {
               {[
                 { id: 'profile', icon: User, label: t('dashboard.nav.myProfile'), route: '/profile' },
                 { id: 'settings', icon: Settings, label: t('dashboard.nav.settings'), route: '#' },
-                { id: 'wallet', icon: Wallet, label: t('dashboard.nav.wallet'), route: '/earnings', state: { tab: 'wallet' } },
+                { id: 'wallet', icon: Wallet, label: t('dashboard.nav.wallet'), route: '/earnings?tab=wallet', state: { tab: 'wallet' } },
                 { id: 'payouts', icon: BarChart2, label: t('dashboard.nav.payouts'), route: '/payouts' },
                 { id: 'help', icon: HelpCircle, label: t('dashboard.nav.helpSupport'), route: '#' }
               ].map((item) => {

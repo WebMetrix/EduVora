@@ -90,7 +90,10 @@ export default function WalletSummary({ t, loading, summary }) {
       </div>
 
       <button
-        onClick={() => navigate('/earnings', { state: { tab: 'wallet' }, replace: true })}
+        onClick={() => {
+          window.dispatchEvent(new CustomEvent('switch-earnings-tab', { detail: 'wallet' }));
+          navigate('/earnings?tab=wallet', { state: { tab: 'wallet' }, replace: true });
+        }}
         className="relative z-10 w-full mt-4 flex items-center justify-center gap-2 py-3 px-4 rounded-xl border-2 border-indigo-600 text-indigo-600 font-bold text-[13px] hover:bg-indigo-50 transition-all duration-300 hover:-translate-y-1 hover:shadow-md"
       >
         <Wallet className="w-4 h-4" />

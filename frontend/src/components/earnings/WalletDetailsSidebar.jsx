@@ -142,7 +142,8 @@ export default function WalletDetailsSidebar({ t, loading, summary }) {
                 el.scrollIntoView({ behavior: 'smooth' });
                 toast.info(t('toast.wallet.viewBelow') || 'Please view your withdrawals in the Recent Transactions table below.');
               } else {
-                navigate('/earnings', { state: { tab: 'history' } });
+                window.dispatchEvent(new CustomEvent('switch-earnings-tab', { detail: 'history' }));
+                navigate('/earnings?tab=history', { state: { tab: 'history' } });
               }
             }}
             className="flex items-center justify-between p-3 rounded-2xl hover:bg-indigo-50/50 hover:shadow-sm hover:-translate-y-0.5 transition-all cursor-pointer group border border-transparent hover:border-indigo-100"

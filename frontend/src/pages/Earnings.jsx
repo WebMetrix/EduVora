@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useSearchParams } from 'react-router-dom';
 import { fetchEarnings } from '../redux/slices/earningsSlice';
 import { fetchKycDetails } from '../redux/slices/kycSlice';
 import { useTranslation } from '../hooks/useTranslation';
@@ -20,15 +20,47 @@ export default function Earnings() {
   const { t } = useTranslation();
   const dispatch = useDispatch();
   const location = useLocation();
+  const [searchParams, setSearchParams] = useSearchParams();
   const { data: earningsData, loading } = useSelector((state) => state.earnings);
-  const [activeTab, setActiveTab] = useState(location.state?.tab || 'summary');
 
+  const getTargetTab = () => {
+    const qTab = searchParams.get('tab');
+    if (qTab && ['summary', 'history', 'wallet'].includes(qTab)) return qTab;
+    if (location.state?.tab && ['summary', 'history', 'wallet'].includes(location.state.tab)) return location.state.tab;
+    return 'summary';
+  };
+
+  const [activeTab, setActiveTab] = useState(getTargetTab);
+  const tabRefs = useRef({});
+
+  // Sync tab with URL search params or location state changes
   useEffect(() => {
-    // If the location state changes, update the tab
-    if (location.state?.tab) {
-      setActiveTab(location.state.tab);
+    const target = getTargetTab();
+    setActiveTab(target);
+  }, [location.search, location.state]);
+
+  // Support direct switch event when already on /earnings
+  useEffect(() => {
+    const handleSwitchTab = (e) => {
+      if (e.detail && ['summary', 'history', 'wallet'].includes(e.detail)) {
+        setActiveTab(e.detail);
+        setSearchParams({ tab: e.detail }, { replace: true });
+      }
+    };
+    window.addEventListener('switch-earnings-tab', handleSwitchTab);
+    return () => window.removeEventListener('switch-earnings-tab', handleSwitchTab);
+  }, [setSearchParams]);
+
+  // Smooth scroll active tab into view on mobile
+  useEffect(() => {
+    if (tabRefs.current[activeTab]) {
+      tabRefs.current[activeTab].scrollIntoView({
+        behavior: 'smooth',
+        block: 'nearest',
+        inline: 'center'
+      });
     }
-  }, [location.state]);
+  }, [activeTab]);
 
   useEffect(() => {
     dispatch(fetchEarnings());
@@ -40,6 +72,11 @@ export default function Earnings() {
     { id: 'history', label: t('earnings.tabs.history'), icon: History },
     { id: 'wallet', label: t('earnings.tabs.wallet'), icon: Wallet }
   ];
+
+  const handleTabClick = (tabId) => {
+    setActiveTab(tabId);
+    setSearchParams({ tab: tabId }, { replace: true });
+  };
 
   return (
     <div className="w-full flex flex-col gap-6 max-w-[1400px] mx-auto pb-6">
@@ -63,8 +100,9 @@ export default function Earnings() {
           return (
             <button
               key={tab.id}
-              onClick={() => setActiveTab(tab.id)}
-              className={`flex items-center gap-2 px-6 py-2.5 rounded-lg text-[13px] font-bold transition-all whitespace-nowrap outline-none ${isActive
+              ref={(el) => (tabRefs.current[tab.id] = el)}
+              onClick={() => handleTabClick(tab.id)}
+              className={`flex items-center gap-2 px-4 sm:px-6 py-2 sm:py-2.5 rounded-lg text-[13px] font-bold transition-all whitespace-nowrap outline-none ${isActive
                   ? 'bg-indigo-50/50 text-indigo-600 shadow-sm border border-indigo-100/50'
                   : 'text-slate-500 hover:text-slate-700 hover:bg-slate-50 border border-transparent'
                 }`}

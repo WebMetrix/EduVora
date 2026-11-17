@@ -117,7 +117,7 @@ export default function ComparePackagesModal({ isOpen, onClose, packages, onSele
 
   // Helper to extract package info from dynamic packages
   const getPackageInfo = (tier) => {
-    return packages.find(p => p.name.toLowerCase().includes(tier)) || null;
+    return (packages || []).find(p => (p.name || '').toLowerCase().includes(tier)) || null;
   };
 
   const diamondPkg = getPackageInfo('diamond');
@@ -141,79 +141,79 @@ export default function ComparePackagesModal({ isOpen, onClose, packages, onSele
   };
 
   const renderIcon = (included) => {
-    if (included) return <CheckCircle2 className="w-[18px] h-[18px] shrink-0" fill="#22c55e" stroke="white" />;
-    return <XCircle className="w-[18px] h-[18px] shrink-0" fill="#ef4444" stroke="white" />;
+    if (included) return <CheckCircle2 className="w-4 h-4 md:w-[18px] md:h-[18px] shrink-0" fill="#22c55e" stroke="white" />;
+    return <XCircle className="w-4 h-4 md:w-[18px] md:h-[18px] shrink-0" fill="#ef4444" stroke="white" />;
   };
 
   const availableTiers = ['diamond', 'gold', 'silver', 'bronze'].filter(tier => getTierData(tier));
-  
-  const gridColsClass = availableTiers.length === 4 
-    ? 'grid-cols-[220px_1fr_1fr_1fr_1fr]' 
-    : availableTiers.length === 3 
-    ? 'grid-cols-[220px_1fr_1fr_1fr]' 
-    : availableTiers.length === 2
-    ? 'grid-cols-[220px_1fr_1fr]'
-    : 'grid-cols-[220px_1fr]';
+
+  const gridColsClass = availableTiers.length === 4
+    ? 'grid-cols-[140px_115px_115px_115px_115px] md:grid-cols-[220px_1fr_1fr_1fr_1fr]'
+    : availableTiers.length === 3
+      ? 'grid-cols-[140px_115px_115px_115px] md:grid-cols-[220px_1fr_1fr_1fr]'
+      : availableTiers.length === 2
+        ? 'grid-cols-[140px_115px_115px] md:grid-cols-[220px_1fr_1fr]'
+        : 'grid-cols-[140px_115px] md:grid-cols-[220px_1fr]';
 
   return createPortal(
-    <div className="fixed inset-0 z-[9999] flex items-center justify-center p-0 md:p-6 bg-slate-900/60 backdrop-blur-sm transition-opacity">
-      <div className="w-full h-[90vh] md:h-auto md:max-h-[95vh] md:max-w-[1100px] bg-white rounded-t-3xl md:rounded-3xl flex flex-col shadow-2xl relative mt-auto md:mt-0 overflow-hidden animate-slide-up md:animate-fade-in">
-        
-        {/* Mobile Drag Handle */}
-        <div className="w-full flex justify-center pt-3 pb-1 md:hidden bg-white shrink-0">
+    <div className="fixed inset-0 z-[9999] flex items-end md:items-center justify-center p-0 md:p-6 bg-slate-900/60 backdrop-blur-sm transition-opacity">
+      <div className="w-full h-[90vh] md:h-auto md:max-h-[95vh] md:max-w-[1100px] bg-white rounded-t-3xl md:rounded-[24px] flex flex-col shadow-2xl relative mt-auto md:mt-0 overflow-hidden animate-slide-up md:animate-fade-in">
+
+        {/* Mobile Drag Handle - Matching PackageDetailsModal */}
+        <div
+          onClick={onClose}
+          className="w-full flex justify-center pt-3 pb-1 md:hidden bg-white shrink-0 cursor-pointer"
+        >
           <div className="w-12 h-1.5 bg-slate-200 rounded-full" />
         </div>
 
-        {/* Header */}
-        <div className="flex items-start justify-between px-6 md:px-8 py-5 md:py-6 border-b border-slate-100 bg-white sticky top-0 z-20 shrink-0">
-          <div>
-            <h2 className="text-xl md:text-2xl font-bold text-[#1a1446] mb-1">Compare Packages</h2>
-            <p className="text-[13px] md:text-[14px] text-slate-500 font-medium">Choose the perfect package to start your learning journey and maximize your earnings.</p>
-          </div>
+        {/* Header - Matching PackageDetailsModal */}
+        <div className="flex items-center justify-between px-4 md:px-5 py-2 border-b border-slate-100 bg-white shrink-0">
+          <h2 className="text-[15px] font-bold text-slate-900">Compare Packages</h2>
           <button
             onClick={onClose}
-            className="p-2 rounded-full hover:bg-slate-100 transition-colors text-slate-500 hover:text-slate-700 bg-white"
+            className="p-1.5 rounded-full hover:bg-slate-100 transition-colors text-slate-500 hover:text-slate-700"
           >
             <X className="w-5 h-5" />
           </button>
         </div>
 
-        {/* Content Scrollable Area */}
-        <div className="flex-1 overflow-x-auto overflow-y-auto custom-scrollbar p-6 md:p-8 bg-white">
-          <div className="min-w-[700px] md:min-w-[900px] flex flex-col">
-            
+        {/* Content Scrollable Area - Compact padding & horizontal scroll */}
+        <div className="flex-1 overflow-x-auto overflow-y-auto custom-scrollbar p-3 sm:p-4 md:p-6 bg-white">
+          <div className="min-w-[600px] md:min-w-[900px] min-h-full flex flex-col justify-between">
+
             {/* Table Header Row (Cards) */}
-            <div className={`grid ${gridColsClass} w-full mb-6`}>
-              <div className="flex items-center px-4">
-                <h3 className="text-[15px] font-bold text-[#1a1446]">Package Features</h3>
+            <div className={`grid ${gridColsClass} w-full mb-2 md:mb-5 items-stretch`}>
+              <div className="flex items-center px-2 md:px-4">
+                <h3 className="text-[12px] md:text-[15px] font-bold text-[#1a1446]">Package Features</h3>
               </div>
-              
+
               {/* Package Header Cards */}
               {availableTiers.map(tier => {
                 const pkg = getTierData(tier);
                 return (
-                  <div key={tier} className="px-2.5 flex flex-col h-full">
-                    <div className="flex-1 flex flex-col border border-slate-200 rounded-[14px] overflow-hidden bg-white shadow-[0_4px_20px_rgba(0,0,0,0.03)] hover:shadow-md transition-shadow">
+                  <div key={tier} className="px-1 md:px-2 flex flex-col h-full">
+                    <div className="flex-1 flex flex-col border border-slate-200 rounded-[10px] md:rounded-[14px] overflow-hidden bg-white shadow-xs hover:shadow-md transition-shadow">
                       {/* Top dark section */}
-                      <div 
-                        className="h-[65px] bg-[#0B1221] flex items-center justify-center relative bg-cover bg-center border-b border-white/10"
+                      <div
+                        className="h-[46px] md:h-[65px] bg-[#0B1221] flex items-center justify-center relative bg-cover bg-center border-b border-white/10"
                         style={{ backgroundImage: `url(${pkg.detailedBg})` }}
                       >
                         {pkg.badge && (
-                          <div className={`absolute top-1.5 right-1.5 px-2 py-0.5 rounded text-[9px] font-bold shadow-sm ${pkg.badgeColor} z-10`}>
+                          <div className={`absolute top-0.5 right-1 md:top-1.5 md:right-1.5 px-1.5 md:px-2 py-0.2 md:py-0.5 rounded text-[7px] md:text-[9px] font-bold shadow-sm ${pkg.badgeColor} z-10`}>
                             {pkg.badge}
                           </div>
                         )}
                         <div className="absolute inset-0 bg-black/20" />
-                        <div className="relative z-10 flex items-center gap-2">
-                          <img src={pkg.icon} alt={pkg.name} className="w-6 h-6 drop-shadow-md" />
-                          <span className="text-white font-bold text-[14px] drop-shadow-md">{pkg.name.replace(' Package', '')}</span>
+                        <div className="relative z-10 flex items-center gap-1 md:gap-2">
+                          <img src={pkg.icon} alt={pkg.name} className="w-4 h-4 md:w-6 md:h-6 drop-shadow-md shrink-0" />
+                          <span className="text-white font-bold text-[11px] md:text-[14px] drop-shadow-md">{pkg.name.replace(' Package', '')}</span>
                         </div>
                       </div>
                       {/* Price section */}
-                      <div className="py-3.5 flex flex-col items-center justify-center bg-white">
-                        <div className="text-[22px] font-extrabold text-[#4f3bf3] mb-0.5">{formatPrice(pkg.price)}</div>
-                        <div className="text-[10px] font-bold text-slate-400">One Time Payment</div>
+                      <div className="py-1.5 md:py-3 flex flex-col items-center justify-center bg-white">
+                        <div className="text-[15px] md:text-[22px] font-extrabold text-[#4f3bf3] mb-0.5 leading-none">{formatPrice(pkg.price)}</div>
+                        <div className="text-[8px] md:text-[10px] font-bold text-slate-400 mt-0.5 whitespace-nowrap">One Time Payment</div>
                       </div>
                     </div>
                   </div>
@@ -222,40 +222,44 @@ export default function ComparePackagesModal({ isOpen, onClose, packages, onSele
             </div>
 
             {/* Features Rows Container */}
-            <div className="bg-white border border-slate-200 rounded-[16px] shadow-[0_4px_20px_rgba(0,0,0,0.02)] overflow-hidden mb-6 flex flex-col">
+            <div className="bg-white border border-slate-200 rounded-[12px] md:rounded-[16px] shadow-xs overflow-hidden mb-2 md:mb-5 flex flex-col">
               {featuresList.map((feature, idx) => (
                 <div key={idx} className={`grid ${gridColsClass} w-full ${idx !== featuresList.length - 1 ? 'border-b border-slate-100' : ''}`}>
-                  <div className="py-4 px-6 flex items-center text-[13px] font-bold text-slate-700">
+                  <div className="py-2 md:py-3 px-2.5 md:px-6 flex items-center text-[11px] md:text-[13px] font-bold text-slate-700 leading-tight">
                     {feature.title}
                   </div>
                   {availableTiers.map(tier => {
-                    const value = feature.values[tier];
+                    const value = feature.values[tier] || {};
                     return (
-                      <div key={tier} className="py-4 px-3 flex items-center justify-center gap-2 border-l border-slate-100">
+                      <div key={tier} className="py-2 md:py-3 px-1.5 md:px-3 flex items-center justify-center gap-1 md:gap-2 border-l border-slate-100">
                         {renderIcon(value.included)}
-                        {value.text && <span className="text-[12px] font-semibold text-slate-600">{value.text}</span>}
+                        {value.text && (
+                          <span className="text-[10.5px] md:text-[12px] font-semibold text-slate-600 text-center leading-tight">
+                            {value.text}
+                          </span>
+                        )}
                       </div>
                     );
                   })}
                 </div>
               ))}
-              
+
               {/* Action Row */}
               <div className={`grid ${gridColsClass} w-full border-t border-slate-100 bg-white`}>
-                <div className="py-5 px-6" />
+                <div className="py-2 md:py-4 px-2.5 md:px-6" />
                 {availableTiers.map(tier => {
                   const pkg = getTierData(tier);
                   return (
-                    <div key={tier} className="py-5 px-4 flex items-center justify-center border-l border-slate-100">
-                      <button 
+                    <div key={tier} className="py-2 md:py-4 px-1.5 md:px-4 flex items-center justify-center border-l border-slate-100">
+                      <button
                         onClick={() => {
                           onClose();
                           onSelectPackage(pkg);
                         }}
-                        className="w-[85%] max-w-[160px] flex items-center justify-center gap-2 py-2.5 bg-[#4f3bf3] border border-[#4f3bf3] rounded-[8px] text-[13px] font-bold text-white shadow-md shadow-indigo-500/20 hover:bg-[#3f2ee6] hover:-translate-y-0.5 hover:shadow-lg transition-all duration-300"
+                        className="w-full flex items-center justify-center gap-1 md:gap-1.5 px-2 py-1.5 md:py-2.5 bg-[#4f3bf3] border border-[#4f3bf3] rounded-lg text-[10.5px] md:text-[13px] font-bold text-white shadow-xs hover:bg-[#3f2ee6] transition-all whitespace-nowrap cursor-pointer active:scale-95"
                       >
-                        <ShoppingCart className="w-4 h-4" />
-                        Purchase Now
+                        <ShoppingCart className="w-3 h-3 md:w-4 md:h-4 shrink-0" />
+                        <span>Purchase Now</span>
                       </button>
                     </div>
                   );
@@ -264,13 +268,13 @@ export default function ComparePackagesModal({ isOpen, onClose, packages, onSele
             </div>
 
             {/* Bottom Info Card */}
-            <div className="bg-[#f8f9fc] border border-slate-100 rounded-[12px] p-4 flex gap-4 items-center">
-              <div className="w-12 h-12 bg-[#edf0ff] rounded-xl flex items-center justify-center text-[#4f3bf3] shrink-0">
-                <ShieldCheck className="w-6 h-6" />
+            <div className="flex bg-[#f8f9fc] border border-slate-100 rounded-[10px] md:rounded-[12px] p-2.5 md:p-3.5 gap-2.5 md:gap-4 items-center">
+              <div className="w-7 h-7 md:w-10 md:h-10 bg-[#edf0ff] rounded-lg md:rounded-xl flex items-center justify-center text-[#4f3bf3] shrink-0">
+                <ShieldCheck className="w-3.5 h-3.5 md:w-5 md:h-5" />
               </div>
               <div>
-                <h4 className="text-[14px] font-bold text-[#1a1446] mb-0.5">All packages are one-time payments with lifetime access.</h4>
-                <p className="text-[13px] text-slate-500 font-medium">Choose the package that best fits your goals and start your journey today!</p>
+                <h4 className="text-[11.5px] md:text-[13.5px] font-bold text-[#1a1446] leading-tight mb-0.5">All packages are one-time payments with lifetime access.</h4>
+                <p className="text-[10.5px] md:text-[12px] text-slate-500 font-medium leading-tight">Choose the package that best fits your goals and start your journey today!</p>
               </div>
             </div>
           </div>

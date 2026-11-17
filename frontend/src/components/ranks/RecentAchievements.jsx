@@ -42,10 +42,10 @@ export default function RecentAchievements({ onOpenModal }) {
 
   return (
     <div className="w-full bg-white border border-slate-200 rounded-[24px] shadow-sm p-6 sm:p-7 flex flex-col h-full relative overflow-hidden group/card transition-all duration-300 hover:shadow-md hover:border-indigo-200">
-      
+
       {/* Decorative background flare */}
       <div className="absolute top-0 right-0 w-64 h-64 bg-indigo-400/10 rounded-full blur-[80px] -translate-y-1/2 translate-x-1/3 pointer-events-none group-hover/card:bg-indigo-400/20 transition-colors duration-700 z-0" />
-      
+
       <div className="relative z-10 flex flex-col h-full w-full justify-between">
         {/* Header */}
         <div className="flex items-center justify-between gap-4 mb-4">
@@ -53,7 +53,7 @@ export default function RecentAchievements({ onOpenModal }) {
             <Award className="w-6 h-6 text-[#4f3bf3]" />
             <h2 className="text-[19px] sm:text-[20px] font-extrabold text-[#1a1446]">Recent Achievements</h2>
           </div>
-          <button 
+          <button
             onClick={onOpenModal}
             className="text-[13px] font-bold text-indigo-600 hover:text-indigo-800 flex items-center transition-colors"
           >
@@ -74,11 +74,11 @@ export default function RecentAchievements({ onOpenModal }) {
             {/* Table Rows */}
             <div className="flex flex-col gap-1.5 flex-1 justify-between">
               {recentHistory.map((item) => (
-                <div 
-                  key={item.id} 
+                <div
+                  key={item.id}
                   className="grid grid-cols-12 gap-4 items-center px-4 py-2.5 hover:bg-slate-50/70 rounded-xl transition-colors border border-transparent hover:border-slate-100/80 group"
                 >
-                  
+
                   {/* Title & Category */}
                   <div className="col-span-6 flex items-center gap-3 min-w-0">
                     <div className="w-9 h-9 rounded-full bg-slate-50 flex items-center justify-center shrink-0 shadow-xs border border-slate-100 group-hover:scale-105 transition-transform">
