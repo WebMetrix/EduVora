@@ -1,12 +1,12 @@
 import React from 'react';
 import { ShoppingBag, CheckCircle2, Clock, XCircle } from 'lucide-react';
 
-export default function OrderStats({ t }) {
+export default function OrderStats({ t, statsData }) {
   const stats = [
     {
       title: t('orders.stats.total'),
       desc: t('orders.stats.totalDesc'),
-      value: "6",
+      value: statsData?.total ?? 0,
       icon: <ShoppingBag className="w-7 h-7 text-indigo-600" />,
       bg: "bg-indigo-100",
       borderColor: "border-indigo-100",
@@ -15,7 +15,7 @@ export default function OrderStats({ t }) {
     {
       title: t('orders.stats.completed'),
       desc: t('orders.stats.completedDesc'),
-      value: "4",
+      value: statsData?.completed ?? 0,
       icon: <CheckCircle2 className="w-7 h-7 text-emerald-600" />,
       bg: "bg-emerald-100",
       borderColor: "border-emerald-100",
@@ -24,7 +24,7 @@ export default function OrderStats({ t }) {
     {
       title: t('orders.stats.pending'),
       desc: t('orders.stats.pendingDesc'),
-      value: "1",
+      value: statsData?.pending ?? 0,
       icon: <Clock className="w-7 h-7 text-amber-500" />,
       bg: "bg-amber-100",
       borderColor: "border-amber-100",
@@ -33,7 +33,7 @@ export default function OrderStats({ t }) {
     {
       title: t('orders.stats.failed'),
       desc: t('orders.stats.failedDesc'),
-      value: "1",
+      value: statsData?.failed ?? 0,
       icon: <XCircle className="w-7 h-7 text-rose-500" />,
       bg: "bg-rose-100",
       borderColor: "border-rose-100",

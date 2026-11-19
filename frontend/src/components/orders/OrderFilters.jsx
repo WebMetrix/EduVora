@@ -13,17 +13,17 @@ export default function OrderFilters({
   onExport
 }) {
   const timeOptions = [
-    { label: t('orders.filters.allTime') || 'All Time', value: '' },
-    { label: 'Today', value: 'today' },
-    { label: 'This Week', value: 'week' },
-    { label: 'This Month', value: 'month' },
+    { label: t('orders.filters.allTime'), value: '' },
+    { label: t('orders.filters.today'), value: 'today' },
+    { label: t('orders.filters.thisWeek'), value: 'week' },
+    { label: t('orders.filters.thisMonth'), value: 'month' },
   ];
 
   const statusOptions = [
-    { label: t('orders.filters.allStatus') || 'All Status', value: '' },
-    { label: t('orders.status.completed') || 'Completed', value: 'completed' },
-    { label: t('orders.status.pending') || 'Pending', value: 'pending' },
-    { label: t('orders.status.failed') || 'Failed', value: 'failed' },
+    { label: t('orders.filters.allStatus'), value: '' },
+    { label: t('orders.status.completed'), value: 'completed' },
+    { label: t('orders.status.pending'), value: 'pending' },
+    { label: t('orders.status.failed'), value: 'failed' },
   ];
 
   return (
@@ -69,7 +69,7 @@ export default function OrderFilters({
         </div>
 
         {/* Export Button */}
-        <button onClick={onExport} className="flex items-center justify-center gap-2 px-4 py-2 bg-white border border-[#4f3bf3] rounded-lg text-[12px] font-bold text-[#4f3bf3] hover:bg-indigo-50 transition-colors shrink-0">
+        <button onClick={onExport} className="flex items-center justify-center gap-2 px-4 py-2 bg-white border border-[#4f3bf3] rounded-lg text-[12px] font-bold text-[#4f3bf3] hover:bg-indigo-50 transition-colors shrink-0 cursor-pointer">
           <Download className="w-4 h-4" />
           {t('orders.filters.export')}
         </button>

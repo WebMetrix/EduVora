@@ -7,6 +7,7 @@ import paymentReducer from './slices/paymentSlice';
 import kycReducer from './slices/kycSlice';
 import earningsReducer from './slices/earningsSlice';
 import dashboardReducer from './slices/dashboardSlice';
+import orderReducer from './slices/orderSlice';
 
 export const store = configureStore({
     reducer: {
@@ -18,5 +19,6 @@ export const store = configureStore({
         kyc: kycReducer,
         earnings: earningsReducer,
         dashboard: dashboardReducer,
+        order: orderReducer,
     },
 });

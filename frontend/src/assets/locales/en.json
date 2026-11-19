@@ -744,6 +744,8 @@
   "orders": {
     "title": "Orders",
     "subtitle": "View all your package purchases and order details.",
+    "breadcrumbHome": "Home",
+    "breadcrumbCurrent": "My Orders",
     "stats": {
       "total": "Total Orders",
       "totalDesc": "All time orders",
@@ -756,6 +758,9 @@
     },
     "filters": {
       "allTime": "All Time",
+      "today": "Today",
+      "thisWeek": "This Week",
+      "thisMonth": "This Month",
       "allStatus": "All Status",
       "search": "Search by order ID or package...",
       "export": "Export"
@@ -768,22 +773,32 @@
       "orderDate": "Order Date",
       "status": "Status",
       "action": "Action",
-      "showing": "Showing {start} to {end} of {total} orders"
+      "showing": "Showing {start} to {end} of {total} orders",
+      "noEntries": "No entries to show",
+      "noOrders": "No orders found",
+      "rowsPerPage": "Rows per page:",
+      "loading": "Loading orders..."
     },
     "status": {
       "completed": "Completed",
       "pending": "Pending",
-      "failed": "Failed"
+      "failed": "Failed",
+      "cancelled": "Cancelled"
     },
     "levels": {
       "beginner": "Beginner",
       "intermediate": "Intermediate",
-      "advanced": "Advanced"
+      "advanced": "Advanced",
+      "pro": "Pro",
+      "standard": "Standard"
     },
     "actions": {
       "viewDetails": "View Details",
       "payNow": "Pay Now",
-      "retryPayment": "Retry Payment"
+      "retryPayment": "Retry Payment",
+      "close": "Close",
+      "goToCourses": "Go to My Courses",
+      "downloadInvoice": "Invoice"
     },
     "details": {
       "title": "Order Details",
@@ -795,8 +810,16 @@
       "orderSummary": "Order Summary",
       "subtotal": "Subtotal",
       "discount": "Discount",
+      "tax": "Tax (GST 18%)",
       "totalAmount": "Total Amount",
-      "paymentCompleted": "Payment Completed"
+      "paymentCompleted": "Payment Completed",
+      "paymentPending": "Payment Pending",
+      "paymentFailed": "Payment Failed",
+      "completedDesc": "Your payment was successful and your package is now active.",
+      "pendingDesc": "Your payment is awaiting confirmation from the payment gateway.",
+      "failedDesc": "Your payment could not be processed. Please retry.",
+      "copied": "Order ID copied to clipboard!",
+      "noInvoice": "Invoice is not available for this order."
     }
   },
   "coursePlayer": {
