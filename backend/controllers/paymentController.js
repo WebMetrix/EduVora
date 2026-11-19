@@ -161,9 +161,24 @@ export const processWebhook = async (req, res) => {
                     let customerPincode = '';
                     let childUserId = null;
 
-                    if (customerUid) {
+                    // Fallback to Tb_Order if customerUid is missing from webhook
+                    let finalUid = customerUid;
+                    if (!finalUid && orderNumber) {
+                        try {
+                            const oReq = pool.request();
+                            oReq.input('OrderNumber', sql.VarChar(50), orderNumber);
+                            const oRes = await oReq.query("SELECT UUID FROM dbo.Tb_Order WHERE OrderNumber = @OrderNumber");
+                            if (oRes.recordset && oRes.recordset.length > 0) {
+                                finalUid = oRes.recordset[0].UUID;
+                            }
+                        } catch (err) {
+                            logger.warn(`Could not lookup UUID from Tb_Order: ${err.message}`);
+                        }
+                    }
+
+                    if (finalUid) {
                         const uReq = pool.request();
-                        uReq.input('UUID', sql.VarChar(36), customerUid);
+                        uReq.input('UUID', sql.VarChar(36), finalUid);
                         const uRes = await uReq.execute('dbo.EV_GetUserProfile');
                         if (uRes.recordset && uRes.recordset.length > 0) {
                             const u = uRes.recordset[0];
@@ -178,21 +193,25 @@ export const processWebhook = async (req, res) => {
                         }
                     }
 
-                    // Fetch Package Name using existing stored procedure EV_GetPackages
+                    // Fetch Package Name and Details using existing stored procedure EV_GetPackages
                     let packageName = "Course Package";
+                    let packageDescription = null;
+                    let packageDialog = null;
                     if (packageId) {
                         const pkgRes = await pool.request().execute('dbo.EV_GetPackages');
                         if (pkgRes.recordset && pkgRes.recordset.length > 0) {
                             const matchedPkg = pkgRes.recordset.find(p => p.PackageId === parseInt(packageId));
                             if (matchedPkg) {
                                 packageName = matchedPkg.PackageName;
+                                packageDescription = matchedPkg.Description;
+                                packageDialog = matchedPkg.DescriptionDialog;
                             }
                         }
                     }
 
                     const orderAmount = Number(orderData.order_amount || paymentData?.payment_amount || 0);
                     const formattedAmount = `₹${orderAmount.toLocaleString('en-IN')}`;
-                    const paymentDateStr = paymentData?.payment_completion_time || new Date().toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' });
+                    const paymentDateStr = paymentData?.payment_completion_time || new Date().toISOString();
                     const paymentMethodStr = String(paymentMethod || 'Online Payment').toUpperCase();
 
                     if (paymentStatus === 'SUCCESS') {
@@ -203,7 +222,7 @@ export const processWebhook = async (req, res) => {
                         try {
                             const invoiceResult = await generateAndSaveInvoice({
                                 orderNumber,
-                                userUuid: customerUid,
+                                userUuid: finalUid,
                                 customerDetails: {
                                     name: customerName,
                                     email: customerEmail,
@@ -216,6 +235,8 @@ export const processWebhook = async (req, res) => {
                                 packageDetails: {
                                     packageId,
                                     packageName,
+                                    description: packageDescription,
+                                    details: packageDialog,
                                     price: orderAmount
                                 },
                                 paymentDetails: {

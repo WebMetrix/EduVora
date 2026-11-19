@@ -2,8 +2,12 @@ import ejs from 'ejs';
 import puppeteer from 'puppeteer';
 import fs from 'fs';
 import path from 'path';
+import { fileURLToPath } from 'url';
 import pool, { sql } from '../config/db.js';
 import logger from '../utils/logger.js';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 // Base UNC path for invoices
 const DEFAULT_INVOICE_REPO_PATH = '\\\\EDUVORA-001\\EduVora-001\\Invoices';
@@ -31,10 +35,16 @@ function getBrowserExecutablePath() {
  */
 function getLogoDataUri() {
     try {
-        const logoPath = path.resolve(process.cwd(), 'App_Data', 'Images', 'Eduvora.png');
-        if (fs.existsSync(logoPath)) {
-            const buffer = fs.readFileSync(logoPath);
-            return `data:image/png;base64,${buffer.toString('base64')}`;
+        const candidatePaths = [
+            path.resolve(__dirname, '..', 'App_Data', 'Images', 'Eduvora.png'),
+            path.resolve(process.cwd(), 'App_Data', 'Images', 'Eduvora.png'),
+            path.resolve(process.cwd(), 'backend', 'App_Data', 'Images', 'Eduvora.png')
+        ];
+        for (const logoPath of candidatePaths) {
+            if (fs.existsSync(logoPath)) {
+                const buffer = fs.readFileSync(logoPath);
+                return `data:image/png;base64,${buffer.toString('base64')}`;
+            }
         }
     } catch (err) {
         logger.warn(`Could not load local Eduvora logo: ${err.message}`);
@@ -113,9 +123,22 @@ export async function generateNextInvoiceNumber() {
  * Renders the EJS invoice template into HTML string
  */
 export async function renderInvoiceHtml(data) {
-    const templatePath = path.resolve(process.cwd(), 'App_Data', 'Invoice', 'EduVora_Invoice_Template.html');
-    if (!fs.existsSync(templatePath)) {
-        throw new Error(`Invoice template not found at ${templatePath}`);
+    const candidatePaths = [
+        path.resolve(__dirname, '..', 'App_Data', 'Invoice', 'EduVora_Invoice_Template.html'),
+        path.resolve(process.cwd(), 'App_Data', 'Invoice', 'EduVora_Invoice_Template.html'),
+        path.resolve(process.cwd(), 'backend', 'App_Data', 'Invoice', 'EduVora_Invoice_Template.html')
+    ];
+
+    let templatePath = null;
+    for (const p of candidatePaths) {
+        if (fs.existsSync(p)) {
+            templatePath = p;
+            break;
+        }
+    }
+
+    if (!templatePath) {
+        throw new Error(`Invoice template not found in candidates: ${candidatePaths.join(', ')}`);
     }
 
     const templateContent = fs.readFileSync(templatePath, 'utf8');
@@ -234,45 +257,84 @@ export async function generateAndSaveInvoice({
         }).format(val);
 
         const formatDisplayDate = (d) => {
-            const dateObj = d ? new Date(d) : new Date();
+            let dateObj = null;
+            if (d instanceof Date && !isNaN(d.getTime())) {
+                dateObj = d;
+            } else if (typeof d === 'string' || typeof d === 'number') {
+                const parsed = new Date(d);
+                if (!isNaN(parsed.getTime())) {
+                    dateObj = parsed;
+                } else {
+                    // Match DD/MM/YYYY or DD-MM-YYYY (e.g. from toLocaleString)
+                    const m = String(d).match(/(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{4})/);
+                    if (m) {
+                        dateObj = new Date(Number(m[3]), Number(m[2]) - 1, Number(m[1]));
+                    }
+                }
+            }
+            if (!dateObj || isNaN(dateObj.getTime())) {
+                dateObj = new Date();
+            }
             return dateObj.toLocaleDateString('en-GB', {
                 day: '2-digit',
                 month: 'long',
                 year: 'numeric'
-            }); // e.g. "17 November 2026"
+            }); // e.g. "19 November 2026"
         };
 
         const invoiceDateStr = formatDisplayDate(paymentDetails.paymentDate);
 
-        // 4. Construct Customer Address
+        // 4. Construct Customer Address cleanly
         const customerAddressParts = [
             customerDetails.address,
             customerDetails.addressLine1,
             customerDetails.addressLine2
         ].filter(Boolean);
-        const customerAddress = customerAddressParts.join(', ') || 'N/A';
+        const customerAddress = customerAddressParts.join(', ').trim() || null;
+        const customerCity = (customerDetails.city || '').trim() || null;
+        const customerState = (customerDetails.state || '').trim() || null;
+        const customerPincode = (customerDetails.postalCode || customerDetails.pincode || '').trim() || null;
 
-        // 5. Build Complete Data Object for EJS Template
+        // 5. Clean / resolve Package descriptions dynamically (strictly plain text, no raw HTML)
+        const pkgName = (packageDetails.packageName || "").toLowerCase();
+        let packageDesc = "Digital Learning & Affiliate Membership Package";
+        let packageDetailsText = "Lifetime Access to Courses, Modules & Community";
+
+        if (pkgName.includes("bronze")) {
+            packageDesc = "Digital Learning & Affiliate Membership Package";
+            packageDetailsText = "Basic Courses • Study Materials • Lifetime Access";
+        } else if (pkgName.includes("silver")) {
+            packageDesc = "Digital Learning & Affiliate Membership Package";
+            packageDetailsText = "Intermediate Courses • Study Materials • Member Support • Lifetime Access";
+        } else if (pkgName.includes("gold")) {
+            packageDesc = "Digital Learning & Affiliate Membership Package";
+            packageDetailsText = "Advanced Courses • Priority Member Support • Lifetime Access";
+        } else if (pkgName.includes("diamond")) {
+            packageDesc = "Digital Learning & Affiliate Membership Package";
+            packageDetailsText = "Lifetime Access to Courses, Modules & Community";
+        }
+
+        // 6. Build Complete Data Object for EJS Template
         const logoDataUri = getLogoDataUri();
         const invoiceData = {
             company: {
-                name: process.env.COMPANY_NAME || "EduVora",
-                legalName: process.env.COMPANY_LEGAL_NAME || "EduVora Technologies Pvt. Ltd.",
+                name: process.env.COMPANY_NAME,
+                legalName: process.env.COMPANY_LEGAL_NAME,
                 logoUrl: logoDataUri,
-                tagline: "LEARN • GROW • EARN",
-                addressLine1: process.env.COMPANY_ADDRESS_1 || "123 Business Park",
-                addressLine2: process.env.COMPANY_ADDRESS_2 || "Andheri East",
-                city: process.env.COMPANY_CITY || "Mumbai",
-                state: process.env.COMPANY_STATE || "Maharashtra",
-                postalCode: process.env.COMPANY_POSTAL_CODE || "400069",
-                country: "India",
-                phone: process.env.COMPANY_PHONE || "+91 9876543210",
-                email: process.env.SUPPORT_EMAIL || "support@eduvora.com",
-                website: process.env.WEBSITE_URL || "https://theduvora.com",
-                taxNumber: process.env.COMPANY_GSTIN || "27XXXXXXXXXX",
-                pan: process.env.COMPANY_PAN || "XXXXXXXXXX",
-                registrationNumber: process.env.COMPANY_CIN || "UXXXXXXXXXX",
-                primaryColor: "#1769E0"
+                tagline: process.env.COMPANY_TAGLINE,
+                addressLine1: process.env.COMPANY_ADDRESS_1,
+                addressLine2: process.env.COMPANY_ADDRESS_2,
+                city: process.env.COMPANY_CITY,
+                state: process.env.COMPANY_STATE,
+                postalCode: process.env.COMPANY_POSTAL_CODE,
+                country: process.env.COMPANY_COUNTRY,
+                phone: process.env.COMPANY_PHONE,
+                email: process.env.SUPPORT_EMAIL,
+                website: process.env.WEBSITE_URL,
+                taxNumber: process.env.COMPANY_GSTIN,
+                pan: process.env.COMPANY_PAN,
+                registrationNumber: process.env.COMPANY_CIN,
+                primaryColor: process.env.COMPANY_PRIMARY_COLOR || "#1769E0"
             },
             invoice: {
                 title: "TAX INVOICE",
@@ -286,17 +348,17 @@ export async function generateAndSaveInvoice({
                 email: customerDetails.email || "",
                 phone: customerDetails.phone || "",
                 address: customerAddress,
-                city: customerDetails.city || "",
-                state: customerDetails.state || "",
-                postalCode: customerDetails.postalCode || customerDetails.pincode || "",
+                city: customerCity,
+                state: customerState,
+                postalCode: customerPincode,
                 country: customerDetails.country || "India",
                 taxNumber: customerDetails.taxNumber || null
             },
             items: [
                 {
                     name: packageDetails.packageName || "Course Package",
-                    description: "Digital Learning & Affiliate Membership Package",
-                    details: "Lifetime Access to Courses, Modules & Community",
+                    description: packageDesc,
+                    details: packageDetailsText,
                     imageUrl: null,
                     quantity: 1,
                     unitPriceFormatted: formatInr(subTotal),
@@ -321,16 +383,16 @@ export async function generateAndSaveInvoice({
             },
             termsAndConditions: "This invoice confirms full payment for the digital products and memberships listed above. Digital products and packages are granted lifetime access subject to the standard terms of service.",
             footer: {
-                message: "Thank you for choosing EduVora!",
-                email: process.env.SUPPORT_EMAIL || "support@eduvora.com",
-                phone: process.env.COMPANY_PHONE || "+91 9876543210",
-                website: process.env.WEBSITE_URL || "https://theduvora.com",
-                termsUrl: process.env.TERMS_URL || "https://theduvora.com/terms",
-                privacyUrl: process.env.PRIVACY_URL || "https://theduvora.com/privacy"
+                message: process.env.INVOICE_FOOTER_MESSAGE || "Thank you for choosing EduVora!",
+                email: process.env.SUPPORT_EMAIL,
+                phone: process.env.COMPANY_PHONE,
+                website: process.env.WEBSITE_URL,
+                termsUrl: process.env.TERMS_URL,
+                privacyUrl: process.env.PRIVACY_URL
             }
         };
 
-        // 6. Render HTML & Generate PDF
+        // 7. Render HTML & Generate PDF
         const renderedHtml = await renderInvoiceHtml(invoiceData);
         await generateInvoicePdf(renderedHtml, filePath);
 

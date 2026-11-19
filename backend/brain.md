@@ -103,16 +103,19 @@ Stores the course packages and their prices.
 | DescriptionDialog | nvarchar(MAX)  | Yes         |             |
 
 ### 9. `Tb_RankMaster`
-Defines ranks and the required minimum business logic.
-| Column Name     | Data Type      | Allow Nulls | Notes       |
-|-----------------|----------------|-------------|-------------|
-| RankId          | int            | No          | Primary Key |
-| RankName        | varchar(100)   | No          |             |
-| MinimumBusiness | decimal(18,2)  | No          |             |
-| Color           | varchar(20)    | Yes         |             |
-| IconPath        | nvarchar(MAX)  | Yes         |             |
-| IsActive        | bit            | No          |             |
-| CreatedDate     | datetime       | No          |             |
+Defines ranks, the required minimum business logic, team size targets, qualified leaders, and rank benefits.
+| Column Name              | Data Type      | Allow Nulls | Notes                                              |
+|--------------------------|----------------|-------------|----------------------------------------------------|
+| RankId                   | int            | No          | Primary Key (1: Bronze, 2: Silver, 3: Gold, 4: Diamond) |
+| RankName                 | varchar(100)   | No          |                                                    |
+| MinimumBusiness          | decimal(18,2)  | No          | Minimum business turnover required                 |
+| RequiredLevel1Members    | int            | No          | Required active direct referrals (Default 0)       |
+| RequiredQualifiedMembers | int            | No          | Required direct members at Silver+ rank (Default 0)|
+| RankBenefits             | nvarchar(MAX)  | Yes         | Pipe-delimited list of rank benefits               |
+| Color                    | varchar(20)    | Yes         |                                                    |
+| IconPath                 | nvarchar(MAX)  | Yes         |                                                    |
+| IsActive                 | bit            | No          |                                                    |
+| CreatedDate              | datetime       | No          |                                                    |
 
 ### 10. `Tb_Referral`
 Tracks referrals, sponsors, and their status.
@@ -480,6 +483,51 @@ Master table for predefined automated and manual KYC rejection reasons.
 | IsActive          | bit           | No          |                               |
 | CreatedDate       | datetime      | No          |                               |
 
+### 41. `Tb_AchievementCategoryMaster`
+Master lookup table for achievement categories (Sales, Network, Earnings, Rank).
+| Column Name   | Data Type    | Allow Nulls | Notes                                              |
+|---------------|--------------|-------------|----------------------------------------------------|
+| CategoryId    | int          | No          | Primary Key (1: Sales, 2: Network, 3: Earnings, 4: Rank) |
+| CategoryName  | varchar(50)  | No          |                                                    |
+| IsActive      | bit          | No          | Default `1`                                        |
+| CreatedDate   | datetime     | No          | Default `GETDATE()`                                |
+
+### 42. `Tb_AchievementMaster`
+Master catalog containing system milestone achievements, requirements, badge rewards, points, and icon styles.
+| Column Name   | Data Type     | Allow Nulls | Notes                                              |
+|---------------|---------------|-------------|----------------------------------------------------|
+| AchievementId | int           | No          | Primary Key (1, 2, 3, ...)                         |
+| Title         | varchar(150)  | No          | Milestone title (e.g. 'First Package Sale')        |
+| Description   | varchar(255)  | No          | Brief summary                                      |
+| Criteria      | varchar(500)  | No          | Full requirements explanation                      |
+| CategoryId    | int           | No          | Foreign Key to `Tb_AchievementCategoryMaster`      |
+| Reward        | varchar(100)  | No          | Badge or reward title                              |
+| Points        | int           | No          | Reward points (Default `0`)                        |
+| MetricType    | varchar(50)   | No          | 'PACKAGE_PURCHASE', 'DIRECT_REFERRALS', 'TEAM_MEMBERS', 'LEVEL2_MEMBERS', 'TOTAL_COMMISSION', 'RANK_REACHED' |
+| TargetValue   | decimal(18,2) | No          | Numerical goal to unlock milestone                 |
+| IconName      | varchar(50)   | No          | Lucide icon name: 'Trophy', 'Star', 'Users', 'DollarSign', 'Target', 'ArrowUpCircle' |
+| IconBg        | varchar(50)   | Yes         | Tailwind badge style class: 'bg-yellow-50', etc.   |
+| DisplayOrder  | int           | No          | Ordering sequence for UI (Default `1`)             |
+| IsActive      | bit           | No          | Default `1`                                        |
+| CreatedDate   | datetime      | No          | Default `GETDATE()`                                |
+
+### 43. `Tb_UserAchievement`
+Tracks user milestone progress, earned badges, and completion timestamps.
+| Column Name       | Data Type     | Allow Nulls | Notes                                              |
+|-------------------|---------------|-------------|----------------------------------------------------|
+| UserAchievementId | int           | No          | Primary Key (Identity)                             |
+| UUID              | varchar(36)   | No          | Foreign Key to `Tb_User(UUID)`                     |
+| AchievementId     | int           | No          | Foreign Key to `Tb_AchievementMaster(AchievementId)` |
+| CurrentProgress   | decimal(18,2) | No          | Current accumulated metric value (Default `0`)     |
+| IsEarned          | bit           | No          | Completion flag (Default `0`, `1` when achieved)   |
+| EarnedDate        | datetime      | Yes         | Unlock timestamp                                   |
+| CreatedDate       | datetime      | No          | Default `GETDATE()`                                |
+| UpdatedDate       | datetime      | Yes         | Last progress update timestamp                     |
+
+*Constraints & Indexes:*
+- `UNIQUE (UUID, AchievementId)`: Ensures one record per achievement per user.
+- Index `IX_Tb_UserAchievement_UUID_IsEarned` on `(UUID, IsEarned)` including `(AchievementId, CurrentProgress, EarnedDate)`.
+
 ## Stored Procedures
 
 ### `EV_GetIdentityProofTypes`
@@ -651,3 +699,48 @@ Records generated invoice details into `Tb_Invoice`, resolves `OrderId` from `Or
 - **Inputs**: `@InvoiceNumber NVARCHAR(50)`, `@OrderNumber VARCHAR(50) = NULL`, `@OrderId INT = NULL`, `@BillingName NVARCHAR(255)`, `@BillingAddress NVARCHAR(MAX) = NULL`, `@SubTotal DECIMAL(18,2)`, `@GSTAmount DECIMAL(18,2)`, `@TotalAmount DECIMAL(18,2)`, `@InvoiceDate DATETIME = NULL`, `@InvoicePath NVARCHAR(500) = NULL`
 - **Outputs**: Result Set containing `InvoiceId INT`, `InvoiceNumber NVARCHAR(50)`, `Success INT` (1 = Created, 0 = Already existed)
 - **Updates**: Inserts a new record into `Tb_Invoice`. If a record for the `OrderId` already exists, updates `InvoicePath`.
+
+### `EV_GetUserOrders`
+Retrieves user orders, summary statistics, filters (Search, Date, Status), single order modal details, and export datasets for the Orders page dynamically.
+- **Inputs**: 
+  - `@ActionType INT = 1` (1 = List & Stats, 2 = Details, 3 = Export, 4 = Stats Only)
+  - `@UUID VARCHAR(36)` (Required, from session)
+  - `@OrderNumber VARCHAR(50) = NULL` (Used for ActionType = 2 or specific lookup)
+  - `@PageNumber INT = 1`
+  - `@PageSize INT = 10`
+  - `@SearchQuery NVARCHAR(100) = NULL` (Searches OrderNumber, PackageName, TransactionId, or Date)
+  - `@DateFilter VARCHAR(20) = NULL` ('today', 'week', 'month', 'all')
+  - `@StatusFilter VARCHAR(20) = NULL` ('completed', 'pending', 'failed', 'all', or status ID)
+- **Outputs**:
+  - **ActionType 1**:
+    1. **Result Set 1 (Global Stats)**: `TotalOrders`, `CompletedOrders`, `PendingOrders`, `FailedOrders`
+    2. **Result Set 2 (Paginated Orders)**: `OrderId`, `OrderNumber`, `UUID`, `TotalAmount`, `GSTAmount`, `SubTotal`, `OrderStatusId`, `OrderStatus`, `StatusCode`, `PaymentMethod`, `TransactionId`, `OrderDate`, `OrderDateIST`, `PackageId`, `PackageName`, `PackagePrice`, `PackageDescription`, `InvoiceId`, `InvoiceNumber`, `InvoiceDate`, `InvoicePath`, `HasInvoice`, `FilteredTotal`, `TotalPages`
+  - **ActionType 2**:
+    1. **Result Set 1 (Order Details)**: Comprehensive single order details with breakdown for `OrderDetailsModal`
+  - **ActionType 3**:
+    1. **Result Set 1 (Export Data)**: Unpaginated table formatted for Excel export (`[Order ID]`, `[Package Name]`, `[Amount]`, `[Payment Method]`, `[Order Date]`, `[Status]`, `[Transaction ID]`, `[Invoice Number]`)
+  - **ActionType 4**:
+    1. **Result Set 1 (Stats Only)**: `TotalOrders`, `CompletedOrders`, `PendingOrders`, `FailedOrders`
+
+### `EV_GetUserRanksAndAchievements`
+Retrieves current user rank details, next rank progress metrics (turnover, level 1 members, qualified leaders), achievement categories, carousel achievements with status counts (All, Earned, In Progress, Locked), recent unlock timeline feed, and filtered records for the View All modal.
+- **Inputs**:
+  - `@ActionType INT = 1` (1 = Overview: Ranks + Achievements list + Recent, 2 = Filtered View All Modal List, 3 = History Audit Timeline, 4 = Categories Dropdown)
+  - `@UUID VARCHAR(36)` (Required, from user session)
+  - `@CategoryId INT = NULL` (Filter for View All Modal: 1: Sales, 2: Network, 3: Earnings, 4: Rank)
+  - `@StatusFilter VARCHAR(20) = NULL` ('all', 'earned', 'inprogress', 'locked')
+  - `@SearchQuery NVARCHAR(100) = NULL` (Free-text search by title or description)
+  - `@PageNumber INT = 1`
+  - `@PageSize INT = 10`
+- **Outputs**:
+  - **ActionType 1 (Overview - Main Page)**:
+    1. **Result Set 1 (Current & Next Rank Summary)**: `CurrentRankId`, `CurrentRankName`, `CurrentRankColor`, `CurrentRankIconPath`, `AchievedDate`, `NextRankId`, `NextRankName`, `NextRankColor`, `NextRankIconPath`, `RequiredBusiness`, `CurrentBusiness`, `BusinessPercentage`, `RequiredLevel1Members`, `CurrentLevel1Members`, `Level1Percentage`, `RequiredQualifiedMembers`, `CurrentQualifiedMembers`, `QualifiedPercentage`, `OverallProgressPercentage`, `RankBenefits`
+    2. **Result Set 2 (All Ranks Master Catalog)**: `RankId`, `RankName`, `MinimumBusiness`, `RequiredLevel1Members`, `RequiredQualifiedMembers`, `Color`, `IconPath`, `RankBenefits` (for Rank Details and Requirements modals)
+    3. **Result Set 3 (Achievements Carousel & Tab Counts)**: `AchievementId`, `Title`, `Description`, `Criteria`, `CategoryId`, `CategoryName`, `Reward`, `Points`, `MetricType`, `TargetValue`, `IconName`, `IconBg`, `CurrentProgress`, `IsEarned`, `EarnedDate`, `Status` ('Earned', 'In Progress', 'Locked'), `TotalCount`, `EarnedCount`, `InProgressCount`, `LockedCount`
+    4. **Result Set 4 (Recent Achievements Feed)**: Top 5 unlocked achievements with `TimeAgoText`
+  - **ActionType 2 (View All Achievements Modal)**:
+    1. **Result Set 1 (Filtered Achievements)**: Filtered list by `@SearchQuery`, `@CategoryId`, and `@StatusFilter` with complete details, criteria, and rewards.
+  - **ActionType 3 (Achievement History Modal)**:
+    1. **Result Set 1 (Unlock Timeline Feed)**: Chronological list of user-earned achievements with unlocked dates.
+  - **ActionType 4 (Categories Dropdown)**:
+    1. **Result Set 1 (Category List)**: Active categories from `Tb_AchievementCategoryMaster` (`CategoryId`, `CategoryName`).
