@@ -101,6 +101,7 @@ Stores the course packages and their prices.
 | Description | nvarchar(MAX)  | Yes         |             |
 | IsActive    | bit            | No          |             |
 | DescriptionDialog | nvarchar(MAX)  | Yes         |             |
+| CoverImagePath | nvarchar(500) | Yes         |             |
 
 ### 9. `Tb_RankMaster`
 Defines ranks, the required minimum business logic, team size targets, qualified leaders, and rank benefits.
@@ -528,6 +529,64 @@ Tracks user milestone progress, earned badges, and completion timestamps.
 - `UNIQUE (UUID, AchievementId)`: Ensures one record per achievement per user.
 - Index `IX_Tb_UserAchievement_UUID_IsEarned` on `(UUID, IsEarned)` including `(AchievementId, CurrentProgress, EarnedDate)`.
 
+### 44. `Tb_PackageEBook`
+Stores the eBooks and course modules associated with each course package.
+| Column Name    | Data Type     | Allow Nulls | Notes                                          |
+|----------------|---------------|-------------|------------------------------------------------|
+| EBookId        | int           | No          | Primary Key (Identity)                         |
+| PackageId      | int           | No          | Foreign Key to `Tb_Package(PackageId)`         |
+| EBookNumber    | varchar(50)   | No          | Label (e.g. 'EBook 1', 'EBook 2')              |
+| Title          | nvarchar(200) | No          |                                                |
+| Summary        | nvarchar(MAX) | Yes         | Description / overview                         |
+| DurationText   | varchar(50)   | Yes         | Audio duration text (e.g. '18m audio')         |
+| TotalPages     | int           | No          | Total page count (Default `1`)                 |
+| CoverImagePath | nvarchar(500) | Yes         |                                                |
+| PdfFilePath    | nvarchar(500) | Yes         | Offline PDF download file path                 |
+| DisplayOrder   | int           | No          | Ordering sequence (Default `1`)                |
+| IsActive       | bit           | No          | Default `1`                                    |
+| CreatedDate    | datetime      | No          | Default `GETDATE()`                            |
+
+### 45. `Tb_EBookChapter`
+Stores individual chapters, reader canvas content, and audio tracks for each eBook.
+| Column Name          | Data Type     | Allow Nulls | Notes                                          |
+|----------------------|---------------|-------------|------------------------------------------------|
+| ChapterId            | int           | No          | Primary Key (Identity)                         |
+| EBookId              | int           | No          | Foreign Key to `Tb_PackageEBook(EBookId)`      |
+| ChapterNumber        | varchar(20)   | No          | e.g. '01', '02'                                |
+| Title                | nvarchar(200) | No          | Chapter title                                  |
+| Subtitle             | nvarchar(200) | Yes         | Subtitle / highlighted accent title            |
+| PagesLabel           | varchar(50)   | Yes         | e.g. 'Page 1 - 4'                              |
+| StartPage            | int           | No          | Default `1`                                    |
+| EndPage              | int           | No          | Default `1`                                    |
+| LeadParagraph        | nvarchar(MAX) | Yes         | Opening introductory lead text                 |
+| ContentBody          | nvarchar(MAX) | Yes         | Full chapter reading body                      |
+| IllustrationPath     | nvarchar(500) | Yes         | Chapter illustration image path                |
+| AudioTitle           | nvarchar(200) | Yes         | Audio modal track title                        |
+| AudioDesc            | nvarchar(MAX) | Yes         | Audio modal track description                  |
+| AudioUrlPath         | nvarchar(500) | Yes         | Path to MP3 audio file                         |
+| AudioDurationSeconds | int           | Yes         | Total audio duration in seconds                |
+| DisplayOrder         | int           | No          | Ordering sequence (Default `1`)                |
+| IsActive             | bit           | No          | Default `1`                                    |
+| CreatedDate          | datetime      | No          | Default `GETDATE()`                            |
+
+### 46. `Tb_UserEBookProgress`
+Tracks user reading page, last accessed chapter, bookmarks, and audio playback state.
+| Column Name          | Data Type     | Allow Nulls | Notes                                          |
+|----------------------|---------------|-------------|------------------------------------------------|
+| ProgressId           | int           | No          | Primary Key (Identity)                         |
+| UUID                 | varchar(36)   | No          | Foreign Key to `Tb_User(UUID)`                 |
+| EBookId              | int           | No          | Foreign Key to `Tb_PackageEBook(EBookId)`      |
+| CurrentPage          | int           | No          | Last read page (Default `1`)                   |
+| LastChapterId        | int           | Yes         | Last active chapter ID                         |
+| IsBookmarked         | bit           | No          | Bookmark toggle flag (Default `0`)             |
+| AudioPositionSeconds | int           | No          | Playback position in seconds (Default `0`)     |
+| Status               | varchar(20)   | No          | 'notStarted', 'inProgress', 'completed'        |
+| LastAccessedDate     | datetime      | No          | Default `GETDATE()`                            |
+
+*Constraints & Indexes:*
+- `UNIQUE (UUID, EBookId)`: Ensures one progress tracking record per user per eBook.
+- Index `IX_UserEBookProgress_UUID` on `(UUID, EBookId)`.
+
 ## Stored Procedures
 
 ### `EV_GetIdentityProofTypes`
@@ -725,22 +784,51 @@ Retrieves user orders, summary statistics, filters (Search, Date, Status), singl
 ### `EV_GetUserRanksAndAchievements`
 Retrieves current user rank details, next rank progress metrics (turnover, level 1 members, qualified leaders), achievement categories, carousel achievements with status counts (All, Earned, In Progress, Locked), recent unlock timeline feed, and filtered records for the View All modal.
 - **Inputs**:
-  - `@ActionType INT = 1` (1 = Overview: Ranks + Achievements list + Recent, 2 = Filtered View All Modal List, 3 = History Audit Timeline, 4 = Categories Dropdown)
-  - `@UUID VARCHAR(36)` (Required, from user session)
+  - `@ActionType INT = 1` (1 = Overview, 2 = Filtered View All Modal List, 3 = History Audit Timeline, 4 = Categories Dropdown)
+  - `@UUID VARCHAR(36)` (Required, from session)
   - `@CategoryId INT = NULL` (Filter for View All Modal: 1: Sales, 2: Network, 3: Earnings, 4: Rank)
   - `@StatusFilter VARCHAR(20) = NULL` ('all', 'earned', 'inprogress', 'locked')
   - `@SearchQuery NVARCHAR(100) = NULL` (Free-text search by title or description)
   - `@PageNumber INT = 1`
-  - `@PageSize INT = 10`
+  - `@PageSize INT = 20`
 - **Outputs**:
-  - **ActionType 1 (Overview - Main Page)**:
-    1. **Result Set 1 (Current & Next Rank Summary)**: `CurrentRankId`, `CurrentRankName`, `CurrentRankColor`, `CurrentRankIconPath`, `AchievedDate`, `NextRankId`, `NextRankName`, `NextRankColor`, `NextRankIconPath`, `RequiredBusiness`, `CurrentBusiness`, `BusinessPercentage`, `RequiredLevel1Members`, `CurrentLevel1Members`, `Level1Percentage`, `RequiredQualifiedMembers`, `CurrentQualifiedMembers`, `QualifiedPercentage`, `OverallProgressPercentage`, `RankBenefits`
-    2. **Result Set 2 (All Ranks Master Catalog)**: `RankId`, `RankName`, `MinimumBusiness`, `RequiredLevel1Members`, `RequiredQualifiedMembers`, `Color`, `IconPath`, `RankBenefits` (for Rank Details and Requirements modals)
-    3. **Result Set 3 (Achievements Carousel & Tab Counts)**: `AchievementId`, `Title`, `Description`, `Criteria`, `CategoryId`, `CategoryName`, `Reward`, `Points`, `MetricType`, `TargetValue`, `IconName`, `IconBg`, `CurrentProgress`, `IsEarned`, `EarnedDate`, `Status` ('Earned', 'In Progress', 'Locked'), `TotalCount`, `EarnedCount`, `InProgressCount`, `LockedCount`
-    4. **Result Set 4 (Recent Achievements Feed)**: Top 5 unlocked achievements with `TimeAgoText`
-  - **ActionType 2 (View All Achievements Modal)**:
-    1. **Result Set 1 (Filtered Achievements)**: Filtered list by `@SearchQuery`, `@CategoryId`, and `@StatusFilter` with complete details, criteria, and rewards.
-  - **ActionType 3 (Achievement History Modal)**:
-    1. **Result Set 1 (Unlock Timeline Feed)**: Chronological list of user-earned achievements with unlocked dates.
-  - **ActionType 4 (Categories Dropdown)**:
-    1. **Result Set 1 (Category List)**: Active categories from `Tb_AchievementCategoryMaster` (`CategoryId`, `CategoryName`).
+  - **ActionType 1**:
+    1. **Result Set 1 (Rank Summary)**: `CurrentRankId`, `CurrentRankName`, `CurrentRankColor`, `CurrentRankIconPath`, `AchievedDate`, `CurrentRankBenefits`, `NextRankId`, `NextRankName`, `NextRankColor`, `NextRankIconPath`, `NextRankBenefits`, `RequiredBusiness`, `CurrentBusiness`, `BusinessPercentage`, `RequiredLevel1Members`, `CurrentLevel1Members`, `Level1Percentage`, `RequiredQualifiedMembers`, `CurrentQualifiedMembers`, `QualifiedPercentage`, `OverallProgressPercentage`
+    2. **Result Set 2 (Master Ranks Catalog)**: `RankId`, `RankName`, `MinimumBusiness`, `RequiredLevel1Members`, `RequiredQualifiedMembers`, `Color`, `IconPath`, `RankBenefits`
+    3. **Result Set 3 (Achievements Carousel)**: `AchievementId`, `Title`, `Description`, `Criteria`, `CategoryId`, `CategoryName`, `Reward`, `Points`, `MetricType`, `TargetValue`, `IconName`, `IconBg`, `DisplayOrder`, `CurrentProgress`, `IsEarned`, `EarnedDate`, `Status`
+    4. **Result Set 4 (Recent Achievements Feed)**: `AchievementId`, `Title`, `Description`, `CategoryId`, `CategoryName`, `Reward`, `Points`, `IconName`, `IconBg`, `EarnedDate`, `Status`, `TimeAgoText`
+  - **ActionType 2**:
+    1. **Result Set 1 (Filtered Achievements)**: `AchievementId`, `Title`, `Description`, `Criteria`, `CategoryId`, `CategoryName`, `Reward`, `Points`, `MetricType`, `TargetValue`, `IconName`, `IconBg`, `DisplayOrder`, `CurrentProgress`, `IsEarned`, `EarnedDate`, `Status`
+  - **ActionType 3**:
+    1. **Result Set 1 (History Audit Timeline)**: `AchievementId`, `Title`, `Description`, `Criteria`, `CategoryId`, `CategoryName`, `Reward`, `Points`, `MetricType`, `TargetValue`, `IconName`, `IconBg`, `DisplayOrder`, `CurrentProgress`, `IsEarned`, `EarnedDate`, `Status`
+  - **ActionType 4**:
+    1. **Result Set 1 (Category List)**: `CategoryId`, `CategoryName`
+
+### `EV_GetUserCourses`
+Manages Course Packages, EBooks, Reader Canvas, Audio Streaming, and User Progress Tracking for the Courses page dynamically.
+- **Inputs**:
+  - `@Action INT` (1 = Main Courses Overview, 2 = EBook Reader Canvas & Audio Details, 3 = Save/Sync User Progress, 4 = Single Chapter Audio Lookup)
+  - `@UUID VARCHAR(36) = NULL` (Required for personalized packages & progress)
+  - `@PackageId INT = NULL` (Optional package filter)
+  - `@EBookId INT = NULL` (Target eBook for Reader Canvas or audio)
+  - `@ChapterId INT = NULL` (Target chapter for reader canvas or quick audio play)
+  - `@CurrentPage INT = NULL` (Current reading page for progress sync)
+  - `@LastChapterId INT = NULL` (Last active chapter ID for progress sync)
+  - `@IsBookmarked BIT = NULL` (Bookmark toggle flag: 0/1)
+  - `@AudioPositionSeconds INT = NULL` (Audio playback timestamp in seconds)
+  - `@Status VARCHAR(20) = NULL` ('notStarted', 'inProgress', 'completed')
+- **Outputs**:
+  - **Action 1 (Courses Overview)**:
+    1. **Result Set 1 (Accessible Packages)**: `PackageId`, `PackageName`, `Price`, `Description`, `CoverImagePath`, `PurchaseDate`, `PurchaseDateFormatted`, `TotalEBooks`, `TotalAudioFiles`, `OverallStatus`, `OverallProgressPercentage`
+    2. **Result Set 2 (EBooks Catalog)**: `EBookId`, `PackageId`, `PackageName`, `EBookNumber`, `Title`, `Summary`, `DurationText`, `TotalPages`, `CoverImagePath`, `PdfFilePath`, `DisplayOrder`, `CurrentPage`, `LastChapterId`, `IsBookmarked`, `AudioPositionSeconds`, `Status`, `ProgressPercentage`, `LastAccessedDate`, `ChapterCount`, `FirstChapterId`
+    3. **Result Set 3 (Curriculum Breakdown)**: `ChapterId`, `EBookId`, `PackageId`, `ChapterNumber`, `Title`, `Subtitle`, `PagesLabel`, `StartPage`, `EndPage`, `AudioTitle`, `AudioUrlPath`, `AudioDurationSeconds`, `DisplayOrder`
+  - **Action 2 (Reader Canvas & Audio Details)**:
+    1. **Result Set 1 (EBook Details & Progress)**: `EBookId`, `PackageId`, `PackageName`, `EBookNumber`, `Title`, `Summary`, `DurationText`, `TotalPages`, `CoverImagePath`, `PdfFilePath`, `CurrentPage`, `LastChapterId`, `IsBookmarked`, `AudioPositionSeconds`, `Status`, `ProgressPercentage`, `LastAccessedDate`
+    2. **Result Set 2 (Chapter Sidebar Table of Contents)**: `ChapterId`, `EBookId`, `ChapterNumber`, `Title`, `Subtitle`, `PagesLabel`, `StartPage`, `EndPage`, `DisplayOrder`, `AudioTitle`, `AudioUrlPath`, `AudioDurationSeconds`, `IsCurrentActive`, `IsLocked`
+    3. **Result Set 3 (Active Chapter Reading Canvas Content)**: `ChapterId`, `EBookId`, `ChapterNumber`, `Title`, `Subtitle`, `PagesLabel`, `StartPage`, `EndPage`, `LeadParagraph`, `ContentBody`, `IllustrationPath`, `AudioTitle`, `AudioDesc`, `AudioUrlPath`, `AudioDurationSeconds`, `DisplayOrder`, `AudioPositionSeconds`, `IsBookmarked`
+  - **Action 3 (Save Progress)**:
+    1. **Result Set 1 (Execution Status)**: `Success`, `Message`
+  - **Action 4 (Audio Lookup)**:
+    1. **Result Set 1 (Chapter Audio Details)**: `ChapterId`, `EBookId`, `EBookTitle`, `ChapterNumber`, `ChapterTitle`, `AudioTitle`, `AudioDesc`, `AudioUrlPath`, `AudioDurationSeconds`, `AudioPositionSeconds`
+- **Updates**:
+  - For Action 3: Upserts user progress into `Tb_UserEBookProgress` based on `(UUID, EBookId)`. Auto-calculates completion status and updates `LastAccessedDate`.

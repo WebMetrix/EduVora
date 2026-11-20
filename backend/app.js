@@ -21,6 +21,7 @@ import earningsRoutes from './routes/earningsRoutes.js';
 import dashboardRoutes from './routes/dashboardRoutes.js';
 import orderRoutes from './routes/orderRoutes.js';
 import rankRoutes from './routes/rankRoutes.js';
+import courseRoutes from './routes/courseRoutes.js';
 
 
 
@@ -70,6 +71,7 @@ app.use('/earnings', earningsRoutes);
 app.use('/dashboard', dashboardRoutes);
 app.use('/orders', orderRoutes);
 app.use('/ranks', rankRoutes);
+app.use('/courses', courseRoutes);
 
 
 const userDataPath = process.env.USER_DATA_PATH;
