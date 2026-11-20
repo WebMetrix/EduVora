@@ -79,9 +79,9 @@ export default function NextRankProgress({ rankSummary, ranksCatalog = [], loadi
 
           {/* Header Right */}
           <div className="flex items-center justify-end sm:items-end w-full sm:w-auto">
-             <div className="bg-indigo-50/80 border border-indigo-100 rounded-xl px-3.5 py-1.5 sm:px-4 sm:py-2 flex items-center sm:flex-col gap-2 sm:gap-0 sm:min-w-[100px]">
-               <span className="text-[16px] sm:text-[18px] font-black text-indigo-700 leading-tight">{overallProgress}%</span>
-               <span className="text-[11px] font-bold text-indigo-500/80">Complete</span>
+             <div className="bg-indigo-50/80 border border-indigo-100 rounded-xl px-3.5 py-1.5 sm:px-4 sm:py-2 flex items-center sm:flex-col gap-2 sm:gap-0 sm:min-w-[100px] shrink-0">
+               <span className="text-[16px] sm:text-[18px] font-black text-indigo-700 leading-tight whitespace-nowrap tabular-nums">{overallProgress}%</span>
+               <span className="text-[11px] font-bold text-indigo-500/80 whitespace-nowrap">Complete</span>
              </div>
           </div>
         </div>

@@ -209,7 +209,7 @@ export default function RankDetailsModal({ isOpen, onClose, rankSummary, ranksCa
                     <div className="flex-1 h-2 md:h-2.5 bg-[#e3dfff] rounded-full overflow-hidden shadow-inner">
                       <div className="h-full bg-[#4f3ff0] rounded-full transition-all duration-700" style={{ width: `${Math.min(100, overallProgress)}%` }} />
                     </div>
-                    <span className="text-[13px] md:text-[15px] font-black text-[#4f3ff0] w-9">{overallProgress}%</span>
+                    <span className="text-[13px] md:text-[15px] font-black text-[#4f3ff0] shrink-0 min-w-[60px] text-right tabular-nums whitespace-nowrap">{overallProgress}%</span>
                   </div>
                 </div>
               </div>

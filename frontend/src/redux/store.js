@@ -9,6 +9,7 @@ import earningsReducer from './slices/earningsSlice';
 import dashboardReducer from './slices/dashboardSlice';
 import orderReducer from './slices/orderSlice';
 import rankReducer from './slices/rankSlice';
+import courseReducer from './slices/courseSlice';
 
 export const store = configureStore({
     reducer: {
@@ -22,5 +23,6 @@ export const store = configureStore({
         dashboard: dashboardReducer,
         order: orderReducer,
         rank: rankReducer,
+        course: courseReducer,
     },
 });

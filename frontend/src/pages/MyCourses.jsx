@@ -1,16 +1,25 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
 import { useTranslation } from '../hooks/useTranslation';
-import { ChevronRight, ArrowLeft } from 'lucide-react';
-import PackageCourseView, { PACKAGES_DATA } from '../components/courses/PackageCourseView';
+import { ChevronRight, ArrowLeft, Loader2 } from 'lucide-react';
+import PackageCourseView from '../components/courses/PackageCourseView';
 import EBookReaderView from '../components/courses/EBookReaderView';
+import { fetchUserCourses, setSelectedPackageId } from '../redux/slices/courseSlice';
 
 export default function MyCourses() {
   const { t } = useTranslation();
-  const [selectedPackageId, setSelectedPackageId] = useState(1);
+  const dispatch = useDispatch();
+  const { packages, ebooks, selectedPackageId, loading } = useSelector((state) => state.course);
   const [readerState, setReaderState] = useState(null); // { ebook: item, initialShowAudio: boolean }
 
-  const activePackage = PACKAGES_DATA.find((p) => p.id === selectedPackageId) || PACKAGES_DATA[0];
+  useEffect(() => {
+    dispatch(fetchUserCourses());
+  }, [dispatch]);
+
+  const activePackage = packages.find(
+    (p) => p.id === selectedPackageId || p.packageId === selectedPackageId
+  ) || packages[0];
 
   return (
     <div className="flex flex-col min-h-full pb-0 lg:pb-6">
@@ -39,7 +48,7 @@ export default function MyCourses() {
                   onClick={() => setReaderState(null)}
                   className="hover:text-indigo-600 transition-colors shrink-0 cursor-pointer"
                 >
-                  {activePackage?.tag || 'Package 1'}
+                  {activePackage?.tag || activePackage?.name || 'Package 1'}
                 </button>
                 <ChevronRight className="w-3.5 h-3.5 text-slate-400 shrink-0" />
                 <span className="text-slate-900 font-medium shrink-0">
@@ -84,8 +93,11 @@ export default function MyCourses() {
         />
       ) : (
         <PackageCourseView
+          packages={packages}
+          ebooks={ebooks}
           selectedPackageId={selectedPackageId}
-          onSelectPackage={setSelectedPackageId}
+          loading={loading}
+          onSelectPackage={(id) => dispatch(setSelectedPackageId(id))}
           onOpenReader={(ebook, initialShowAudio) => {
             setReaderState({ ebook, initialShowAudio });
             window.scrollTo({ top: 0, behavior: 'smooth' });
