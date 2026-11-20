@@ -20,6 +20,7 @@ import kycRoutes from './routes/kycRoutes.js';
 import earningsRoutes from './routes/earningsRoutes.js';
 import dashboardRoutes from './routes/dashboardRoutes.js';
 import orderRoutes from './routes/orderRoutes.js';
+import rankRoutes from './routes/rankRoutes.js';
 
 
 
@@ -68,6 +69,7 @@ app.use('/kyc', kycRoutes);
 app.use('/earnings', earningsRoutes);
 app.use('/dashboard', dashboardRoutes);
 app.use('/orders', orderRoutes);
+app.use('/ranks', rankRoutes);
 
 
 const userDataPath = process.env.USER_DATA_PATH;

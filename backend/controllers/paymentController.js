@@ -117,11 +117,17 @@ export const processWebhook = async (req, res) => {
         const payload = req.body;
 
         if (payload && payload.data && payload.data.order) {
+            const eventType = payload.type;
             const orderData = payload.data.order;
             const paymentData = payload.data.payment;
-
-            // Extract core fields
             const orderNumber = orderData.order_id; // Our internal OrderNumber
+
+            // If the webhook is ORDER_PAID_WEBHOOK, acknowledge immediately without duplicate processing
+            // Payment success workflow (invoice & emails) is handled exclusively by PAYMENT_SUCCESS_WEBHOOK
+            if (eventType === 'ORDER_PAID_WEBHOOK') {
+                logger.info(`Webhook event '${eventType}' received for Order: ${orderNumber}. Acknowledged without duplicate processing.`);
+                return res.status(200).send("ORDER_PAID_WEBHOOK acknowledged");
+            }
             const gatewayOrderId = paymentData?.cf_payment_id || orderData?.cf_order_id || 'UNKNOWN';
             const packageId = orderData.order_tags?.package_id;
             const customerUid = orderData.customer_details?.customer_id;
