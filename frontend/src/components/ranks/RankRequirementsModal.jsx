@@ -1,9 +1,9 @@
 import React, { useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import { X, Sparkles, Users, IndianRupee, UserCheck, Award } from 'lucide-react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { getRankTheme, formatCurrency } from '../../utils/rankHelper';
 
-export default function RankRequirementsModal({ isOpen, onClose }) {
+export default function RankRequirementsModal({ isOpen, onClose, rankSummary, ranksCatalog = [] }) {
   // Prevent body scrolling when modal is open
   useEffect(() => {
     if (isOpen) {
@@ -33,6 +33,33 @@ export default function RankRequirementsModal({ isOpen, onClose }) {
 
   if (!isOpen) return null;
 
+  const currentRankName = rankSummary?.currentRankName || 'Bronze';
+  const getFallbackNextRank = (curr) => {
+    const c = (curr || '').toLowerCase();
+    if (c === 'bronze') return 'Silver';
+    if (c === 'silver') return 'Gold';
+    if (c === 'gold') return 'Diamond';
+    return 'Diamond';
+  };
+  const nextRankName = (rankSummary?.nextRankName && rankSummary?.currentRankId !== rankSummary?.nextRankId)
+    ? rankSummary.nextRankName 
+    : (rankSummary?.currentRankId === 4 ? currentRankName : getFallbackNextRank(currentRankName));
+
+  const currentMembers = rankSummary?.currentLevel1Members ?? 0;
+  const requiredMembers = rankSummary?.requiredLevel1Members ?? 0;
+  const membersNeeded = Math.max(0, requiredMembers - currentMembers);
+  const memberPct = rankSummary?.level1Percentage ?? 0;
+
+  const currentBusiness = rankSummary?.currentBusiness ?? 0;
+  const requiredBusiness = rankSummary?.requiredBusiness ?? 0;
+  const businessNeeded = Math.max(0, requiredBusiness - currentBusiness);
+  const businessPct = rankSummary?.businessPercentage ?? 0;
+
+  const currentQualified = rankSummary?.currentQualifiedMembers ?? 0;
+  const requiredQualified = rankSummary?.requiredQualifiedMembers ?? 0;
+  const qualifiedNeeded = Math.max(0, requiredQualified - currentQualified);
+  const qualifiedPct = rankSummary?.qualifiedPercentage ?? 0;
+
   return createPortal(
     <div className="fixed inset-0 z-[10000] flex items-end md:items-center justify-center p-0 md:p-4">
       {/* Backdrop */}
@@ -42,9 +69,7 @@ export default function RankRequirementsModal({ isOpen, onClose }) {
       />
 
       {/* Modal / Bottom Sheet Card */}
-      <div
-        className="w-full md:max-w-[480px] bg-white rounded-t-[28px] md:rounded-[24px] shadow-2xl relative z-10 flex flex-col max-h-[90vh] md:max-h-[85vh] overflow-hidden animate-slide-up md:animate-fade-in"
-      >
+      <div className="w-full md:max-w-[500px] bg-white rounded-t-[28px] md:rounded-[24px] shadow-2xl relative z-10 flex flex-col max-h-[90vh] md:max-h-[85vh] overflow-hidden animate-slide-up md:animate-fade-in">
         {/* Mobile Drag Handle */}
         <div 
           onClick={onClose}
@@ -61,7 +86,7 @@ export default function RankRequirementsModal({ isOpen, onClose }) {
             </div>
             <div className="flex flex-col">
               <h3 className="text-[17px] font-extrabold text-[#1a1446] leading-tight">
-                Platinum Qualification Guide
+                {nextRankName} Qualification Guide
               </h3>
               <span className="text-[12px] font-semibold text-slate-500">
                 Advancement rules & milestones
@@ -70,7 +95,7 @@ export default function RankRequirementsModal({ isOpen, onClose }) {
           </div>
           <button
             onClick={onClose}
-            className="p-2 rounded-xl text-slate-400 hover:text-slate-600 hover:bg-slate-100 transition-colors"
+            className="p-2 rounded-xl text-slate-400 hover:text-slate-600 hover:bg-slate-100 transition-colors cursor-pointer"
             aria-label="Close"
           >
             <X className="w-5 h-5" />
@@ -82,7 +107,7 @@ export default function RankRequirementsModal({ isOpen, onClose }) {
           {/* Overview Banner */}
           <div className="bg-indigo-50/70 border border-indigo-100 rounded-2xl p-3.5">
             <p className="text-[13px] text-indigo-950 font-medium leading-relaxed">
-              To advance from <span className="font-extrabold text-amber-600">Gold</span> to <span className="font-extrabold text-indigo-600">Platinum Rank</span>, you must fulfill all 3 performance conditions simultaneously. Once reached, your rank upgrade is applied automatically!
+              To advance from <span className="font-extrabold text-amber-600">{currentRankName}</span> to <span className="font-extrabold text-indigo-600">{nextRankName} Rank</span>, you must fulfill all qualification conditions. Once reached, your rank upgrade is applied automatically!
             </p>
           </div>
 
@@ -99,91 +124,80 @@ export default function RankRequirementsModal({ isOpen, onClose }) {
                   <div className="w-8 h-8 rounded-xl bg-indigo-100 text-indigo-600 flex items-center justify-center shrink-0">
                     <Users className="w-4 h-4" />
                   </div>
-                  <div>
-                    <h4 className="text-[13px] font-extrabold text-slate-900 leading-tight">Level 1 Members</h4>
-                    <p className="text-[11px] text-slate-500">Active direct referrals enrolled</p>
+                  <div className="flex flex-col">
+                    <span className="text-[13px] font-bold text-[#1a1446]">Direct Members</span>
+                    <span className="text-[11px] text-slate-500">Level 1 team size</span>
                   </div>
                 </div>
-                <span className="text-[13px] font-extrabold text-indigo-700">8 / 18</span>
+                <div className="text-right">
+                  <span className="text-[13px] font-black text-[#1a1446]">{currentMembers} / {requiredMembers}</span>
+                  <span className="block text-[11px] font-bold text-indigo-600">
+                    {membersNeeded > 0 ? `${membersNeeded} needed` : 'Completed'}
+                  </span>
+                </div>
               </div>
               <div className="w-full h-2 bg-slate-200 rounded-full overflow-hidden">
-                <div className="h-full bg-indigo-600 rounded-full w-[44%]" />
-              </div>
-              <div className="flex justify-between items-center text-[11px]">
-                <span className="text-slate-500">Target: 18 members</span>
-                <span className="font-bold text-indigo-600">10 more required</span>
+                <div className="h-full bg-indigo-600 rounded-full transition-all duration-700" style={{ width: `${Math.min(100, memberPct)}%` }} />
               </div>
             </div>
 
-            {/* Requirement 2: Business Turnover */}
+            {/* Requirement 2: Eligible Business */}
             <div className="border border-slate-100 bg-slate-50/60 rounded-2xl p-3.5 flex flex-col gap-2">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2.5">
                   <div className="w-8 h-8 rounded-xl bg-emerald-100 text-emerald-600 flex items-center justify-center shrink-0">
                     <IndianRupee className="w-4 h-4" />
                   </div>
-                  <div>
-                    <h4 className="text-[13px] font-extrabold text-slate-900 leading-tight">Eligible Turnover</h4>
-                    <p className="text-[11px] text-slate-500">Cumulative direct business volume</p>
+                  <div className="flex flex-col">
+                    <span className="text-[13px] font-bold text-[#1a1446]">Turnover Volume</span>
+                    <span className="text-[11px] text-slate-500">Eligible package sales</span>
                   </div>
                 </div>
-                <span className="text-[13px] font-extrabold text-emerald-700">₹75,000 / ₹100,000</span>
+                <div className="text-right">
+                  <span className="text-[13px] font-black text-[#1a1446]">{formatCurrency(currentBusiness)} / {formatCurrency(requiredBusiness)}</span>
+                  <span className="block text-[11px] font-bold text-emerald-600">
+                    {businessNeeded > 0 ? `${formatCurrency(businessNeeded)} needed` : 'Completed'}
+                  </span>
+                </div>
               </div>
               <div className="w-full h-2 bg-slate-200 rounded-full overflow-hidden">
-                <div className="h-full bg-emerald-600 rounded-full w-[75%]" />
-              </div>
-              <div className="flex justify-between items-center text-[11px]">
-                <span className="text-slate-500">Target: ₹1,00,000</span>
-                <span className="font-bold text-emerald-600">₹25,000 more required</span>
+                <div className="h-full bg-emerald-600 rounded-full transition-all duration-700" style={{ width: `${Math.min(100, businessPct)}%` }} />
               </div>
             </div>
 
-            {/* Requirement 3: Qualified Leaders */}
+            {/* Requirement 3: Qualified Members */}
             <div className="border border-slate-100 bg-slate-50/60 rounded-2xl p-3.5 flex flex-col gap-2">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2.5">
                   <div className="w-8 h-8 rounded-xl bg-orange-100 text-orange-600 flex items-center justify-center shrink-0">
                     <UserCheck className="w-4 h-4" />
                   </div>
-                  <div>
-                    <h4 className="text-[13px] font-extrabold text-slate-900 leading-tight">Qualified Leaders</h4>
-                    <p className="text-[11px] text-slate-500">Direct partners reaching Silver+</p>
+                  <div className="flex flex-col">
+                    <span className="text-[13px] font-bold text-[#1a1446]">Qualified Members</span>
+                    <span className="text-[11px] text-slate-500">Active package holders</span>
                   </div>
                 </div>
-                <span className="text-[13px] font-extrabold text-orange-700">3 / 5</span>
+                <div className="text-right">
+                  <span className="text-[13px] font-black text-[#1a1446]">{currentQualified} / {requiredQualified}</span>
+                  <span className="block text-[11px] font-bold text-orange-600">
+                    {qualifiedNeeded > 0 ? `${qualifiedNeeded} needed` : 'Completed'}
+                  </span>
+                </div>
               </div>
               <div className="w-full h-2 bg-slate-200 rounded-full overflow-hidden">
-                <div className="h-full bg-orange-500 rounded-full w-[60%]" />
-              </div>
-              <div className="flex justify-between items-center text-[11px]">
-                <span className="text-slate-500">Target: 5 Silver+ partners</span>
-                <span className="font-bold text-orange-600">2 more required</span>
+                <div className="h-full bg-orange-600 rounded-full transition-all duration-700" style={{ width: `${Math.min(100, qualifiedPct)}%` }} />
               </div>
             </div>
           </div>
 
-          {/* Platinum Rewards Perk Callout */}
-          <div className="bg-gradient-to-r from-amber-50 to-amber-100/50 border border-amber-200/60 rounded-2xl p-3.5 flex items-center gap-3">
-            <div className="w-9 h-9 rounded-xl bg-amber-500 text-white flex items-center justify-center shrink-0 shadow-sm">
-              <Award className="w-5 h-5" />
-            </div>
-            <div className="flex flex-col">
-              <span className="text-[12px] font-extrabold text-amber-950">Platinum Rank Privileges</span>
-              <span className="text-[11px] font-medium text-amber-800 leading-snug">
-                Unlocks 18% direct reward tier, priority payout processing, and exclusive profile recognition badge.
-              </span>
-            </div>
+          <div className="mt-2 pt-3 border-t border-slate-100 flex justify-end">
+            <button
+              onClick={onClose}
+              className="px-5 py-2.5 rounded-xl bg-[#4f3bf3] text-white font-bold text-[13px] hover:bg-[#3f2ee6] transition-all shadow-md shadow-indigo-500/20 cursor-pointer"
+            >
+              Got it
+            </button>
           </div>
-        </div>
-
-        {/* Footer Action */}
-        <div className="p-4 pb-6 sm:pb-4 bg-slate-50 border-t border-slate-100 flex items-center justify-end shrink-0">
-          <button
-            onClick={onClose}
-            className="w-full md:w-auto px-6 py-2.5 bg-indigo-600 hover:bg-indigo-700 active:scale-[0.98] text-white text-[14px] font-bold rounded-xl shadow-md shadow-indigo-600/20 transition-all duration-200"
-          >
-            Got It
-          </button>
         </div>
       </div>
     </div>,

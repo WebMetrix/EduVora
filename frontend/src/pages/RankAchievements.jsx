@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
 import { ChevronRight } from 'lucide-react';
 import { useTranslation } from '../hooks/useTranslation';
 import CurrentRankCard from '../components/ranks/CurrentRankCard';
@@ -8,15 +9,32 @@ import AchievementsList from '../components/ranks/AchievementsList';
 import RecentAchievements from '../components/ranks/RecentAchievements';
 import ViewAllAchievementsModal from '../components/ranks/ViewAllAchievementsModal';
 import AchievementHistoryModal from '../components/ranks/AchievementHistoryModal';
+import { fetchUserRanksOverview } from '../redux/slices/rankSlice';
 
 export default function RankAchievements() {
   const { t } = useTranslation();
-  const [isModalOpen, setIsModalOpen] = React.useState(false);
-  const [isHistoryModalOpen, setIsHistoryModalOpen] = React.useState(false);
+  const dispatch = useDispatch();
+
+  const { 
+    rankSummary, 
+    ranksCatalog, 
+    achievements, 
+    counts, 
+    recentAchievements, 
+    loading 
+  } = useSelector((state) => state.rank);
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isHistoryModalOpen, setIsHistoryModalOpen] = useState(false);
+
+  // Fetch Full Ranks & Achievements Overview on page mount
+  useEffect(() => {
+    dispatch(fetchUserRanksOverview());
+  }, [dispatch]);
 
   return (
     <div className="w-full flex flex-col gap-6 max-w-[1400px] mx-auto pb-6">
-      {/* Header */}
+      {/* Header & Breadcrumbs */}
       <div>
         <div className="hidden md:flex items-center text-[13px] font-medium text-slate-500 gap-1.5 mb-2">
           <Link to="/" className="hover:text-indigo-600 transition-colors">Dashboard</Link>
@@ -31,26 +49,43 @@ export default function RankAchievements() {
         </p>
       </div>
 
-      {/* Top Grid: Current Rank & Progress */}
+      {/* Top Grid: Current Rank Card & Next Rank Progress */}
       <div className="grid grid-cols-1 xl:grid-cols-12 gap-6">
         <div className="xl:col-span-5 flex h-full">
-          <CurrentRankCard />
+          <CurrentRankCard 
+            rankSummary={rankSummary} 
+            ranksCatalog={ranksCatalog} 
+            loading={loading} 
+          />
         </div>
         <div className="xl:col-span-7 flex h-full">
-          <NextRankProgress />
+          <NextRankProgress 
+            rankSummary={rankSummary} 
+            ranksCatalog={ranksCatalog} 
+            loading={loading} 
+          />
         </div>
       </div>
 
-      {/* Achievements Section */}
-      <AchievementsList onOpenModal={() => setIsModalOpen(true)} />
+      {/* Achievements Section with Dynamic Tabs & Carousel */}
+      <AchievementsList 
+        achievements={achievements} 
+        counts={counts} 
+        loading={loading} 
+        onOpenModal={() => setIsModalOpen(true)} 
+      />
 
-      {/* Bottom Grid: Recent Achievements & Illustration */}
+      {/* Bottom Grid: Recent Unlocks Feed & Trophy Showcase */}
       <div className="grid grid-cols-1 xl:grid-cols-12 gap-6">
         <div className="xl:col-span-8 flex h-full">
-          <RecentAchievements onOpenModal={() => setIsHistoryModalOpen(true)} />
+          <RecentAchievements 
+            recentList={recentAchievements} 
+            loading={loading} 
+            onOpenModal={() => setIsHistoryModalOpen(true)} 
+          />
         </div>
         <div className="xl:col-span-4 bg-indigo-50/50 border border-indigo-100/50 rounded-3xl p-6 flex flex-col items-center justify-center relative overflow-hidden hidden xl:flex">
-          {/* Trophy Illustration Approximation */}
+          {/* Trophy Showcase Illustration */}
           <div className="relative z-10 w-full flex justify-center items-end h-48 mt-8">
             <div className="absolute inset-0 bg-gradient-to-t from-indigo-100/80 to-transparent -bottom-6 w-full rounded-full blur-xl" />
             
@@ -85,7 +120,6 @@ export default function RankAchievements() {
             <svg className="absolute w-4 h-4 text-yellow-300 fill-yellow-300 top-12 left-6 opacity-70" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
             <svg className="absolute w-5 h-5 text-yellow-400 fill-yellow-400 top-8 right-14 animate-pulse delay-300" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
             <svg className="absolute w-3 h-3 text-yellow-300 fill-yellow-300 top-20 right-8 opacity-60" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-            
           </div>
         </div>
       </div>

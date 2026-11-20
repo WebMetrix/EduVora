@@ -8,6 +8,7 @@ import kycReducer from './slices/kycSlice';
 import earningsReducer from './slices/earningsSlice';
 import dashboardReducer from './slices/dashboardSlice';
 import orderReducer from './slices/orderSlice';
+import rankReducer from './slices/rankSlice';
 
 export const store = configureStore({
     reducer: {
@@ -20,5 +21,6 @@ export const store = configureStore({
         earnings: earningsReducer,
         dashboard: dashboardReducer,
         order: orderReducer,
+        rank: rankReducer,
     },
 });
