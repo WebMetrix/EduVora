@@ -22,7 +22,7 @@ export default function MyCourses() {
   ) || packages[0];
 
   return (
-    <div className="flex flex-col min-h-full pb-0 lg:pb-6">
+    <div className="flex flex-col min-h-full pb-2 lg:pb-4 max-w-full overflow-hidden">
       {/* Header & Breadcrumbs Section */}
       <div className="mb-6">
         {readerState ? (
