@@ -530,11 +530,11 @@ Tracks user milestone progress, earned badges, and completion timestamps.
 - Index `IX_Tb_UserAchievement_UUID_IsEarned` on `(UUID, IsEarned)` including `(AchievementId, CurrentProgress, EarnedDate)`.
 
 ### 44. `Tb_PackageEBook`
-Stores the eBooks and course modules associated with each course package.
+Stores the eBooks and course modules associated with each course (Foreign Key to `Tb_Courses`). A course can have 1 or multiple eBooks.
 | Column Name    | Data Type     | Allow Nulls | Notes                                          |
 |----------------|---------------|-------------|------------------------------------------------|
 | EBookId        | int           | No          | Primary Key (Identity)                         |
-| PackageId      | int           | No          | Foreign Key to `Tb_Package(PackageId)`         |
+| CourseId       | int           | No          | Foreign Key to `Tb_Courses(CourseId)`          |
 | EBookNumber    | varchar(50)   | No          | Label (e.g. 'EBook 1', 'EBook 2')              |
 | Title          | nvarchar(200) | No          |                                                |
 | Summary        | nvarchar(MAX) | Yes         | Description / overview                         |
@@ -805,7 +805,7 @@ Retrieves current user rank details, next rank progress metrics (turnover, level
     1. **Result Set 1 (Category List)**: `CategoryId`, `CategoryName`
 
 ### `EV_GetUserCourses`
-Manages Course Packages, EBooks, Reader Canvas, Audio Streaming, and User Progress Tracking for the Courses page dynamically.
+Manages Course Packages, Courses (sourced from `Tb_Courses`), EBooks (sourced from `Tb_PackageEBook` mapped via `CourseId`), Reader Canvas, Audio Streaming, and User Progress Tracking for the Courses page dynamically. Package entitlements are determined cumulatively from BOTH `Tb_UserPackage` and completed orders in `Tb_Order` + `Tb_OrderItem` (`OrderStatusId = 2`), ensuring users always see all unlocked course packages. A Package contains multiple Courses; each Course can have 0, 1, or multiple EBooks; and each EBook has chapters and audio lessons.
 - **Inputs**:
   - `@Action INT` (1 = Main Courses Overview, 2 = EBook Reader Canvas & Audio Details, 3 = Save/Sync User Progress, 4 = Single Chapter Audio Lookup)
   - `@UUID VARCHAR(36) = NULL` (Required for personalized packages & progress)
@@ -819,11 +819,12 @@ Manages Course Packages, EBooks, Reader Canvas, Audio Streaming, and User Progre
   - `@Status VARCHAR(20) = NULL` ('notStarted', 'inProgress', 'completed')
 - **Outputs**:
   - **Action 1 (Courses Overview)**:
-    1. **Result Set 1 (Accessible Packages)**: `PackageId`, `PackageName`, `Price`, `Description`, `CoverImagePath`, `PurchaseDate`, `PurchaseDateFormatted`, `TotalEBooks`, `TotalAudioFiles`, `OverallStatus`, `OverallProgressPercentage`
-    2. **Result Set 2 (EBooks Catalog)**: `EBookId`, `PackageId`, `PackageName`, `EBookNumber`, `Title`, `Summary`, `DurationText`, `TotalPages`, `CoverImagePath`, `PdfFilePath`, `DisplayOrder`, `CurrentPage`, `LastChapterId`, `IsBookmarked`, `AudioPositionSeconds`, `Status`, `ProgressPercentage`, `LastAccessedDate`, `ChapterCount`, `FirstChapterId`
-    3. **Result Set 3 (Curriculum Breakdown)**: `ChapterId`, `EBookId`, `PackageId`, `ChapterNumber`, `Title`, `Subtitle`, `PagesLabel`, `StartPage`, `EndPage`, `AudioTitle`, `AudioUrlPath`, `AudioDurationSeconds`, `DisplayOrder`
+    1. **Result Set 1 (Accessible Packages)**: `PackageId`, `PackageName`, `Price`, `Description`, `CoverImagePath`, `PurchaseDate`, `PurchaseDateFormatted`, `TotalCourses`, `TotalEBooks`, `TotalAudioFiles`, `OverallStatus`, `OverallProgressPercentage`
+    2. **Result Set 2 (Courses Catalog)**: `CourseId`, `PackageId`, `PackageName`, `CourseNumber`, `CourseName`, `CourseDescr`, `DisplayOrder`, `TotalEBooksInCourse`, `TotalAudioInCourse`
+    3. **Result Set 3 (EBooks Catalog)**: `EBookId`, `CourseId`, `PackageId`, `PackageName`, `CourseName`, `EBookNumber`, `Title`, `Summary`, `DurationText`, `TotalPages`, `CoverImagePath`, `PdfFilePath`, `DisplayOrder`, `CurrentPage`, `LastChapterId`, `IsBookmarked`, `AudioPositionSeconds`, `Status`, `ProgressPercentage`, `LastAccessedDate`, `ChapterCount`, `FirstChapterId`
+    4. **Result Set 4 (Curriculum Breakdown)**: `ChapterId`, `EBookId`, `CourseId`, `PackageId`, `ChapterNumber`, `Title`, `Subtitle`, `PagesLabel`, `StartPage`, `EndPage`, `AudioTitle`, `AudioUrlPath`, `AudioDurationSeconds`, `DisplayOrder`
   - **Action 2 (Reader Canvas & Audio Details)**:
-    1. **Result Set 1 (EBook Details & Progress)**: `EBookId`, `PackageId`, `PackageName`, `EBookNumber`, `Title`, `Summary`, `DurationText`, `TotalPages`, `CoverImagePath`, `PdfFilePath`, `CurrentPage`, `LastChapterId`, `IsBookmarked`, `AudioPositionSeconds`, `Status`, `ProgressPercentage`, `LastAccessedDate`
+    1. **Result Set 1 (EBook Details & Progress)**: `EBookId`, `CourseId`, `PackageId`, `PackageName`, `CourseName`, `EBookNumber`, `Title`, `Summary`, `DurationText`, `TotalPages`, `CoverImagePath`, `PdfFilePath`, `CurrentPage`, `LastChapterId`, `IsBookmarked`, `AudioPositionSeconds`, `Status`, `ProgressPercentage`, `LastAccessedDate`
     2. **Result Set 2 (Chapter Sidebar Table of Contents)**: `ChapterId`, `EBookId`, `ChapterNumber`, `Title`, `Subtitle`, `PagesLabel`, `StartPage`, `EndPage`, `DisplayOrder`, `AudioTitle`, `AudioUrlPath`, `AudioDurationSeconds`, `IsCurrentActive`, `IsLocked`
     3. **Result Set 3 (Active Chapter Reading Canvas Content)**: `ChapterId`, `EBookId`, `ChapterNumber`, `Title`, `Subtitle`, `PagesLabel`, `StartPage`, `EndPage`, `LeadParagraph`, `ContentBody`, `IllustrationPath`, `AudioTitle`, `AudioDesc`, `AudioUrlPath`, `AudioDurationSeconds`, `DisplayOrder`, `AudioPositionSeconds`, `IsBookmarked`
   - **Action 3 (Save Progress)**:

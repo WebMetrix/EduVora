@@ -14,6 +14,7 @@ const normalizePackage = (p) => {
         description: p.Description || 'N/A',
         coverImagePath: p.CoverImagePath || null,
         purchasedDate: p.PurchaseDateFormatted || (p.PurchaseDate ? new Date(p.PurchaseDate).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }) : 'N/A'),
+        coursesCount: Number(p.TotalCourses) || 0,
         ebooksCount: Number(p.TotalEBooks) || 0,
         audioCount: Number(p.TotalAudioFiles) || 0,
         status: (p.OverallStatus || 'Not Started').toLowerCase().replace(/\s+/g, ''),
@@ -27,6 +28,26 @@ const normalizePackage = (p) => {
     };
 };
 
+// Helper to normalize Course from DB
+const normalizeCourse = (c) => {
+    if (!c) return null;
+    return {
+        id: `course-${c.CourseId}`,
+        courseId: c.CourseId,
+        packageId: c.PackageId,
+        packageName: c.PackageName || 'N/A',
+        number: c.CourseNumber || `Course ${c.CourseId}`,
+        title: c.CourseName || 'N/A',
+        name: c.CourseName || 'N/A',
+        description: c.CourseDescr || 'N/A',
+        summary: c.CourseDescr || 'N/A',
+        displayOrder: c.DisplayOrder || 1,
+        ebooksCount: Number(c.TotalEBooksInCourse) || 0,
+        audioCount: Number(c.TotalAudioInCourse) || 0,
+        ebooks: []
+    };
+};
+
 // Helper to normalize EBook item from DB
 const normalizeEBook = (eb, chaptersList = []) => {
     if (!eb) return null;
@@ -35,8 +56,10 @@ const normalizeEBook = (eb, chaptersList = []) => {
     return {
         id: `eb-${eb.EBookId}`,
         ebookId: eb.EBookId,
+        courseId: eb.CourseId,
         packageId: eb.PackageId,
         packageName: eb.PackageName || 'N/A',
+        courseName: eb.CourseName || 'N/A',
         number: eb.EBookNumber || (eb.DisplayOrder ? `EBook ${eb.DisplayOrder}` : 'N/A'),
         title: eb.Title || 'N/A',
         summary: eb.Summary || 'N/A',
@@ -88,21 +111,41 @@ export const getUserCourses = async (req, res) => {
         const result = await request.execute('EV_GetUserCourses');
 
         const rawPackages = result.recordsets[0] || [];
-        const rawEBooks = result.recordsets[1] || [];
-        const rawCurriculum = result.recordsets[2] || [];
+        const rawCourses = result.recordsets[1] || [];
+        const rawEBooks = result.recordsets[2] || [];
+        const rawCurriculum = result.recordsets[3] || [];
 
         const packages = rawPackages.map(normalizePackage);
+        const courses = rawCourses.map(normalizeCourse);
         const ebooks = rawEBooks.map(eb => normalizeEBook(eb, rawCurriculum));
 
-        // Group eBooks under packages for structured frontend access
-        const packagesWithContent = packages.map(pkg => ({
-            ...pkg,
-            content: ebooks.filter(eb => eb.packageId === pkg.packageId)
-        }));
+        // Group EBooks under each Course
+        const coursesWithEBooks = courses.map(crs => {
+            const courseEBooks = ebooks.filter(eb => eb.courseId === crs.courseId);
+            return {
+                ...crs,
+                ebooksCount: courseEBooks.length,
+                ebooks: courseEBooks
+            };
+        });
+
+        // Group Courses under each Package
+        const packagesWithContent = packages.map(pkg => {
+            const pkgCourses = coursesWithEBooks.filter(crs => crs.packageId === pkg.packageId);
+            const pkgEBooks = ebooks.filter(eb => eb.packageId === pkg.packageId);
+            return {
+                ...pkg,
+                coursesCount: Number(pkg.coursesCount) || pkgCourses.length,
+                ebooksCount: Number(pkg.ebooksCount) || pkgEBooks.length,
+                courses: pkgCourses,
+                content: pkgCourses // backwards-compatible
+            };
+        });
 
         res.status(200).json({
             success: true,
             packages: packagesWithContent,
+            courses: coursesWithEBooks,
             ebooks,
             curriculum: rawCurriculum
         });
