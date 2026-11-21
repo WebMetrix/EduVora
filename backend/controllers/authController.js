@@ -9,6 +9,8 @@ import { t } from '../utils/translation.js';
 import { decryptUserId } from '../utils/encryption.js';
 import { sendEmail } from '../services/emailService.js';
 import EmailEvents from '../utils/emailEvents.js';
+import CryptoJS from "crypto-js"; // Import CryptoJS for decryption
+import "dotenv/config"; // Load environment variables from .env file
 
 // Initialize the Google Client
 const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
@@ -194,7 +196,12 @@ export const loginUser = async (req, res) => {
 
         // 3. User found, validate password
         const user = result.recordset[0];
-        const isMatch = await bcrypt.compare(password, user.Password);
+
+        // Decrypt the password received from the frontend
+        const bytes = CryptoJS.AES.decrypt(req.body.password, process.env.CRYPTO_SECRET);
+        const decryptedPassword = bytes.toString(CryptoJS.enc.Utf8);
+
+        const isMatch = await bcrypt.compare(decryptedPassword, user.Password); // Compare decrypted password with hashed password in DB
 
         if (!isMatch) {
             return res.status(400).send({ message: t('api.auth.invalidCredentials') });

@@ -5,6 +5,8 @@ import { useTranslation } from '../../../hooks/useTranslation';
 import { useDispatch, useSelector } from 'react-redux';
 import { loginUser } from '../../../redux/slices/authSlice';
 import { toast } from 'react-toastify';
+import CryptoJS from "crypto-js"; // Import CryptoJS for encryption
+
 
 export default function LoginForm() {
   const { t } = useTranslation();
@@ -24,9 +26,15 @@ export default function LoginForm() {
       return toast.error(t('toast.auth.enterEmailPassword'));
     }
 
+    // Encrypt the password before sending it to the backend
+    const encryptedPassword = CryptoJS.AES.encrypt(
+    password,
+    import.meta.env.VITE_CRYPTO_SECRET
+  ).toString();
+
     const payload = {
       emailAddress,
-      password
+      password: encryptedPassword // Send the encrypted password
     };
 
     const resultAction = await dispatch(loginUser(payload));
