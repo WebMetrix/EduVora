@@ -1,0 +1,17 @@
+{
+  "admin": {
+    "dashboard": "Dashboard",
+    "userManagement": "User Management",
+    "networkReferrals": "Network & Referrals",
+    "packageProductManagement": "Package & Product Management",
+    "ordersInvoices": "Orders & Invoices",
+    "payments": "Payments",
+    "commissionManagement": "Commission Management",
+    "walletManagement": "Wallet Management",
+    "rankAchievements": "Rank & Achievements",
+    "kycVerification": "KYC Verification",
+    "contentLegal": "Content & Legal",
+    "reportsAnalytics": "Reports & Analytics",
+    "systemMonitoringAudit": "System Monitoring & Audit"
+  }
+}
