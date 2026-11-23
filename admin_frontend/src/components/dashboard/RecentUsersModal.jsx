@@ -5,6 +5,8 @@ import {
   Search, Calendar, ChevronDown, ChevronLeft, ChevronRight,
   Download, Eye, MoreVertical, ShieldCheck, Mail, Phone
 } from 'lucide-react';
+import UserDetailsModal from './UserDetailsModal';
+import KycDetailsModal from './KycDetailsModal';
 
 // Mock Recent Users Dataset matching the provided design
 const initialRecentUsers = [
@@ -162,6 +164,7 @@ export default function RecentUsersModal({ isOpen, onClose }) {
   const [packageFilter, setPackageFilter] = useState('All Packages');
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedUser, setSelectedUser] = useState(null);
+  const [viewingKycUser, setViewingKycUser] = useState(null);
   const [isExporting, setIsExporting] = useState(false);
   const itemsPerPage = 10;
 
@@ -811,78 +814,20 @@ export default function RecentUsersModal({ isOpen, onClose }) {
         </div>
       </div>
 
-      {/* Detail Dialog */}
-      {selectedUser && (
-        <div className="fixed inset-0 z-[10000] flex items-center justify-center p-3 sm:p-4 bg-slate-950/70 backdrop-blur-sm animate-fade-in">
-          <div className="fixed inset-0" onClick={() => setSelectedUser(null)} />
-          <div className="relative z-10 w-full max-w-md bg-white rounded-2xl shadow-2xl border border-slate-200 p-4 sm:p-5 modal-fade-in">
-            <div className="flex items-center justify-between pb-2.5 border-b border-slate-100">
-              <div className="flex items-center gap-2.5">
-                <img
-                  src={selectedUser.avatar}
-                  alt={selectedUser.name}
-                  className="w-8 h-8 rounded-full object-cover border border-slate-200"
-                />
-                <div>
-                  <h3 className="text-[14px] font-bold text-slate-900 leading-tight">
-                    {selectedUser.name}
-                  </h3>
-                  <span className="text-[11px] text-slate-500 font-medium">
-                    {selectedUser.userId}
-                  </span>
-                </div>
-              </div>
-              <button
-                onClick={() => setSelectedUser(null)}
-                className="p-1.5 rounded-lg text-slate-400 hover:text-slate-700 hover:bg-slate-100 cursor-pointer"
-              >
-                <X className="w-4 h-4" />
-              </button>
-            </div>
+      {/* Nested User Detail Dialog (View All -> Actions Click Window) */}
+      <UserDetailsModal
+        user={selectedUser}
+        isOpen={Boolean(selectedUser)}
+        onClose={() => setSelectedUser(null)}
+        onViewKyc={() => setViewingKycUser(selectedUser)}
+      />
 
-            <div className="py-3 space-y-2.5 text-[12px]">
-              <div className="grid grid-cols-2 gap-2 bg-slate-50/70 p-2.5 rounded-xl border border-slate-100">
-                <div>
-                  <span className="text-[10px] font-bold text-slate-400 uppercase">Package</span>
-                  <p className="font-bold text-slate-800">{selectedUser.package}</p>
-                </div>
-                <div>
-                  <span className="text-[10px] font-bold text-slate-400 uppercase">Registered</span>
-                  <p className="font-semibold text-slate-700 text-[11px]">{selectedUser.registrationDate}</p>
-                </div>
-                <div>
-                  <span className="text-[10px] font-bold text-slate-400 uppercase">KYC Status</span>
-                  <div className="mt-0.5">{getKycBadge(selectedUser.kycStatus)}</div>
-                </div>
-                <div>
-                  <span className="text-[10px] font-bold text-slate-400 uppercase">Account Status</span>
-                  <div className="mt-0.5">{getAccountBadge(selectedUser.accountStatus)}</div>
-                </div>
-              </div>
-
-              <div className="border border-indigo-100 bg-indigo-50/30 rounded-xl p-3 flex flex-col gap-1.5 text-[11.5px]">
-                <div className="flex items-center gap-2 text-slate-600">
-                  <Mail className="w-3.5 h-3.5 text-indigo-500" />
-                  <span className="font-medium">{selectedUser.email}</span>
-                </div>
-                <div className="flex items-center gap-2 text-slate-600">
-                  <Phone className="w-3.5 h-3.5 text-indigo-500" />
-                  <span className="font-medium">{selectedUser.mobile}</span>
-                </div>
-              </div>
-            </div>
-
-            <div className="pt-2 flex justify-end">
-              <button
-                onClick={() => setSelectedUser(null)}
-                className="px-4 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 text-[12px] font-bold rounded-xl transition-colors cursor-pointer"
-              >
-                Close
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+      {/* KYC Details Dialog if triggered from within User Details */}
+      <KycDetailsModal
+        user={viewingKycUser}
+        isOpen={Boolean(viewingKycUser)}
+        onClose={() => setViewingKycUser(null)}
+      />
     </div>,
     document.body
   );

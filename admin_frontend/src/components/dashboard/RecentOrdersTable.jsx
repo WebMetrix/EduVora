@@ -1,5 +1,6 @@
-import React from 'react';
-import { ShoppingCart, MoreHorizontal, Calendar, IndianRupee, Package } from 'lucide-react';
+import React, { useState } from 'react';
+import { ShoppingCart, Calendar, IndianRupee, Package } from 'lucide-react';
+import OrderDetailsModal from './OrderDetailsModal';
 
 const ordersData = [
   {
@@ -50,13 +51,14 @@ const ordersData = [
 ];
 
 export default function RecentOrdersTable({ onViewAll }) {
+  const [selectedOrder, setSelectedOrder] = useState(null);
   return (
-    <div className="relative overflow-hidden rounded-2xl sm:rounded-3xl bg-linear-to-br from-white/90 to-indigo-50/40 backdrop-blur-xl border border-indigo-100/60 p-3.5 sm:p-4 lg:p-4 shadow-[0_8px_30px_rgb(0,0,0,0.04)] hover:shadow-[0_8px_30px_rgb(99,102,241,0.12)] hover:border-indigo-300 transition-all duration-300 group flex flex-col justify-between">
+    <div className="relative overflow-hidden rounded-2xl sm:rounded-3xl bg-linear-to-br from-white/90 to-indigo-50/40 backdrop-blur-xl border border-indigo-100/60 p-3.5 sm:p-4 lg:p-4 shadow-[0_8px_30px_rgb(0,0,0,0.04)] hover:shadow-[0_8px_30px_rgb(99,102,241,0.12)] hover:border-indigo-300 transition-all duration-300 group flex flex-col justify-between h-full">
       {/* Decorative hover gradient flare */}
       <div className="absolute top-0 right-0 w-64 h-64 bg-indigo-400/10 rounded-full blur-[80px] -translate-y-1/2 translate-x-1/3 pointer-events-none group-hover:bg-indigo-400/20 transition-colors duration-700" />
 
       {/* Header */}
-      <div className="relative z-10 flex items-center justify-between mb-3">
+      <div className="relative z-10 flex items-center justify-between mb-2.5 sm:mb-3">
         <div className="flex items-center gap-2">
           <div className="w-8 h-8 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center shrink-0 shadow-2xs group-hover:scale-105 transition-transform">
             <ShoppingCart className="w-4 h-4" />
@@ -86,33 +88,42 @@ export default function RecentOrdersTable({ onViewAll }) {
       {/* Desktop View Table (hidden on mobile) */}
       <div className="relative z-10 hidden md:block overflow-hidden">
         <table className="w-full text-left text-[11.5px] sm:text-[12px] whitespace-nowrap">
+          <colgroup>
+            <col className="w-[6%]" />
+            <col className="w-[20%]" />
+            <col className="w-[22%]" />
+            <col className="w-[14%]" />
+            <col className="w-[13%]" />
+            <col className="w-[13%]" />
+            <col className="w-[12%]" />
+          </colgroup>
           <thead>
             <tr className="border-b border-slate-200/60 text-slate-400 font-bold">
-              <th className="py-2.5 px-1.5 font-semibold text-center w-7">#</th>
-              <th className="py-2.5 px-1.5 font-semibold">Order ID</th>
-              <th className="py-2.5 px-1.5 font-semibold">User Name</th>
-              <th className="py-2.5 px-1.5 font-semibold">Package</th>
-              <th className="py-2.5 px-1.5 font-semibold">Amount</th>
-              <th className="py-2.5 px-1.5 font-semibold">Date</th>
-              <th className="py-2.5 px-1.5 font-semibold">Status</th>
-              <th className="py-2.5 px-1.5 font-semibold text-center w-7">Actions</th>
+              <th className="py-2 sm:py-2.5 px-2 font-semibold text-center">#</th>
+              <th className="py-2 sm:py-2.5 px-2 font-semibold">Order ID</th>
+              <th className="py-2 sm:py-2.5 px-2 font-semibold">User Name</th>
+              <th className="py-2 sm:py-2.5 px-2 font-semibold">Package</th>
+              <th className="py-2 sm:py-2.5 px-2 font-semibold">Amount</th>
+              <th className="py-2 sm:py-2.5 px-2 font-semibold">Date</th>
+              <th className="py-2 sm:py-2.5 px-2 font-semibold text-center">Status</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-indigo-100/30">
             {ordersData.map((order) => (
               <tr
                 key={order.id}
+                onClick={() => setSelectedOrder(order)}
                 className="group border-b border-indigo-100/30 hover:bg-white hover:shadow-md hover:-translate-y-0.5 hover:z-10 relative transition-all duration-300 cursor-pointer"
               >
-                <td className="py-3 px-1.5 text-slate-400 font-medium text-center rounded-l-xl">{order.id}</td>
-                <td className="py-3 px-1.5 font-semibold text-slate-700 group-hover:text-indigo-600 transition-colors tracking-tight">{order.orderId}</td>
-                <td className="py-3 px-1.5 font-bold text-slate-900 group-hover:text-indigo-950 transition-colors">{order.userName}</td>
-                <td className="py-3 px-1.5 text-slate-600 font-semibold">{order.package}</td>
-                <td className="py-3 px-1.5 font-black text-slate-900">{order.amount}</td>
-                <td className="py-3 px-1.5 text-slate-500 font-medium">{order.date}</td>
-                <td className="py-3 px-1.5">
+                <td className="py-2 sm:py-2.5 px-2 text-slate-400 font-medium text-center rounded-l-xl">{order.id}</td>
+                <td className="py-2 sm:py-2.5 px-2 font-semibold text-slate-700 group-hover:text-indigo-600 transition-colors tracking-tight">{order.orderId}</td>
+                <td className="py-2 sm:py-2.5 px-2 font-bold text-slate-900 group-hover:text-indigo-950 transition-colors">{order.userName}</td>
+                <td className="py-2 sm:py-2.5 px-2 text-slate-600 font-semibold">{order.package}</td>
+                <td className="py-2 sm:py-2.5 px-2 font-black text-slate-900">{order.amount}</td>
+                <td className="py-2 sm:py-2.5 px-2 text-slate-500 font-medium">{order.date}</td>
+                <td className="py-2 sm:py-2.5 px-2 text-center rounded-r-xl">
                   <span
-                    className={`px-1.5 py-0.5 rounded-md text-[10px] font-bold border inline-flex items-center shadow-2xs transition-transform duration-300 group-hover:scale-105 ${order.status === 'Completed'
+                    className={`px-2 py-0.5 rounded-md text-[10px] font-bold border inline-flex items-center shadow-2xs transition-transform duration-300 group-hover:scale-105 ${order.status === 'Completed'
                       ? 'bg-emerald-50 text-emerald-700 border-emerald-200/60'
                       : order.status === 'Pending'
                         ? 'bg-amber-50 text-amber-700 border-amber-200/60'
@@ -121,11 +132,6 @@ export default function RecentOrdersTable({ onViewAll }) {
                   >
                     {order.status}
                   </span>
-                </td>
-                <td className="py-3 px-1.5 text-center rounded-r-xl">
-                  <button className="p-1 rounded-md text-slate-400 hover:text-indigo-600 hover:bg-indigo-50 transition-all duration-300 group-hover:scale-110 cursor-pointer">
-                    <MoreHorizontal className="w-4 h-4" />
-                  </button>
                 </td>
               </tr>
             ))}
@@ -138,6 +144,7 @@ export default function RecentOrdersTable({ onViewAll }) {
         {ordersData.map((order) => (
           <div
             key={order.id}
+            onClick={() => setSelectedOrder(order)}
             className="group p-3 sm:p-4 flex flex-col gap-2.5 bg-white/60 border border-indigo-100/50 rounded-2xl hover:bg-white hover:shadow-lg hover:border-indigo-300 hover:-translate-y-1 transition-all duration-300 cursor-pointer relative z-10"
           >
             {/* Top row: Order ID + Status + Action */}
@@ -162,9 +169,6 @@ export default function RecentOrdersTable({ onViewAll }) {
                 >
                   {order.status}
                 </span>
-                <button className="p-1 text-slate-400 hover:text-indigo-600 transition-transform duration-300 group-hover:scale-110">
-                  <MoreHorizontal className="w-3.5 h-3.5" />
-                </button>
               </div>
             </div>
 
@@ -185,6 +189,13 @@ export default function RecentOrdersTable({ onViewAll }) {
           </div>
         ))}
       </div>
+
+      {/* Order Details Modal */}
+      <OrderDetailsModal
+        order={selectedOrder}
+        isOpen={Boolean(selectedOrder)}
+        onClose={() => setSelectedOrder(null)}
+      />
     </div>
   );
 }

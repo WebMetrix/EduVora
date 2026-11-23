@@ -5,6 +5,7 @@ import {
   Calendar, ChevronDown, ChevronLeft, ChevronRight, Download,
   Eye, CheckCircle2, AlertCircle, XCircle
 } from 'lucide-react';
+import KycDetailsModal from './KycDetailsModal';
 
 // Mock KYC Dataset matching the provided design
 const initialKycUsers = [
@@ -13,66 +14,111 @@ const initialKycUsers = [
     userId: 'EVU001248',
     name: 'Rajesh Kumar',
     email: 'rajesh@gmail.com',
+    mobile: '+91 98765 43210',
     avatar: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=120&auto=format&fit=crop&q=80',
     kycType: 'Aadhar Card',
+    registeredOn: '31 Aug 2026, 10:24 AM',
     submissionDate: '31 Aug 2026, 10:24 AM',
     status: 'Approved',
     reviewedBy: 'Neha Sharma',
     reviewedDate: '01 Sep 2026, 11:30 AM',
-    documentNumber: 'XXXX-XXXX-4821',
+    aadharNumber: 'XXXX XXXX 1234',
+    panNumber: 'ABCDE1234F',
+    nameOnDocument: 'Rajesh Kumar',
+    dob: '15 Oct 2000',
+    gender: 'Male',
+    address: '123, MG Road,\nAndheri West, Mumbai,\nMaharashtra - 400053',
+    remarks: 'Documents verified successfully. All details are valid.',
+    remarkAuthor: 'Neha Sharma (01 Sep 2026, 11:30 AM)'
   },
   {
     id: 2,
     userId: 'EVU001247',
     name: 'Priya Sharma',
     email: 'priya@gmail.com',
+    mobile: '+91 91234 56789',
     avatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=120&auto=format&fit=crop&q=80',
     kycType: 'PAN Card',
+    registeredOn: '31 Aug 2026, 09:12 AM',
     submissionDate: '31 Aug 2026, 09:12 AM',
     status: 'Under Review',
     reviewedBy: '-',
     reviewedDate: '-',
-    documentNumber: 'ABCDE1234F',
+    aadharNumber: 'XXXX XXXX 5678',
+    panNumber: 'ABCDE1234F',
+    nameOnDocument: 'Priya Sharma',
+    dob: '22 Feb 1998',
+    gender: 'Female',
+    address: '45, Park Street, Bandra,\nMumbai, Maharashtra - 400050',
+    remarks: 'Documents are currently under review by compliance team.',
+    remarkAuthor: 'Automated System (31 Aug 2026, 09:15 AM)'
   },
   {
     id: 3,
     userId: 'EVU001246',
     name: 'Arjun Mehta',
     email: 'arjun@gmail.com',
+    mobile: '+91 99887 66554',
     avatar: 'https://images.unsplash.com/photo-1570295999919-56ceb5ecca61?w=120&auto=format&fit=crop&q=80',
     kycType: 'Aadhar Card',
+    registeredOn: '30 Aug 2026, 04:20 PM',
     submissionDate: '30 Aug 2026, 04:20 PM',
     status: 'Rejected',
     reviewedBy: 'Vikram Singh',
     reviewedDate: '31 Aug 2026, 10:15 AM',
-    documentNumber: 'XXXX-XXXX-9912',
+    aadharNumber: 'XXXX XXXX 9912',
+    panNumber: 'ARJPM9912K',
+    nameOnDocument: 'Arjun Mehta',
+    dob: '10 Jun 1995',
+    gender: 'Male',
+    address: '88, Ring Road, Connaught Place,\nNew Delhi - 110001',
     rejectReason: 'Blurry document image submitted.',
+    remarks: 'Blurry document image submitted. Re-upload requested with clear high-resolution copies.',
+    remarkAuthor: 'Vikram Singh (31 Aug 2026, 10:15 AM)'
   },
   {
     id: 4,
     userId: 'EVU001245',
     name: 'Sneha Iyer',
     email: 'sneha@gmail.com',
+    mobile: '+91 87654 32109',
     avatar: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=120&auto=format&fit=crop&q=80',
     kycType: 'Passport',
+    registeredOn: '30 Aug 2026, 11:05 AM',
     submissionDate: '30 Aug 2026, 11:05 AM',
     status: 'Approved',
     reviewedBy: 'Neha Sharma',
     reviewedDate: '31 Aug 2026, 02:45 PM',
-    documentNumber: 'Z8732910',
+    aadharNumber: 'XXXX XXXX 8732',
+    panNumber: 'SNEIP8732L',
+    nameOnDocument: 'Sneha Iyer',
+    dob: '14 Dec 1999',
+    gender: 'Female',
+    address: '12, Indiranagar 100ft Road,\nBangalore, Karnataka - 560038',
+    remarks: 'Documents verified successfully. All details are valid.',
+    remarkAuthor: 'Neha Sharma (31 Aug 2026, 02:45 PM)'
   },
   {
     id: 5,
     userId: 'EVU001244',
     name: 'Vikram Singh',
     email: 'vikram@gmail.com',
+    mobile: '+91 76543 21098',
     avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=120&auto=format&fit=crop&q=80',
     kycType: 'Driving License',
+    registeredOn: '29 Aug 2026, 03:40 PM',
     submissionDate: '29 Aug 2026, 03:40 PM',
     status: 'Pending',
     reviewedBy: '-',
     reviewedDate: '-',
-    documentNumber: 'DL-042021008129',
+    aadharNumber: 'XXXX XXXX 8129',
+    panNumber: 'VIKPS8129M',
+    nameOnDocument: 'Vikram Singh',
+    dob: '04 Apr 1992',
+    gender: 'Male',
+    address: '56, Civil Lines,\nJaipur, Rajasthan - 302006',
+    remarks: 'KYC application awaiting review in processing queue.',
+    remarkAuthor: 'System Automated Queue'
   },
   {
     id: 6,
@@ -810,128 +856,12 @@ export default function KycStatusModal({ isOpen, onClose }) {
         </div>
       </div>
 
-      {/* Nested KYC Detail Preview Dialog when Eye is clicked */}
-      {selectedUser && (
-        <div className="fixed inset-0 z-[10000] flex items-center justify-center p-3 sm:p-4 bg-slate-950/70 backdrop-blur-sm animate-fade-in">
-          <div className="fixed inset-0" onClick={() => setSelectedUser(null)} />
-          <div className="relative z-10 w-full max-w-md bg-white rounded-2xl shadow-2xl border border-slate-200 p-4 sm:p-5 modal-fade-in">
-            {/* Header */}
-            <div className="flex items-center justify-between pb-2.5 border-b border-slate-100">
-              <div className="flex items-center gap-2.5">
-                <img
-                  src={selectedUser.avatar}
-                  alt={selectedUser.name}
-                  className="w-8 h-8 rounded-full object-cover border border-slate-200"
-                />
-                <div>
-                  <h3 className="text-[14px] font-bold text-slate-900 leading-tight">
-                    {selectedUser.name}
-                  </h3>
-                  <span className="text-[11px] text-slate-500 font-medium">
-                    {selectedUser.userId} • {selectedUser.email}
-                  </span>
-                </div>
-              </div>
-              <button
-                onClick={() => setSelectedUser(null)}
-                className="p-1.5 rounded-lg text-slate-400 hover:text-slate-700 hover:bg-slate-100 cursor-pointer"
-              >
-                <X className="w-4 h-4" />
-              </button>
-            </div>
-
-            {/* Details Grid */}
-            <div className="py-3 space-y-2.5 text-[12px]">
-              <div className="grid grid-cols-2 gap-2 bg-slate-50/70 p-2.5 rounded-xl border border-slate-100">
-                <div>
-                  <span className="text-[10px] font-bold text-slate-400 uppercase">Document Type</span>
-                  <p className="font-bold text-slate-800">{selectedUser.kycType}</p>
-                </div>
-                <div>
-                  <span className="text-[10px] font-bold text-slate-400 uppercase">Doc Number</span>
-                  <p className="font-bold text-slate-800">{selectedUser.documentNumber || 'N/A'}</p>
-                </div>
-                <div>
-                  <span className="text-[10px] font-bold text-slate-400 uppercase">Submission Date</span>
-                  <p className="font-semibold text-slate-700 text-[11px]">{selectedUser.submissionDate}</p>
-                </div>
-                <div>
-                  <span className="text-[10px] font-bold text-slate-400 uppercase">Status</span>
-                  <div className="mt-0.5">{getStatusBadge(selectedUser.status)}</div>
-                </div>
-              </div>
-
-              {/* Document Scan Simulation */}
-              <div className="border border-indigo-100 bg-indigo-50/30 rounded-xl p-3 flex flex-col items-center justify-center text-center gap-1.5">
-                <FileText className="w-7 h-7 text-indigo-500" />
-                <div>
-                  <p className="text-[12px] font-bold text-slate-800">
-                    {selectedUser.kycType} Document Scan
-                  </p>
-                  <p className="text-[10px] text-slate-500">
-                    {selectedUser.userId}_kyc_document.pdf (1.8 MB)
-                  </p>
-                </div>
-              </div>
-
-              {selectedUser.rejectReason && (
-                <div className="p-2.5 rounded-xl bg-rose-50 border border-rose-200/70 text-[11px] text-rose-700 font-medium">
-                  <span className="font-bold">Rejection Reason:</span> {selectedUser.rejectReason}
-                </div>
-              )}
-            </div>
-
-            {/* Action Buttons */}
-            <div className="flex items-center justify-end gap-2 pt-2.5 border-t border-slate-100">
-              <button
-                type="button"
-                onClick={() => setSelectedUser(null)}
-                className="px-3.5 py-1.5 border border-slate-200 rounded-xl text-[11.5px] font-bold text-slate-700 hover:bg-slate-50 cursor-pointer"
-              >
-                Close
-              </button>
-              {selectedUser.status !== 'Approved' && (
-                <button
-                  type="button"
-                  onClick={() => {
-                    setUsers((prev) =>
-                      prev.map((u) =>
-                        u.id === selectedUser.id
-                          ? { ...u, status: 'Approved', reviewedBy: 'Admin User', reviewedDate: 'Just now' }
-                          : u
-                      )
-                    );
-                    setSelectedUser(null);
-                  }}
-                  className="px-3.5 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-[11.5px] font-bold shadow-xs cursor-pointer flex items-center gap-1.5"
-                >
-                  <CheckCircle2 className="w-3.5 h-3.5" />
-                  <span>Approve KYC</span>
-                </button>
-              )}
-              {selectedUser.status !== 'Rejected' && (
-                <button
-                  type="button"
-                  onClick={() => {
-                    setUsers((prev) =>
-                      prev.map((u) =>
-                        u.id === selectedUser.id
-                          ? { ...u, status: 'Rejected', reviewedBy: 'Admin User', reviewedDate: 'Just now', rejectReason: 'Rejected by Super Admin.' }
-                          : u
-                      )
-                    );
-                    setSelectedUser(null);
-                  }}
-                  className="px-3.5 py-1.5 bg-rose-600 hover:bg-rose-700 text-white rounded-xl text-[11.5px] font-bold shadow-xs cursor-pointer flex items-center gap-1.5"
-                >
-                  <XCircle className="w-3.5 h-3.5" />
-                  <span>Reject</span>
-                </button>
-              )}
-            </div>
-          </div>
-        </div>
-      )}
+      {/* Nested KYC Detail Dialog (View All -> Actions Click Window) */}
+      <KycDetailsModal
+        user={selectedUser}
+        isOpen={Boolean(selectedUser)}
+        onClose={() => setSelectedUser(null)}
+      />
 
       {/* Keyframe animations identical to PackageDetailsModal */}
       <style dangerouslySetInnerHTML={{

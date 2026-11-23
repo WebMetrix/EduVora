@@ -5,6 +5,7 @@ import {
   Search, Calendar, ChevronDown, ChevronLeft, ChevronRight,
   Download, Eye, MoreVertical, CreditCard, Wallet, RotateCcw
 } from 'lucide-react';
+import OrderStatusDetailsModal from './OrderStatusDetailsModal';
 
 // Mock Order Status Dataset matching the provided design
 const initialOrders = [
@@ -611,16 +612,16 @@ export default function OrderStatusModal({ isOpen, onClose }) {
             <div className="bg-slate-50/95 border-b border-slate-200/80 shrink-0 pr-[6px]">
               <table className="w-full table-fixed text-left border-collapse">
                 <colgroup>
-                  <col style={{ width: '36px' }} />
-                  <col style={{ width: '115px' }} />
-                  <col style={{ width: '190px' }} />
-                  <col style={{ width: '130px' }} />
+                  <col style={{ width: '34px' }} />
+                  <col style={{ width: '95px' }} />
+                  <col style={{ width: '155px' }} />
                   <col style={{ width: '110px' }} />
-                  <col style={{ width: '110px' }} />
-                  <col style={{ width: '105px' }} />
-                  <col style={{ width: '105px' }} />
-                  <col style={{ width: '105px' }} />
-                  <col style={{ width: '55px' }} />
+                  <col style={{ width: '85px' }} />
+                  <col style={{ width: '90px' }} />
+                  <col style={{ width: '90px' }} />
+                  <col style={{ width: '80px' }} />
+                  <col style={{ width: '80px' }} />
+                  <col style={{ width: '65px' }} />
                 </colgroup>
                 <thead>
                   <tr className="text-[10.5px] font-bold text-slate-500 uppercase tracking-wider">
@@ -632,8 +633,8 @@ export default function OrderStatusModal({ isOpen, onClose }) {
                       <span className="block whitespace-nowrap leading-tight">Product</span>
                     </th>
                     <th className="py-2.5 px-2">
-                      <span className="block whitespace-nowrap leading-tight">Order Amount</span>
-                      <span className="block whitespace-nowrap text-[9.5px] text-slate-400 font-semibold leading-tight">(₹)</span>
+                      <span className="block whitespace-nowrap leading-tight">Order</span>
+                      <span className="block whitespace-nowrap leading-tight">Amount</span>
                     </th>
                     <th className="py-2.5 px-2">
                       <span className="block whitespace-nowrap leading-tight">Payment</span>
@@ -658,16 +659,16 @@ export default function OrderStatusModal({ isOpen, onClose }) {
             <div className="flex-1 min-h-0 overflow-y-auto overflow-x-hidden custom-scrollbar">
               <table className="w-full table-fixed text-left border-collapse text-[12px]">
                 <colgroup>
-                  <col style={{ width: '36px' }} />
-                  <col style={{ width: '115px' }} />
-                  <col style={{ width: '190px' }} />
-                  <col style={{ width: '130px' }} />
+                  <col style={{ width: '34px' }} />
+                  <col style={{ width: '95px' }} />
+                  <col style={{ width: '155px' }} />
                   <col style={{ width: '110px' }} />
-                  <col style={{ width: '110px' }} />
-                  <col style={{ width: '105px' }} />
-                  <col style={{ width: '105px' }} />
-                  <col style={{ width: '105px' }} />
-                  <col style={{ width: '55px' }} />
+                  <col style={{ width: '85px' }} />
+                  <col style={{ width: '90px' }} />
+                  <col style={{ width: '90px' }} />
+                  <col style={{ width: '80px' }} />
+                  <col style={{ width: '80px' }} />
+                  <col style={{ width: '65px' }} />
                 </colgroup>
                 <tbody className="divide-y divide-indigo-100/30">
                   {currentRecords.length === 0 ? (
@@ -709,7 +710,7 @@ export default function OrderStatusModal({ isOpen, onClose }) {
                           {getPackageBadge(item.package)}
                         </td>
                         <td className="py-2.5 px-2 font-bold text-slate-800 whitespace-nowrap">
-                          {item.amount}
+                          ₹ {item.amount}
                         </td>
                         <td className="py-2.5 px-2 font-medium text-slate-700 whitespace-nowrap">
                           {item.paymentMethod}
@@ -873,86 +874,12 @@ export default function OrderStatusModal({ isOpen, onClose }) {
         </div>
       </div>
 
-      {/* Detail Dialog */}
-      {selectedOrder && (
-        <div className="fixed inset-0 z-[10000] flex items-center justify-center p-3 sm:p-4 bg-slate-950/70 backdrop-blur-sm animate-fade-in">
-          <div className="fixed inset-0" onClick={() => setSelectedOrder(null)} />
-          <div className="relative z-10 w-full max-w-md bg-white rounded-2xl shadow-2xl border border-slate-200 p-4 sm:p-5 modal-fade-in">
-            <div className="flex items-center justify-between pb-2.5 border-b border-slate-100">
-              <div className="flex items-center gap-2.5">
-                <img
-                  src={selectedOrder.avatar}
-                  alt={selectedOrder.name}
-                  className="w-8 h-8 rounded-full object-cover border border-slate-200"
-                />
-                <div>
-                  <h3 className="text-[14px] font-bold text-slate-900 leading-tight">
-                    {selectedOrder.name}
-                  </h3>
-                  <span className="text-[11px] text-slate-500 font-medium">
-                    {selectedOrder.orderId} • {selectedOrder.email}
-                  </span>
-                </div>
-              </div>
-              <button
-                onClick={() => setSelectedOrder(null)}
-                className="p-1.5 rounded-lg text-slate-400 hover:text-slate-700 hover:bg-slate-100 cursor-pointer"
-              >
-                <X className="w-4 h-4" />
-              </button>
-            </div>
-
-            <div className="py-3 space-y-2.5 text-[12px]">
-              <div className="grid grid-cols-2 gap-2 bg-slate-50/70 p-2.5 rounded-xl border border-slate-100">
-                <div>
-                  <span className="text-[10px] font-bold text-slate-400 uppercase">Package</span>
-                  <p className="font-bold text-slate-800">{selectedOrder.package}</p>
-                </div>
-                <div>
-                  <span className="text-[10px] font-bold text-slate-400 uppercase">Amount</span>
-                  <p className="font-bold text-slate-900 text-[13px]">₹ {selectedOrder.amount}</p>
-                </div>
-                <div>
-                  <span className="text-[10px] font-bold text-slate-400 uppercase">Payment Method</span>
-                  <p className="font-semibold text-slate-700">{selectedOrder.paymentMethod}</p>
-                </div>
-                <div>
-                  <span className="text-[10px] font-bold text-slate-400 uppercase">Order Date</span>
-                  <p className="font-semibold text-slate-700 text-[11px]">{selectedOrder.orderDate}</p>
-                </div>
-                <div>
-                  <span className="text-[10px] font-bold text-slate-400 uppercase">Order Status</span>
-                  <div className="mt-0.5">{getStatusBadge(selectedOrder.status)}</div>
-                </div>
-                <div>
-                  <span className="text-[10px] font-bold text-slate-400 uppercase">Payment Status</span>
-                  <div className="mt-0.5">{getPaymentBadge(selectedOrder.paymentStatus)}</div>
-                </div>
-              </div>
-
-              <div className="border border-indigo-100 bg-indigo-50/30 rounded-xl p-3 flex flex-col gap-1 text-[11px]">
-                <div className="flex justify-between text-slate-500">
-                  <span>Transaction ID:</span>
-                  <span className="font-mono font-bold text-slate-800">{selectedOrder.txnId}</span>
-                </div>
-                <div className="flex justify-between text-slate-500">
-                  <span>Invoice Generated:</span>
-                  <span className="font-bold text-emerald-600">Yes (Auto-billed)</span>
-                </div>
-              </div>
-            </div>
-
-            <div className="pt-2 flex justify-end">
-              <button
-                onClick={() => setSelectedOrder(null)}
-                className="px-4 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 text-[12px] font-bold rounded-xl transition-colors cursor-pointer"
-              >
-                Close
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+      {/* Nested Order Detail Dialog (View All -> Actions Click Window) */}
+      <OrderStatusDetailsModal
+        order={selectedOrder}
+        isOpen={Boolean(selectedOrder)}
+        onClose={() => setSelectedOrder(null)}
+      />
     </div>,
     document.body
   );

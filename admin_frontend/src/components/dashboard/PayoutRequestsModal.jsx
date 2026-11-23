@@ -5,6 +5,7 @@ import {
   Search, Calendar, ChevronDown, ChevronLeft, ChevronRight,
   Download, Eye, MoreVertical
 } from 'lucide-react';
+import PayoutRequestDetailsModal from './PayoutRequestDetailsModal';
 
 // Mock Payout Requests Dataset matching the provided design
 const initialPayouts = [
@@ -583,16 +584,16 @@ export default function PayoutRequestsModal({ isOpen, onClose }) {
             <div className="bg-slate-50/95 border-b border-slate-200/80 shrink-0 pr-[6px]">
               <table className="w-full table-fixed text-left border-collapse">
                 <colgroup>
-                  <col style={{ width: '36px' }} />
-                  <col style={{ width: '115px' }} />
-                  <col style={{ width: '190px' }} />
-                  <col style={{ width: '145px' }} />
+                  <col style={{ width: '34px' }} />
                   <col style={{ width: '95px' }} />
+                  <col style={{ width: '155px' }} />
                   <col style={{ width: '110px' }} />
-                  <col style={{ width: '105px' }} />
-                  <col style={{ width: '105px' }} />
-                  <col style={{ width: '105px' }} />
-                  <col style={{ width: '55px' }} />
+                  <col style={{ width: '80px' }} />
+                  <col style={{ width: '90px' }} />
+                  <col style={{ width: '90px' }} />
+                  <col style={{ width: '80px' }} />
+                  <col style={{ width: '90px' }} />
+                  <col style={{ width: '65px' }} />
                 </colgroup>
                 <thead>
                   <tr className="text-[10.5px] font-bold text-slate-500 uppercase tracking-wider">
@@ -605,7 +606,6 @@ export default function PayoutRequestsModal({ isOpen, onClose }) {
                     </th>
                     <th className="py-2.5 px-2">
                       <span className="block whitespace-nowrap leading-tight">Amount</span>
-                      <span className="block whitespace-nowrap text-[9.5px] text-slate-400 font-semibold leading-tight">(₹)</span>
                     </th>
                     <th className="py-2.5 px-2">
                       <span className="block whitespace-nowrap leading-tight">Payment</span>
@@ -630,16 +630,16 @@ export default function PayoutRequestsModal({ isOpen, onClose }) {
             <div className="flex-1 min-h-0 overflow-y-auto overflow-x-hidden custom-scrollbar">
               <table className="w-full table-fixed text-left border-collapse text-[12px]">
                 <colgroup>
-                  <col style={{ width: '36px' }} />
-                  <col style={{ width: '115px' }} />
-                  <col style={{ width: '190px' }} />
-                  <col style={{ width: '145px' }} />
+                  <col style={{ width: '34px' }} />
                   <col style={{ width: '95px' }} />
+                  <col style={{ width: '155px' }} />
                   <col style={{ width: '110px' }} />
-                  <col style={{ width: '105px' }} />
-                  <col style={{ width: '105px' }} />
-                  <col style={{ width: '105px' }} />
-                  <col style={{ width: '55px' }} />
+                  <col style={{ width: '80px' }} />
+                  <col style={{ width: '90px' }} />
+                  <col style={{ width: '90px' }} />
+                  <col style={{ width: '80px' }} />
+                  <col style={{ width: '90px' }} />
+                  <col style={{ width: '65px' }} />
                 </colgroup>
                 <tbody className="divide-y divide-indigo-100/30">
                   {currentRecords.length === 0 ? (
@@ -681,7 +681,7 @@ export default function PayoutRequestsModal({ isOpen, onClose }) {
                           {getRequestTypeBadge(item.requestType)}
                         </td>
                         <td className="py-2.5 px-2 font-bold text-slate-800 whitespace-nowrap">
-                          {item.amount}
+                          ₹ {item.amount}
                         </td>
                         <td className="py-2.5 px-2 font-medium text-slate-700 whitespace-nowrap">
                           {item.paymentMethod}
@@ -830,93 +830,12 @@ export default function PayoutRequestsModal({ isOpen, onClose }) {
         </div>
       </div>
 
-      {/* Detail Dialog */}
-      {selectedPayout && (
-        <div className="fixed inset-0 z-[10000] flex items-center justify-center p-3 sm:p-4 bg-slate-950/70 backdrop-blur-sm animate-fade-in">
-          <div className="fixed inset-0" onClick={() => setSelectedPayout(null)} />
-          <div className="relative z-10 w-full max-w-md bg-white rounded-2xl shadow-2xl border border-slate-200 p-4 sm:p-5 modal-fade-in">
-            <div className="flex items-center justify-between pb-2.5 border-b border-slate-100">
-              <div className="flex items-center gap-2.5">
-                <img
-                  src={selectedPayout.avatar}
-                  alt={selectedPayout.name}
-                  className="w-8 h-8 rounded-full object-cover border border-slate-200"
-                />
-                <div>
-                  <h3 className="text-[14px] font-bold text-slate-900 leading-tight">
-                    {selectedPayout.name}
-                  </h3>
-                  <span className="text-[11px] text-slate-500 font-medium">
-                    {selectedPayout.requestId} • {selectedPayout.email}
-                  </span>
-                </div>
-              </div>
-              <button
-                onClick={() => setSelectedPayout(null)}
-                className="p-1.5 rounded-lg text-slate-400 hover:text-slate-700 hover:bg-slate-100 cursor-pointer"
-              >
-                <X className="w-4 h-4" />
-              </button>
-            </div>
-
-            <div className="py-3 space-y-2.5 text-[12px]">
-              <div className="grid grid-cols-2 gap-2 bg-slate-50/70 p-2.5 rounded-xl border border-slate-100">
-                <div>
-                  <span className="text-[10px] font-bold text-slate-400 uppercase">Request Type</span>
-                  <p className="font-bold text-slate-800">{selectedPayout.requestType}</p>
-                </div>
-                <div>
-                  <span className="text-[10px] font-bold text-slate-400 uppercase">Amount</span>
-                  <p className="font-bold text-slate-900 text-[13px]">₹ {selectedPayout.amount}</p>
-                </div>
-                <div>
-                  <span className="text-[10px] font-bold text-slate-400 uppercase">Payout Mode</span>
-                  <p className="font-semibold text-slate-700">{selectedPayout.paymentMethod}</p>
-                </div>
-                <div>
-                  <span className="text-[10px] font-bold text-slate-400 uppercase">Status</span>
-                  <div className="mt-0.5">{getStatusBadge(selectedPayout.status)}</div>
-                </div>
-                <div>
-                  <span className="text-[10px] font-bold text-slate-400 uppercase">Requested On</span>
-                  <p className="font-semibold text-slate-700 text-[11px]">{selectedPayout.requestedOn}</p>
-                </div>
-                <div>
-                  <span className="text-[10px] font-bold text-slate-400 uppercase">Processed On</span>
-                  <p className="font-semibold text-slate-700 text-[11px]">{selectedPayout.processedOn}</p>
-                </div>
-              </div>
-
-              <div className="border border-indigo-100 bg-indigo-50/30 rounded-xl p-3 flex flex-col gap-1 text-[11px]">
-                <div className="flex justify-between text-slate-500">
-                  <span>Destination:</span>
-                  <span className="font-mono font-bold text-slate-800">{selectedPayout.bankAccount}</span>
-                </div>
-                {selectedPayout.ifsc !== '-' && (
-                  <div className="flex justify-between text-slate-500">
-                    <span>IFSC Code:</span>
-                    <span className="font-mono font-semibold text-slate-700">{selectedPayout.ifsc}</span>
-                  </div>
-                )}
-                {selectedPayout.rejectReason && (
-                  <div className="mt-1 pt-1 border-t border-rose-100 text-rose-600 font-medium">
-                    Reason: {selectedPayout.rejectReason}
-                  </div>
-                )}
-              </div>
-            </div>
-
-            <div className="pt-2 flex justify-end">
-              <button
-                onClick={() => setSelectedPayout(null)}
-                className="px-4 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 text-[12px] font-bold rounded-xl transition-colors cursor-pointer"
-              >
-                Close
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+      {/* Nested Payout Request Detail Dialog (View All -> Actions Click Window) */}
+      <PayoutRequestDetailsModal
+        payout={selectedPayout}
+        isOpen={Boolean(selectedPayout)}
+        onClose={() => setSelectedPayout(null)}
+      />
     </div>,
     document.body
   );
