@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Calendar, ChevronDown, User, Users, ShoppingCart, IndianRupee,
   ShieldCheck, Wallet, Boxes
@@ -21,6 +21,20 @@ export default function Dashboard() {
   const [isPayoutModalOpen, setIsPayoutModalOpen] = useState(false);
   const [isRecentOrdersModalOpen, setIsRecentOrdersModalOpen] = useState(false);
   const [isRecentUsersModalOpen, setIsRecentUsersModalOpen] = useState(false);
+
+  // Listen to sidebar custom events to trigger view modals
+  useEffect(() => {
+    const handleOpenUsers = () => setIsRecentUsersModalOpen(true);
+    const handleOpenKyc = () => setIsKycModalOpen(true);
+
+    window.addEventListener('open-recent-users-modal', handleOpenUsers);
+    window.addEventListener('open-kyc-modal', handleOpenKyc);
+
+    return () => {
+      window.removeEventListener('open-recent-users-modal', handleOpenUsers);
+      window.removeEventListener('open-kyc-modal', handleOpenKyc);
+    };
+  }, []);
   return (
     <div className="flex flex-col gap-3.5 sm:gap-4 lg:gap-5 animate-fade-in">
       {/* Top Header Row: Title & Date Range Filter */}

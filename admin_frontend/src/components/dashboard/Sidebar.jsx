@@ -1,8 +1,9 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import {
   Home, Users, GitFork, Boxes, FileText, CreditCard,
   Coins, Wallet, Award, ShieldCheck, BookOpen, BarChart2,
-  Sliders, ChevronDown, X
+  Sliders, ChevronDown, X, UserPlus, AlignLeft, Edit3, ClipboardCheck
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import logoImg from '../../assets/images/Eduvora.png';
@@ -14,7 +15,12 @@ const navItems = [
     label: 'User Management',
     icon: Users,
     hasSub: true,
-    subItems: ['All Users', 'Create User', 'Roles & Permissions']
+    subItems: [
+      { id: 'add-user', label: 'Add User', icon: UserPlus },
+      { id: 'view-users', label: 'View Users', icon: AlignLeft },
+      { id: 'edit-user', label: 'Edit User', icon: Edit3 },
+      { id: 'kyc-verification', label: 'KYC Verification', icon: ClipboardCheck },
+    ]
   },
   {
     id: 'network',
@@ -96,8 +102,36 @@ const navItems = [
 ];
 
 export default function Sidebar({ isOpen, setIsOpen }) {
-  const [activeItem, setActiveItem] = useState('dashboard');
-  const [openAccordions, setOpenAccordions] = useState({});
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  const [activeItem, setActiveItem] = useState('users');
+  const [activeSubItem, setActiveSubItem] = useState('add-user');
+  const [openAccordions, setOpenAccordions] = useState({ users: true });
+
+  // Sync active states with route
+  useEffect(() => {
+    if (location.pathname.includes('/kyc')) {
+      setActiveItem('users');
+      setActiveSubItem('kyc-verification');
+      setOpenAccordions((prev) => ({ ...prev, users: true }));
+    } else if (location.pathname.includes('/view') || location.pathname === '/users') {
+      setActiveItem('users');
+      setActiveSubItem('view-users');
+      setOpenAccordions((prev) => ({ ...prev, users: true }));
+    } else if (location.pathname.includes('/edit')) {
+      setActiveItem('users');
+      setActiveSubItem('edit-user');
+      setOpenAccordions((prev) => ({ ...prev, users: true }));
+    } else if (location.pathname.startsWith('/users') || location.pathname.startsWith('/user-management')) {
+      setActiveItem('users');
+      setActiveSubItem('add-user');
+      setOpenAccordions((prev) => ({ ...prev, users: true }));
+    } else if (location.pathname === '/' || location.pathname === '/dashboard') {
+      setActiveItem('dashboard');
+      setActiveSubItem('');
+    }
+  }, [location.pathname]);
 
   const toggleAccordion = (id) => {
     setOpenAccordions((prev) => ({
@@ -127,7 +161,13 @@ export default function Sidebar({ isOpen, setIsOpen }) {
       >
         {/* Logo Area */}
         <div className="h-14 flex items-center justify-between px-5 border-b border-slate-100 shrink-0">
-          <div className="flex items-center gap-2.5">
+          <div
+            onClick={() => {
+              navigate('/dashboard');
+              if (window.innerWidth < 1024) setIsOpen(false);
+            }}
+            className="flex items-center gap-2.5 cursor-pointer hover:opacity-90 transition-opacity"
+          >
             <div className="w-9 h-9 shrink-0 flex items-center justify-center">
               <img src={logoImg} alt="Eduvora Logo" className="w-full h-full object-contain" />
             </div>
@@ -162,18 +202,26 @@ export default function Sidebar({ isOpen, setIsOpen }) {
                 <button
                   onClick={() => {
                     setActiveItem(item.id);
-                    if (item.hasSub) {
+                    if (item.id === 'dashboard') {
+                      navigate('/dashboard');
+                      if (window.innerWidth < 1024) setIsOpen(false);
+                    } else if (item.hasSub) {
                       toggleAccordion(item.id);
                     } else if (window.innerWidth < 1024) {
                       setIsOpen(false);
                     }
                   }}
-                  className={`w-full group relative flex items-center justify-between px-3 py-2 rounded-xl text-[12.5px] font-bold transition-all duration-200 cursor-pointer ${
+                  className={`w-full group relative flex items-center justify-between px-3 py-2.5 rounded-xl text-[12.5px] font-bold transition-all duration-200 cursor-pointer ${
                     isSelected
-                      ? 'text-indigo-600 bg-indigo-50/80 shadow-2xs font-extrabold'
+                      ? 'text-indigo-600 bg-indigo-50/70 shadow-2xs font-extrabold'
                       : 'text-slate-600 hover:text-indigo-600 hover:bg-slate-50'
                   }`}
                 >
+                  {/* Left indicator bar matching user design */}
+                  {isSelected && (
+                    <div className="absolute left-0 top-1.5 bottom-1.5 w-1 bg-indigo-600 rounded-r-md" />
+                  )}
+
                   <div className="flex items-center gap-3 min-w-0">
                     <Icon
                       className={`w-4 h-4 shrink-0 transition-transform duration-200 ${
@@ -208,18 +256,49 @@ export default function Sidebar({ isOpen, setIsOpen }) {
                         exit={{ opacity: 0, height: 0 }}
                         className="overflow-hidden"
                       >
-                        <div className="flex flex-col gap-0.5 pl-8 pr-1 py-1">
-                          {item.subItems.map((sub, idx) => (
-                            <button
-                              key={idx}
-                              onClick={() => {
-                                if (window.innerWidth < 1024) setIsOpen(false);
-                              }}
-                              className="px-2.5 py-1.5 text-[11.5px] font-semibold text-slate-500 rounded-lg hover:text-indigo-600 hover:bg-indigo-50/50 transition-colors text-left truncate cursor-pointer"
-                            >
-                              {sub}
-                            </button>
-                          ))}
+                        <div className="flex flex-col gap-1 pl-3 pr-1 py-1 mt-0.5">
+                          {item.subItems.map((sub, idx) => {
+                            const isSubObj = typeof sub === 'object';
+                            const subLabel = isSubObj ? sub.label : sub;
+                            const subId = isSubObj ? sub.id : `sub-${idx}`;
+                            const SubIcon = isSubObj ? sub.icon : null;
+                            const isSubActive = activeSubItem === subId;
+
+                            return (
+                              <button
+                                key={subId}
+                                onClick={() => {
+                                  setActiveSubItem(subId);
+                                  if (subId === 'add-user') {
+                                    navigate('/users/add');
+                                  } else if (subId === 'edit-user') {
+                                    navigate('/users/edit');
+                                  } else if (subId === 'view-users') {
+                                    navigate('/users/view');
+                                  } else if (subId === 'kyc-verification') {
+                                    navigate('/users/kyc');
+                                  }
+                                  if (window.innerWidth < 1024) setIsOpen(false);
+                                }}
+                                className={`w-full group flex items-center gap-2.5 px-3 py-2 rounded-xl text-[12px] font-bold transition-all duration-200 text-left truncate cursor-pointer ${
+                                  isSubActive
+                                    ? 'bg-indigo-50/90 text-indigo-700 shadow-2xs font-extrabold'
+                                    : 'text-indigo-950 hover:text-indigo-600 hover:bg-indigo-50/40'
+                                }`}
+                              >
+                                {SubIcon && (
+                                  <SubIcon
+                                    className={`w-4 h-4 shrink-0 transition-colors ${
+                                      isSubActive
+                                        ? 'text-indigo-600'
+                                        : 'text-indigo-950 group-hover:text-indigo-600'
+                                    }`}
+                                  />
+                                )}
+                                <span className="truncate">{subLabel}</span>
+                              </button>
+                            );
+                          })}
                         </div>
                       </motion.div>
                     )}

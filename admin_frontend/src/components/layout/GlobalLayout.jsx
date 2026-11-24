@@ -33,7 +33,7 @@ export default function GlobalLayout({ children }) {
       <div className="flex-1 flex flex-col h-screen overflow-hidden relative z-10">
         <Header toggleSidebar={() => setIsSidebarOpen(!isSidebarOpen)} />
 
-        <main className="flex-1 overflow-y-auto overflow-x-hidden custom-scrollbar p-3.5 sm:p-5 lg:p-6 pb-[85px] lg:pb-8">
+        <main className="flex-1 overflow-y-auto overflow-x-hidden custom-scrollbar p-3.5 sm:p-5 lg:p-6 pb-[76px] lg:pb-8">
           <div className="max-w-[1400px] w-full min-w-0 mx-auto flex flex-col gap-4 lg:gap-5">
             {children}
           </div>
