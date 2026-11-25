@@ -16,10 +16,10 @@ const navItems = [
     icon: Users,
     hasSub: true,
     subItems: [
-      { id: 'add-user', label: 'Add User', icon: UserPlus },
-      { id: 'view-users', label: 'View Users', icon: AlignLeft },
-      { id: 'edit-user', label: 'Edit User', icon: Edit3 },
-      { id: 'kyc-verification', label: 'KYC Verification', icon: ClipboardCheck },
+      { id: 'add-user', label: 'Add User', icon: UserPlus, path: '/users/add' },
+      { id: 'view-users', label: 'View Users', icon: AlignLeft, path: '/users/view' },
+      { id: 'edit-user', label: 'Edit User', icon: Edit3, path: '/users/edit' },
+      { id: 'kyc-verification', label: 'KYC Verification', icon: ClipboardCheck, path: '/users/kyc' },
     ]
   },
   {
@@ -27,7 +27,14 @@ const navItems = [
     label: 'Network & Referrals',
     icon: GitFork,
     hasSub: true,
-    subItems: ['Tree View', 'Referral Logs', 'Genealogy']
+    subItems: [
+      { id: 'referral-overview', label: 'Referral Overview', path: '/network/referral-overview' },
+      { id: 'genealogy-tree', label: 'Genealogy Tree', path: '/network/genealogy-tree' },
+      { id: 'referral-details', label: 'Referral Details', path: '/network/referral-details' },
+      { id: 'referral-analytics', label: 'Referral Analytics', path: '/network/referral-analytics' },
+      { id: 'referral-exceptions', label: 'Referral Exceptions', path: '/network/referral-exceptions' },
+      { id: 'referral-audit-history', label: 'Referral Audit History', path: '/network/referral-audit-history' },
+    ]
   },
   {
     id: 'package',
@@ -105,13 +112,29 @@ export default function Sidebar({ isOpen, setIsOpen }) {
   const navigate = useNavigate();
   const location = useLocation();
 
-  const [activeItem, setActiveItem] = useState('users');
-  const [activeSubItem, setActiveSubItem] = useState('add-user');
-  const [openAccordions, setOpenAccordions] = useState({ users: true });
+  const [activeItem, setActiveItem] = useState('network');
+  const [activeSubItem, setActiveSubItem] = useState('genealogy-tree');
+  const [openAccordions, setOpenAccordions] = useState({ network: true, users: true });
 
   // Sync active states with route
   useEffect(() => {
-    if (location.pathname.includes('/kyc')) {
+    if (location.pathname.startsWith('/network') || location.pathname.startsWith('/referral')) {
+      setActiveItem('network');
+      setOpenAccordions((prev) => ({ ...prev, network: true }));
+      if (location.pathname.includes('genealogy') || location.pathname.includes('tree')) {
+        setActiveSubItem('genealogy-tree');
+      } else if (location.pathname.includes('details')) {
+        setActiveSubItem('referral-details');
+      } else if (location.pathname.includes('analytics')) {
+        setActiveSubItem('referral-analytics');
+      } else if (location.pathname.includes('exceptions')) {
+        setActiveSubItem('referral-exceptions');
+      } else if (location.pathname.includes('audit')) {
+        setActiveSubItem('referral-audit-history');
+      } else {
+        setActiveSubItem('referral-overview');
+      }
+    } else if (location.pathname.includes('/kyc')) {
       setActiveItem('users');
       setActiveSubItem('kyc-verification');
       setOpenAccordions((prev) => ({ ...prev, users: true }));
@@ -256,7 +279,8 @@ export default function Sidebar({ isOpen, setIsOpen }) {
                         exit={{ opacity: 0, height: 0 }}
                         className="overflow-hidden"
                       >
-                        <div className="flex flex-col gap-1 pl-3 pr-1 py-1 mt-0.5">
+                        {/* Connecting guideline container on the left */}
+                        <div className="relative flex flex-col gap-1 pl-3 ml-4.5 border-l-2 border-indigo-200 py-1 my-0.5">
                           {item.subItems.map((sub, idx) => {
                             const isSubObj = typeof sub === 'object';
                             const subLabel = isSubObj ? sub.label : sub;
@@ -268,8 +292,11 @@ export default function Sidebar({ isOpen, setIsOpen }) {
                               <button
                                 key={subId}
                                 onClick={() => {
+                                  setActiveItem(item.id);
                                   setActiveSubItem(subId);
-                                  if (subId === 'add-user') {
+                                  if (isSubObj && sub.path) {
+                                    navigate(sub.path);
+                                  } else if (subId === 'add-user') {
                                     navigate('/users/add');
                                   } else if (subId === 'edit-user') {
                                     navigate('/users/edit');
@@ -280,18 +307,23 @@ export default function Sidebar({ isOpen, setIsOpen }) {
                                   }
                                   if (window.innerWidth < 1024) setIsOpen(false);
                                 }}
-                                className={`w-full group flex items-center gap-2.5 px-3 py-2 rounded-xl text-[12px] font-bold transition-all duration-200 text-left truncate cursor-pointer ${
+                                className={`w-full group relative flex items-center gap-2 px-3 py-2 rounded-xl text-[12px] font-bold transition-all duration-200 text-left truncate cursor-pointer ${
                                   isSubActive
-                                    ? 'bg-indigo-50/90 text-indigo-700 shadow-2xs font-extrabold'
-                                    : 'text-indigo-950 hover:text-indigo-600 hover:bg-indigo-50/40'
+                                    ? 'bg-indigo-50/80 text-indigo-600 shadow-2xs font-extrabold'
+                                    : 'text-slate-700 hover:text-indigo-600 hover:bg-indigo-50/40'
                                 }`}
                               >
+                                {/* Active vertical accent bar on the left connecting tree guideline */}
+                                {isSubActive && (
+                                  <div className="absolute -left-[14px] top-1 bottom-1 w-[3px] bg-indigo-600 rounded-full" />
+                                )}
+
                                 {SubIcon && (
                                   <SubIcon
-                                    className={`w-4 h-4 shrink-0 transition-colors ${
+                                    className={`w-3.5 h-3.5 shrink-0 transition-colors ${
                                       isSubActive
                                         ? 'text-indigo-600'
-                                        : 'text-indigo-950 group-hover:text-indigo-600'
+                                        : 'text-slate-400 group-hover:text-indigo-600'
                                     }`}
                                   />
                                 )}

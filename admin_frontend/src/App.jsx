@@ -5,6 +5,12 @@ import AddUser from './pages/AddUser';
 import EditUser from './pages/EditUser';
 import ViewUsers from './pages/ViewUsers';
 import KycVerification from './pages/KycVerification';
+import ReferralOverview from './pages/network/ReferralOverview';
+import GenealogyTree from './pages/network/GenealogyTree';
+import ReferralDetails from './pages/network/ReferralDetails';
+import ReferralAnalytics from './pages/network/ReferralAnalytics';
+import ReferralExceptions from './pages/network/ReferralExceptions';
+import ReferralAuditHistory from './pages/network/ReferralAuditHistory';
 
 export default function App() {
   return (
@@ -12,6 +18,8 @@ export default function App() {
       <Routes>
         <Route path="/" element={<Navigate to="/dashboard" replace />} />
         <Route path="/dashboard" element={<Dashboard />} />
+        
+        {/* User Management */}
         <Route path="/users" element={<ViewUsers />} />
         <Route path="/users/view" element={<ViewUsers />} />
         <Route path="/user-management/view-users" element={<ViewUsers />} />
@@ -23,6 +31,24 @@ export default function App() {
         <Route path="/users/kyc" element={<KycVerification />} />
         <Route path="/users/kyc-verification" element={<KycVerification />} />
         <Route path="/user-management/kyc-verification" element={<KycVerification />} />
+
+        {/* Network & Referrals */}
+        <Route path="/network" element={<Navigate to="/network/referral-overview" replace />} />
+        <Route path="/network/referral-overview" element={<ReferralOverview />} />
+        <Route path="/network/genealogy-tree" element={<GenealogyTree />} />
+        <Route path="/network/genealogy" element={<GenealogyTree />} />
+        <Route path="/network/referral-details" element={<ReferralDetails />} />
+        <Route path="/network/referral-analytics" element={<ReferralAnalytics />} />
+        <Route path="/network/referral-exceptions" element={<ReferralExceptions />} />
+        <Route path="/network/referral-audit-history" element={<ReferralAuditHistory />} />
+
+        {/* Aliases for referrals */}
+        <Route path="/referrals" element={<Navigate to="/network/referral-overview" replace />} />
+        <Route path="/referrals/overview" element={<ReferralOverview />} />
+        <Route path="/referrals/tree" element={<GenealogyTree />} />
+        <Route path="/referrals/details" element={<ReferralDetails />} />
+        <Route path="/referrals/analytics" element={<ReferralAnalytics />} />
+
         {/* Wildcard redirect back to dashboard */}
         <Route path="*" element={<Navigate to="/dashboard" replace />} />
       </Routes>

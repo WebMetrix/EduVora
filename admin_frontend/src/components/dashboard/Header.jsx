@@ -56,9 +56,9 @@ export default function Header({ toggleSidebar }) {
           >
             {/* Avatar */}
             <div className="w-8 h-8 lg:w-9 lg:h-9 rounded-full bg-slate-900 text-white overflow-hidden shrink-0 border border-slate-200 flex items-center justify-center font-bold text-[12px] shadow-xs">
-              <img 
-                src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&auto=format&fit=crop&q=80" 
-                alt="Admin User" 
+              <img
+                src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&auto=format&fit=crop&q=80"
+                alt="Admin User"
                 className="w-full h-full object-cover"
                 onError={(e) => {
                   e.currentTarget.onerror = null;
