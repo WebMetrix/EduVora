@@ -2,10 +2,12 @@ import React, { useState, useMemo, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import {
   ShoppingCart, X, Check, Clock, RotateCcw,
-  Search, Calendar, ChevronDown, ChevronLeft, ChevronRight,
-  Download, Eye, MoreVertical
+  Search, ChevronDown, ChevronLeft, ChevronRight,
+  Download, Eye
 } from 'lucide-react';
 import OrderDetailsModal from './OrderDetailsModal';
+import DateRangePicker from '../common/DateRangePicker';
+import { isDateWithinRange } from '../../utils/dateFilterUtils';
 
 // Mock Recent Orders Dataset matching the provided design
 const initialRecentOrders = [
@@ -172,6 +174,7 @@ export default function RecentOrdersModal({ isOpen, onClose }) {
   const [searchQuery, setSearchQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState('All Status');
   const [packageFilter, setPackageFilter] = useState('All Packages');
+  const [dateRangeFilter, setDateRangeFilter] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedOrder, setSelectedOrder] = useState(null);
   const [isExporting, setIsExporting] = useState(false);
@@ -222,9 +225,11 @@ export default function RecentOrdersModal({ isOpen, onClose }) {
       const matchesPackage =
         packageFilter === 'All Packages' || order.package.toLowerCase() === packageFilter.toLowerCase();
 
-      return matchesSearch && matchesStatus && matchesPackage;
+      const matchesDate = isDateWithinRange(order.orderDate, dateRangeFilter);
+
+      return matchesSearch && matchesStatus && matchesPackage && matchesDate;
     });
-  }, [orders, searchQuery, statusFilter, packageFilter]);
+  }, [orders, searchQuery, statusFilter, packageFilter, dateRangeFilter]);
 
   const totalOrdersCount = 1248;
   const totalPages = Math.ceil(filteredOrders.length / itemsPerPage) || 1;
@@ -237,6 +242,7 @@ export default function RecentOrdersModal({ isOpen, onClose }) {
     setSearchQuery('');
     setStatusFilter('All Status');
     setPackageFilter('All Packages');
+    setDateRangeFilter(null);
     setCurrentPage(1);
   };
 
@@ -524,13 +530,16 @@ export default function RecentOrdersModal({ isOpen, onClose }) {
               </div>
 
               {/* Date Filter */}
-              <button
-                type="button"
-                className="flex items-center gap-1.5 bg-white border border-slate-200 rounded-xl px-3 py-1.5 md:py-2 text-[11.5px] md:text-[12px] font-semibold text-slate-700 hover:border-slate-300 transition-colors shadow-2xs cursor-pointer"
-              >
-                <Calendar className="w-3.5 h-3.5 text-slate-400" />
-                <span>Select date range</span>
-              </button>
+              <DateRangePicker
+                variant="modal"
+                value={dateRangeFilter}
+                onChange={(val) => {
+                  setDateRangeFilter(val);
+                  setCurrentPage(1);
+                }}
+                placeholder="Select date range"
+                initialMonth={new Date(2026, 7, 1)}
+              />
 
               {/* Reset */}
               <button
@@ -620,6 +629,7 @@ export default function RecentOrdersModal({ isOpen, onClose }) {
                     currentRecords.map((item, idx) => (
                       <tr
                         key={item.id}
+                        onClick={() => setSelectedOrder(item)}
                         className="group border-b border-indigo-100/30 hover:bg-white hover:shadow-md hover:-translate-y-0.5 hover:z-10 relative transition-all duration-300 cursor-pointer"
                       >
                         <td className="py-2.5 px-2 text-center text-slate-400 font-semibold text-[11px] rounded-l-xl">
@@ -663,23 +673,14 @@ export default function RecentOrdersModal({ isOpen, onClose }) {
                           </span>
                         </td>
                         <td className="py-2.5 px-2 text-center rounded-r-xl">
-                          <div className="flex items-center justify-center gap-1">
-                            <button
-                              type="button"
-                              onClick={() => setSelectedOrder(item)}
-                              className="p-1 rounded-lg text-indigo-600 hover:text-indigo-800 hover:bg-indigo-50 transition-all duration-300 group-hover:scale-110 cursor-pointer"
-                              title="View Order Details"
-                            >
-                              <Eye className="w-3.5 h-3.5" />
-                            </button>
-                            <button
-                              type="button"
-                              className="p-1 rounded-lg text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition-all duration-300 group-hover:scale-110 cursor-pointer"
-                              title="More Options"
-                            >
-                              <MoreVertical className="w-3.5 h-3.5" />
-                            </button>
-                          </div>
+                          <button
+                            type="button"
+                            onClick={(e) => { e.stopPropagation(); setSelectedOrder(item); }}
+                            className="p-1 rounded-lg text-indigo-600 hover:text-indigo-800 hover:bg-indigo-50 transition-all duration-300 group-hover:scale-110 cursor-pointer"
+                            title="View Order Details"
+                          >
+                            <Eye className="w-3.5 h-3.5" />
+                          </button>
                         </td>
                       </tr>
                     ))

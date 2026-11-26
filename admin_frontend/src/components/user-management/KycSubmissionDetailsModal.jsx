@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { createPortal } from 'react-dom';
 import {
-  X, FileText, User, Search, Check, RotateCw, QrCode
+  X, FileText, User, Search, Check, RotateCw, QrCode, AlertCircle
 } from 'lucide-react';
 
 export default function KycSubmissionDetailsModal({
@@ -11,7 +11,9 @@ export default function KycSubmissionDetailsModal({
   onStatusUpdate,
 }) {
   const [internalRemarks, setInternalRemarks] = useState('');
+  const [remarksError, setRemarksError] = useState('');
   const [activePreviewDoc, setActivePreviewDoc] = useState(null); // 'front' | 'back' | 'pan' | null
+  const remarksInputRef = useRef(null);
 
   // ESC key handler and body scroll lock
   useEffect(() => {
@@ -40,6 +42,7 @@ export default function KycSubmissionDetailsModal({
   useEffect(() => {
     if (submission) {
       setInternalRemarks(submission.remarks && submission.remarks !== '-' ? submission.remarks : '');
+      setRemarksError('');
       setActivePreviewDoc(null);
     }
   }, [submission]);
@@ -61,8 +64,23 @@ export default function KycSubmissionDetailsModal({
   const panNumber = submission.panNumber || 'ABCDE1234F';
 
   const handleAction = (newStatus, actionLabel) => {
+    const trimmedRemarks = internalRemarks.trim();
+    const requiresRemarks = newStatus === 'Rejected' || newStatus === 'Pending';
+
+    if (requiresRemarks && !trimmedRemarks) {
+      setRemarksError(
+        newStatus === 'Rejected'
+          ? 'Internal remarks are required when rejecting a KYC submission.'
+          : 'Internal remarks are required when requesting resubmission.'
+      );
+      remarksInputRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      remarksInputRef.current?.focus();
+      return;
+    }
+
+    setRemarksError('');
     if (onStatusUpdate) {
-      onStatusUpdate(submission.id, newStatus, internalRemarks, actionLabel);
+      onStatusUpdate(submission.id, newStatus, trimmedRemarks, actionLabel);
     }
     onClose();
   };
@@ -409,18 +427,44 @@ export default function KycSubmissionDetailsModal({
             </div>
 
             <div className="relative z-10">
-              <label className="block text-[11px] sm:text-[11.5px] font-bold text-slate-700 mb-1">
-                Internal Remarks (Optional)
-              </label>
+              <div className="flex flex-wrap items-center justify-between gap-1 mb-1">
+                <label className="block text-[11px] sm:text-[11.5px] font-bold text-slate-700">
+                  Internal Remarks
+                </label>
+                <span className="text-[10px] sm:text-[10.5px] font-medium text-slate-400">
+                  Required for Rejection / Resubmission
+                </span>
+              </div>
               <textarea
+                ref={remarksInputRef}
                 value={internalRemarks}
-                onChange={(e) => setInternalRemarks(e.target.value.slice(0, 500))}
+                onChange={(e) => {
+                  const val = e.target.value.slice(0, 500);
+                  setInternalRemarks(val);
+                  if (remarksError && val.trim()) {
+                    setRemarksError('');
+                  }
+                }}
                 rows={2}
                 placeholder="Enter remarks about this KYC submission..."
-                className="w-full bg-white hover:bg-slate-50/50 focus:bg-white border border-slate-200/90 focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 rounded-xl px-3 py-2 text-[11.5px] sm:text-[12px] font-medium text-slate-800 placeholder:text-slate-400 focus:outline-none transition-all duration-200 resize-none min-h-[60px]"
+                className={`w-full rounded-xl px-3 py-2 text-[11.5px] sm:text-[12px] font-medium text-slate-800 placeholder:text-slate-400 focus:outline-none transition-all duration-200 resize-none min-h-[60px] border ${
+                  remarksError
+                    ? 'bg-rose-50/40 border-rose-400 focus:border-rose-500 focus:ring-4 focus:ring-rose-500/15'
+                    : 'bg-white hover:bg-slate-50/50 focus:bg-white border-slate-200/90 focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10'
+                }`}
               />
-              <div className="text-right text-[10px] sm:text-[10.5px] text-slate-400 font-medium mt-0.5">
-                {internalRemarks.length}/500
+              <div className="flex items-start justify-between gap-2 mt-1">
+                {remarksError ? (
+                  <p className="inline-flex items-center gap-1 text-[10.5px] sm:text-[11px] font-semibold text-rose-600">
+                    <AlertCircle className="w-3.5 h-3.5 shrink-0" />
+                    <span>{remarksError}</span>
+                  </p>
+                ) : (
+                  <span />
+                )}
+                <span className="text-[10px] sm:text-[10.5px] text-slate-400 font-medium shrink-0">
+                  {internalRemarks.length}/500
+                </span>
               </div>
             </div>
           </div>

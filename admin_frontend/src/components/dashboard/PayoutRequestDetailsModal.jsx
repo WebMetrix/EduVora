@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import {
   X, Wallet, Check, Clock, Building, Download,
   CheckCircle2, AlertCircle, FileText, ArrowRight,
@@ -19,7 +20,7 @@ export default function PayoutRequestDetailsModal({ payout, isOpen, onClose }) {
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [isOpen, onClose]);
 
-  if (!isOpen || !payout) return null;
+  if (!isOpen || !payout || typeof document === 'undefined') return null;
 
   // Resolve payout fields with realistic defaults matching Image 2
   const name = payout.name || 'Rajesh Kumar';
@@ -78,7 +79,7 @@ export default function PayoutRequestDetailsModal({ payout, isOpen, onClose }) {
     }
   };
 
-  return (
+  return createPortal(
     <div className="fixed inset-0 z-[10000] flex items-end sm:items-center justify-center p-0 sm:p-4 bg-slate-900/60 backdrop-blur-sm transition-opacity">
       {/* Backdrop click to close */}
       <div className="fixed inset-0" onClick={onClose} />
@@ -369,6 +370,7 @@ export default function PayoutRequestDetailsModal({ payout, isOpen, onClose }) {
           </button>
         </div>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 }

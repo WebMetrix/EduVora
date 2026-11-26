@@ -7,10 +7,10 @@ export default function ReferralActivityCard({ memberName, activities = [] }) {
   const visibleActivities = showAll ? activities : activities.slice(0, 4);
 
   return (
-    <div className="relative overflow-hidden rounded-2xl sm:rounded-3xl bg-white border border-slate-200/80 p-4 sm:p-5 shadow-[0_4px_20px_rgb(0,0,0,0.03)] hover:shadow-[0_8px_30px_rgb(99,102,241,0.12)] hover:border-indigo-300 transition-all duration-300 group flex flex-col justify-between h-full">
+    <div className="relative overflow-hidden rounded-2xl sm:rounded-3xl bg-white border border-slate-200/80 p-4 sm:p-5 shadow-[0_4px_20px_rgb(0,0,0,0.03)] hover:shadow-[0_8px_30px_rgb(99,102,241,0.12)] hover:border-indigo-300 transition-all duration-300 group flex flex-col">
       <div className="absolute top-0 right-0 w-44 h-44 bg-indigo-400/8 rounded-full blur-[65px] -translate-y-1/2 translate-x-1/3 pointer-events-none group-hover:scale-125 transition-transform duration-700" />
 
-      <div className="relative z-10 flex-1 flex flex-col">
+      <div className="relative z-10 flex flex-col">
         {/* Header */}
         <div className="flex items-start gap-2.5 mb-4">
           <div className="w-8 h-8 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center shrink-0 shadow-2xs mt-0.5">
@@ -27,7 +27,7 @@ export default function ReferralActivityCard({ memberName, activities = [] }) {
         </div>
 
         {/* Vertical Timeline */}
-        <div className="relative pl-5 space-y-4 flex-1">
+        <div className="relative pl-5 space-y-4">
           <div className="absolute left-[7px] top-2 bottom-2 w-px bg-slate-200" />
 
           {visibleActivities.map((act, idx) => (

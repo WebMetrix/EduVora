@@ -5,6 +5,7 @@ import KycStatsCards from '../components/user-management/KycStatsCards';
 import KycFiltersCard from '../components/user-management/KycFiltersCard';
 import KycSubmissionsTable from '../components/user-management/KycSubmissionsTable';
 import KycSubmissionDetailsModal from '../components/user-management/KycSubmissionDetailsModal';
+import { isDateWithinRange } from '../utils/dateFilterUtils';
 
 export default function KycVerification() {
   // Initial 10 KYC submissions matching the screenshot exactly
@@ -282,6 +283,11 @@ export default function KycVerification() {
 
       // Proof Type
       if (appliedFilters.proofType !== 'all' && item.proofType !== appliedFilters.proofType) {
+        return false;
+      }
+
+      // Submission Date Range
+      if (!isDateWithinRange(item.submissionDate, appliedFilters)) {
         return false;
       }
 

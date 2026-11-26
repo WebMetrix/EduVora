@@ -1,5 +1,6 @@
 import React from 'react';
-import { User, Mail, Phone, Calendar, MapPin, ChevronDown } from 'lucide-react';
+import { User, Mail, Phone, MapPin, ChevronDown } from 'lucide-react';
+import CustomDatePicker from '../common/CustomDatePicker';
 
 export default function PersonalInformationCard({ formData, onChange, errors = {} }) {
   return (
@@ -103,18 +104,13 @@ export default function PersonalInformationCard({ formData, onChange, errors = {
             <label className="block text-[11.5px] font-bold text-slate-700 mb-1.5">
               Date of Birth
             </label>
-            <div className="relative">
-              <Calendar className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
-              <input
-                type="text"
-                name="dob"
-                value={formData.dob}
-                onChange={onChange}
-                placeholder="dd/mm/yyyy"
-                className="w-full bg-slate-50/50 hover:bg-slate-50 focus:bg-white border border-slate-200/90 focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 rounded-xl pl-9.5 pr-9.5 py-2.5 text-[12.5px] font-medium text-slate-800 placeholder:text-slate-400 focus:outline-none transition-all duration-200"
-              />
-              <Calendar className="w-4 h-4 text-slate-400 absolute right-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
-            </div>
+            <CustomDatePicker
+              placeholder="dd/mm/yyyy"
+              value={formData.dob}
+              onChange={(val) => onChange({ target: { name: 'dob', value: val } })}
+              separator="/"
+              leftIcon
+            />
           </div>
         </div>
 

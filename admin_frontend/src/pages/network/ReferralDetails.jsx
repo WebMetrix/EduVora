@@ -588,13 +588,9 @@ export default function ReferralDetails() {
       </div>
 
       {/* Row 4: Direct/Indirect Referrals Table (Left) + Referral Activity (Right) */}
-      {(activeTab === 'direct' || activeTab === 'indirect' || activeTab === 'activity') && (
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 sm:gap-5 items-stretch">
-          <div
-            className={`${
-              activeTab === 'activity' ? 'lg:col-span-5 order-2 lg:order-1' : 'lg:col-span-8'
-            }`}
-          >
+      {(activeTab === 'direct' || activeTab === 'indirect') && (
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 sm:gap-5 items-start">
+          <div className="lg:col-span-8">
             <ReferralConnectionsTable
               title={tableTitle}
               subtitle={tableSubtitle}
@@ -603,16 +599,21 @@ export default function ReferralDetails() {
             />
           </div>
 
-          <div
-            className={`${
-              activeTab === 'activity' ? 'lg:col-span-7 order-1 lg:order-2' : 'lg:col-span-4'
-            }`}
-          >
+          <div className="lg:col-span-4">
             <ReferralActivityCard
               memberName={activeMember.name}
               activities={activeMember.activities}
             />
           </div>
+        </div>
+      )}
+
+      {activeTab === 'activity' && (
+        <div className="w-full max-w-[540px]">
+          <ReferralActivityCard
+            memberName={activeMember.name}
+            activities={activeMember.activities}
+          />
         </div>
       )}
 

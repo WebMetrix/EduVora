@@ -5,6 +5,7 @@ import UserStatsCards from '../components/user-management/UserStatsCards';
 import UserFiltersCard from '../components/user-management/UserFiltersCard';
 import UsersTable from '../components/user-management/UsersTable';
 import UserDetailsSidePanel from '../components/user-management/UserDetailsSidePanel';
+import { isDateWithinRange } from '../utils/dateFilterUtils';
 
 export default function ViewUsers() {
   // Initial 10 users matching the screenshot exactly
@@ -284,6 +285,11 @@ export default function ViewUsers() {
       // Package
       if (filters.package !== 'all') {
         if (u.package !== filters.package) return false;
+      }
+
+      // Registration Date Range
+      if (!isDateWithinRange(u.registrationDate, filters)) {
+        return false;
       }
 
       return true;

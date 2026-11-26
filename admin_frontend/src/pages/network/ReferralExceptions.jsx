@@ -1,9 +1,11 @@
 import React, { useState, useMemo } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Calendar, ChevronDown, Search, Download } from 'lucide-react';
+import { ChevronDown, Search, Download } from 'lucide-react';
 import ReferralExceptionsStats from '../../components/network/ReferralExceptionsStats';
 import ReferralExceptionsTable from '../../components/network/ReferralExceptionsTable';
 import ExceptionDetailsModal from '../../components/network/ExceptionDetailsModal';
+import DateRangePicker from '../../components/common/DateRangePicker';
+import { isDateWithinRange } from '../../utils/dateFilterUtils';
 
 const INITIAL_EXCEPTIONS = [
   {
@@ -196,6 +198,13 @@ const INITIAL_EXCEPTIONS = [
   },
 ];
 
+const DEFAULT_EXCEPTIONS_DATE_RANGE = {
+  preset: 'this_month',
+  label: 'This Month',
+  startDate: new Date(2026, 9, 1),
+  endDate: new Date(2026, 9, 31),
+};
+
 export default function ReferralExceptions() {
   const navigate = useNavigate();
 
@@ -204,7 +213,7 @@ export default function ReferralExceptions() {
   const [exportFormat, setExportFormat] = useState('CSV');
 
   const [draftFilters, setDraftFilters] = useState({
-    dateRange: 'this_month',
+    dateRange: DEFAULT_EXCEPTIONS_DATE_RANGE,
     exceptionType: 'all',
     severity: 'all',
     status: 'all',
@@ -249,6 +258,14 @@ export default function ReferralExceptions() {
       ) {
         return false;
       }
+      if (
+        (appliedFilters.dateRange?.preset === 'custom' ||
+          appliedFilters.dateRange?.preset === 'today' ||
+          appliedFilters.dateRange?.preset === 'week') &&
+        !isDateWithinRange(row.detectedDate, appliedFilters.dateRange)
+      ) {
+        return false;
+      }
       return true;
     });
   }, [exceptions, appliedFilters]);
@@ -264,7 +281,7 @@ export default function ReferralExceptions() {
 
   const handleResetFilters = () => {
     const reset = {
-      dateRange: 'this_month',
+      dateRange: DEFAULT_EXCEPTIONS_DATE_RANGE,
       exceptionType: 'all',
       severity: 'all',
       status: 'all',
@@ -311,13 +328,6 @@ export default function ReferralExceptions() {
     link.click();
     URL.revokeObjectURL(url);
   };
-
-  const dateRangeSubtitle =
-    draftFilters.dateRange === 'last_3_months'
-      ? '01 Aug 2026 - 31 Oct 2026'
-      : draftFilters.dateRange === 'last_6_months'
-      ? '01 May 2026 - 31 Oct 2026'
-      : '01 Oct 2026 - 31 Oct 2026';
 
   return (
     <div className="flex flex-col gap-4 sm:gap-5 animate-fade-in relative pb-1 sm:pb-2">
@@ -395,26 +405,14 @@ export default function ReferralExceptions() {
             <label className="block text-[11.5px] font-bold text-slate-600 mb-1">
               Date Range
             </label>
-            <div className="relative flex items-center bg-slate-50/70 hover:bg-white border border-slate-200/90 rounded-xl px-2.5 py-1.5 h-11">
-              <Calendar className="w-4 h-4 text-indigo-600 shrink-0 mr-2" />
-              <div className="min-w-0 flex-1">
-                <select
-                  value={draftFilters.dateRange}
-                  onChange={(e) =>
-                    setDraftFilters((prev) => ({ ...prev, dateRange: e.target.value }))
-                  }
-                  className="w-full bg-transparent text-[11.5px] font-bold text-slate-800 appearance-none focus:outline-none cursor-pointer leading-tight pr-4"
-                >
-                  <option value="this_month">This Month</option>
-                  <option value="last_3_months">Last 3 Months</option>
-                  <option value="last_6_months">Last 6 Months</option>
-                </select>
-                <p className="text-[9.5px] font-medium text-slate-400 truncate leading-tight">
-                  {dateRangeSubtitle}
-                </p>
-              </div>
-              <ChevronDown className="w-3.5 h-3.5 text-slate-400 pointer-events-none shrink-0" />
-            </div>
+            <DateRangePicker
+              variant="field"
+              value={draftFilters.dateRange}
+              onChange={(val) =>
+                setDraftFilters((prev) => ({ ...prev, dateRange: val }))
+              }
+              initialMonth={new Date(2026, 9, 1)}
+            />
           </div>
 
           {/* Exception Type */}

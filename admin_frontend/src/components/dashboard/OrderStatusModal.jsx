@@ -2,10 +2,12 @@ import React, { useState, useMemo, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import {
   ShoppingBag, X, FileText, Check, Clock, IndianRupee,
-  Search, Calendar, ChevronDown, ChevronLeft, ChevronRight,
-  Download, Eye, MoreVertical, CreditCard, Wallet, RotateCcw
+  Search, ChevronDown, ChevronLeft, ChevronRight,
+  Download, Eye, CreditCard, Wallet, RotateCcw
 } from 'lucide-react';
 import OrderStatusDetailsModal from './OrderStatusDetailsModal';
+import DateRangePicker from '../common/DateRangePicker';
+import { isDateWithinRange } from '../../utils/dateFilterUtils';
 
 // Mock Order Status Dataset matching the provided design
 const initialOrders = [
@@ -183,8 +185,9 @@ export default function OrderStatusModal({ isOpen, onClose }) {
   const [orders, setOrders] = useState(initialOrders);
   const [searchQuery, setSearchQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState('All Status');
-  const [paymentFilter, setPaymentFilter] = useState('All Status');
+  const [paymentFilter, setPaymentFilter] = useState('Payment Status');
   const [packageFilter, setPackageFilter] = useState('All Packages');
+  const [dateRangeFilter, setDateRangeFilter] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedOrder, setSelectedOrder] = useState(null);
   const [isExporting, setIsExporting] = useState(false);
@@ -233,14 +236,16 @@ export default function OrderStatusModal({ isOpen, onClose }) {
         statusFilter === 'All Status' || order.status.toLowerCase() === statusFilter.toLowerCase();
 
       const matchesPayment =
-        paymentFilter === 'All Status' || order.paymentStatus.toLowerCase() === paymentFilter.toLowerCase();
+        paymentFilter === 'Payment Status' || order.paymentStatus.toLowerCase() === paymentFilter.toLowerCase();
 
       const matchesPackage =
         packageFilter === 'All Packages' || order.package.toLowerCase() === packageFilter.toLowerCase();
 
-      return matchesSearch && matchesStatus && matchesPayment && matchesPackage;
+      const matchesDate = isDateWithinRange(order.orderDate, dateRangeFilter);
+
+      return matchesSearch && matchesStatus && matchesPayment && matchesPackage && matchesDate;
     });
-  }, [orders, searchQuery, statusFilter, paymentFilter, packageFilter]);
+  }, [orders, searchQuery, statusFilter, paymentFilter, packageFilter, dateRangeFilter]);
 
   const totalOrdersCount = 128;
   const totalPages = Math.ceil(filteredOrders.length / itemsPerPage) || 1;
@@ -252,8 +257,9 @@ export default function OrderStatusModal({ isOpen, onClose }) {
   const handleReset = () => {
     setSearchQuery('');
     setStatusFilter('All Status');
-    setPaymentFilter('All Status');
+    setPaymentFilter('Payment Status');
     setPackageFilter('All Packages');
+    setDateRangeFilter(null);
     setCurrentPage(1);
   };
 
@@ -501,9 +507,9 @@ export default function OrderStatusModal({ isOpen, onClose }) {
           </div>
 
           {/* Filters & Actions Bar */}
-          <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-2.5 pt-0.5 shrink-0">
+          <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-2 pt-0.5 shrink-0">
             {/* Search Input */}
-            <div className="flex-1 min-w-[200px] lg:max-w-sm">
+            <div className="flex-1 min-w-[180px] lg:max-w-[290px]">
               <div className="relative">
                 <Search className="w-3.5 h-3.5 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
                 <input
@@ -520,7 +526,7 @@ export default function OrderStatusModal({ isOpen, onClose }) {
             </div>
 
             {/* Filter Dropdowns and Buttons */}
-            <div className="flex flex-wrap items-center gap-2">
+            <div className="flex flex-wrap items-center gap-1.5">
               {/* Order Status */}
               <div className="relative">
                 <select
@@ -529,14 +535,14 @@ export default function OrderStatusModal({ isOpen, onClose }) {
                     setStatusFilter(e.target.value);
                     setCurrentPage(1);
                   }}
-                  className="appearance-none bg-white border border-slate-200 rounded-xl px-3 py-1.5 md:py-2 pr-7 text-[11.5px] md:text-[12px] font-semibold text-slate-700 hover:border-slate-300 focus:outline-none focus:border-indigo-500 transition-colors shadow-2xs cursor-pointer min-w-[110px]"
+                  className="appearance-none bg-white border border-slate-200 rounded-xl px-2.5 py-1.5 md:py-2 pr-6 text-[11.5px] md:text-[12px] font-semibold text-slate-700 hover:border-slate-300 focus:outline-none focus:border-indigo-500 transition-colors shadow-2xs cursor-pointer"
                 >
                   <option value="All Status">All Status</option>
                   <option value="Completed">Completed</option>
                   <option value="Processing">Processing</option>
                   <option value="Cancelled">Cancelled</option>
                 </select>
-                <ChevronDown className="w-3 h-3 text-slate-400 absolute right-2.5 top-1/2 -translate-y-1/2 pointer-events-none" />
+                <ChevronDown className="w-3 h-3 text-slate-400 absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none" />
               </div>
 
               {/* Payment Status */}
@@ -547,14 +553,14 @@ export default function OrderStatusModal({ isOpen, onClose }) {
                     setPaymentFilter(e.target.value);
                     setCurrentPage(1);
                   }}
-                  className="appearance-none bg-white border border-slate-200 rounded-xl px-3 py-1.5 md:py-2 pr-7 text-[11.5px] md:text-[12px] font-semibold text-slate-700 hover:border-slate-300 focus:outline-none focus:border-indigo-500 transition-colors shadow-2xs cursor-pointer min-w-[115px]"
+                  className="appearance-none bg-white border border-slate-200 rounded-xl px-2.5 py-1.5 md:py-2 pr-6 text-[11.5px] md:text-[12px] font-semibold text-slate-700 hover:border-slate-300 focus:outline-none focus:border-indigo-500 transition-colors shadow-2xs cursor-pointer"
                 >
-                  <option value="All Status">All Status</option>
+                  <option value="Payment Status">Payment Status</option>
                   <option value="Paid">Paid</option>
                   <option value="Pending">Pending</option>
                   <option value="Refunded">Refunded</option>
                 </select>
-                <ChevronDown className="w-3 h-3 text-slate-400 absolute right-2.5 top-1/2 -translate-y-1/2 pointer-events-none" />
+                <ChevronDown className="w-3 h-3 text-slate-400 absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none" />
               </div>
 
               {/* Package Filter */}
@@ -565,30 +571,33 @@ export default function OrderStatusModal({ isOpen, onClose }) {
                     setPackageFilter(e.target.value);
                     setCurrentPage(1);
                   }}
-                  className="appearance-none bg-white border border-slate-200 rounded-xl px-3 py-1.5 md:py-2 pr-7 text-[11.5px] md:text-[12px] font-semibold text-slate-700 hover:border-slate-300 focus:outline-none focus:border-indigo-500 transition-colors shadow-2xs cursor-pointer min-w-[115px]"
+                  className="appearance-none bg-white border border-slate-200 rounded-xl px-2.5 py-1.5 md:py-2 pr-6 text-[11.5px] md:text-[12px] font-semibold text-slate-700 hover:border-slate-300 focus:outline-none focus:border-indigo-500 transition-colors shadow-2xs cursor-pointer"
                 >
                   <option value="All Packages">All Packages</option>
                   <option value="Business Starter">Business Starter</option>
                   <option value="Growth Pack">Growth Pack</option>
                   <option value="Premium Pack">Premium Pack</option>
                 </select>
-                <ChevronDown className="w-3 h-3 text-slate-400 absolute right-2.5 top-1/2 -translate-y-1/2 pointer-events-none" />
+                <ChevronDown className="w-3 h-3 text-slate-400 absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none" />
               </div>
 
               {/* Date Filter */}
-              <button
-                type="button"
-                className="flex items-center gap-1.5 bg-white border border-slate-200 rounded-xl px-3 py-1.5 md:py-2 text-[11.5px] md:text-[12px] font-semibold text-slate-700 hover:border-slate-300 transition-colors shadow-2xs cursor-pointer"
-              >
-                <Calendar className="w-3.5 h-3.5 text-slate-400" />
-                <span>Select date range</span>
-              </button>
+              <DateRangePicker
+                variant="modal"
+                value={dateRangeFilter}
+                onChange={(val) => {
+                  setDateRangeFilter(val);
+                  setCurrentPage(1);
+                }}
+                placeholder="Select date range"
+                initialMonth={new Date(2026, 7, 1)}
+              />
 
               {/* Reset Button */}
               <button
                 type="button"
                 onClick={handleReset}
-                className="px-3.5 py-1.5 md:py-2 border border-slate-200 hover:bg-slate-50 text-slate-700 text-[11.5px] md:text-[12px] font-bold rounded-xl transition-colors shadow-2xs cursor-pointer"
+                className="px-3 py-1.5 md:py-2 border border-slate-200 hover:bg-slate-50 text-slate-700 text-[11.5px] md:text-[12px] font-bold rounded-xl transition-colors shadow-2xs cursor-pointer whitespace-nowrap"
               >
                 Reset
               </button>
@@ -598,7 +607,7 @@ export default function OrderStatusModal({ isOpen, onClose }) {
                 type="button"
                 onClick={handleExport}
                 disabled={isExporting}
-                className="px-3.5 py-1.5 md:py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-[11.5px] md:text-[12px] font-bold rounded-xl transition-colors shadow-xs flex items-center gap-1.5 cursor-pointer disabled:opacity-60"
+                className="px-3 py-1.5 md:py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-[11.5px] md:text-[12px] font-bold rounded-xl transition-colors shadow-xs flex items-center gap-1.5 cursor-pointer disabled:opacity-60 whitespace-nowrap"
               >
                 <Download className="w-3.5 h-3.5" />
                 <span>{isExporting ? 'Exporting...' : 'Export'}</span>
@@ -729,23 +738,14 @@ export default function OrderStatusModal({ isOpen, onClose }) {
                           </span>
                         </td>
                         <td className="py-2.5 px-2 text-center rounded-r-xl">
-                          <div className="flex items-center justify-center gap-1">
-                            <button
-                              type="button"
-                              onClick={() => setSelectedOrder(item)}
-                              className="p-1 rounded-lg text-indigo-600 hover:text-indigo-800 hover:bg-indigo-50 transition-all duration-300 group-hover:scale-110 cursor-pointer"
-                              title="View Order Details"
-                            >
-                              <Eye className="w-3.5 h-3.5" />
-                            </button>
-                            <button
-                              type="button"
-                              className="p-1 rounded-lg text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition-all duration-300 group-hover:scale-110 cursor-pointer"
-                              title="More Options"
-                            >
-                              <MoreVertical className="w-3.5 h-3.5" />
-                            </button>
-                          </div>
+                          <button
+                            type="button"
+                            onClick={() => setSelectedOrder(item)}
+                            className="p-1 rounded-lg text-indigo-600 hover:text-indigo-800 hover:bg-indigo-50 transition-all duration-300 group-hover:scale-110 cursor-pointer"
+                            title="View Order Details"
+                          >
+                            <Eye className="w-3.5 h-3.5" />
+                          </button>
                         </td>
                       </tr>
                     ))

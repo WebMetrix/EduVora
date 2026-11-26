@@ -2,11 +2,13 @@ import React, { useState, useMemo, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import { Link, useNavigate } from 'react-router-dom';
 import {
-  Calendar, ChevronDown, Search, Download, X, Trophy, AlertTriangle, ExternalLink
+  ChevronDown, Search, Download, X, Trophy, AlertTriangle, ExternalLink
 } from 'lucide-react';
 import ReferralAnalyticsStats from '../../components/network/ReferralAnalyticsStats';
 import ReferralAnalyticsCharts from '../../components/network/ReferralAnalyticsCharts';
 import ReferralAnalyticsTables from '../../components/network/ReferralAnalyticsTables';
+import DateRangePicker from '../../components/common/DateRangePicker';
+import { isDateWithinRange } from '../../utils/dateFilterUtils';
 
 const TOP_SPONSORS = [
   { id: 'EV10021', name: 'Amit Kumar', direct: 85, level2: 142, activated: 68, rate: '80%', period: '12 Jul 2026', status: 'Active', pkgStatus: 'Activated', level: '1' },
@@ -27,11 +29,18 @@ const REFERRAL_EXCEPTIONS = [
   { id: 'EXC-5', issueType: 'Admin Created (No Sponsor)', count: 6, severity: 'Low', description: 'Accounts created manually by platform administrators without sponsor linkage.' },
 ];
 
+const DEFAULT_DATE_RANGE = {
+  preset: 'this_month',
+  label: 'This Month',
+  startDate: new Date(2026, 9, 1),
+  endDate: new Date(2026, 9, 31),
+};
+
 export default function ReferralAnalytics() {
   const navigate = useNavigate();
 
   const [draftFilters, setDraftFilters] = useState({
-    dateRange: 'this_month',
+    dateRange: DEFAULT_DATE_RANGE,
     level: 'all',
     regStatus: 'all',
     pkgStatus: 'all',
@@ -63,6 +72,9 @@ export default function ReferralAnalytics() {
       if (appliedFilters.level !== 'all' && row.level !== appliedFilters.level) return false;
       if (appliedFilters.regStatus !== 'all' && row.status !== appliedFilters.regStatus) return false;
       if (appliedFilters.pkgStatus !== 'all' && row.pkgStatus !== appliedFilters.pkgStatus) return false;
+      if (appliedFilters.dateRange?.preset === 'custom' && !isDateWithinRange(row.period, appliedFilters.dateRange)) {
+        return false;
+      }
       if (q && !row.id.toLowerCase().includes(q) && !row.name.toLowerCase().includes(q)) {
         return false;
       }
@@ -77,7 +89,7 @@ export default function ReferralAnalytics() {
 
   const handleResetFilters = () => {
     const resetState = {
-      dateRange: 'this_month',
+      dateRange: DEFAULT_DATE_RANGE,
       level: 'all',
       regStatus: 'all',
       pkgStatus: 'all',
@@ -119,13 +131,6 @@ export default function ReferralAnalytics() {
     link.click();
     URL.revokeObjectURL(url);
   };
-
-  const dateRangeSubtitle =
-    draftFilters.dateRange === 'last_3_months'
-      ? '01 Aug 2026 - 31 Oct 2026'
-      : draftFilters.dateRange === 'last_6_months'
-        ? '01 May 2026 - 31 Oct 2026'
-        : '01 Oct 2026 - 31 Oct 2026';
 
   return (
     <div className="flex flex-col gap-4 sm:gap-5 animate-fade-in relative pb-1 sm:pb-2">
@@ -187,37 +192,25 @@ export default function ReferralAnalytics() {
         onSubmit={handleApplyFilters}
         className="relative overflow-hidden rounded-2xl sm:rounded-3xl bg-white border border-slate-200/80 p-3.5 sm:p-4 shadow-[0_4px_20px_rgb(0,0,0,0.03)] hover:shadow-[0_8px_30px_rgb(99,102,241,0.08)] hover:border-indigo-300 transition-all duration-300"
       >
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-12 gap-3 items-end">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-12 2xl:flex 2xl:items-end gap-3 items-end">
           {/* Date Range */}
-          <div className="lg:col-span-3">
+          <div className="sm:col-span-2 lg:col-span-3 2xl:w-[215px] 2xl:shrink-0">
             <label className="block text-[11.5px] font-bold text-slate-600 mb-1">
               Date Range
             </label>
-            <div className="relative flex items-center bg-slate-50/70 hover:bg-white border border-slate-200/90 rounded-xl px-3 py-1.5 h-11">
-              <Calendar className="w-4 h-4 text-indigo-600 shrink-0 mr-2.5" />
-              <div className="min-w-0 flex-1">
-                <select
-                  value={draftFilters.dateRange}
-                  onChange={(e) =>
-                    setDraftFilters((prev) => ({ ...prev, dateRange: e.target.value }))
-                  }
-                  className="w-full bg-transparent text-[11.5px] font-bold text-slate-800 appearance-none focus:outline-none cursor-pointer leading-tight pr-4"
-                >
-                  <option value="this_month">This Month</option>
-                  <option value="last_3_months">Last 3 Months</option>
-                  <option value="last_6_months">Last 6 Months</option>
-                </select>
-                <p className="text-[10px] font-medium text-slate-400 truncate leading-tight">
-                  {dateRangeSubtitle}
-                </p>
-              </div>
-              <ChevronDown className="w-3.5 h-3.5 text-slate-400 pointer-events-none shrink-0" />
-            </div>
+            <DateRangePicker
+              variant="field"
+              value={draftFilters.dateRange}
+              onChange={(val) =>
+                setDraftFilters((prev) => ({ ...prev, dateRange: val }))
+              }
+              initialMonth={new Date(2026, 9, 1)}
+            />
           </div>
 
           {/* Referral Level */}
-          <div className="lg:col-span-2">
-            <label className="block text-[11.5px] font-bold text-slate-600 mb-1">
+          <div className="lg:col-span-3 2xl:flex-1 2xl:min-w-[135px]">
+            <label className="block text-[11.5px] font-bold text-slate-600 mb-1 whitespace-nowrap">
               Referral Level
             </label>
             <div className="relative">
@@ -235,8 +228,8 @@ export default function ReferralAnalytics() {
           </div>
 
           {/* Registration Status */}
-          <div className="lg:col-span-2">
-            <label className="block text-[11.5px] font-bold text-slate-600 mb-1">
+          <div className="lg:col-span-3 2xl:flex-1 2xl:min-w-[145px]">
+            <label className="block text-[11.5px] font-bold text-slate-600 mb-1 whitespace-nowrap">
               Registration Status
             </label>
             <div className="relative">
@@ -256,8 +249,8 @@ export default function ReferralAnalytics() {
           </div>
 
           {/* Package Status */}
-          <div className="lg:col-span-1.5 sm:col-span-1 lg:col-span-1">
-            <label className="block text-[11.5px] font-bold text-slate-600 mb-1 truncate">
+          <div className="lg:col-span-3 2xl:flex-1 2xl:min-w-[135px]">
+            <label className="block text-[11.5px] font-bold text-slate-600 mb-1 whitespace-nowrap">
               Package Status
             </label>
             <div className="relative">
@@ -266,19 +259,19 @@ export default function ReferralAnalytics() {
                 onChange={(e) =>
                   setDraftFilters((prev) => ({ ...prev, pkgStatus: e.target.value }))
                 }
-                className="w-full h-11 bg-white border border-slate-200/90 hover:border-indigo-300 focus:border-indigo-500 rounded-xl pl-2.5 pr-6 text-[11.5px] font-bold text-slate-700 appearance-none focus:outline-none cursor-pointer shadow-2xs"
+                className="w-full h-11 bg-white border border-slate-200/90 hover:border-indigo-300 focus:border-indigo-500 rounded-xl pl-3 pr-7 text-[12px] font-bold text-slate-700 appearance-none focus:outline-none cursor-pointer shadow-2xs"
               >
                 <option value="all">All Status</option>
                 <option value="Activated">Activated</option>
                 <option value="Purchased">Purchased</option>
                 <option value="Pending">Pending</option>
               </select>
-              <ChevronDown className="w-3.5 h-3.5 text-slate-400 absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none" />
+              <ChevronDown className="w-3.5 h-3.5 text-slate-400 absolute right-2.5 top-1/2 -translate-y-1/2 pointer-events-none" />
             </div>
           </div>
 
           {/* Sponsor Search */}
-          <div className="sm:col-span-2 lg:col-span-2">
+          <div className="sm:col-span-2 lg:col-span-8 2xl:flex-[1.35] 2xl:min-w-[190px]">
             <label className="block text-[11.5px] font-bold text-slate-600 mb-1">
               Sponsor
             </label>
@@ -297,7 +290,7 @@ export default function ReferralAnalytics() {
           </div>
 
           {/* Apply & Reset Buttons */}
-          <div className="sm:col-span-2 lg:col-span-2 flex items-center gap-2">
+          <div className="sm:col-span-2 lg:col-span-4 2xl:w-[190px] 2xl:shrink-0 flex items-center gap-2">
             <button
               type="submit"
               className="flex-1 h-11 px-4 rounded-xl bg-indigo-600 hover:bg-indigo-700 active:scale-98 text-white text-[12.5px] font-bold shadow-sm shadow-indigo-600/20 hover:shadow-md hover:shadow-indigo-600/30 transition-all cursor-pointer"

@@ -48,7 +48,13 @@ const navItems = [
     label: 'Orders & Invoices',
     icon: FileText,
     hasSub: true,
-    subItems: ['All Orders', 'Invoices', 'Refund Requests']
+    subItems: [
+      { id: 'order-management', label: 'All Orders', path: '/orders' },
+      { id: 'invoice-management', label: 'Invoices', path: '/orders/invoices' },
+      { id: 'refund-requests', label: 'Refund Requests', path: '/orders/refunds' },
+      { id: 'order-status-history', label: 'Order Status History', path: '/orders/history' },
+      { id: 'order-exceptions', label: 'Order Exceptions', path: '/orders/exceptions' },
+    ]
   },
   {
     id: 'payments',
@@ -133,6 +139,20 @@ export default function Sidebar({ isOpen, setIsOpen }) {
         setActiveSubItem('referral-audit-history');
       } else {
         setActiveSubItem('referral-overview');
+      }
+    } else if (location.pathname.startsWith('/orders')) {
+      setActiveItem('orders');
+      setOpenAccordions((prev) => ({ ...prev, orders: true }));
+      if (location.pathname.includes('/invoices')) {
+        setActiveSubItem('invoice-management');
+      } else if (location.pathname.includes('/refunds')) {
+        setActiveSubItem('refund-requests');
+      } else if (location.pathname.includes('/history')) {
+        setActiveSubItem('order-status-history');
+      } else if (location.pathname.includes('/exceptions')) {
+        setActiveSubItem('order-exceptions');
+      } else {
+        setActiveSubItem('order-management');
       }
     } else if (location.pathname.includes('/kyc')) {
       setActiveItem('users');

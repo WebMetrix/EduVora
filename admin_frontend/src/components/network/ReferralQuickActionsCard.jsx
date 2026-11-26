@@ -56,11 +56,11 @@ export default function ReferralQuickActionsCard() {
             <Link
               key={idx}
               to={act.to}
-              className="flex items-center justify-between p-2.5 rounded-xl border border-slate-200/70 bg-slate-50/50 hover:bg-white hover:border-indigo-300 hover:shadow-xs active:scale-98 transition-all duration-200 group/link cursor-pointer"
+              className="flex items-center justify-between gap-2 p-2.5 rounded-xl border border-slate-200/70 bg-slate-50/50 hover:bg-white hover:border-indigo-300 hover:shadow-xs active:scale-98 transition-all duration-200 group/link cursor-pointer"
             >
-              <div className="flex items-center gap-2.5 min-w-0">
+              <div className="flex items-center gap-2 min-w-0">
                 <Icon className="w-4 h-4 text-indigo-600 shrink-0 group-hover/link:scale-110 transition-transform" />
-                <span className="text-[12px] font-bold text-slate-800 group-hover/link:text-indigo-600 transition-colors truncate">
+                <span className="text-[11.5px] sm:text-[12px] font-bold text-slate-800 group-hover/link:text-indigo-600 transition-colors leading-snug">
                   {act.label}
                 </span>
               </div>

@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { createPortal } from 'react-dom';
 import {
   X, ShoppingBag, Check, Clock, Truck, Download,
   CheckCircle2, FileText, ExternalLink,
@@ -30,7 +31,7 @@ export default function OrderStatusDetailsModal({ order, isOpen, onClose }) {
     }
   }, [activeTab]);
 
-  if (!isOpen || !order) return null;
+  if (!isOpen || !order || typeof document === 'undefined') return null;
 
   // Resolve order fields with realistic defaults matching Image 2
   const orderId = order.orderId || 'OR20260831001';
@@ -91,7 +92,7 @@ export default function OrderStatusDetailsModal({ order, isOpen, onClose }) {
     }
   };
 
-  return (
+  return createPortal(
     <div className="fixed inset-0 z-[10000] flex items-end sm:items-center justify-center p-0 sm:p-4 bg-slate-900/60 backdrop-blur-sm transition-opacity">
       {/* Backdrop click to close */}
       <div className="fixed inset-0" onClick={onClose} />
@@ -788,6 +789,7 @@ export default function OrderStatusDetailsModal({ order, isOpen, onClose }) {
           </button>
         </div>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 }

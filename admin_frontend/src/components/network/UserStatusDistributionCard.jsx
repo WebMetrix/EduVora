@@ -28,17 +28,17 @@ export default function UserStatusDistributionCard() {
       </div>
 
       {/* Donut Chart & Legend Container with flex-1 to fill equal height */}
-      <div className="relative z-10 flex-1 flex flex-col sm:flex-row items-center justify-between gap-4 sm:gap-6 my-auto py-2">
+      <div className="relative z-10 flex-1 flex flex-col sm:flex-row lg:flex-col xl:flex-row items-center justify-between gap-3 sm:gap-4 my-auto py-2">
         {/* Left: Donut Chart with Center Total */}
-        <div className="relative w-[150px] h-[150px] sm:w-[160px] sm:h-[160px] shrink-0 flex items-center justify-center">
+        <div className="relative w-[136px] h-[136px] sm:w-[144px] sm:h-[144px] shrink-0 flex items-center justify-center">
           <ResponsiveContainer width="100%" height="100%">
             <PieChart>
               <Pie
                 data={data}
                 cx="50%"
                 cy="50%"
-                innerRadius={46}
-                outerRadius={68}
+                innerRadius={42}
+                outerRadius={62}
                 startAngle={90}
                 endAngle={-270}
                 paddingAngle={2.5}
@@ -55,29 +55,29 @@ export default function UserStatusDistributionCard() {
 
           {/* Centered Total Label */}
           <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none text-center">
-            <span className="text-[18px] sm:text-[20px] font-black text-slate-900 leading-tight">
+            <span className="text-[17px] sm:text-[18px] font-black text-slate-900 leading-tight">
               12,846
             </span>
-            <span className="text-[10px] sm:text-[10.5px] font-bold text-slate-400 leading-tight mt-0.5">
+            <span className="text-[10px] font-bold text-slate-400 leading-tight mt-0.5">
               Total Users
             </span>
           </div>
         </div>
 
         {/* Right: Legend Breakdown List */}
-        <div className="flex-1 w-full space-y-2.5 sm:pl-2 flex flex-col justify-center">
+        <div className="flex-1 min-w-0 w-full space-y-2 flex flex-col justify-center">
           {data.map((item, idx) => (
-            <div key={idx} className="flex items-center justify-between gap-3 text-[12px] group/item hover:bg-slate-50/80 px-2 py-1.5 rounded-xl transition-colors">
-              <div className="flex items-center gap-2.5 min-w-0">
+            <div key={idx} className="flex items-center justify-between gap-2 text-[11.5px] sm:text-[12px] group/item hover:bg-slate-50/80 px-1.5 py-1.5 rounded-xl transition-colors">
+              <div className="flex items-center gap-2 min-w-0">
                 <span
                   className="w-2.5 h-2.5 rounded-full shrink-0 shadow-2xs group-hover/item:scale-125 transition-transform"
                   style={{ backgroundColor: item.color }}
                 />
                 <span className="font-bold text-slate-700 truncate">{item.name}</span>
               </div>
-              <div className="flex items-center gap-3 shrink-0">
-                <span className="font-black text-slate-900">{item.count}</span>
-                <span className="text-slate-400 font-semibold w-11 text-right">{item.percentage}</span>
+              <div className="flex items-center gap-2 shrink-0">
+                <span className="font-black text-slate-900 tabular-nums">{item.count}</span>
+                <span className="text-slate-400 font-semibold min-w-[38px] text-right tabular-nums">{item.percentage}</span>
               </div>
             </div>
           ))}

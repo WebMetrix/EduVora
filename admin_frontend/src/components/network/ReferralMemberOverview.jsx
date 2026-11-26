@@ -245,62 +245,62 @@ export default function ReferralMemberOverview({ member, onViewSponsorProfile })
 
             <div className="grid grid-cols-2 gap-2 sm:gap-3">
               {/* Direct Referrals */}
-              <div className="relative overflow-hidden rounded-xl sm:rounded-2xl bg-linear-to-br from-white/95 to-emerald-50/50 backdrop-blur-xl border border-emerald-100/80 p-2.5 sm:p-3 shadow-[0_4px_15px_rgb(0,0,0,0.03)] hover:shadow-[0_6px_20px_rgb(16,185,129,0.14)] hover:border-emerald-300 hover:-translate-y-0.5 transition-all duration-300 group/tile flex items-center gap-2 sm:gap-2.5">
-                <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center shrink-0 shadow-2xs group-hover/tile:scale-110 group-hover/tile:rotate-3 transition-all duration-300">
-                  <User className="w-4 h-4" />
+              <div className="relative overflow-hidden rounded-xl sm:rounded-2xl bg-linear-to-br from-white/95 to-emerald-50/50 backdrop-blur-xl border border-emerald-100/80 p-2 sm:p-2.5 xl:p-3 shadow-[0_4px_15px_rgb(0,0,0,0.03)] hover:shadow-[0_6px_20px_rgb(16,185,129,0.14)] hover:border-emerald-300 hover:-translate-y-0.5 transition-all duration-300 group/tile flex items-center gap-2">
+                <div className="w-7 h-7 sm:w-8 sm:h-8 xl:w-9 xl:h-9 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center shrink-0 shadow-2xs group-hover/tile:scale-110 group-hover/tile:rotate-3 transition-all duration-300">
+                  <User className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                 </div>
                 <div className="min-w-0">
                   <p className="text-[10px] sm:text-[10.5px] font-semibold text-slate-500 group-hover/tile:text-slate-700 leading-tight transition-colors">
                     Direct Referrals
                     <span className="block text-[9px] sm:text-[9.5px] text-slate-400">(Level 1)</span>
                   </p>
-                  <p className="text-[16px] sm:text-[19px] font-black text-slate-900 leading-none mt-1">
+                  <p className="text-[15px] sm:text-[16px] xl:text-[18px] font-black text-slate-900 leading-none mt-1">
                     {member.summary.direct}
                   </p>
                 </div>
               </div>
 
               {/* Indirect Referrals */}
-              <div className="relative overflow-hidden rounded-xl sm:rounded-2xl bg-linear-to-br from-white/95 to-orange-50/50 backdrop-blur-xl border border-orange-100/80 p-2.5 sm:p-3 shadow-[0_4px_15px_rgb(0,0,0,0.03)] hover:shadow-[0_6px_20px_rgb(249,115,22,0.14)] hover:border-orange-300 hover:-translate-y-0.5 transition-all duration-300 group/tile flex items-center gap-2 sm:gap-2.5">
-                <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-orange-50 text-orange-600 flex items-center justify-center shrink-0 shadow-2xs group-hover/tile:scale-110 group-hover/tile:rotate-3 transition-all duration-300">
-                  <Users className="w-4 h-4" />
+              <div className="relative overflow-hidden rounded-xl sm:rounded-2xl bg-linear-to-br from-white/95 to-orange-50/50 backdrop-blur-xl border border-orange-100/80 p-2 sm:p-2.5 xl:p-3 shadow-[0_4px_15px_rgb(0,0,0,0.03)] hover:shadow-[0_6px_20px_rgb(249,115,22,0.14)] hover:border-orange-300 hover:-translate-y-0.5 transition-all duration-300 group/tile flex items-center gap-2">
+                <div className="w-7 h-7 sm:w-8 sm:h-8 xl:w-9 xl:h-9 rounded-xl bg-orange-50 text-orange-600 flex items-center justify-center shrink-0 shadow-2xs group-hover/tile:scale-110 group-hover/tile:rotate-3 transition-all duration-300">
+                  <Users className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                 </div>
                 <div className="min-w-0">
                   <p className="text-[10px] sm:text-[10.5px] font-semibold text-slate-500 group-hover/tile:text-slate-700 leading-tight transition-colors">
                     Indirect Referrals
                     <span className="block text-[9px] sm:text-[9.5px] text-slate-400">(Level 2)</span>
                   </p>
-                  <p className="text-[16px] sm:text-[19px] font-black text-slate-900 leading-none mt-1">
+                  <p className="text-[15px] sm:text-[16px] xl:text-[18px] font-black text-slate-900 leading-none mt-1">
                     {member.summary.indirect}
                   </p>
                 </div>
               </div>
 
               {/* Total Referrals */}
-              <div className="relative overflow-hidden rounded-xl sm:rounded-2xl bg-linear-to-br from-white/95 to-purple-50/50 backdrop-blur-xl border border-purple-100/80 p-2.5 sm:p-3 shadow-[0_4px_15px_rgb(0,0,0,0.03)] hover:shadow-[0_6px_20px_rgb(139,92,246,0.14)] hover:border-purple-300 hover:-translate-y-0.5 transition-all duration-300 group/tile flex items-center gap-2 sm:gap-2.5">
-                <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-purple-50 text-purple-600 flex items-center justify-center shrink-0 shadow-2xs group-hover/tile:scale-110 group-hover/tile:rotate-3 transition-all duration-300">
-                  <GitFork className="w-4 h-4" />
+              <div className="relative overflow-hidden rounded-xl sm:rounded-2xl bg-linear-to-br from-white/95 to-purple-50/50 backdrop-blur-xl border border-purple-100/80 p-2 sm:p-2.5 xl:p-3 shadow-[0_4px_15px_rgb(0,0,0,0.03)] hover:shadow-[0_6px_20px_rgb(139,92,246,0.14)] hover:border-purple-300 hover:-translate-y-0.5 transition-all duration-300 group/tile flex items-center gap-2">
+                <div className="w-7 h-7 sm:w-8 sm:h-8 xl:w-9 xl:h-9 rounded-xl bg-purple-50 text-purple-600 flex items-center justify-center shrink-0 shadow-2xs group-hover/tile:scale-110 group-hover/tile:rotate-3 transition-all duration-300">
+                  <GitFork className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                 </div>
                 <div className="min-w-0">
                   <p className="text-[10px] sm:text-[10.5px] font-semibold text-slate-500 group-hover/tile:text-slate-700 leading-tight transition-colors">
                     Total Referrals
                   </p>
-                  <p className="text-[16px] sm:text-[19px] font-black text-slate-900 leading-none mt-1.5">
+                  <p className="text-[15px] sm:text-[16px] xl:text-[18px] font-black text-slate-900 leading-none mt-1.5">
                     {member.summary.total}
                   </p>
                 </div>
               </div>
 
               {/* Total Earnings */}
-              <div className="relative overflow-hidden rounded-xl sm:rounded-2xl bg-linear-to-br from-white/95 to-sky-50/50 backdrop-blur-xl border border-sky-100/80 p-2.5 sm:p-3 shadow-[0_4px_15px_rgb(0,0,0,0.03)] hover:shadow-[0_6px_20px_rgb(14,165,233,0.14)] hover:border-sky-300 hover:-translate-y-0.5 transition-all duration-300 group/tile flex items-center gap-2 sm:gap-2.5">
-                <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-sky-50 text-sky-600 flex items-center justify-center shrink-0 font-black text-[13px] sm:text-[14px] shadow-2xs group-hover/tile:scale-110 group-hover/tile:rotate-3 transition-all duration-300">
+              <div className="relative overflow-hidden rounded-xl sm:rounded-2xl bg-linear-to-br from-white/95 to-sky-50/50 backdrop-blur-xl border border-sky-100/80 p-2 sm:p-2.5 xl:p-3 shadow-[0_4px_15px_rgb(0,0,0,0.03)] hover:shadow-[0_6px_20px_rgb(14,165,233,0.14)] hover:border-sky-300 hover:-translate-y-0.5 transition-all duration-300 group/tile flex items-center gap-2">
+                <div className="w-7 h-7 sm:w-8 sm:h-8 xl:w-9 xl:h-9 rounded-xl bg-sky-50 text-sky-600 flex items-center justify-center shrink-0 font-black text-[12px] sm:text-[13px] shadow-2xs group-hover/tile:scale-110 group-hover/tile:rotate-3 transition-all duration-300">
                   ₹
                 </div>
                 <div className="min-w-0">
                   <p className="text-[10px] sm:text-[10.5px] font-semibold text-slate-500 group-hover/tile:text-slate-700 leading-tight transition-colors">
                     Total Earnings
                   </p>
-                  <p className="text-[15px] sm:text-[18px] font-black text-slate-900 leading-none mt-1.5 truncate">
+                  <p className="text-[13.5px] sm:text-[14.5px] xl:text-[16px] font-black text-slate-900 leading-tight mt-1.5 whitespace-nowrap">
                     {member.summary.earnings}
                   </p>
                 </div>

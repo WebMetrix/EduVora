@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import {
-  Calendar, ChevronDown, User, Users, ShoppingCart, IndianRupee,
+  User, Users, ShoppingCart, IndianRupee,
   ShieldCheck, Wallet, Boxes
 } from 'lucide-react';
+import DateRangePicker from '../components/common/DateRangePicker';
 import StatCard from '../components/dashboard/StatCard';
 import RegistrationTrendChart from '../components/dashboard/RegistrationTrendChart';
 import RevenueOverviewChart from '../components/dashboard/RevenueOverviewChart';
@@ -21,6 +22,12 @@ export default function Dashboard() {
   const [isPayoutModalOpen, setIsPayoutModalOpen] = useState(false);
   const [isRecentOrdersModalOpen, setIsRecentOrdersModalOpen] = useState(false);
   const [isRecentUsersModalOpen, setIsRecentUsersModalOpen] = useState(false);
+  const [dateRange, setDateRange] = useState({
+    preset: 'aug_2026',
+    label: 'Aug 2026',
+    startDate: new Date(2026, 7, 1),
+    endDate: new Date(2026, 7, 31),
+  });
 
   // Listen to sidebar custom events to trigger view modals
   useEffect(() => {
@@ -49,13 +56,14 @@ export default function Dashboard() {
         </div>
 
         {/* Date Filter Button */}
-        <button className="flex items-center justify-between sm:justify-start gap-2 bg-white border border-slate-200/90 rounded-xl px-3.5 py-2 text-[12px] sm:text-[12.5px] font-bold text-slate-700 shadow-2xs hover:border-indigo-200 hover:text-indigo-600 transition-all cursor-pointer w-full sm:w-auto">
-          <div className="flex items-center gap-2">
-            <Calendar className="w-4 h-4 text-slate-500" />
-            <span>01 Aug 2026 - 31 Aug 2026</span>
-          </div>
-          <ChevronDown className="w-3.5 h-3.5 text-slate-400" />
-        </button>
+        <DateRangePicker
+          variant="header"
+          value={dateRange}
+          onChange={setDateRange}
+          placeholder="01 Aug 2026 - 31 Aug 2026"
+          clearable={false}
+          initialMonth={new Date(2026, 7, 1)}
+        />
       </div>
 
       {/* Row 1: Four Stat Cards */}

@@ -2,10 +2,12 @@ import React, { useState, useMemo, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import {
   ShieldCheck, X, User, Check, Clock, FileText, Search,
-  Calendar, ChevronDown, ChevronLeft, ChevronRight, Download,
+  ChevronDown, ChevronLeft, ChevronRight, Download,
   Eye, CheckCircle2, AlertCircle, XCircle
 } from 'lucide-react';
 import KycDetailsModal from './KycDetailsModal';
+import DateRangePicker from '../common/DateRangePicker';
+import { isDateWithinRange } from '../../utils/dateFilterUtils';
 
 // Mock KYC Dataset matching the provided design
 const initialKycUsers = [
@@ -219,6 +221,7 @@ export default function KycStatusModal({ isOpen, onClose }) {
   const [searchQuery, setSearchQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState('All Status');
   const [typeFilter, setTypeFilter] = useState('All Types');
+  const [dateRangeFilter, setDateRangeFilter] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedUser, setSelectedUser] = useState(null);
   const [isExporting, setIsExporting] = useState(false);
@@ -271,9 +274,11 @@ export default function KycStatusModal({ isOpen, onClose }) {
       const matchesType =
         typeFilter === 'All Types' || user.kycType.toLowerCase() === typeFilter.toLowerCase();
 
-      return matchesSearch && matchesStatus && matchesType;
+      const matchesDate = isDateWithinRange(user.submissionDate, dateRangeFilter);
+
+      return matchesSearch && matchesStatus && matchesType && matchesDate;
     });
-  }, [users, searchQuery, statusFilter, typeFilter]);
+  }, [users, searchQuery, statusFilter, typeFilter, dateRangeFilter]);
 
   // Pagination calculation
   const totalUsersCount = 248; // Total users in system
@@ -287,6 +292,7 @@ export default function KycStatusModal({ isOpen, onClose }) {
     setSearchQuery('');
     setStatusFilter('All Status');
     setTypeFilter('All Types');
+    setDateRangeFilter(null);
     setCurrentPage(1);
   };
 
@@ -566,13 +572,16 @@ export default function KycStatusModal({ isOpen, onClose }) {
               </div>
 
               {/* Registration Date Filter */}
-              <button
-                type="button"
-                className="flex items-center gap-1.5 bg-white border border-slate-200 rounded-xl px-3 py-1.5 md:py-2 text-[11.5px] md:text-[12px] font-semibold text-slate-700 hover:border-slate-300 transition-colors shadow-2xs cursor-pointer"
-              >
-                <Calendar className="w-3.5 h-3.5 text-slate-400" />
-                <span>Select date range</span>
-              </button>
+              <DateRangePicker
+                variant="modal"
+                value={dateRangeFilter}
+                onChange={(val) => {
+                  setDateRangeFilter(val);
+                  setCurrentPage(1);
+                }}
+                placeholder="Select date range"
+                initialMonth={new Date(2026, 7, 1)}
+              />
 
               {/* Reset Button */}
               <button

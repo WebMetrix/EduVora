@@ -7,53 +7,79 @@ const usersData = [
     id: 1,
     userId: 'EVU001248',
     name: 'Rajesh Kumar',
+    email: 'rajesh@gmail.com',
+    mobile: '+91 98765 43210',
     initials: 'RK',
     initialsBg: 'bg-purple-100 text-purple-700',
     package: 'Starter',
     regDate: '31 Aug 2026',
+    registrationDate: '31 Aug 2026, 10:24 AM',
     status: 'Active'
   },
   {
     id: 2,
     userId: 'EVU001247',
     name: 'Priya Sharma',
+    email: 'priya@gmail.com',
+    mobile: '+91 98765 43211',
     initials: 'PS',
     initialsBg: 'bg-blue-100 text-blue-700',
     package: 'Advanced',
     regDate: '31 Aug 2026',
+    registrationDate: '31 Aug 2026, 09:45 AM',
     status: 'Active'
   },
   {
     id: 3,
     userId: 'EVU001246',
     name: 'Arjun Mehta',
+    email: 'arjun@gmail.com',
+    mobile: '+91 98765 43212',
     initials: 'AM',
     initialsBg: 'bg-emerald-100 text-emerald-700',
     package: 'Pro',
     regDate: '30 Aug 2026',
+    registrationDate: '30 Aug 2026, 06:12 PM',
     status: 'Active'
   },
   {
     id: 4,
     userId: 'EVU001245',
     name: 'Sneha Iyer',
+    email: 'sneha@gmail.com',
+    mobile: '+91 98765 43213',
     initials: 'SI',
     initialsBg: 'bg-indigo-100 text-indigo-700',
     package: 'Basic',
     regDate: '30 Aug 2026',
+    registrationDate: '30 Aug 2026, 02:30 PM',
     status: 'Active'
   },
   {
     id: 5,
     userId: 'EVU001244',
     name: 'Vikram Singh',
+    email: 'vikram@gmail.com',
+    mobile: '+91 98765 43214',
     initials: 'VS',
     initialsBg: 'bg-amber-100 text-amber-700',
     package: 'Starter',
     regDate: '29 Aug 2026',
+    registrationDate: '29 Aug 2026, 11:05 AM',
     status: 'Inactive'
   }
 ];
+
+const renderCompactDate = (dateStr) => {
+  const parts = String(dateStr || '').trim().split(/\s+/);
+  if (parts.length < 3) return dateStr;
+  return (
+    <span className="leading-tight">
+      <span className="block 2xl:inline">{parts[0]} {parts[1]} </span>
+      <span className="block 2xl:inline">{parts.slice(2).join(' ')}</span>
+    </span>
+  );
+};
 
 export default function RecentUsersTable({ onViewAll }) {
   const [selectedUser, setSelectedUser] = useState(null);
@@ -91,24 +117,19 @@ export default function RecentUsersTable({ onViewAll }) {
       </div>
 
       {/* Desktop View Table (hidden on mobile) */}
-      <div className="relative z-10 hidden md:block overflow-hidden">
-        <table className="w-full text-left text-[11.5px] sm:text-[12px] whitespace-nowrap">
-          <colgroup>
-            <col className="w-[6%]" />
-            <col className="w-[18%]" />
-            <col className="w-[30%]" />
-            <col className="w-[16%]" />
-            <col className="w-[18%]" />
-            <col className="w-[12%]" />
-          </colgroup>
+      <div className="relative z-10 hidden md:block overflow-x-auto custom-scrollbar">
+        <table className="w-full text-left text-[11px] 2xl:text-[12px]">
           <thead>
             <tr className="border-b border-slate-200/60 text-slate-400 font-bold">
-              <th className="py-2 sm:py-2.5 px-2 font-semibold text-center">#</th>
-              <th className="py-2 sm:py-2.5 px-2 font-semibold">User ID</th>
-              <th className="py-2 sm:py-2.5 px-2 font-semibold">Name</th>
-              <th className="py-2 sm:py-2.5 px-2 font-semibold">Package</th>
-              <th className="py-2 sm:py-2.5 px-2 font-semibold">Registration Date</th>
-              <th className="py-2 sm:py-2.5 px-2 font-semibold text-center">Status</th>
+              <th className="py-2 px-1 2xl:px-2 font-semibold text-center whitespace-nowrap">#</th>
+              <th className="py-2 px-1.5 2xl:px-2 font-semibold whitespace-nowrap">User ID</th>
+              <th className="py-2 px-1.5 2xl:px-2 font-semibold whitespace-nowrap">Name</th>
+              <th className="py-2 px-1.5 2xl:px-2 font-semibold whitespace-nowrap">Package</th>
+              <th className="py-2 px-1.5 2xl:px-2 font-semibold leading-tight">
+                <span className="block 2xl:inline">Registration </span>
+                <span className="block 2xl:inline">Date</span>
+              </th>
+              <th className="py-2 px-1.5 2xl:px-2 font-semibold text-center whitespace-nowrap">Status</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-indigo-100/30">
@@ -118,25 +139,25 @@ export default function RecentUsersTable({ onViewAll }) {
                 onClick={() => setSelectedUser(user)}
                 className="group border-b border-indigo-100/30 hover:bg-white hover:shadow-md hover:-translate-y-0.5 hover:z-10 relative transition-all duration-300 cursor-pointer"
               >
-                <td className="py-2 sm:py-2.5 px-2 text-slate-400 font-medium text-center rounded-l-xl">{user.id}</td>
-                <td className="py-2 sm:py-2.5 px-2 font-semibold text-slate-700 group-hover:text-indigo-600 transition-colors tracking-tight">{user.userId}</td>
-                <td className="py-2 sm:py-2.5 px-2">
-                  <div className="flex items-center gap-1.5 sm:gap-2">
+                <td className="py-2 px-1 2xl:px-2 text-slate-400 font-medium text-center rounded-l-xl whitespace-nowrap">{user.id}</td>
+                <td className="py-2 px-1.5 2xl:px-2 font-semibold text-slate-700 group-hover:text-indigo-600 transition-colors tracking-tight whitespace-nowrap">{user.userId}</td>
+                <td className="py-2 px-1.5 2xl:px-2">
+                  <div className="flex items-center gap-1.5 2xl:gap-2 min-w-0">
                     <span
                       className={`w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-extrabold shrink-0 shadow-2xs transition-transform duration-300 group-hover:scale-110 group-hover:shadow-xs ${user.initialsBg}`}
                     >
                       {user.initials}
                     </span>
-                    <span className="font-bold text-slate-900 group-hover:text-indigo-950 transition-colors truncate">
+                    <span className="font-bold text-slate-900 group-hover:text-indigo-950 transition-colors leading-tight">
                       {user.name}
                     </span>
                   </div>
                 </td>
-                <td className="py-2 sm:py-2.5 px-2 text-slate-600 font-semibold">{user.package}</td>
-                <td className="py-2 sm:py-2.5 px-2 text-slate-500 font-medium">{user.regDate}</td>
-                <td className="py-2 sm:py-2.5 px-2 text-center rounded-r-xl">
+                <td className="py-2 px-1.5 2xl:px-2 text-slate-600 font-semibold whitespace-nowrap">{user.package}</td>
+                <td className="py-2 px-1.5 2xl:px-2 text-slate-500 font-medium">{renderCompactDate(user.regDate)}</td>
+                <td className="py-2 px-1.5 2xl:px-2 text-center rounded-r-xl whitespace-nowrap">
                   <span
-                    className={`px-2 py-0.5 rounded-md text-[10px] font-bold border inline-flex items-center shadow-2xs transition-transform duration-300 group-hover:scale-105 ${user.status === 'Active'
+                    className={`px-2 py-0.5 rounded-md text-[10px] font-bold border inline-flex items-center whitespace-nowrap shadow-2xs transition-transform duration-300 group-hover:scale-105 ${user.status === 'Active'
                       ? 'bg-emerald-50 text-emerald-700 border-emerald-200/60'
                       : 'bg-rose-50 text-rose-700 border-rose-200/60'
                       }`}

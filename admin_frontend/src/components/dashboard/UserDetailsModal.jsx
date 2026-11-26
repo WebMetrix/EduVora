@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import {
   X, User, Mail, Phone, Calendar, ShieldCheck, CheckCircle2,
   Copy, Check, ExternalLink, Package, ArrowUpRight,
@@ -23,7 +24,7 @@ export default function UserDetailsModal({ user, isOpen, onClose, onViewKyc }) {
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [isOpen, onClose]);
 
-  if (!isOpen || !user) return null;
+  if (!isOpen || !user || typeof document === 'undefined') return null;
 
   // Resolve user fields with realistic defaults matching Image 4
   const userName = user.name || 'Rajesh Kumar';
@@ -55,7 +56,7 @@ export default function UserDetailsModal({ user, isOpen, onClose, onViewKyc }) {
     { id: 'activity', label: 'Activity Logs' },
   ];
 
-  return (
+  return createPortal(
     <div className="fixed inset-0 z-[10000] flex items-end sm:items-center justify-center p-0 sm:p-4 bg-slate-900/60 backdrop-blur-sm transition-opacity">
       {/* Backdrop click to close */}
       <div className="fixed inset-0" onClick={onClose} />
@@ -603,6 +604,7 @@ export default function UserDetailsModal({ user, isOpen, onClose, onViewKyc }) {
           </button>
         </div>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 }

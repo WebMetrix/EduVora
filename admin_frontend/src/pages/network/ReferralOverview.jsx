@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Calendar, ChevronDown } from 'lucide-react';
+import DateRangePicker from '../../components/common/DateRangePicker';
 import ReferralOverviewStats from '../../components/network/ReferralOverviewStats';
 import ReferralGrowthChart from '../../components/network/ReferralGrowthChart';
 import UserStatusDistributionCard from '../../components/network/UserStatusDistributionCard';
@@ -10,7 +10,12 @@ import ReferralQuickActionsCard from '../../components/network/ReferralQuickActi
 import ReferralLevelTable from '../../components/network/ReferralLevelTable';
 
 export default function ReferralOverview() {
-  const [dateRange, setDateRange] = useState('01 Oct 2026 - 31 Oct 2026');
+  const [dateRange, setDateRange] = useState({
+    preset: 'this_month',
+    label: 'This Month',
+    startDate: new Date(2026, 9, 1),
+    endDate: new Date(2026, 9, 31),
+  });
 
   return (
     <div className="flex flex-col gap-4 sm:gap-5 animate-fade-in relative pb-1 sm:pb-2">
@@ -39,16 +44,14 @@ export default function ReferralOverview() {
           </nav>
 
           {/* Date Picker Button */}
-          <button
-            type="button"
-            className="flex items-center justify-between sm:justify-start gap-2 bg-white/90 hover:bg-white border border-slate-200/90 rounded-xl px-3 py-1.5 text-[11.5px] sm:text-[12px] font-bold text-slate-700 shadow-2xs hover:border-indigo-300 hover:text-indigo-600 transition-all cursor-pointer w-full sm:w-auto"
-          >
-            <div className="flex items-center gap-2">
-              <Calendar className="w-3.5 h-3.5 text-indigo-600 shrink-0" />
-              <span>{dateRange}</span>
-            </div>
-            <ChevronDown className="w-3.5 h-3.5 text-slate-400" />
-          </button>
+          <DateRangePicker
+            variant="header"
+            value={dateRange}
+            onChange={setDateRange}
+            placeholder="01 Oct 2026 - 31 Oct 2026"
+            clearable={false}
+            initialMonth={new Date(2026, 9, 1)}
+          />
         </div>
       </div>
 
@@ -73,12 +76,12 @@ export default function ReferralOverview() {
         </div>
 
         {/* Referral Health Progress Card */}
-        <div className="md:col-span-1 lg:col-span-5 flex flex-col h-full">
+        <div className="md:col-span-1 lg:col-span-4 flex flex-col h-full">
           <ReferralHealthCard />
         </div>
 
         {/* Quick Actions Card */}
-        <div className="md:col-span-2 lg:col-span-3 flex flex-col h-full">
+        <div className="md:col-span-2 lg:col-span-4 flex flex-col h-full">
           <ReferralQuickActionsCard />
         </div>
       </div>

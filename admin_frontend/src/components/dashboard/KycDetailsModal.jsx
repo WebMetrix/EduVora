@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import {
   X, FileText, Check, Clock, Eye, CheckCircle2,
   AlertCircle, XCircle, Download, ZoomIn, ShieldCheck,
@@ -25,7 +26,7 @@ export default function KycDetailsModal({ user, isOpen, onClose }) {
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [isOpen, selectedDocPreview, onClose]);
 
-  if (!isOpen || !user) return null;
+  if (!isOpen || !user || typeof document === 'undefined') return null;
 
   // Resolve user fields with realistic defaults matching the provided design
   const userName = user.name || 'Rajesh Kumar';
@@ -105,7 +106,7 @@ export default function KycDetailsModal({ user, isOpen, onClose }) {
     </span>
   );
 
-  return (
+  return createPortal(
     <>
       {/* Modal Backdrop & Container */}
       <div className="fixed inset-0 z-[10000] flex items-end sm:items-center justify-center p-0 sm:p-4 bg-slate-900/60 backdrop-blur-sm transition-opacity">
@@ -750,6 +751,7 @@ export default function KycDetailsModal({ user, isOpen, onClose }) {
           </div>
         </div>
       )}
-    </>
+    </>,
+    document.body
   );
 }

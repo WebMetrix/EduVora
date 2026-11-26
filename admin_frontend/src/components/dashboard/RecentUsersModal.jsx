@@ -2,11 +2,13 @@ import React, { useState, useMemo, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import {
   Users, X, User, Check, Clock,
-  Search, Calendar, ChevronDown, ChevronLeft, ChevronRight,
-  Download, Eye, MoreVertical, ShieldCheck, Mail, Phone
+  Search, ChevronDown, ChevronLeft, ChevronRight,
+  Download, Eye, ShieldCheck, Mail, Phone
 } from 'lucide-react';
 import UserDetailsModal from './UserDetailsModal';
 import KycDetailsModal from './KycDetailsModal';
+import DateRangePicker from '../common/DateRangePicker';
+import { isDateWithinRange } from '../../utils/dateFilterUtils';
 
 // Mock Recent Users Dataset matching the provided design
 const initialRecentUsers = [
@@ -162,6 +164,7 @@ export default function RecentUsersModal({ isOpen, onClose }) {
   const [accountStatusFilter, setAccountStatusFilter] = useState('All Status');
   const [kycStatusFilter, setKycStatusFilter] = useState('All Status');
   const [packageFilter, setPackageFilter] = useState('All Packages');
+  const [dateRangeFilter, setDateRangeFilter] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedUser, setSelectedUser] = useState(null);
   const [viewingKycUser, setViewingKycUser] = useState(null);
@@ -217,9 +220,11 @@ export default function RecentUsersModal({ isOpen, onClose }) {
       const matchesPackage =
         packageFilter === 'All Packages' || user.package.toLowerCase() === packageFilter.toLowerCase();
 
-      return matchesSearch && matchesAccountStatus && matchesKycStatus && matchesPackage;
+      const matchesDate = isDateWithinRange(user.registrationDate, dateRangeFilter);
+
+      return matchesSearch && matchesAccountStatus && matchesKycStatus && matchesPackage && matchesDate;
     });
-  }, [users, searchQuery, accountStatusFilter, kycStatusFilter, packageFilter]);
+  }, [users, searchQuery, accountStatusFilter, kycStatusFilter, packageFilter, dateRangeFilter]);
 
   const totalUsersCount = 1248;
   const totalPages = Math.ceil(filteredUsers.length / itemsPerPage) || 1;
@@ -233,6 +238,7 @@ export default function RecentUsersModal({ isOpen, onClose }) {
     setAccountStatusFilter('All Status');
     setKycStatusFilter('All Status');
     setPackageFilter('All Packages');
+    setDateRangeFilter(null);
     setCurrentPage(1);
   };
 
@@ -536,13 +542,16 @@ export default function RecentUsersModal({ isOpen, onClose }) {
               </div>
 
               {/* Date Filter */}
-              <button
-                type="button"
-                className="flex items-center gap-1.5 bg-white border border-slate-200 rounded-xl px-3 py-1.5 md:py-2 text-[11.5px] md:text-[12px] font-semibold text-slate-700 hover:border-slate-300 transition-colors shadow-2xs cursor-pointer"
-              >
-                <Calendar className="w-3.5 h-3.5 text-slate-400" />
-                <span>Select date range</span>
-              </button>
+              <DateRangePicker
+                variant="modal"
+                value={dateRangeFilter}
+                onChange={(val) => {
+                  setDateRangeFilter(val);
+                  setCurrentPage(1);
+                }}
+                placeholder="Select date range"
+                initialMonth={new Date(2026, 7, 1)}
+              />
 
               {/* Reset */}
               <button
@@ -628,6 +637,7 @@ export default function RecentUsersModal({ isOpen, onClose }) {
                     currentRecords.map((item, idx) => (
                       <tr
                         key={item.id}
+                        onClick={() => setSelectedUser(item)}
                         className="group border-b border-indigo-100/30 hover:bg-white hover:shadow-md hover:-translate-y-0.5 hover:z-10 relative transition-all duration-300 cursor-pointer"
                       >
                         <td className="py-2.5 px-2 text-center text-slate-400 font-semibold text-[11px] rounded-l-xl">
@@ -670,23 +680,14 @@ export default function RecentUsersModal({ isOpen, onClose }) {
                           </span>
                         </td>
                         <td className="py-2.5 px-2 text-center rounded-r-xl">
-                          <div className="flex items-center justify-center gap-1">
-                            <button
-                              type="button"
-                              onClick={() => setSelectedUser(item)}
-                              className="p-1 rounded-lg text-indigo-600 hover:text-indigo-800 hover:bg-indigo-50 transition-all duration-300 group-hover:scale-110 cursor-pointer"
-                              title="View User Details"
-                            >
-                              <Eye className="w-3.5 h-3.5" />
-                            </button>
-                            <button
-                              type="button"
-                              className="p-1 rounded-lg text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition-all duration-300 group-hover:scale-110 cursor-pointer"
-                              title="More Options"
-                            >
-                              <MoreVertical className="w-3.5 h-3.5" />
-                            </button>
-                          </div>
+                          <button
+                            type="button"
+                            onClick={(e) => { e.stopPropagation(); setSelectedUser(item); }}
+                            className="p-1 rounded-lg text-indigo-600 hover:text-indigo-800 hover:bg-indigo-50 transition-all duration-300 group-hover:scale-110 cursor-pointer"
+                            title="View User Details"
+                          >
+                            <Eye className="w-3.5 h-3.5" />
+                          </button>
                         </td>
                       </tr>
                     ))

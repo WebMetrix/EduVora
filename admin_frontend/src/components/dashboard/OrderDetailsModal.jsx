@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import {
   X, FileText, ShoppingBag, ShoppingCart, User, Package,
   BookOpen, Clock, Download, RotateCcw, Copy, Check,
@@ -21,7 +22,7 @@ export default function OrderDetailsModal({ order, isOpen, onClose }) {
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [isOpen, onClose]);
 
-  if (!isOpen || !order) return null;
+  if (!isOpen || !order || typeof document === 'undefined') return null;
 
   // Resolve order fields with realistic defaults matching Image 1
   const orderId = order.orderId || 'OR20260831001';
@@ -106,7 +107,7 @@ export default function OrderDetailsModal({ order, isOpen, onClose }) {
     }
   };
 
-  return (
+  return createPortal(
     <div className="fixed inset-0 z-[10000] flex items-end sm:items-center justify-center p-0 sm:p-4 bg-slate-900/60 backdrop-blur-sm transition-opacity">
       {/* Backdrop click to close */}
       <div className="fixed inset-0" onClick={onClose} />
@@ -550,6 +551,7 @@ export default function OrderDetailsModal({ order, isOpen, onClose }) {
           </button>
         </div>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 }

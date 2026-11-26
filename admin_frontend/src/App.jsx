@@ -11,6 +11,7 @@ import ReferralDetails from './pages/network/ReferralDetails';
 import ReferralAnalytics from './pages/network/ReferralAnalytics';
 import ReferralExceptions from './pages/network/ReferralExceptions';
 import ReferralAuditHistory from './pages/network/ReferralAuditHistory';
+import OrderManagement from './pages/orders/OrderManagement';
 
 export default function App() {
   return (
@@ -48,6 +49,14 @@ export default function App() {
         <Route path="/referrals/tree" element={<GenealogyTree />} />
         <Route path="/referrals/details" element={<ReferralDetails />} />
         <Route path="/referrals/analytics" element={<ReferralAnalytics />} />
+
+        {/* Orders & Invoices */}
+        <Route path="/orders" element={<OrderManagement defaultTab="orders" />} />
+        <Route path="/orders/all" element={<OrderManagement defaultTab="orders" />} />
+        <Route path="/orders/invoices" element={<OrderManagement defaultTab="invoices" />} />
+        <Route path="/orders/refunds" element={<OrderManagement defaultTab="refunds" />} />
+        <Route path="/orders/history" element={<OrderManagement defaultTab="history" />} />
+        <Route path="/orders/exceptions" element={<OrderManagement defaultTab="exceptions" />} />
 
         {/* Wildcard redirect back to dashboard */}
         <Route path="*" element={<Navigate to="/dashboard" replace />} />

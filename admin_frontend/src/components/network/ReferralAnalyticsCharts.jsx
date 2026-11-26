@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
-import { BarChart2, PieChart as PieIcon, Filter, ChevronDown } from 'lucide-react';
+import { BarChart2, PieChart as PieIcon, Filter } from 'lucide-react';
 import {
   AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid,
   PieChart, Pie, Cell, BarChart, Bar
 } from 'recharts';
+import CustomSelect from '../common/CustomSelect';
 
 const MONTHLY_TREND = [
   { label: 'Apr 2026', value: 300 },
@@ -89,15 +90,18 @@ export default function ReferralAnalyticsCharts() {
           </div>
 
           <div className="relative shrink-0">
-            <select
+            <CustomSelect
+              options={[
+                { label: 'Monthly', value: 'monthly' },
+                { label: 'Weekly', value: 'weekly' },
+              ]}
               value={period}
-              onChange={(e) => setPeriod(e.target.value)}
-              className="bg-slate-50 hover:bg-white border border-slate-200/90 hover:border-indigo-300 rounded-xl pl-2.5 pr-6 py-1 text-[11px] font-bold text-slate-700 appearance-none focus:outline-none focus:border-indigo-500 cursor-pointer"
-            >
-              <option value="monthly">Monthly</option>
-              <option value="weekly">Weekly</option>
-            </select>
-            <ChevronDown className="w-3 h-3 text-slate-400 absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none" />
+              onChange={(val) => setPeriod(val)}
+              align="right"
+              buttonClassName="flex items-center justify-between gap-1.5 px-2.5 py-1 rounded-xl bg-slate-50/90 hover:bg-white border border-slate-200/90 hover:border-indigo-300 transition-all shadow-2xs min-w-[96px]"
+              textClassName="text-[11px] font-bold text-slate-700"
+              iconClassName="w-3 h-3 text-slate-500"
+            />
           </div>
         </div>
 
@@ -164,17 +168,17 @@ export default function ReferralAnalyticsCharts() {
         </div>
 
         {/* Donut + Legend */}
-        <div className="relative z-10 flex-1 flex flex-col sm:flex-row lg:flex-col xl:flex-row items-center justify-between gap-4 my-auto py-2">
+        <div className="relative z-10 flex-1 flex flex-col sm:flex-row lg:flex-col 2xl:flex-row items-center justify-between gap-3.5 2xl:gap-4 my-auto py-2">
           {/* Donut */}
-          <div className="relative w-[150px] h-[150px] shrink-0 flex items-center justify-center">
+          <div className="relative w-[138px] h-[138px] sm:w-[144px] sm:h-[144px] shrink-0 flex items-center justify-center">
             <ResponsiveContainer width="100%" height="100%">
               <PieChart>
                 <Pie
                   data={LEVEL_DONUT_DATA}
                   cx="50%"
                   cy="50%"
-                  innerRadius={46}
-                  outerRadius={68}
+                  innerRadius={43}
+                  outerRadius={63}
                   startAngle={90}
                   endAngle={-270}
                   paddingAngle={2.5}
@@ -190,7 +194,7 @@ export default function ReferralAnalyticsCharts() {
             </ResponsiveContainer>
 
             <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none text-center">
-              <span className="text-[18px] font-black text-slate-900 leading-tight">
+              <span className="text-[17px] font-black text-slate-900 leading-tight">
                 12,450
               </span>
               <span className="text-[10px] font-bold text-slate-400 mt-0.5">
@@ -200,11 +204,11 @@ export default function ReferralAnalyticsCharts() {
           </div>
 
           {/* Legend */}
-          <div className="flex-1 w-full space-y-3">
+          <div className="flex-1 min-w-0 w-full space-y-2.5">
             {LEVEL_DONUT_DATA.map((item, idx) => (
               <div
                 key={idx}
-                className="flex items-center justify-between gap-2 p-2 rounded-xl bg-slate-50/70 hover:bg-slate-50 transition-colors"
+                className="flex items-center justify-between gap-2 px-2.5 py-2 rounded-xl bg-slate-50/70 hover:bg-slate-50 transition-colors"
               >
                 <div className="flex items-center gap-2 min-w-0">
                   <span
@@ -212,11 +216,11 @@ export default function ReferralAnalyticsCharts() {
                     style={{ backgroundColor: item.color }}
                   />
                   <div className="min-w-0">
-                    <p className="text-[11.5px] font-bold text-slate-700 truncate">{item.name}</p>
+                    <p className="text-[11.5px] font-bold text-slate-700 leading-tight">{item.name}</p>
                     <p className="text-[13px] font-black text-slate-900 mt-0.5">{item.count}</p>
                   </div>
                 </div>
-                <span className="text-[11.5px] font-bold text-slate-500 shrink-0">
+                <span className="text-[11.5px] font-bold text-slate-500 shrink-0 tabular-nums">
                   {item.percentage}
                 </span>
               </div>

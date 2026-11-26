@@ -2,10 +2,12 @@ import React, { useState, useMemo, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import {
   Wallet, X, FileText, Check, Clock, IndianRupee,
-  Search, Calendar, ChevronDown, ChevronLeft, ChevronRight,
-  Download, Eye, MoreVertical
+  Search, ChevronDown, ChevronLeft, ChevronRight,
+  Download, Eye
 } from 'lucide-react';
 import PayoutRequestDetailsModal from './PayoutRequestDetailsModal';
+import DateRangePicker from '../common/DateRangePicker';
+import { isDateWithinRange } from '../../utils/dateFilterUtils';
 
 // Mock Payout Requests Dataset matching the provided design
 const initialPayouts = [
@@ -198,6 +200,7 @@ export default function PayoutRequestsModal({ isOpen, onClose }) {
   const [searchQuery, setSearchQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState('All Status');
   const [typeFilter, setTypeFilter] = useState('All Types');
+  const [dateRangeFilter, setDateRangeFilter] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedPayout, setSelectedPayout] = useState(null);
   const [isExporting, setIsExporting] = useState(false);
@@ -248,9 +251,11 @@ export default function PayoutRequestsModal({ isOpen, onClose }) {
       const matchesType =
         typeFilter === 'All Types' || item.requestType.toLowerCase() === typeFilter.toLowerCase();
 
-      return matchesSearch && matchesStatus && matchesType;
+      const matchesDate = isDateWithinRange(item.requestedOn, dateRangeFilter);
+
+      return matchesSearch && matchesStatus && matchesType && matchesDate;
     });
-  }, [payouts, searchQuery, statusFilter, typeFilter]);
+  }, [payouts, searchQuery, statusFilter, typeFilter, dateRangeFilter]);
 
   const totalRequestsCount = 42;
   const totalPages = Math.ceil(filteredPayouts.length / itemsPerPage) || 1;
@@ -263,6 +268,7 @@ export default function PayoutRequestsModal({ isOpen, onClose }) {
     setSearchQuery('');
     setStatusFilter('All Status');
     setTypeFilter('All Types');
+    setDateRangeFilter(null);
     setCurrentPage(1);
   };
 
@@ -548,13 +554,16 @@ export default function PayoutRequestsModal({ isOpen, onClose }) {
               </div>
 
               {/* Date Filter */}
-              <button
-                type="button"
-                className="flex items-center gap-1.5 bg-white border border-slate-200 rounded-xl px-3 py-1.5 md:py-2 text-[11.5px] md:text-[12px] font-semibold text-slate-700 hover:border-slate-300 transition-colors shadow-2xs cursor-pointer"
-              >
-                <Calendar className="w-3.5 h-3.5 text-slate-400" />
-                <span>Select date range</span>
-              </button>
+              <DateRangePicker
+                variant="modal"
+                value={dateRangeFilter}
+                onChange={(val) => {
+                  setDateRangeFilter(val);
+                  setCurrentPage(1);
+                }}
+                placeholder="Select date range"
+                initialMonth={new Date(2026, 7, 1)}
+              />
 
               {/* Reset */}
               <button
@@ -698,23 +707,14 @@ export default function PayoutRequestsModal({ isOpen, onClose }) {
                           {renderDateTime(item.processedOn)}
                         </td>
                         <td className="py-2.5 px-2 text-center rounded-r-xl">
-                          <div className="flex items-center justify-center gap-1">
-                            <button
-                              type="button"
-                              onClick={() => setSelectedPayout(item)}
-                              className="p-1 rounded-lg text-indigo-600 hover:text-indigo-800 hover:bg-indigo-50 transition-all duration-300 group-hover:scale-110 cursor-pointer"
-                              title="View Request Details"
-                            >
-                              <Eye className="w-3.5 h-3.5" />
-                            </button>
-                            <button
-                              type="button"
-                              className="p-1 rounded-lg text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition-all duration-300 group-hover:scale-110 cursor-pointer"
-                              title="More Options"
-                            >
-                              <MoreVertical className="w-3.5 h-3.5" />
-                            </button>
-                          </div>
+                          <button
+                            type="button"
+                            onClick={() => setSelectedPayout(item)}
+                            className="p-1 rounded-lg text-indigo-600 hover:text-indigo-800 hover:bg-indigo-50 transition-all duration-300 group-hover:scale-110 cursor-pointer"
+                            title="View Request Details"
+                          >
+                            <Eye className="w-3.5 h-3.5" />
+                          </button>
                         </td>
                       </tr>
                     ))
