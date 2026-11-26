@@ -35,7 +35,7 @@ function App() {
       <Route path="/accessdenied" element={<AccessDenied />} />
 
       {/* New Help & Support route */}
-<Route path="/HelpSupport" element={<HelpSupport />} />
+      <Route path="/HelpSupport" element={<HelpSupport />} />
       
       {/* Protected Routes */}
       <Route element={<ProtectedRoute />}>
