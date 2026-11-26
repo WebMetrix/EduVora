@@ -23,6 +23,8 @@ import Payouts from './pages/Payouts';
 import ProtectedRoute from './components/common/ProtectedRoute';
 import GlobalLayout from './components/layout/GlobalLayout';
 
+import HelpSupport from './pages/HelpSupport';
+
 function App() {
   return (
     <Routes>
@@ -31,6 +33,9 @@ function App() {
       <Route path="/register" element={<Register />} />
       <Route path="/forgotpassword" element={<Forgot />} />
       <Route path="/accessdenied" element={<AccessDenied />} />
+
+      {/* New Help & Support route */}
+<Route path="/HelpSupport" element={<HelpSupport />} />
       
       {/* Protected Routes */}
       <Route element={<ProtectedRoute />}>
