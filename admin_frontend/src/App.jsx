@@ -12,6 +12,7 @@ import ReferralAnalytics from './pages/network/ReferralAnalytics';
 import ReferralExceptions from './pages/network/ReferralExceptions';
 import ReferralAuditHistory from './pages/network/ReferralAuditHistory';
 import OrderManagement from './pages/orders/OrderManagement';
+import PaymentOverview from './pages/payments/PaymentOverview';
 
 export default function App() {
   return (
@@ -57,6 +58,15 @@ export default function App() {
         <Route path="/orders/refunds" element={<OrderManagement defaultTab="refunds" />} />
         <Route path="/orders/history" element={<OrderManagement defaultTab="history" />} />
         <Route path="/orders/exceptions" element={<OrderManagement defaultTab="exceptions" />} />
+
+        {/* Payments */}
+        <Route path="/payments" element={<PaymentOverview defaultTab="overview" />} />
+        <Route path="/payments/overview" element={<PaymentOverview defaultTab="overview" />} />
+        <Route path="/payments/transactions" element={<PaymentOverview defaultTab="transactions" />} />
+        <Route path="/payments/verification" element={<PaymentOverview defaultTab="verification" />} />
+        <Route path="/payments/refunds" element={<PaymentOverview defaultTab="refunds" />} />
+        <Route path="/payments/reconciliation" element={<PaymentOverview defaultTab="reconciliation" />} />
+        <Route path="/payments/webhooks" element={<PaymentOverview defaultTab="webhooks" />} />
 
         {/* Wildcard redirect back to dashboard */}
         <Route path="*" element={<Navigate to="/dashboard" replace />} />

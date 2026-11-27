@@ -61,7 +61,14 @@ const navItems = [
     label: 'Payments',
     icon: CreditCard,
     hasSub: true,
-    subItems: ['Transactions', 'Payment Gateways', 'Reconciliation']
+    subItems: [
+      { id: 'payment-overview', label: 'Payment Overview', path: '/payments' },
+      { id: 'payment-transactions', label: 'Transactions', path: '/payments/transactions' },
+      { id: 'payment-verification', label: 'Payment Verification', path: '/payments/verification' },
+      { id: 'payment-refunds', label: 'Refund Management', path: '/payments/refunds' },
+      { id: 'payment-reconciliation', label: 'Reconciliation', path: '/payments/reconciliation' },
+      { id: 'payment-webhooks', label: 'Webhooks & Exceptions', path: '/payments/webhooks' },
+    ]
   },
   {
     id: 'commission',
@@ -153,6 +160,22 @@ export default function Sidebar({ isOpen, setIsOpen }) {
         setActiveSubItem('order-exceptions');
       } else {
         setActiveSubItem('order-management');
+      }
+    } else if (location.pathname.startsWith('/payments')) {
+      setActiveItem('payments');
+      setOpenAccordions((prev) => ({ ...prev, payments: true }));
+      if (location.pathname.includes('/transactions')) {
+        setActiveSubItem('payment-transactions');
+      } else if (location.pathname.includes('/verification')) {
+        setActiveSubItem('payment-verification');
+      } else if (location.pathname.includes('/refunds')) {
+        setActiveSubItem('payment-refunds');
+      } else if (location.pathname.includes('/reconciliation')) {
+        setActiveSubItem('payment-reconciliation');
+      } else if (location.pathname.includes('/webhooks')) {
+        setActiveSubItem('payment-webhooks');
+      } else {
+        setActiveSubItem('payment-overview');
       }
     } else if (location.pathname.includes('/kyc')) {
       setActiveItem('users');
